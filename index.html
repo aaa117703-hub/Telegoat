@@ -38,7 +38,6 @@
             user-select: none;
         }
 
-        /* السماح بالكتابة فقط في حقول الإدخال */
         input, textarea {
             -webkit-user-select: text;
             user-select: text;
@@ -55,23 +54,21 @@
             font-family: var(--font-en) !important;
         }
 
-        /* منع حفظ أو سحب الصور تماماً للزوار */
         img {
             pointer-events: none;
             -webkit-touch-callout: none;
         }
 
-        /* تصميم البانر الاحترافي مع كلمة TELE GOAT المدمجة داخله */
         .banner-container {
             width: 100%;
             max-width: 800px;
             margin: 15px auto 0 auto;
-            height: 130px;
+            height: 120px;
             background: linear-gradient(135deg, #24003c 0%, #38003c 50%, #12001e 100%);
             border-radius: 16px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             padding: 0 30px;
             border: 2px solid var(--pl-pink);
             box-shadow: 0 10px 30px rgba(255,0,90,0.2);
@@ -80,24 +77,9 @@
         }
         
         .banner-logo-section img {
-            max-height: 85px;
+            max-height: 80px;
             object-fit: contain;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
-        }
-
-        /* كلمة TELE GOAT داخل الصورة مع خاصية النقر المزدوج للتعديل */
-        .banner-title-section {
-            font-family: var(--font-en);
-            font-size: 34px;
-            font-weight: 900;
-            color: #ffffff;
-            letter-spacing: 4px;
-            text-shadow: 0 0 15px rgba(0,255,135,0.5), 2px 2px 4px rgba(0,0,0,0.8);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .banner-title-section:hover {
-            color: var(--pl-green);
         }
 
         .header { 
@@ -134,8 +116,8 @@
 
         .filter-btn:hover, .filter-btn.active {
             background: var(--pl-purple);
-            border-color: var(--pl-green);
-            box-shadow: 0 0 15px rgba(0,255,135,0.3);
+            border-color: var(--pl-pink);
+            box-shadow: 0 0 15px rgba(255,0,90,0.3);
         }
 
         .filter-select {
@@ -162,13 +144,23 @@
             margin: 20px 0 15px 0;
         }
 
+        /* تم جعل النقر المزدوج هنا لتفعيل وضع التعديل */
         .round-indicator {
             font-family: var(--font-en);
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 900;
             letter-spacing: 2px;
-            color: var(--pl-green);
-            text-shadow: 0 0 10px rgba(0,255,135,0.3);
+            color: var(--text-white);
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            cursor: pointer;
+            padding: 5px 15px;
+            border-radius: 8px;
+            border: 1px dashed transparent;
+            transition: 0.2s;
+        }
+        .round-indicator:hover {
+            border-color: var(--pl-pink);
+            background: rgba(255,0,90,0.1);
         }
 
         .nav-arrow-btn {
@@ -188,9 +180,9 @@
         }
 
         .nav-arrow-btn:hover {
-            background: var(--pl-green);
-            color: var(--bg-main);
-            border-color: var(--pl-green);
+            background: var(--pl-pink);
+            color: var(--text-white);
+            border-color: var(--pl-pink);
         }
 
         .main-container { max-width: 800px; margin: 0 auto; padding: 0 10px; }
@@ -220,7 +212,7 @@
             color: #38003c;
             margin-bottom: 20px;
             letter-spacing: 2px;
-            border-bottom: 3px solid #00ff87;
+            border-bottom: 3px solid #ff005a;
             padding-bottom: 8px;
         }
 
@@ -271,7 +263,7 @@
             font-family: var(--font-en);
             font-size: 18px;
             font-weight: 900;
-            color: #00ff87;
+            color: #ffffff;
         }
 
         .score-input {
@@ -282,8 +274,8 @@
             font-size: 16px;
             font-weight: 900;
             background: #160b24;
-            color: #00ff87;
-            border: 1px solid #00ff87;
+            color: #ffffff;
+            border: 1px solid #ff005a;
             border-radius: 6px;
             outline: none;
         }
@@ -338,13 +330,11 @@
 </head>
 <body>
 
-    <!-- البانر العلوي مع دمج كلمة TELE GOAT وقفل حماية الصور -->
+    <!-- البانر العلوي بعد إزالة كلمة تيلي غوت وجعله نظيفاً -->
     <div class="banner-container">
         <div class="banner-logo-section">
-            <img src="header.png.pdf" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/120x120/38003c/00ff87&text=PL'">
+            <img src="header.png.pdf" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/120x120/38003c/ffffff&text=PL'">
         </div>
-        <!-- انقر نقراً مزدوجاً هنا لفتح وإغلاق وضع التعديل الخاص بك -->
-        <div class="banner-title-section" ondblclick="unlockAdmin()">TELE GOAT</div>
     </div>
 
     <div class="header">
@@ -354,7 +344,7 @@
             
             <select class="filter-select" id="roundSelect" onchange="selectRound(this.value)"></select>
 
-            <!-- أزرار المدير (مخفية تماماً عن الزوار ولا تظهر إلا برمزك السري) -->
+            <!-- أزرار المدير (تظهر فقط بعد النقر المزدوج على كلمة Matchweek وإدخال الرمز) -->
             <button class="filter-btn admin-only" id="editToggleBtn" onclick="toggleEditMode()" data-ar="تعديل" data-en="Edit">تعديل</button>
             <button class="filter-btn admin-only" id="saveAlbumBtn" onclick="downloadAsImage()" data-ar="حفظ للألبوم" data-en="Save to Album">حفظ للألبوم</button>
             
@@ -363,7 +353,8 @@
 
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">&lt;</button>
-            <div class="round-indicator" id="currentRoundTitle">MATCHWEEK 1</div>
+            <!-- انقر نقراً مزدوجاً (Double Click) على اسم الجولة أدناه لفتح حقل ادخال الرمز السري للتعديل -->
+            <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockAdmin()">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(1)">&gt;</button>
         </div>
     </div>
@@ -403,9 +394,9 @@
     </div>
 
     <script>
-        // إعدادات اتصال قاعدة بيانات Firebase السحابية
+        // إعدادات اتصال قاعدة البيانات السحابية (تحفظ النتائج وتظهر للجميع بشكل دائم)
         const firebaseConfig = {
-            databaseURL: "https://telegram-goat-default-rtdb.firebaseio.com/" // تم تجهيز الرابط السحابي المباشر لموقعك
+            databaseURL: "https://telegram-goat-default-rtdb.firebaseio.com/"
         };
         
         if (!firebase.apps.length) {
@@ -417,7 +408,7 @@
         let isAdmin = localStorage.getItem('fpl_admin') === 'true';
         let scoresStorage = {};
 
-        // جلب البيانات من السحابة فور فتح الموقع لتحديث النتائج لدى الجميع
+        // جلب البيانات وحفظها سحابياً وتحديثها تلقائياً
         db.ref('fpl_scores').on('value', (snapshot) => {
             scoresStorage = snapshot.val() || {};
             renderFixtures();
