@@ -208,7 +208,6 @@
         .team-box.home { justify-content: flex-end; text-align: right; }
         .team-box.away { justify-content: flex-start; text-align: left; }
         
-        /* إزالة الدائرة الخلفية للشعارات في المواجهات */
         .team-box img {
             width: 32px;
             height: 32px;
@@ -256,17 +255,8 @@
         th { font-family: var(--font-en); background-color: #6a329f; color: #ffffff; padding: 12px 6px; font-weight: 900; border-bottom: 2px solid #4a154b; font-size: 14px; }
         td { font-family: var(--font-en); padding: 11px 6px; border-bottom: 1.5px solid #4da6ff; font-weight: 900; font-size: 14px; color: #4a154b; }
         
-        /* خطوط مخصصة للفصل بين المراكز في جدول الترتيب حسب الطلب */
-        tr.border-after-first td {
-            border-bottom: 3px solid #0099ff !important;
-        }
-        tr.border-before-relegation td {
-            border-top: 3px solid #0099ff !important;
-        }
-
         .team-cell { font-family: var(--font-en); display: flex; align-items: center; justify-content: flex-start; font-weight: 900; text-transform: uppercase; color: #4a154b; font-size: 15px; }
         
-        /* إزالة الدائرة الخلفية للشعارات في جدول الترتيب */
         .team-cell img { 
             width: 28px; 
             height: 28px; 
@@ -526,17 +516,9 @@
 
             sortedTeams.forEach((team, index) => {
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
-                
-                // إضافة فئات CSS لإضافة الخطوط بناءً على ترتيب الفريق (المركز الأول وبعد المركز 17)
-                let rowClass = "";
-                if (index === 0) {
-                    rowClass = "border-after-first";
-                } else if (index === 17) {
-                    rowClass = "border-before-relegation";
-                }
 
                 tbody.innerHTML += `
-                    <tr class="${rowClass}">
+                    <tr>
                         <td style="font-weight:900;">${index + 1}</td>
                         <td class="team-cell">
                             <img src="${teamInfo.logo}" alt="${teamInfo.name}">
