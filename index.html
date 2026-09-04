@@ -63,23 +63,32 @@
             width: 100%;
             max-width: 800px;
             margin: 15px auto 0 auto;
-            height: 120px;
+            height: 130px;
             background: linear-gradient(135deg, #24003c 0%, #38003c 50%, #12001e 100%);
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0 30px;
+            padding: 0;
             border: 2px solid var(--pl-pink);
             box-shadow: 0 10px 30px rgba(255,0,90,0.2);
             position: relative;
             overflow: hidden;
         }
         
+        .banner-logo-section {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .banner-logo-section img {
-            max-height: 80px;
-            object-fit: contain;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+            width: 100%;
+            height: 100%;
+            object-fit: fill; /* جعل الصورة تتمدد لتملأ المستطيل والإطار بالكامل بانسجام */
+            display: block;
         }
 
         .header { 
@@ -186,7 +195,7 @@
 
         .main-container { max-width: 800px; margin: 0 auto; padding: 0 10px; }
 
-        /* صندوق إدخال النتائج بالنصوص (يظهر فقط عند التفعيل) */
+        /* صندوق إدخال النتائج بالنصوص */
         .bulk-edit-container {
             display: none;
             background: linear-gradient(135deg, #24003c 0%, #160b24 100%);
@@ -377,7 +386,7 @@
 
     <div class="banner-container">
         <div class="banner-logo-section">
-            <img src="header.png.pdf" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/120x120/38003c/ffffff&text=PL'">
+            <img src="header.png.pdf" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/800x130/38003c/ffffff&text=PREMIER+LEAGUE'">
         </div>
     </div>
 
@@ -403,7 +412,7 @@
 
     <div class="main-container">
 
-        <!-- صندوق إدخال النتائج كنصوص (يظهر عند التفعيل) -->
+        <!-- صندوق إدخال النتائج كنصوص -->
         <div class="bulk-edit-container admin-only" id="bulkEditBox">
             <div style="font-weight: 900; margin-bottom: 8px; font-size: 14px;" data-ar="إدخال النتائج كنصوص (كل سطر مباراة، مثال: أرسنال 2 - 1 تشيلسي أو بالأسماء الإنجليزية):" data-en="Bulk Text Score Entry (Line by line, e.g., Arsenal 2 - 1 Chelsea):">إدخال النتائج كنصوص (كل سطر مباراة، مثال: أرسنال 2 - 1 تشيلسي):</div>
             <textarea id="bulkTextarea" placeholder="أرسنال 2 - 1 تشيلسي&#10;مانشستر يونايتد 3 - 0 ليفربول..."></textarea>
@@ -619,7 +628,6 @@
             db.ref('fpl_scores/' + key).set(val);
         }
 
-        // دالة تحليل النص المكتوب وتوزيع النتائج تلقائياً على مباريات الجولة الحالية
         function processBulkText() {
             if(!isAdmin) return;
             let text = document.getElementById('bulkTextarea').value;
@@ -630,20 +638,17 @@
                 line = line.trim();
                 if(!line) return;
                 
-                // البحث عن النتيجة الرقمية ضمن السطر (مثال: رقم يليه فاصلة أو شرطة ثم رقم)
                 let scoreMatch = line.match(/(\d+)\s*[-–:]\s*(\d+)/);
                 if(!scoreMatch) return;
 
                 let hScore = scoreMatch[1];
                 let aScore = scoreMatch[2];
 
-                // استخراج اسم الفريقين من النص بحذف الأرقام والرموز لتحديد المطابقة مع الفرق
                 let parts = line.split(/[\d\-–:]+/);
                 if(parts.length < 2) return;
                 let team1Text = parts[0].trim().toLowerCase();
                 let team2Text = parts[parts.length - 1].trim().toLowerCase();
 
-                // مطابقة النص مع القائمة الحالية للجولة
                 matches.forEach((match, idx) => {
                     let hTeam = teamsMap[match[0]];
                     let aTeam = teamsMap[match[1]];
