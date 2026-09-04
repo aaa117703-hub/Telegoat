@@ -8,11 +8,11 @@
     <style>
         @font-face {
             font-family: 'SultanCustom';
-            src: url('./Sultan.ttf') format('truetype');
+            src: url('fonts/Sultan.ttf') format('truetype');
         }
         @font-face {
             font-family: 'EnglishCustom';
-            src: url('./english-font.ttf') format('truetype');
+            src: url('fonts/english-font.ttf') format('truetype');
         }
 
         :root {
@@ -227,13 +227,45 @@
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .search-box input {
+            font-family: var(--font-ar);
+            background: var(--pl-dark-card);
+            color: #fff;
+            border: 1px solid var(--border-dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            width: 60%;
+            outline: none;
+        }
+        .search-box input::placeholder {
+            color: #888;
+        }
+
+        .team-filter-badge {
+            display: inline-block;
+            background: var(--pl-pink);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 800;
+            margin: 5px 0;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
     <!-- البانر العلوي -->
     <div class="banner-container">
-        <img src="./header.png" alt="TELE GOAT Banner" onerror="this.src='https://dummyimage.com/800x120/240024/ffffff.png&text=TELE+GOAT'">
+        <img src="img/header.png" alt="TELE GOAT Banner" onerror="this.src='https://dummyimage.com/800x120/240024/ffffff.png&text=TELE+GOAT'">
     </div>
 
     <div class="header">
@@ -245,6 +277,10 @@
 
             <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()">تعديل</button>
             <button class="filter-btn" onclick="downloadAsImage()">حفظ الصورة</button>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="teamSearch" placeholder="ابحث عن فريق..." oninput="filterByTeam(this.value)">
         </div>
 
         <div class="round-nav-container">
@@ -286,26 +322,26 @@
 
     <script>
         const teamsMap = {
-            "ARSENAL": { name: "Arsenal", logo: "arsenal.png.WEBP" },
-            "ASTON VILLA": { name: "Aston Villa", logo: "aston_villa.png.WEBP" },
-            "BOURNEMOUTH": { name: "Bournemouth", logo: "bournemouth.png.WEBP" },
-            "BRENTFORD": { name: "Brentford", logo: "brentford.png.PNG" },
-            "BRIGHTON": { name: "Brighton", logo: "brighton.png.WEBP" },
-            "CHELSEA": { name: "Chelsea", logo: "chelsea.png.WEBP" },
-            "COVENTRY": { name: "Coventry", logo: "coventry.png.WEBP" },
-            "CRYSTAL PALACE": { name: "Crystal Palace", logo: "crystal_palace.png.WEBP" },
-            "EVERTON": { name: "Everton", logo: "everton.png.WEBP" },
-            "FULHAM": { name: "Fulham", logo: "fulham.png.WEBP" },
-            "HULL": { name: "Hull", logo: "hull.png.WEBP" },
-            "IPSWICH": { name: "Ipswich", logo: "ipswich.png.WEBP" },
-            "LEEDS": { name: "Leeds", logo: "leeds.png.WEBP" },
-            "LIVERPOOL": { name: "Liverpool", logo: "liverpool.png.WEBP" },
-            "MAN CITY": { name: "Man City", logo: "man_city.png.WEBP" },
-            "MAN UTD": { name: "Man Utd", logo: "man_utd.png.WEBP" },
-            "NEWCASTLE": { name: "Newcastle", logo: "newcastle.png.WEBP" },
-            "NOTTINGHAM": { name: "Nott'm Forest", logo: "forest.png.PNG" },
-            "SUNDERLAND": { name: "Sunderland", logo: "sunderland.png.WEBP" },
-            "TOTTENHAM": { name: "Spurs", logo: "tottenham.png.WEBP" }
+            "ARSENAL": { name: "Arsenal", logo: "img/arsenal.png" },
+            "ASTON VILLA": { name: "Aston Villa", logo: "img/aston_villa.png" },
+            "BOURNEMOUTH": { name: "Bournemouth", logo: "img/bournemouth.png" },
+            "BRENTFORD": { name: "Brentford", logo: "img/brentford.png" },
+            "BRIGHTON": { name: "Brighton", logo: "img/brighton.png" },
+            "CHELSEA": { name: "Chelsea", logo: "img/chelsea.png" },
+            "COVENTRY": { name: "Coventry", logo: "img/coventry.png" },
+            "CRYSTAL PALACE": { name: "Crystal Palace", logo: "img/crystal_palace.png" },
+            "EVERTON": { name: "Everton", logo: "img/everton.png" },
+            "FULHAM": { name: "Fulham", logo: "img/fulham.png" },
+            "HULL": { name: "Hull", logo: "img/hull.png" },
+            "IPSWICH": { name: "Ipswich", logo: "img/ipswich.png" },
+            "LEEDS": { name: "Leeds", logo: "img/leeds.png" },
+            "LIVERPOOL": { name: "Liverpool", logo: "img/liverpool.png" },
+            "MAN CITY": { name: "Man City", logo: "img/man_city.png" },
+            "MAN UTD": { name: "Man Utd", logo: "img/man_utd.png" },
+            "NEWCASTLE": { name: "Newcastle", logo: "img/newcastle.png" },
+            "NOTTINGHAM": { name: "Nott'm Forest", logo: "img/forest.png" },
+            "SUNDERLAND": { name: "Sunderland", logo: "img/sunderland.png" },
+            "TOTTENHAM": { name: "Spurs", logo: "img/tottenham.png" }
         };
 
         const initialBasePoints = {};
@@ -318,18 +354,52 @@
             2: [ ["BOURNEMOUTH", "EVERTON"], ["ASTON VILLA", "ARSENAL"], ["CHELSEA", "BRIGHTON"], ["COVENTRY", "HULL"], ["CRYSTAL PALACE", "MAN CITY"], ["LEEDS", "BRENTFORD"], ["LIVERPOOL", "NOTTINGHAM"], ["MAN UTD", "IPSWICH"], ["SUNDERLAND", "FULHAM"], ["TOTTENHAM", "NEWCASTLE"] ],
             3: [ ["ARSENAL", "CHELSEA"], ["BRENTFORD", "SUNDERLAND"], ["BRIGHTON", "LEEDS"], ["EVERTON", "MAN UTD"], ["FULHAM", "CRYSTAL PALACE"], ["HULL", "ASTON VILLA"], ["IPSWICH", "LIVERPOOL"], ["MAN CITY", "COVENTRY"], ["NEWCASTLE", "BOURNEMOUTH"], ["NOTTINGHAM", "TOTTENHAM"] ],
             4: [ ["BOURNEMOUTH", "BRENTFORD"], ["ASTON VILLA", "NOTTINGHAM"], ["CHELSEA", "HULL"], ["COVENTRY", "BRIGHTON"], ["CRYSTAL PALACE", "IPSWICH"], ["LEEDS", "NEWCASTLE"], ["LIVERPOOL", "FULHAM"], ["MAN UTD", "MAN CITY"], ["SUNDERLAND", "ARSENAL"], ["TOTTENHAM", "EVERTON"] ],
-            5: [ ["BOURNEMOUTH", "LIVERPOOL"], ["BRENTFORD", "CHELSEA"], ["BRIGHTON", "ARSENAL"], ["EVERTON", "IPSWICH"], ["FULHAM", "MAN UTD"], ["LEEDS", "CRYSTAL PALACE"], ["MAN CITY", "SUNDERLAND"], ["NEWCASTLE", "HULL"], ["NOTTINGHAM", "COVENTRY"], ["TOTTENHAM", "ASTON VILLA"] ]
+            5: [ ["BOURNEMOUTH", "LIVERPOOL"], ["BRENTFORD", "CHELSEA"], ["BRIGHTON", "ARSENAL"], ["EVERTON", "IPSWICH"], ["FULHAM", "MAN UTD"], ["LEEDS", "CRYSTAL PALACE"], ["MAN CITY", "SUNDERLAND"], ["NEWCASTLE", "HULL"], ["NOTTINGHAM", "COVENTRY"], ["TOTTENHAM", "ASTON VILLA"] ],
+            6: [ ["ARSENAL", "LEEDS"], ["ASTON VILLA", "BRENTFORD"], ["CHELSEA", "BOURNEMOUTH"], ["COVENTRY", "NEWCASTLE"], ["CRYSTAL PALACE", "NOTTINGHAM"], ["HULL", "EVERTON"], ["IPSWICH", "FULHAM"], ["LIVERPOOL", "MAN CITY"], ["MAN UTD", "TOTTENHAM"], ["SUNDERLAND", "BRIGHTON"] ],
+            7: [ ["BOURNEMOUTH", "SUNDERLAND"], ["BRENTFORD", "LIVERPOOL"], ["BRIGHTON", "CRYSTAL PALACE"], ["EVERTON", "CHELSEA"], ["FULHAM", "HULL"], ["LEEDS", "MAN UTD"], ["MAN CITY", "IPSWICH"], ["NEWCASTLE", "ASTON VILLA"], ["NOTTINGHAM", "ARSENAL"], ["TOTTENHAM", "COVENTRY"] ],
+            8: [ ["ARSENAL", "EVERTON"], ["ASTON VILLA", "MAN CITY"], ["CHELSEA", "TOTTENHAM"], ["COVENTRY", "FULHAM"], ["CRYSTAL PALACE", "NEWCASTLE"], ["HULL", "BRENTFORD"], ["IPSWICH", "NOTTINGHAM"], ["LIVERPOOL", "BRIGHTON"], ["MAN UTD", "BOURNEMOUTH"], ["SUNDERLAND", "LEEDS"] ],
+            9: [ ["BOURNEMOUTH", "LEEDS"], ["BRENTFORD", "NOTTINGHAM"], ["CHELSEA", "MAN UTD"], ["COVENTRY", "SUNDERLAND"], ["HULL", "IPSWICH"], ["LIVERPOOL", "ARSENAL"], ["MAN CITY", "BRIGHTON"], ["NEWCASTLE", "EVERTON"], ["TOTTENHAM", "CRYSTAL PALACE"] ],
+            10: [ ["ARSENAL", "HULL"], ["BRIGHTON", "BRENTFORD"], ["CRYSTAL PALACE", "LIVERPOOL"], ["EVERTON", "COVENTRY"], ["FULHAM", "NEWCASTLE"], ["IPSWICH", "BOURNEMOUTH"], ["LEEDS", "TOTTENHAM"], ["MAN UTD", "ASTON VILLA"], ["NOTTINGHAM", "MAN CITY"], ["SUNDERLAND", "CHELSEA"] ],
+            11: [ ["BRENTFORD", "EVERTON"], ["CHELSEA", "LEEDS"], ["COVENTRY", "CRYSTAL PALACE"], ["HULL", "BRIGHTON"], ["LIVERPOOL", "MAN UTD"], ["MAN CITY", "FULHAM"], ["NEWCASTLE", "ARSENAL"], ["TOTTENHAM", "IPSWICH"] ],
+            12: [ ["ARSENAL", "MAN CITY"], ["BRIGHTON", "NEWCASTLE"], ["CRYSTAL PALACE", "HULL"], ["EVERTON", "LIVERPOOL"], ["FULHAM", "BOURNEMOUTH"], ["IPSWICH", "ASTON VILLA"], ["LEEDS", "COVENTRY"], ["MAN UTD", "BRENTFORD"], ["NOTTINGHAM", "CHELSEA"], ["SUNDERLAND", "TOTTENHAM"] ],
+            13: [ ["BOURNEMOUTH", "BRIGHTON"], ["ASTON VILLA", "EVERTON"], ["BRENTFORD", "ARSENAL"], ["CHELSEA", "CRYSTAL PALACE"], ["COVENTRY", "IPSWICH"], ["HULL", "NOTTINGHAM"], ["LIVERPOOL", "SUNDERLAND"], ["MAN CITY", "LEEDS"], ["NEWCASTLE", "MAN UTD"], ["TOTTENHAM", "FULHAM"] ],
+            14: [ ["BOURNEMOUTH", "HULL"], ["ASTON VILLA", "CRYSTAL PALACE"], ["BRENTFORD", "MAN CITY"], ["CHELSEA", "LIVERPOOL"], ["EVERTON", "FULHAM"], ["LEEDS", "IPSWICH"], ["MAN UTD", "COVENTRY"], ["NEWCASTLE", "SUNDERLAND"], ["NOTTINGHAM", "BRIGHTON"], ["TOTTENHAM", "ARSENAL"] ],
+            15: [ ["ARSENAL", "BOURNEMOUTH"], ["BRIGHTON", "EVERTON"], ["COVENTRY", "ASTON VILLA"], ["CRYSTAL PALACE", "MAN UTD"], ["FULHAM", "BRENTFORD"], ["HULL", "TOTTENHAM"], ["IPSWICH", "NEWCASTLE"], ["LIVERPOOL", "LEEDS"], ["MAN CITY", "CHELSEA"], ["SUNDERLAND", "NOTTINGHAM"] ],
+            16: [ ["BOURNEMOUTH", "COVENTRY"], ["ARSENAL", "MAN UTD"], ["BRENTFORD", "NEWCASTLE"], ["BRIGHTON", "IPSWICH"], ["CHELSEA", "ASTON VILLA"], ["LEEDS", "FULHAM"], ["LIVERPOOL", "TOTTENHAM"], ["MAN CITY", "HULL"], ["NOTTINGHAM", "EVERTON"], ["SUNDERLAND", "CRYSTAL PALACE"] ],
+            17: [ ["ASTON VILLA", "LEEDS"], ["COVENTRY", "CHELSEA"], ["CRYSTAL PALACE", "ARSENAL"], ["EVERTON", "SUNDERLAND"], ["FULHAM", "BRIGHTON"], ["HULL", "LIVERPOOL"], ["IPSWICH", "BRENTFORD"], ["MAN UTD", "NOTTINGHAM"], ["NEWCASTLE", "MAN CITY"], ["TOTTENHAM", "BOURNEMOUTH"] ],
+            18: [ ["ASTON VILLA", "LIVERPOOL"], ["COVENTRY", "BRENTFORD"], ["CRYSTAL PALACE", "BOURNEMOUTH"], ["EVERTON", "MAN CITY"], ["FULHAM", "ARSENAL"], ["HULL", "LEEDS"], ["IPSWICH", "CHELSEA"], ["MAN UTD", "SUNDERLAND"], ["NEWCASTLE", "NOTTINGHAM"], ["TOTTENHAM", "BRIGHTON"] ],
+            19: [ ["BOURNEMOUTH", "ASTON VILLA"], ["ARSENAL", "IPSWICH"], ["BRENTFORD", "CRYSTAL PALACE"], ["BRIGHTON", "MAN UTD"], ["CHELSEA", "NEWCASTLE"], ["LEEDS", "EVERTON"], ["LIVERPOOL", "COVENTRY"], ["MAN CITY", "TOTTENHAM"], ["NOTTINGHAM", "FULHAM"], ["SUNDERLAND", "HULL"] ],
+            20: [ ["ARSENAL", "BRENTFORD"], ["BRIGHTON", "BOURNEMOUTH"], ["CRYSTAL PALACE", "CHELSEA"], ["EVERTON", "ASTON VILLA"], ["FULHAM", "TOTTENHAM"], ["IPSWICH", "COVENTRY"], ["LEEDS", "MAN CITY"], ["MAN UTD", "NEWCASTLE"], ["NOTTINGHAM", "HULL"], ["SUNDERLAND", "LIVERPOOL"] ],
+            21: [ ["ASTON VILLA", "EVERTON"], ["BRENTFORD", "BRIGHTON"], ["CHELSEA", "SUNDERLAND"], ["COVENTRY", "LIVERPOOL"], ["CRYSTAL PALACE", "BOURNEMOUTH"], ["FULHAM", "MAN UTD"], ["HULL", "NEWCASTLE"], ["LEEDS", "ARSENAL"], ["MAN CITY", "IPSWICH"], ["TOTTENHAM", "LEEDS"] ],
+            22: [ ["BOURNEMOUTH", "NOTTINGHAM"], ["ARSENAL", "LEEDS"], ["BRIGHTON", "MAN CITY"], ["EVERTON", "HULL"], ["IPSWICH", "ASTON VILLA"], ["LIVERPOOL", "NEWCASTLE"], ["MAN UTD", "FULHAM"], ["NOTTINGHAM", "BOURNEMOUTH"], ["SUNDERLAND", "COVENTRY"], ["TOTTENHAM", "BRENTFORD"] ],
+            23: [ ["ASTON VILLA", "LIVERPOOL"], ["BRENTFORD", "EVERTON"], ["CHELSEA", "NEWCASTLE"], ["COVENTRY", "MAN UTD"], ["CRYSTAL PALACE", "SUNDERLAND"], ["HULL", "ARSENAL"], ["IPSWICH", "LEEDS"], ["MAN CITY", "BRIGHTON"], ["NOTTINGHAM", "FULHAM"], ["TOTTENHAM", "BOURNEMOUTH"] ],
+            24: [ ["BOURNEMOUTH", "COVENTRY"], ["ARSENAL", "ASTON VILLA"], ["BRIGHTON", "LIVERPOOL"], ["EVERTON", "NOTTINGHAM"], ["FULHAM", "IPSWICH"], ["LEEDS", "HULL"], ["MAN UTD", "CRYSTAL PALACE"], ["NEWCASTLE", "TOTTENHAM"], ["SUNDERLAND", "BRENTFORD"], ["MAN CITY", "LEEDS"] ],
+            25: [ ["ASTON VILLA", "BOURNEMOUTH"], ["BRENTFORD", "CRYSTAL PALACE"], ["COVENTRY", "ARSENAL"], ["HULL", "MAN CITY"], ["IPSWICH", "EVERTON"], ["LEEDS", "SUNDERLAND"], ["LIVERPOOL", "FULHAM"], ["MAN UTD", "NEWCASTLE"], ["NOTTINGHAM", "BRIGHTON"], ["TOTTENHAM", "CHELSEA"] ],
+            26: [ ["BOURNEMOUTH", "LEEDS"], ["BRIGHTON", "ASTON VILLA"], ["CHELSEA", "HULL"], ["CRYSTAL PALACE", "COVENTRY"], ["EVERTON", "LIVERPOOL"], ["FULHAM", "NOTTINGHAM"], ["MAN CITY", "BRENTFORD"], ["NEWCASTLE", "MAN UTD"], ["SUNDERLAND", "IPSWICH"], ["TOTTENHAM", "ARSENAL"] ],
+            27: [ ["ASTON VILLA", "CHELSEA"], ["BRENTFORD", "FULHAM"], ["COVENTRY", "CRYSTAL PALACE"], ["HULL", "BOURNEMOUTH"], ["IPSWICH", "BRIGHTON"], ["LEEDS", "EVERTON"], ["LIVERPOOL", "MAN UTD"], ["MAN UTD", "MAN CITY"], ["NOTTINGHAM", "SUNDERLAND"], ["TOTTENHAM", "NEWCASTLE"] ],
+            28: [ ["ARSENAL", "NOTTINGHAM"], ["BOURNEMOUTH", "BRENTFORD"], ["BRIGHTON", "HULL"], ["CRYSTAL PALACE", "ASTON VILLA"], ["EVERTON", "LEEDS"], ["FULHAM", "LIVERPOOL"], ["MAN CITY", "TOTTENHAM"], ["NEWCASTLE", "IPSWICH"], ["SUNDERLAND", "MAN UTD"], ["CHELSEA", "COVENTRY"] ],
+            29: [ ["ARSENAL", "FULHAM"], ["ASTON VILLA", "CHELSEA"], ["BRENTFORD", "NEWCASTLE"], ["COVENTRY", "LEEDS"], ["HULL", "CRYSTAL PALACE"], ["IPSWICH", "MAN CITY"], ["LIVERPOOL", "BRIGHTON"], ["MAN UTD", "EVERTON"], ["NOTTINGHAM", "BOURNEMOUTH"], ["TOTTENHAM", "SUNDERLAND"] ],
+            30: [ ["BOURNEMOUTH", "IPSWICH"], ["BRIGHTON", "COVENTRY"], ["CHELSEA", "ARSENAL"], ["CRYSTAL PALACE", "MAN CITY"], ["EVERTON", "BRENTFORD"], ["FULHAM", "HULL"], ["LEEDS", "ASTON VILLA"], ["LIVERPOOL", "NOTTINGHAM"], ["NEWCASTLE", "FULHAM"], ["SUNDERLAND", "TOTTENHAM"] ],
+            31: [ ["ARSENAL", "CRYSTAL PALACE"], ["ASTON VILLA", "LEEDS"], ["BRENTFORD", "FULHAM"], ["COVENTRY", "EVERTON"], ["HULL", "LIVERPOOL"], ["IPSWICH", "CHELSEA"], ["MAN CITY", "BRIGHTON"], ["NOTTINGHAM", "MAN UTD"], ["TOTTENHAM", "BOURNEMOUTH"], ["NEWCASTLE", "MAN CITY"] ],
+            32: [ ["BOURNEMOUTH", "ARSENAL"], ["BRIGHTON", "NOTTINGHAM"], ["CHELSEA", "FULHAM"], ["CRYSTAL PALACE", "ASTON VILLA"], ["EVERTON", "IPSWICH"], ["FULHAM", "COVENTRY"], ["LEEDS", "TOTTENHAM"], ["LIVERPOOL", "BRENTFORD"], ["MAN UTD", "HULL"], ["NEWCASTLE", "MAN CITY"] ],
+            33: [ ["ARSENAL", "NEWCASTLE"], ["ASTON VILLA", "CRYSTAL PALACE"], ["BRENTFORD", "LEEDS"], ["COVENTRY", "BRIGHTON"], ["HULL", "CHELSEA"], ["IPSWICH", "BOURNEMOUTH"], ["MAN CITY", "LIVERPOOL"], ["NOTTINGHAM", "EVERTON"], ["TOTTENHAM", "MAN UTD"], ["FULHAM", "NEWCASTLE"] ],
+            34: [ ["BOURNEMOUTH", "ASTON VILLA"], ["BRIGHTON", "IPSWICH"], ["CHELSEA", "BRENTFORD"], ["CRYSTAL PALACE", "FULHAM"], ["EVERTON", "ARSENAL"], ["FULHAM", "LEEDS"], ["LIVERPOOL", "TOTTENHAM"], ["MAN UTD", "COVENTRY"], ["NEWCASTLE", "HULL"], ["NOTTINGHAM", "MAN CITY"] ],
+            35: [ ["ARSENAL", "BRIGHTON"], ["ASTON VILLA", "NOTTINGHAM"], ["BRENTFORD", "BOURNEMOUTH"], ["COVENTRY", "CHELSEA"], ["HULL", "CRYSTAL PALACE"], ["IPSWICH", "MAN UTD"], ["LEEDS", "LIVERPOOL"], ["MAN CITY", "EVERTON"], ["TOTTENHAM", "FULHAM"], ["NEWCASTLE", "FULHAM"] ],
+            36: [ ["BOURNEMOUTH", "MAN UTD"], ["BRIGHTON", "FULHAM"], ["CHELSEA", "IPSWICH"], ["CRYSTAL PALACE", "BRENTFORD"], ["EVERTON", "ASTON VILLA"], ["FULHAM", "MAN CITY"], ["LIVERPOOL", "COVENTRY"], ["NEWCASTLE", "LEEDS"], ["NOTTINGHAM", "TOTTENHAM"], ["SUNDERLAND", "ARSENAL"] ],
+            37: [ ["ARSENAL", "LIVERPOOL"], ["ASTON VILLA", "SUNDERLAND"], ["BRENTFORD", "HULL"], ["COVENTRY", "BOURNEMOUTH"], ["IPSWICH", "CRYSTAL PALACE"], ["LEEDS", "CHELSEA"], ["MAN CITY", "NEWCASTLE"], ["MAN UTD", "NOTTINGHAM"], ["TOTTENHAM", "EVERTON"], ["FULHAM", "BRIGHTON"] ],
+            38: [ ["BOURNEMOUTH", "NOTTINGHAM"], ["BRIGHTON", "MAN UTD"], ["CHELSEA", "ASTON VILLA"], ["CRYSTAL PALACE", "ARSENAL"], ["EVERTON", "FULHAM"], ["HULL", "COVENTRY"], ["LEEDS", "BRENTFORD"], ["LIVERPOOL", "IPSWICH"], ["MAN CITY", "SUNDERLAND"], ["TOTTENHAM", "NEWCASTLE"] ]
         };
 
         let currentRound = 1;
         let activeTab = 'fixtures';
         let editMode = false;
         let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
+        let filterTeam = '';
 
         function initRoundDropdown() {
             const select = document.getElementById('roundSelect');
             select.innerHTML = '';
-            for(let i=1; i<=18; i++) {
+            for(let i=1; i<=38; i++) {
                 let opt = document.createElement('option');
                 opt.value = i;
                 opt.innerText = `الجولة ${i}`;
@@ -354,6 +424,7 @@
                 document.getElementById('standingsTab').classList.add('active');
             } else {
                 document.getElementById('fixturesTab').classList.add('active');
+                renderFixtures();
             }
         }
 
@@ -376,7 +447,11 @@
         }
 
         function updateScore(round, idx, type, val) {
-            scoresStorage[`r${round}_m${idx}_${type}`] = val;
+            if(val === '') {
+                delete scoresStorage[`r${round}_m${idx}_${type}`];
+            } else {
+                scoresStorage[`r${round}_m${idx}_${type}`] = val;
+            }
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
         }
 
@@ -388,125 +463,4 @@
 
             for (let round in matchweeks) {
                 matchweeks[round].forEach((match, idx) => {
-                    let hKey = match[0];
-                    let aKey = match[1];
-                    let hVal = scoresStorage[`r${round}_m${idx}_home`];
-                    let aVal = scoresStorage[`r${round}_m${idx}_away`];
-
-                    if (hVal !== undefined && aVal !== undefined && hVal !== '' && aVal !== '') {
-                        let hScore = parseFloat(hVal);
-                        let aScore = parseFloat(aVal);
-
-                        calculated[hKey].gf += hScore;
-                        calculated[aKey].gf += aScore;
-
-                        if (hScore > aScore) {
-                            calculated[hKey].pts += 3;
-                        } else if (aScore > hScore) {
-                            calculated[aKey].pts += 3;
-                        } else if (hScore === aScore) {
-                            calculated[hKey].pts += 1;
-                            calculated[aKey].pts += 1;
-                        }
-                    }
-                });
-            }
-
-            return Object.values(calculated).sort((a, b) => b.pts - a.pts || b.gf - a.gf);
-        }
-
-        function renderStandings() {
-            const tbody = document.getElementById('standingsBody');
-            tbody.innerHTML = '';
-            
-            let sortedTeams = calculateStandings();
-
-            sortedTeams.forEach((team, index) => {
-                let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="font-weight:900;">${index + 1}</td>
-                        <td class="team-cell">
-                            <img src="${teamInfo.logo}" alt="${teamInfo.name}">
-                            ${teamInfo.name}
-                        </td>
-                        <td>${team.gf}</td>
-                        <td style="color:var(--pl-pink); font-size:14px;">${team.pts}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        function renderFixtures() {
-            const list = document.getElementById('fixturesList');
-            document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
-            document.getElementById('roundSelect').value = currentRound;
-            list.innerHTML = '';
-
-            let matches = matchweeks[currentRound] || [];
-            matches.forEach((match, idx) => {
-                let home = teamsMap[match[0]] || { name: match[0], logo: "" };
-                let away = teamsMap[match[1]] || { name: match[1], logo: "" };
-
-                let homeScore = scoresStorage[`r${currentRound}_m${idx}_home`] ?? '';
-                let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
-
-                let scoreContent = editMode ? `
-                    <input type="number" class="score-input" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value)">
-                    <span style="font-weight:900; color:#fff;">:</span>
-                    <input type="number" class="score-input" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value)">
-                ` : `
-                    <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
-                    <span style="font-weight:900; color:#ff005a; font-family: var(--font-en);">VS</span>
-                    <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
-                `;
-
-                list.innerHTML += `
-                    <div class="fixture-row">
-                        <div class="team-box home">
-                            <span>${home.name}</span>
-                            <img src="${home.logo}">
-                        </div>
-                        <div class="match-score-center">
-                            ${scoreContent}
-                        </div>
-                        <div class="team-box away">
-                            <img src="${away.logo}">
-                            <span>${away.name}</span>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function changeRound(step) {
-            currentRound += step;
-            if(currentRound < 1) currentRound = 1;
-            if(currentRound > 18) currentRound = 18;
-            renderFixtures();
-        }
-
-        function downloadAsImage() {
-            const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
-            const element = document.getElementById(targetId);
-
-            html2canvas(element, {
-                backgroundColor: "#240024",
-                scale: 2
-            }).then(canvas => {
-                canvas.toBlob(function(blob) {
-                    let link = document.createElement('a');
-                    link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings.png`;
-                    link.href = URL.createObjectURL(blob);
-                    link.click();
-                    URL.revokeObjectURL(link.href);
-                }, 'image/png');
-            });
-        }
-
-        initRoundDropdown();
-        renderStandings();
-        renderFixtures();
-    </script>
-</body>
-</html>
+                    let hKey =
