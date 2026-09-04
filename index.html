@@ -136,26 +136,26 @@
 
     <script>
         const defaultTeams = [
-            { id: 1, name: "آرسنال", logo: "arsenal.png", pts: 116 },
-            { id: 2, name: "أستون فيلا", logo: "aston_villa.png", pts: 104 },
-            { id: 3, name: "بورنموث", logo: "bournemouth.png", pts: 102 },
-            { id: 4, name: "برينتفورد", logo: "brentford.png", pts: 97 },
-            { id: 5, name: "برايتون", logo: "brighton.png", pts: 99 },
-            { id: 6, name: "تشيلسي", logo: "chelsea.png", pts: 106 },
-            { id: 7, name: "كوفنتري سيتي", logo: "coventry.png", pts: 90 },
-            { id: 8, name: "كريستال بالاس", logo: "crystal_palace.png", pts: 110 },
-            { id: 9, name: "إيفرتون", logo: "everton.png", pts: 88 },
-            { id: 10, name: "فولهام", logo: "fulham.png", pts: 94 },
-            { id: 11, name: "هال سيتي", logo: "hull.png", pts: 85 },
-            { id: 12, name: "إيبسويتش", logo: "ipswich.png", pts: 80 },
-            { id: 13, name: "ليدز يونايتد", logo: "leeds.png", pts: 92 },
-            { id: 14, name: "ليفربول", logo: "liverpool.png", pts: 118 },
-            { id: 15, name: "مانشستر سيتي", logo: "man_city.png", pts: 115 },
-            { id: 16, name: "مانشستر يونايتد", logo: "man_utd.png", pts: 112 },
-            { id: 17, name: "نيوكاسل", logo: "newcastle.png", pts: 105 },
-            { id: 18, name: "نوتنغهام فورست", logo: "forest.png", pts: 95 },
-            { id: 19, name: "سندرلاند", logo: "sunderland.png", pts: 89 },
-            { id: 20, name: "توتنهام", logo: "spurs.png", pts: 108 }
+            { id: 1, name: "آرسنال", logo: "arsenal.png.WEBP", pts: 116 },
+            { id: 2, name: "أستون فيلا", logo: "aston_villa.png.WEBP", pts: 104 },
+            { id: 3, name: "بورنموث", logo: "bournemouth.png.WEBP", pts: 102 },
+            { id: 4, name: "برينتفورد", logo: "brentford.png.PNG", pts: 97 },
+            { id: 5, name: "برايتون", logo: "brighton.png.WEBP", pts: 99 },
+            { id: 6, name: "تشيلسي", logo: "chelsea.png.WEBP", pts: 106 },
+            { id: 7, name: "كوفنتري سيتي", logo: "coventry.png.WEBP", pts: 90 },
+            { id: 8, name: "كريستال بالاس", logo: "crystal_palace.png.WEBP", pts: 110 },
+            { id: 9, name: "إيفرتون", logo: "everton.png.WEBP", pts: 88 },
+            { id: 10, name: "فولهام", logo: "fulham.png.WEBP", pts: 94 },
+            { id: 11, name: "هال سيتي", logo: "hull.png.WEBP", pts: 85 },
+            { id: 12, name: "إيبسويتش", logo: "ipswich.png.WEBP", pts: 80 },
+            { id: 13, name: "ليدز يونايتد", logo: "leeds.png.WEBP", pts: 92 },
+            { id: 14, name: "ليفربول", logo: "liverpool.png.WEBP", pts: 118 },
+            { id: 15, name: "مانشستر سيتي", logo: "man_city.png.WEBP", pts: 115 },
+            { id: 16, name: "مانشستر يونايتد", logo: "man_utd.png.WEBP", pts: 112 },
+            { id: 17, name: "نيوكاسل", logo: "newcastle.png.WEBP", pts: 105 },
+            { id: 18, name: "نوتنغهام فورست", logo: "forest.png.PNG", pts: 95 },
+            { id: 19, name: "سندرلاند", logo: "sunderland.png.WEBP", pts: 89 },
+            { id: 20, name: "توتنهام", logo: "spurs.png.WEBP", pts: 108 }
         ];
 
         const roundFixtures = [
@@ -167,13 +167,9 @@
         let teams = [];
 
         function init() {
-            const savedTeams = localStorage.getItem('tgTeams');
-            if (savedTeams) {
-                teams = JSON.parse(savedTeams);
-            } else {
-                teams = [...defaultTeams];
-                localStorage.setItem('tgTeams', JSON.stringify(teams));
-            }
+            localStorage.removeItem('tgTeams'); // تنظيف التخزين القديم للاعتماد على الأسماء الجديدة
+            teams = [...defaultTeams];
+            localStorage.setItem('tgTeams', JSON.stringify(teams));
             renderAll();
         }
 
@@ -302,4 +298,3 @@
     </script>
 </body>
 </html>
-
