@@ -1,1 +1,305 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TELE GOAT - FPL League</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --pl-purple: #38003c;
+            --pl-green: #00ff85;
+            --pl-red: #ff0055;
+            --pl-dark: #0f0210;
+            --border-color: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+        body { background-color: #f4f4f7; color: #333; padding-bottom: 30px; }
+
+        .header { background-color: var(--pl-purple); color: #fff; padding: 15px; text-align: center; border-bottom: 3px solid var(--pl-green); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .league-title { font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 2px 2px 0px var(--pl-red); margin-bottom: 10px; }
+        .action-bar { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        
+        .btn { background: #fff; color: var(--pl-purple); border: none; padding: 8px 14px; border-radius: 20px; font-weight: 800; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; text-transform: uppercase; transition: all 0.2s; text-decoration: none; }
+        .btn:active { transform: translateY(1px); }
+        .btn-green { background: var(--pl-green); color: var(--pl-purple); }
+        .btn-admin { background: none; color: #fff; border: 2px solid #fff; }
+        
+        .main-container { max-width: 800px; margin: 20px auto; padding: 0 10px; }
+        
+        .section-header { background: #fff; padding: 10px 15px; border-radius: 8px 8px 0 0; border: 1px solid var(--border-color); border-bottom: none; display: flex; justify-content: space-between; align-items: center; }
+        .section-title { font-size: 18px; font-weight: 800; color: var(--pl-purple); }
+
+        .table-container { width: 100%; background: #ffffff; border-radius: 0 0 8px 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border-color); margin-bottom: 25px; }
+        .league-table { width: 100%; border-collapse: collapse; text-align: center; }
+        .league-table th { background-color: #f9f9fc; color: #777; padding: 10px 4px; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+        .league-table td { padding: 8px 4px; border-bottom: 1px solid #f0f0f0; font-size: 13px; font-weight: 700; vertical-align: middle; }
+        
+        .col-rank { width: 8%; }
+        .col-logo { width: 12%; }
+        .col-team { width: 40%; text-align: right; padding-right: 8px !important; }
+        .col-stats { width: 8%; color: #555; }
+        .col-pts  { width: 16%; color: #008744; font-weight: 900; font-size: 14px; }
+
+        .team-logo { width: 30px; height: 30px; object-fit: cover; border-radius: 6px; display: block; margin: 0 auto; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+        .team-name { color: var(--pl-purple); font-size: 13px; font-weight: 800; }
+
+        tr.top-rank { background-color: rgba(0, 255, 133, 0.12); }
+        tr.relegation-rank { background-color: rgba(255, 0, 85, 0.08); }
+
+        .fixtures-container { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 25px; }
+        .fixture-card { background: #fff; border-radius: 8px; border: 1px solid var(--border-color); padding: 12px 15px; display: flex; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .fixture-team { flex: 1; display: flex; align-items: center; gap: 8px; }
+        .fixture-team.home { justify-content: flex-end; text-align: right; }
+        .fixture-team.away { justify-content: flex-start; text-align: left; }
+        .fixture-logo { width: 32px; height: 32px; object-fit: cover; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+        .fixture-score { font-size: 22px; font-weight: 900; color: var(--pl-purple); width: 50px; text-align: center; }
+        .fixture-vs { font-size: 11px; font-weight: 800; color: #aaa; margin: 0 4px; }
+
+        .admin-panel { background: var(--pl-dark); color: #fff; border-radius: 12px; padding: 20px; display: none; margin-bottom: 25px; border: 2px solid var(--pl-green); }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .admin-title { color: var(--pl-green); font-size: 18px; font-weight: 800; }
+        .admin-list { max-height: 400px; overflow-y: auto; padding-right: 5px; }
+        .admin-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #222; }
+        .admin-name { flex: 1; font-size: 13px; font-weight: 700; }
+        .admin-input { width: 70px; background: #222; color: #fff; border: 1px solid #444; padding: 5px; border-radius: 4px; font-size: 13px; font-weight: 800; text-align: center; }
+        .admin-footer { display: flex; justify-content: space-between; gap: 10px; margin-top: 15px; padding-top: 10px; border-top: 1px solid #333; }
+
+        @media (max-width: 480px) {
+            .header { padding: 10px; }
+            .league-title { font-size: 20px; }
+            .btn { padding: 6px 10px; font-size: 11px; }
+            .col-stats { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1 class="league-title">TELE GOAT FPL</h1>
+        <div class="action-bar">
+            <button class="btn btn-green" onclick="capture('standings-capture', 'standings')">📸 الترتيب</button>
+            <button class="btn btn-green" onclick="capture('fixtures-capture', 'fixtures')">📸 المواجهات</button>
+            <button class="btn btn-admin" onclick="toggleAdmin()">🔧 الإدارة</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+
+        <div id="adminPanel" class="admin-panel">
+            <div class="admin-header">
+                <h2 class="admin-title">تعديل نقاط الفرق</h2>
+                <button class="btn" style="background:#ff0055; color:#fff;" onclick="toggleAdmin()">إغلاق</button>
+            </div>
+            <div id="adminList" class="admin-list"></div>
+            <div class="admin-footer">
+                <button class="btn btn-green" style="width: 100%;" onclick="savePoints()">💾 حفظ التغييرات</button>
+                <button class="btn" style="background: #444; color: #fff;" onclick="resetData()">🔄 إعادة ضبط</button>
+            </div>
+        </div>
+
+        <div id="standings-capture">
+            <div class="section-header">
+                <h2 class="section-title">جدول الترتيب</h2>
+                <div class="btn" style="background:var(--pl-purple); color:#fff; pointer-events:none;">الجولة 1</div>
+            </div>
+            <div class="table-container">
+                <table id="standingsTable" class="league-table">
+                    <thead>
+                        <tr>
+                            <th class="col-rank">#</th>
+                            <th class="col-logo"></th>
+                            <th class="col-team">الفريق</th>
+                            <th class="col-stats">ل</th>
+                            <th class="col-stats">ف</th>
+                            <th class="col-stats">ت</th>
+                            <th class="col-stats">خ</th>
+                            <th class="col-pts">النقاط</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="fixtures-capture">
+            <div class="section-header">
+                <h2 class="section-title">مواجهات الجولة</h2>
+                <div class="btn" style="background:var(--pl-purple); color:#fff; pointer-events:none;">الجولة 1</div>
+            </div>
+            <div id="fixturesList" class="fixtures-container"></div>
+        </div>
+
+    </div>
+
+    <script>
+        const defaultTeams = [
+            { id: 1, name: "آرسنال", logo: "arsenal.png", pts: 116 },
+            { id: 2, name: "أستون فيلا", logo: "aston_villa.png", pts: 104 },
+            { id: 3, name: "بورنموث", logo: "bournemouth.png", pts: 102 },
+            { id: 4, name: "برينتفورد", logo: "brentford.png", pts: 97 },
+            { id: 5, name: "برايتون", logo: "brighton.png", pts: 99 },
+            { id: 6, name: "تشيلسي", logo: "chelsea.png", pts: 106 },
+            { id: 7, name: "كوفنتري سيتي", logo: "coventry.png", pts: 90 },
+            { id: 8, name: "كريستال بالاس", logo: "crystal_palace.png", pts: 110 },
+            { id: 9, name: "إيفرتون", logo: "everton.png", pts: 88 },
+            { id: 10, name: "فولهام", logo: "fulham.png", pts: 94 },
+            { id: 11, name: "هال سيتي", logo: "hull.png", pts: 85 },
+            { id: 12, name: "إيبسويتش", logo: "ipswich.png", pts: 80 },
+            { id: 13, name: "ليدز يونايتد", logo: "leeds.png", pts: 92 },
+            { id: 14, name: "ليفربول", logo: "liverpool.png", pts: 118 },
+            { id: 15, name: "مانشستر سيتي", logo: "man_city.png", pts: 115 },
+            { id: 16, name: "مانشستر يونايتد", logo: "man_utd.png", pts: 112 },
+            { id: 17, name: "نيوكاسل", logo: "newcastle.png", pts: 105 },
+            { id: 18, name: "نوتنغهام فورست", logo: "forest.png", pts: 95 },
+            { id: 19, name: "سندرلاند", logo: "sunderland.png", pts: 89 },
+            { id: 20, name: "توتنهام", logo: "spurs.png", pts: 108 }
+        ];
+
+        const roundFixtures = [
+            { home: 1, away: 15, scoreH: 3, scoreA: 1 },
+            { home: 14, away: 16, scoreH: 2, scoreA: 2 },
+            { home: 2, away: 20, scoreH: 1, scoreA: 3 }
+        ];
+
+        let teams = [];
+
+        function init() {
+            const savedTeams = localStorage.getItem('tgTeams');
+            if (savedTeams) {
+                teams = JSON.parse(savedTeams);
+            } else {
+                teams = [...defaultTeams];
+                localStorage.setItem('tgTeams', JSON.stringify(teams));
+            }
+            renderAll();
+        }
+
+        function renderAll() {
+            renderStandings();
+            renderFixtures();
+            renderAdminList();
+        }
+
+        function renderStandings() {
+            teams.sort((a, b) => b.pts - a.pts);
+            const tbody = document.querySelector('#standingsTable tbody');
+            tbody.innerHTML = '';
+
+            teams.forEach((team, index) => {
+                const tr = document.createElement('tr');
+                if (index === 0) tr.classList.add('top-rank');
+                if (index >= 17) tr.classList.add('relegation-rank');
+
+                tr.innerHTML = `
+                    <td class="col-rank">${index + 1}</td>
+                    <td class="col-logo"><img class="team-logo" src="${team.logo}" alt="${team.name}"></td>
+                    <td class="col-team"><span class="team-name">${team.name}</span></td>
+                    <td class="col-stats">0</td>
+                    <td class="col-stats">0</td>
+                    <td class="col-stats">0</td>
+                    <td class="col-stats">0</td>
+                    <td class="col-pts">${team.pts}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function getTeamById(id) {
+            return teams.find(t => t.id === id);
+        }
+
+        function renderFixtures() {
+            const list = document.getElementById('fixturesList');
+            list.innerHTML = '';
+
+            roundFixtures.forEach(fix => {
+                const homeTeam = getTeamById(fix.home);
+                const awayTeam = getTeamById(fix.away);
+                if (!homeTeam || !awayTeam) return;
+
+                const card = document.createElement('div');
+                card.classList.add('fixture-card');
+                card.innerHTML = `
+                    <div class="fixture-team home">
+                        <span class="team-name">${homeTeam.name}</span>
+                        <img class="fixture-logo" src="${homeTeam.logo}" alt="${homeTeam.name}">
+                    </div>
+                    <div class="fixture-score">${fix.scoreH}</div>
+                    <div class="fixture-vs">VS</div>
+                    <div class="fixture-score">${fix.scoreA}</div>
+                    <div class="fixture-team away">
+                        <img class="fixture-logo" src="${awayTeam.logo}" alt="${awayTeam.name}">
+                        <span class="team-name">${awayTeam.name}</span>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function renderAdminList() {
+            const list = document.getElementById('adminList');
+            list.innerHTML = '';
+            let adminSortedTeams = [...teams].sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+
+            adminSortedTeams.forEach(team => {
+                const item = document.createElement('div');
+                item.classList.add('admin-item');
+                item.innerHTML = `
+                    <img class="team-logo" src="${team.logo}" alt="${team.name}">
+                    <span class="admin-name">${team.name}</span>
+                    <input type="number" class="admin-input" id="points-${team.id}" value="${team.pts}">
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function toggleAdmin() {
+            const panel = document.getElementById('adminPanel');
+            panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function savePoints() {
+            teams.forEach(team => {
+                const input = document.getElementById(`points-${team.id}`);
+                if (input) team.pts = parseInt(input.value) || 0;
+            });
+            localStorage.setItem('tgTeams', JSON.stringify(teams));
+            renderAll();
+            toggleAdmin();
+            alert('تم حفظ التغييرات بنجاح!');
+        }
+
+        function resetData() {
+            if (confirm('هل أنت متأكد من إعادة ضبط البيانات؟')) {
+                teams = [...defaultTeams];
+                localStorage.setItem('tgTeams', JSON.stringify(teams));
+                renderAll();
+                toggleAdmin();
+            }
+        }
+
+        function capture(containerId, filenamePrefix) {
+            alert('انتظر قليلاً، جارٍ تحميل الصورة...');
+            const container = document.getElementById(containerId);
+            html2canvas(container, {
+                useCORS: true,
+                scale: 2,
+                backgroundColor: "#f4f4f7",
+                logging: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `${filenamePrefix}-GW1.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>
 
