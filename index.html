@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TELEGRAM GOAT - Premier League</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
-    <!-- html2canvas لتصدير الصفحة كصورة -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --pl-dark-bg: #240024;
             --pl-dark-card: #2f012f;
             --pl-pink: #ff005a;
-            --pl-green: #00ff85;
-            --pl-red: #e90052;
+            --pl-green: #00cc66;
+            --pl-red: #ff4d4d;
             --text-white: #ffffff;
             --border-dark: #3f033f;
         }
@@ -21,48 +20,99 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
         body { background-color: var(--pl-dark-bg); color: var(--text-white); padding-bottom: 50px; }
 
+        /* البانر العلوي */
+        .banner-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 10px auto;
+            overflow: hidden;
+        }
+        .banner-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Header Styling */
         .header { 
             background-color: var(--pl-dark-bg); 
             color: #ffffff; 
-            padding: 20px 15px; 
+            padding: 10px 15px 20px 15px; 
             text-align: center; 
             border-bottom: 1px solid var(--border-dark); 
         }
+        
         .league-title { 
-            font-size: 26px; 
+            font-size: 24px; 
             font-weight: 900; 
             letter-spacing: 2px; 
             color: #ffffff;
             margin-bottom: 15px;
             text-transform: uppercase;
         }
-        .action-bar { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+        /* شريط الأزرار والتصفية الجديد */
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .filter-btn {
+            background: #2f012f;
+            color: #ffffff;
+            border: 1px solid #5a055a;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-btn:after {
+            content: '⌄';
+            font-size: 14px;
+            margin-top: -2px;
+        }
+
+        .filter-btn.no-arrow:after {
+            content: '';
+        }
+
+        .action-bar { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 
         .btn { 
             background: transparent; 
             color: #ffffff; 
             border: 2px solid #ffffff; 
-            padding: 8px 16px; 
+            padding: 8px 14px; 
             border-radius: 20px; 
             font-weight: 800; 
             cursor: pointer; 
-            font-size: 13px; 
+            font-size: 12px; 
             transition: 0.2s;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
         .btn:hover, .btn.active-btn { background: #ffffff; color: var(--pl-dark-bg); }
-        .btn-red { border-color: var(--pl-red); background: var(--pl-red); color: #ffffff; }
-        .btn-red:hover { background: #ff2a75; color: #ffffff; }
+        .btn-red { border-color: #e90052; background: #e90052; color: #ffffff; }
+        .btn-pink { border-color: var(--pl-pink); color: var(--pl-pink); }
+        .btn-pink.active-edit { background: var(--pl-pink); color: #fff; }
 
-        .main-container { max-width: 750px; margin: 20px auto; padding: 0 12px; }
+        .main-container { max-width: 750px; margin: 15px auto; padding: 0 12px; }
 
         .round-selector { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            margin-bottom: 25px; 
+            margin-bottom: 20px; 
             padding: 10px; 
             border-bottom: 1px solid var(--border-dark);
         }
@@ -71,7 +121,7 @@
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            padding: 14px 10px;
+            padding: 12px 10px;
             margin-bottom: 8px;
             background: var(--pl-dark-bg);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -81,7 +131,7 @@
             display: flex;
             align-items: center;
             width: 38%;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 800;
             color: #ffffff;
             text-transform: uppercase;
@@ -90,10 +140,10 @@
         .team-box.away { justify-content: flex-start; text-align: left; }
         
         .team-box img {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             object-fit: contain;
-            margin: 0 10px;
+            margin: 0 8px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             padding: 2px;
@@ -104,18 +154,28 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            width: 24%;
+            width: 28%;
+            background: #1a001a;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border-dark);
+        }
+
+        .score-display {
+            font-size: 14px;
+            font-weight: 900;
+            color: #ffffff;
         }
 
         .score-input {
             width: 45px;
-            height: 35px;
+            height: 30px;
             text-align: center;
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 900;
-            background: #ffffff;
-            color: var(--pl-dark-bg);
-            border: none;
+            background: #2f012f;
+            color: #ffffff;
+            border: 1px solid var(--pl-pink);
             border-radius: 4px;
             outline: none;
         }
@@ -138,8 +198,8 @@
             padding: 2px;
         }
 
-        .pts-col { color: var(--pl-green); font-weight: 900; }
-        .gf-col { color: #ffffff; font-weight: 800; }
+        .rank-1 .pts-col, .rank-1 .gf-col { color: var(--pl-green) !important; font-weight: 900; }
+        .relegation .pts-col, .relegation .gf-col { color: var(--pl-red) !important; font-weight: 900; }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
@@ -147,11 +207,27 @@
 </head>
 <body>
 
+    <!-- صورة البانر العلوي -->
+    <div class="banner-container">
+        <img src="https://i.ibb.co/3ykG5M0/fantasy-banner.jpg" alt="Fantasy Premier League Banner" id="topBanner">
+    </div>
+
     <div class="header">
-        <div class="league-title">TELEGRAM GOAT</div>
+        <div class="league-title">Premier League 2026/27</div>
+        
+        <!-- شريط الأزرار المنسدلة النمط الجديد -->
+        <div class="filter-bar">
+            <button class="filter-btn">Premier League</button>
+            <button class="filter-btn">2026/27</button>
+            <button class="filter-btn" id="filterRoundTitle">الجولة 1</button>
+            <button class="filter-btn">الأندية</button>
+            <button class="filter-btn no-arrow" onclick="resetData()">إعادة تعيين ↻</button>
+        </div>
+
         <div class="action-bar">
             <button class="btn active-btn" onclick="switchTab('fixtures', this)">🎮 المواجهات</button>
             <button class="btn" onclick="switchTab('standings', this)">📊 الترتيب العام</button>
+            <button class="btn btn-pink" id="editBtn" onclick="toggleEditMode()">✏️ تعديل النتائج</button>
             <button class="btn btn-red" onclick="downloadAsImage()">📥 حفظ كصورة</button>
         </div>
     </div>
@@ -215,28 +291,28 @@
             "TOTTENHAM": { name: "Spurs", logo: "tottenham.png.WEBP" }
         };
 
-        let teamsData = JSON.parse(localStorage.getItem('fpl_teams_data')) || [
-            { key: "LIVERPOOL", gf: 6, pts: 1787 },
-            { key: "BRIGHTON", gf: 6, pts: 1784 },
-            { key: "ARSENAL", gf: 6, pts: 1761 },
-            { key: "TOTTENHAM", gf: 6, pts: 1718 },
-            { key: "BOURNEMOUTH", gf: 6, pts: 1683 },
-            { key: "FULHAM", gf: 6, pts: 1680 },
-            { key: "MAN UTD", gf: 6, pts: 1669 },
-            { key: "LEEDS", gf: 3, pts: 1741 },
-            { key: "CRYSTAL PALACE", gf: 3, pts: 1699 },
-            { key: "MAN CITY", gf: 3, pts: 1687 },
-            { key: "BRENTFORD", gf: 3, pts: 1683 },
-            { key: "HULL", gf: 3, pts: 1677 },
-            { key: "SUNDERLAND", gf: 3, pts: 1637 },
-            { key: "NEWCASTLE", gf: 0, pts: 1654 },
-            { key: "EVERTON", gf: 0, pts: 1653 },
-            { key: "CHELSEA", gf: 0, pts: 1622 },
-            { key: "COVENTRY", gf: 0, pts: 1606 },
-            { key: "NOTTINGHAM", gf: 0, pts: 1574 },
-            { key: "ASTON VILLA", gf: 0, pts: 1558 },
-            { key: "IPSWICH", gf: 0, pts: 1557 }
-        ];
+        const initialBasePoints = {
+            "LIVERPOOL": { gf: 6, pts: 1787 },
+            "BRIGHTON": { gf: 6, pts: 1784 },
+            "ARSENAL": { gf: 6, pts: 1761 },
+            "TOTTENHAM": { gf: 6, pts: 1718 },
+            "BOURNEMOUTH": { gf: 6, pts: 1683 },
+            "FULHAM": { gf: 6, pts: 1680 },
+            "MAN UTD": { gf: 6, pts: 1669 },
+            "LEEDS": { gf: 3, pts: 1741 },
+            "CRYSTAL PALACE": { gf: 3, pts: 1699 },
+            "MAN CITY": { gf: 3, pts: 1687 },
+            "BRENTFORD": { gf: 3, pts: 1683 },
+            "HULL": { gf: 3, pts: 1677 },
+            "SUNDERLAND": { gf: 3, pts: 1637 },
+            "NEWCASTLE": { gf: 0, pts: 1654 },
+            "EVERTON": { gf: 0, pts: 1653 },
+            "CHELSEA": { gf: 0, pts: 1622 },
+            "COVENTRY": { gf: 0, pts: 1606 },
+            "NOTTINGHAM": { gf: 0, pts: 1574 },
+            "ASTON VILLA": { gf: 0, pts: 1558 },
+            "IPSWICH": { gf: 0, pts: 1557 }
+        };
 
         const matchweeks = {
             1: [ ["ARSENAL", "COVENTRY"], ["HULL", "MAN UTD"], ["EVERTON", "CRYSTAL PALACE"], ["IPSWICH", "SUNDERLAND"], ["NOTTINGHAM", "LEEDS"], ["BRENTFORD", "TOTTENHAM"], ["BRIGHTON", "ASTON VILLA"], ["MAN CITY", "BOURNEMOUTH"], ["NEWCASTLE", "LIVERPOOL"], ["FULHAM", "CHELSEA"] ],
@@ -261,6 +337,7 @@
 
         let currentRound = 1;
         let activeTab = 'fixtures';
+        let editMode = false;
         let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
 
         function switchTab(tabName, btn) {
@@ -275,20 +352,76 @@
             if(tabName === 'fixtures') document.getElementById('fixturesTab').classList.add('active');
         }
 
+        function toggleEditMode() {
+            editMode = !editMode;
+            const btn = document.getElementById('editBtn');
+            if(editMode) {
+                btn.classList.add('active-edit');
+                btn.innerText = "💾 حفظ التعديل";
+            } else {
+                btn.classList.remove('active-edit');
+                btn.innerText = "✏️ تعديل النتائج";
+            }
+            renderFixtures();
+        }
+
         function updateScore(round, idx, type, val) {
             scoresStorage[`r${round}_m${idx}_${type}`] = val;
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
         }
 
+        // حساب النقاط تلقائياً بناءً على المواجهات
+        function calculateStandings() {
+            let calculated = {};
+            for (let teamKey in initialBasePoints) {
+                calculated[teamKey] = { 
+                    key: teamKey, 
+                    gf: initialBasePoints[teamKey].gf, 
+                    pts: initialBasePoints[teamKey].pts 
+                };
+            }
+
+            for (let round in matchweeks) {
+                matchweeks[round].forEach((match, idx) => {
+                    let hKey = match[0];
+                    let aKey = match[1];
+                    let hVal = scoresStorage[`r${round}_m${idx}_home`];
+                    let aVal = scoresStorage[`r${round}_m${idx}_away`];
+
+                    if (hVal !== undefined && aVal !== undefined && hVal !== '' && aVal !== '') {
+                        let hScore = parseFloat(hVal);
+                        let aScore = parseFloat(aVal);
+
+                        if (hScore > aScore) {
+                            calculated[hKey].pts += 3;
+                        } else if (aScore > hScore) {
+                            calculated[aKey].pts += 3;
+                        } else if (hScore === aScore) {
+                            calculated[hKey].pts += 1;
+                            calculated[aKey].pts += 1;
+                        }
+                    }
+                });
+            }
+
+            return Object.values(calculated).sort((a, b) => b.pts - a.pts);
+        }
+
         function renderStandings() {
             const tbody = document.getElementById('standingsBody');
             tbody.innerHTML = '';
-            teamsData.sort((a, b) => b.pts - a.pts);
+            
+            let sortedTeams = calculateStandings();
 
-            teamsData.forEach((team, index) => {
+            sortedTeams.forEach((team, index) => {
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
+                let rowClass = "";
+                
+                if (index === 0) rowClass = "rank-1";
+                if (index >= 17) rowClass = "relegation";
+
                 tbody.innerHTML += `
-                    <tr>
+                    <tr class="${rowClass}">
                         <td style="font-weight:900;">${index + 1}</td>
                         <td class="team-cell">
                             <img src="${teamInfo.logo}" alt="${teamInfo.name}">
@@ -304,6 +437,7 @@
         function renderFixtures() {
             const list = document.getElementById('fixturesList');
             document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
+            document.getElementById('filterRoundTitle').innerText = `الجولة ${currentRound}`;
             list.innerHTML = '';
 
             let matches = matchweeks[currentRound] || [];
@@ -314,6 +448,16 @@
                 let homeScore = scoresStorage[`r${currentRound}_m${idx}_home`] ?? '';
                 let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
 
+                let scoreContent = editMode ? `
+                    <input type="number" class="score-input" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value)">
+                    <span style="font-weight:900; color:#fff;">:</span>
+                    <input type="number" class="score-input" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value)">
+                ` : `
+                    <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
+                    <span style="font-weight:900; color:#ff005a;">VS</span>
+                    <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
+                `;
+
                 list.innerHTML += `
                     <div class="fixture-row">
                         <div class="team-box home">
@@ -321,9 +465,7 @@
                             <img src="${home.logo}">
                         </div>
                         <div class="match-score-center">
-                            <input type="number" class="score-input" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value)">
-                            <span style="font-weight:900;">:</span>
-                            <input type="number" class="score-input" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value)">
+                            ${scoreContent}
                         </div>
                         <div class="team-box away">
                             <img src="${away.logo}">
@@ -341,6 +483,15 @@
             renderFixtures();
         }
 
+        function resetData() {
+            if(confirm("هل تريد إعادة تعيين كافة النتائج المسجلة؟")) {
+                localStorage.removeItem('fpl_scores');
+                scoresStorage = {};
+                renderFixtures();
+                renderStandings();
+            }
+        }
+
         function downloadAsImage() {
             const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
             const element = document.getElementById(targetId);
@@ -349,10 +500,13 @@
                 backgroundColor: "#240024",
                 scale: 2
             }).then(canvas => {
-                let link = document.createElement('a');
-                link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings.png`;
-                link.href = canvas.toDataURL();
-                link.click();
+                canvas.toBlob(function(blob) {
+                    let link = document.createElement('a');
+                    link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings.png`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }, 'image/png');
             });
         }
 
