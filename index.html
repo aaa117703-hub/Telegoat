@@ -3,106 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TELEGRAM GOAT - FPL League</title>
+    <title>TELEGRAM GOAT - Premier League</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <!-- html2canvas لتصدير الصفحة كصورة -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
-            --pl-purple: #38003c;
+            --pl-dark-bg: #240024;
+            --pl-dark-card: #2f012f;
+            --pl-pink: #ff005a;
             --pl-green: #00ff85;
-            --pl-light-blue: #24caff;
-            --bg-color: #e9eff5;
-            --border-color: #d8e2ec;
+            --pl-red: #e90052;
+            --text-white: #ffffff;
+            --border-dark: #3f033f;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background-color: var(--bg-color); color: #38003c; padding-bottom: 40px; }
+        body { background-color: var(--pl-dark-bg); color: var(--text-white); padding-bottom: 50px; }
 
-        /* Header Styling */
         .header { 
-            background-color: var(--pl-purple); 
+            background-color: var(--pl-dark-bg); 
             color: #ffffff; 
-            padding: 22px 15px; 
+            padding: 20px 15px; 
             text-align: center; 
-            border-bottom: 6px solid var(--pl-light-blue); 
+            border-bottom: 1px solid var(--border-dark); 
         }
         .league-title { 
-            font-size: 28px; 
+            font-size: 26px; 
             font-weight: 900; 
             letter-spacing: 2px; 
             color: #ffffff;
             margin-bottom: 15px;
             text-transform: uppercase;
         }
-        .action-bar { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .action-bar { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
 
         .btn { 
-            background: #ffffff; 
-            color: var(--pl-purple); 
-            border: none; 
-            padding: 10px 20px; 
-            border-radius: 25px; 
+            background: transparent; 
+            color: #ffffff; 
+            border: 2px solid #ffffff; 
+            padding: 8px 16px; 
+            border-radius: 20px; 
             font-weight: 800; 
             cursor: pointer; 
-            font-size: 14px; 
-            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            font-size: 13px; 
             transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
-        .btn:active { transform: translateY(2px); }
-        .btn-blue { background: var(--pl-light-blue); color: var(--pl-purple); }
-        .btn-admin { background: transparent; color: #ffffff; border: 2px solid #ffffff; }
+        .btn:hover, .btn.active-btn { background: #ffffff; color: var(--pl-dark-bg); }
+        .btn-red { border-color: var(--pl-red); background: var(--pl-red); color: #ffffff; }
+        .btn-red:hover { background: #ff2a75; color: #ffffff; }
 
-        .main-container { max-width: 850px; margin: 25px auto; padding: 0 12px; }
+        .main-container { max-width: 750px; margin: 20px auto; padding: 0 12px; }
 
-        /* Standings Table Styling */
-        .standings-card { background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-        .table-header-title { background: var(--pl-purple); color: #ffffff; padding: 15px; font-size: 20px; font-weight: 900; text-align: center; }
-
-        .team-logo {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-            background-color: transparent;
-            vertical-align: middle;
-            margin-left: 10px;
+        .round-selector { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 25px; 
+            padding: 10px; 
+            border-bottom: 1px solid var(--border-dark);
         }
 
-        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; }
-        th { background-color: #f1f5f9; color: var(--pl-purple); padding: 14px 8px; font-weight: 900; border-bottom: 2px solid var(--border-color); }
-        td { padding: 12px 8px; border-bottom: 1px solid #eef2f6; font-weight: 800; color: #38003c; }
-        tr:nth-child(even) { background-color: #f8fafc; }
-
-        .team-cell { display: flex; align-items: center; justify-content: flex-start; text-align: right; font-weight: 900; color: var(--pl-purple); text-transform: uppercase; }
-        .pts-col { color: var(--pl-light-blue); font-weight: 900; font-size: 16px; }
-        .gf-col { color: var(--pl-purple); font-weight: 800; }
-
-        /* Matchweek Results Styling */
-        .matchweek-card { background: #ffffff; border-radius: 12px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-        .matchweek-title { text-align: center; font-size: 24px; font-weight: 900; color: var(--pl-purple); margin-bottom: 20px; text-transform: uppercase; }
-        
-        .round-selector { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #e0f2fe; padding: 10px 15px; border-radius: 8px; }
-        
-        .fixture-card-row { 
+        .fixture-row { 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            background: #ffffff; 
-            border: 2px solid var(--pl-light-blue); 
-            border-radius: 8px; 
-            margin-bottom: 12px; 
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            padding: 14px 10px;
+            margin-bottom: 8px;
+            background: var(--pl-dark-bg);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .fixture-team-box { display: flex; align-items: center; width: 40%; padding: 10px 12px; font-weight: 900; color: var(--pl-purple); font-size: 14px; text-transform: uppercase; }
-        .fixture-team-box.home { justify-content: flex-start; }
-        .fixture-team-box.away { justify-content: flex-end; }
-        .fixture-team-box img { width: 32px; height: 32px; object-fit: contain; margin: 0 8px; }
-        .vs-score-center { background: var(--pl-purple); color: #ffffff; width: 20%; padding: 12px 0; text-align: center; font-weight: 900; font-size: 15px; }
 
-        /* Admin Panel */
-        .admin-panel { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 25px; border: 3px dashed #ff0055; display: none; }
-        .admin-panel.active { display: block; }
-        .admin-match-input { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 8px; background: #f8fafc; border-radius: 6px; }
-        .input-pts { width: 65px; text-align: center; padding: 6px; font-weight: 800; border: 2px solid var(--pl-purple); border-radius: 6px; font-size: 14px; }
+        .team-box {
+            display: flex;
+            align-items: center;
+            width: 38%;
+            font-size: 14px;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+        .team-box.home { justify-content: flex-end; text-align: right; }
+        .team-box.away { justify-content: flex-start; text-align: left; }
+        
+        .team-box img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            margin: 0 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        .match-score-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 24%;
+        }
+
+        .score-input {
+            width: 45px;
+            height: 35px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 900;
+            background: #ffffff;
+            color: var(--pl-dark-bg);
+            border: none;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .export-area { padding: 15px; background: var(--pl-dark-bg); border-radius: 12px; }
+
+        .standings-card { background: var(--pl-dark-bg); border-radius: 8px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; color: #ffffff; }
+        th { background-color: var(--pl-dark-card); color: #a892a8; padding: 14px 8px; font-weight: 800; border-bottom: 1px solid var(--border-dark); }
+        td { padding: 12px 8px; border-bottom: 1px solid var(--border-dark); font-weight: 800; }
+        
+        .team-cell { display: flex; align-items: center; justify-content: flex-start; font-weight: 800; text-transform: uppercase; }
+        .team-cell img { 
+            width: 28px; 
+            height: 28px; 
+            margin-left: 10px; 
+            object-fit: contain;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        .pts-col { color: var(--pl-green); font-weight: 900; }
+        .gf-col { color: #ffffff; font-weight: 800; }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
@@ -113,50 +150,42 @@
     <div class="header">
         <div class="league-title">TELEGRAM GOAT</div>
         <div class="action-bar">
-            <button class="btn btn-blue" onclick="switchTab('standings')">📊 الترتيب العام</button>
-            <button class="btn btn-blue" onclick="switchTab('fixtures')">🎮 نتائج المواجهات</button>
-            <button class="btn btn-admin" onclick="toggleAdmin()">🔧 لوحة الإدارة</button>
+            <button class="btn active-btn" onclick="switchTab('fixtures', this)">🎮 المواجهات</button>
+            <button class="btn" onclick="switchTab('standings', this)">📊 الترتيب العام</button>
+            <button class="btn btn-red" onclick="downloadAsImage()">📥 حفظ كصورة</button>
         </div>
     </div>
 
     <div class="main-container">
 
-        <!-- Admin Panel -->
-        <div id="adminPanel" class="admin-panel">
-            <h3 style="color: #ff0055; margin-bottom: 10px;">لوحة تحكم نتائج الفانتزي</h3>
-            <p style="font-size: 13px; margin-bottom: 15px; color: #555;">أدخل إجمالي نقاط الفانتزي (Pts) لكل فريق في الجولة الحالية وسيحسب النظام الفائز والترتيب تلقائياً:</p>
-            <div id="adminFixturesInputs"></div>
-            <button class="btn btn-blue" style="margin-top: 15px; width: 100%; background: var(--pl-purple); color: #fff;" onclick="saveScores()">💾 حفظ النقاط وتحديث الترتيب</button>
-        </div>
-
-        <!-- Standings Tab -->
-        <div id="standingsTab" class="tab-content active">
-            <div class="standings-card">
-                <div class="table-header-title">جدول الترتيب العام</div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Pos</th>
-                            <th style="text-align: right; padding-right: 20px;">Club</th>
-                            <th>GF</th>
-                            <th>Pts</th>
-                        </tr>
-                    </thead>
-                    <tbody id="standingsBody"></tbody>
-                </table>
+        <!-- Fixtures Tab -->
+        <div id="fixturesTab" class="tab-content active">
+            <div class="round-selector">
+                <button class="btn" onclick="changeRound(-1)">◀ الجولة السابقة</button>
+                <span id="currentRoundTitle" style="font-weight: 900; font-size: 18px;">MATCHWEEK 1</span>
+                <button class="btn" onclick="changeRound(1)">الجولة التالية ▶</button>
+            </div>
+            <div id="captureFixtures" class="export-area">
+                <div id="fixturesList"></div>
             </div>
         </div>
 
-        <!-- Fixtures Tab -->
-        <div id="fixturesTab" class="tab-content">
-            <div class="matchweek-card">
-                <div class="matchweek-title">MATCHWEEK RESULTS</div>
-                <div class="round-selector">
-                    <button class="btn" onclick="changeRound(-1)">◀ الجولة السابقة</button>
-                    <span id="currentRoundTitle" style="font-weight: 900; color: var(--pl-purple);">MATCHWEEK 1</span>
-                    <button class="btn" onclick="changeRound(1)">الجولة التالية ▶</button>
+        <!-- Standings Tab -->
+        <div id="standingsTab" class="tab-content">
+            <div id="captureStandings" class="export-area">
+                <div class="standings-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th style="text-align: right; padding-right: 20px;">Club</th>
+                                <th>GF</th>
+                                <th>Pts</th>
+                            </tr>
+                        </thead>
+                        <tbody id="standingsBody"></tbody>
+                    </table>
                 </div>
-                <div id="fixturesList"></div>
             </div>
         </div>
 
@@ -168,177 +197,101 @@
             "ASTON VILLA": { name: "Aston Villa", logo: "aston_villa.png.WEBP" },
             "BOURNEMOUTH": { name: "Bournemouth", logo: "bournemouth.png.WEBP" },
             "BRENTFORD": { name: "Brentford", logo: "brentford.png.PNG" },
-            "BRIGHTON": { name: "Brighton & Hove Albion", logo: "brighton.png.WEBP" },
+            "BRIGHTON": { name: "Brighton", logo: "brighton.png.WEBP" },
             "CHELSEA": { name: "Chelsea", logo: "chelsea.png.WEBP" },
-            "COVENTRY": { name: "Coventry City", logo: "coventry.png.WEBP" },
+            "COVENTRY": { name: "Coventry", logo: "coventry.png.WEBP" },
             "CRYSTAL PALACE": { name: "Crystal Palace", logo: "crystal_palace.png.WEBP" },
             "EVERTON": { name: "Everton", logo: "everton.png.WEBP" },
             "FULHAM": { name: "Fulham", logo: "fulham.png.WEBP" },
-            "HULL": { name: "Hull City", logo: "hull.png.WEBP" },
-            "IPSWICH": { name: "Ipswich Town", logo: "ipswich.png.WEBP" },
-            "LEEDS": { name: "Leeds United", logo: "leeds.png.WEBP" },
+            "HULL": { name: "Hull", logo: "hull.png.WEBP" },
+            "IPSWICH": { name: "Ipswich", logo: "ipswich.png.WEBP" },
+            "LEEDS": { name: "Leeds", logo: "leeds.png.WEBP" },
             "LIVERPOOL": { name: "Liverpool", logo: "liverpool.png.WEBP" },
-            "MAN CITY": { name: "Manchester City", logo: "man_city.png.WEBP" },
-            "MAN UTD": { name: "Manchester United", logo: "man_utd.png.WEBP" },
-            "NEWCASTLE": { name: "Newcastle United", logo: "newcastle.png.WEBP" },
-            "NOTTINGHAM": { name: "Nottingham Forest", logo: "forest.png.PNG" },
+            "MAN CITY": { name: "Man City", logo: "man_city.png.WEBP" },
+            "MAN UTD": { name: "Man Utd", logo: "man_utd.png.WEBP" },
+            "NEWCASTLE": { name: "Newcastle", logo: "newcastle.png.WEBP" },
+            "NOTTINGHAM": { name: "Nott'm Forest", logo: "forest.png.PNG" },
             "SUNDERLAND": { name: "Sunderland", logo: "sunderland.png.WEBP" },
-            "TOTTENHAM": { name: "Tottenham Hotspur", logo: "tottenham.png.WEBP" }
+            "TOTTENHAM": { name: "Spurs", logo: "tottenham.png.WEBP" }
         };
 
-        const teamsData = [
-            { id: 1, name: "LIVERPOOL", key: "LIVERPOOL", gf: 6, pts: 1787 },
-            { id: 2, name: "BRIGHTON", key: "BRIGHTON", gf: 6, pts: 1784 },
-            { id: 3, name: "ARSENAL", key: "ARSENAL", gf: 6, pts: 1761 },
-            { id: 4, name: "TOTTENHAM", key: "TOTTENHAM", gf: 6, pts: 1718 },
-            { id: 5, name: "BOURNEMOUTH", key: "BOURNEMOUTH", gf: 6, pts: 1683 },
-            { id: 6, name: "FULHAM", key: "FULHAM", gf: 6, pts: 1680 },
-            { id: 7, name: "MANCHESTER UNITED", key: "MAN UTD", gf: 6, pts: 1669 },
-            { id: 8, name: "LEEDS UNITED", key: "LEEDS", gf: 3, pts: 1741 },
-            { id: 9, name: "CRYSTAL PALACE", key: "CRYSTAL PALACE", gf: 3, pts: 1699 },
-            { id: 10, name: "MANCHESTER CITY", key: "MAN CITY", gf: 3, pts: 1687 },
-            { id: 11, name: "BRENTFORD", key: "BRENTFORD", gf: 3, pts: 1683 },
-            { id: 12, name: "HULL CITY", key: "HULL", gf: 3, pts: 1677 },
-            { id: 13, name: "SUNDERLAND", key: "SUNDERLAND", gf: 3, pts: 1637 },
-            { id: 14, name: "NEWCASTLE UNITED", key: "NEWCASTLE", gf: 0, pts: 1654 },
-            { id: 15, name: "EVERTON", key: "EVERTON", gf: 0, pts: 1653 },
-            { id: 16, name: "CHELSEA", key: "CHELSEA", gf: 0, pts: 1622 },
-            { id: 17, name: "COVENTRY CITY", key: "COVENTRY", gf: 0, pts: 1606 },
-            { id: 18, name: "NOTTINGHAM FOREST", key: "NOTTINGHAM", gf: 0, pts: 1574 },
-            { id: 19, name: "ASTON VILLA", key: "ASTON VILLA", gf: 0, pts: 1558 },
-            { id: 20, name: "IPSWICH TOWN", key: "IPSWICH", gf: 0, pts: 1557 }
+        let teamsData = JSON.parse(localStorage.getItem('fpl_teams_data')) || [
+            { key: "LIVERPOOL", gf: 6, pts: 1787 },
+            { key: "BRIGHTON", gf: 6, pts: 1784 },
+            { key: "ARSENAL", gf: 6, pts: 1761 },
+            { key: "TOTTENHAM", gf: 6, pts: 1718 },
+            { key: "BOURNEMOUTH", gf: 6, pts: 1683 },
+            { key: "FULHAM", gf: 6, pts: 1680 },
+            { key: "MAN UTD", gf: 6, pts: 1669 },
+            { key: "LEEDS", gf: 3, pts: 1741 },
+            { key: "CRYSTAL PALACE", gf: 3, pts: 1699 },
+            { key: "MAN CITY", gf: 3, pts: 1687 },
+            { key: "BRENTFORD", gf: 3, pts: 1683 },
+            { key: "HULL", gf: 3, pts: 1677 },
+            { key: "SUNDERLAND", gf: 3, pts: 1637 },
+            { key: "NEWCASTLE", gf: 0, pts: 1654 },
+            { key: "EVERTON", gf: 0, pts: 1653 },
+            { key: "CHELSEA", gf: 0, pts: 1622 },
+            { key: "COVENTRY", gf: 0, pts: 1606 },
+            { key: "NOTTINGHAM", gf: 0, pts: 1574 },
+            { key: "ASTON VILLA", gf: 0, pts: 1558 },
+            { key: "IPSWICH", gf: 0, pts: 1557 }
         ];
 
         const matchweeks = {
-            1: [
-                ["ARSENAL", "COVENTRY"], ["HULL", "MAN UTD"], ["EVERTON", "CRYSTAL PALACE"],
-                ["IPSWICH", "SUNDERLAND"], ["NOTTINGHAM", "LEEDS"], ["BRENTFORD", "TOTTENHAM"],
-                ["BRIGHTON", "ASTON VILLA"], ["MAN CITY", "BOURNEMOUTH"], ["NEWCASTLE", "LIVERPOOL"], ["FULHAM", "CHELSEA"]
-            ],
-            2: [
-                ["BOURNEMOUTH", "EVERTON"], ["ASTON VILLA", "ARSENAL"], ["CHELSEA", "BRIGHTON"],
-                ["COVENTRY", "HULL"], ["CRYSTAL PALACE", "MAN CITY"], ["LEEDS", "BRENTFORD"],
-                ["LIVERPOOL", "NOTTINGHAM"], ["MAN UTD", "IPSWICH"], ["SUNDERLAND", "FULHAM"], ["TOTTENHAM", "NEWCASTLE"]
-            ],
-            3: [
-                ["ARSENAL", "CHELSEA"], ["BRENTFORD", "SUNDERLAND"], ["BRIGHTON", "LEEDS"],
-                ["EVERTON", "MAN UTD"], ["FULHAM", "CRYSTAL PALACE"], ["HULL", "ASTON VILLA"],
-                ["IPSWICH", "LIVERPOOL"], ["MAN CITY", "COVENTRY"], ["NEWCASTLE", "BOURNEMOUTH"], ["NOTTINGHAM", "TOTTENHAM"]
-            ],
-            4: [
-                ["BOURNEMOUTH", "BRENTFORD"], ["ASTON VILLA", "NOTTINGHAM"], ["CHELSEA", "HULL"],
-                ["COVENTRY", "BRIGHTON"], ["CRYSTAL PALACE", "IPSWICH"], ["LEEDS", "NEWCASTLE"],
-                ["LIVERPOOL", "FULHAM"], ["MAN UTD", "MAN CITY"], ["SUNDERLAND", "ARSENAL"], ["TOTTENHAM", "EVERTON"]
-            ],
-            5: [
-                ["BOURNEMOUTH", "LIVERPOOL"], ["BRENTFORD", "CHELSEA"], ["BRIGHTON", "ARSENAL"],
-                ["EVERTON", "IPSWICH"], ["FULHAM", "MAN UTD"], ["LEEDS", "CRYSTAL PALACE"],
-                ["MAN CITY", "SUNDERLAND"], ["NEWCASTLE", "HULL"], ["NOTTINGHAM", "COVENTRY"], ["TOTTENHAM", "ASTON VILLA"]
-            ],
-            6: [
-                ["ARSENAL", "LEEDS"], ["ASTON VILLA", "BRENTFORD"], ["CHELSEA", "BOURNEMOUTH"],
-                ["COVENTRY", "NEWCASTLE"], ["CRYSTAL PALACE", "NOTTINGHAM"], ["HULL", "EVERTON"],
-                ["IPSWICH", "FULHAM"], ["LIVERPOOL", "MAN CITY"], ["MAN UTD", "TOTTENHAM"], ["SUNDERLAND", "BRIGHTON"]
-            ],
-            7: [
-                ["BOURNEMOUTH", "SUNDERLAND"], ["BRENTFORD", "LIVERPOOL"], ["BRIGHTON", "CRYSTAL PALACE"],
-                ["EVERTON", "CHELSEA"], ["FULHAM", "HULL"], ["LEEDS", "MAN UTD"],
-                ["MAN CITY", "IPSWICH"], ["NEWCASTLE", "ASTON VILLA"], ["NOTTINGHAM", "ARSENAL"], ["TOTTENHAM", "COVENTRY"]
-            ],
-            8: [
-                ["ARSENAL", "EVERTON"], ["ASTON VILLA", "MAN CITY"], ["CHELSEA", "TOTTENHAM"],
-                ["COVENTRY", "FULHAM"], ["CRYSTAL PALACE", "NEWCASTLE"], ["HULL", "BRENTFORD"],
-                ["IPSWICH", "NOTTINGHAM"], ["LIVERPOOL", "BRIGHTON"], ["MAN UTD", "BOURNEMOUTH"], ["SUNDERLAND", "LEEDS"]
-            ],
-            9: [
-                ["BOURNEMOUTH", "LEEDS"], ["BRENTFORD", "NOTTINGHAM"], ["CHELSEA", "MAN UTD"],
-                ["COVENTRY", "SUNDERLAND"], ["HULL", "IPSWICH"], ["LIVERPOOL", "ARSENAL"],
-                ["MAN CITY", "BRIGHTON"], ["NEWCASTLE", "EVERTON"], ["TOTTENHAM", "CRYSTAL PALACE"]
-            ],
-            10: [
-                ["ARSENAL", "HULL"], ["BRIGHTON", "BRENTFORD"], ["CRYSTAL PALACE", "LIVERPOOL"],
-                ["EVERTON", "COVENTRY"], ["FULHAM", "NEWCASTLE"], ["IPSWICH", "BOURNEMOUTH"],
-                ["MAN UTD", "ASTON VILLA"], ["NOTTINGHAM", "MAN CITY"], ["SUNDERLAND", "CHELSEA"]
-            ],
-            11: [
-                ["BRENTFORD", "EVERTON"], ["CHELSEA", "LEEDS"], ["COVENTRY", "CRYSTAL PALACE"],
-                ["HULL", "BRIGHTON"], ["LIVERPOOL", "MAN UTD"], ["MAN CITY", "FULHAM"],
-                ["NEWCASTLE", "ARSENAL"], ["TOTTENHAM", "IPSWICH"]
-            ],
-            12: [
-                ["ARSENAL", "MAN CITY"], ["BRIGHTON", "NEWCASTLE"], ["CRYSTAL PALACE", "HULL"],
-                ["EVERTON", "LIVERPOOL"], ["FULHAM", "BOURNEMOUTH"], ["IPSWICH", "ASTON VILLA"],
-                ["LEEDS", "COVENTRY"], ["MAN UTD", "BRENTFORD"], ["NOTTINGHAM", "CHELSEA"], ["SUNDERLAND", "TOTTENHAM"]
-            ],
-            13: [
-                ["BOURNEMOUTH", "BRIGHTON"], ["ASTON VILLA", "EVERTON"], ["BRENTFORD", "ARSENAL"],
-                ["CHELSEA", "CRYSTAL PALACE"], ["COVENTRY", "IPSWICH"], ["HULL", "NOTTINGHAM"],
-                ["LIVERPOOL", "SUNDERLAND"], ["MAN CITY", "LEEDS"], ["NEWCASTLE", "MAN UTD"], ["TOTTENHAM", "FULHAM"]
-            ],
-            14: [
-                ["BOURNEMOUTH", "HULL"], ["ASTON VILLA", "CRYSTAL PALACE"], ["BRENTFORD", "MAN CITY"],
-                ["CHELSEA", "LIVERPOOL"], ["EVERTON", "FULHAM"], ["LEEDS", "IPSWICH"],
-                ["MAN UTD", "COVENTRY"], ["NEWCASTLE", "SUNDERLAND"], ["NOTTINGHAM", "BRIGHTON"], ["TOTTENHAM", "ARSENAL"]
-            ],
-            15: [
-                ["ARSENAL", "BOURNEMOUTH"], ["BRIGHTON", "EVERTON"], ["COVENTRY", "ASTON VILLA"],
-                ["CRYSTAL PALACE", "MAN UTD"], ["FULHAM", "BRENTFORD"], ["HULL", "TOTTENHAM"],
-                ["IPSWICH", "NEWCASTLE"], ["LIVERPOOL", "LEEDS"], ["MAN CITY", "CHELSEA"], ["SUNDERLAND", "NOTTINGHAM"]
-            ],
-            16: [
-                ["BOURNEMOUTH", "COVENTRY"], ["ARSENAL", "MAN UTD"], ["BRENTFORD", "NEWCASTLE"],
-                ["BRIGHTON", "IPSWICH"], ["CHELSEA", "ASTON VILLA"], ["LEEDS", "FULHAM"],
-                ["LIVERPOOL", "TOTTENHAM"], ["MAN CITY", "HULL"], ["NOTTINGHAM", "EVERTON"], ["SUNDERLAND", "CRYSTAL PALACE"]
-            ],
-            17: [
-                ["ASTON VILLA", "LEEDS"], ["COVENTRY", "CHELSEA"], ["CRYSTAL PALACE", "ARSENAL"],
-                ["EVERTON", "SUNDERLAND"], ["FULHAM", "BRIGHTON"], ["HULL", "LIVERPOOL"],
-                ["IPSWICH", "BRENTFORD"], ["MAN UTD", "NOTTINGHAM"], ["NEWCASTLE", "MAN CITY"], ["TOTTENHAM", "BOURNEMOUTH"]
-            ],
-            18: [
-                ["ASTON VILLA", "LIVERPOOL"], ["COVENTRY", "BRENTFORD"], ["CRYSTAL PALACE", "BOURNEMOUTH"],
-                ["EVERTON", "MAN CITY"], ["FULHAM", "ARSENAL"], ["HULL", "LEEDS"],
-                ["IPSWICH", "CHELSEA"], ["MAN UTD", "SUNDERLAND"], ["NEWCASTLE", "NOTTINGHAM"], ["TOTTENHAM", "BRIGHTON"]
-            ]
+            1: [ ["ARSENAL", "COVENTRY"], ["HULL", "MAN UTD"], ["EVERTON", "CRYSTAL PALACE"], ["IPSWICH", "SUNDERLAND"], ["NOTTINGHAM", "LEEDS"], ["BRENTFORD", "TOTTENHAM"], ["BRIGHTON", "ASTON VILLA"], ["MAN CITY", "BOURNEMOUTH"], ["NEWCASTLE", "LIVERPOOL"], ["FULHAM", "CHELSEA"] ],
+            2: [ ["BOURNEMOUTH", "EVERTON"], ["ASTON VILLA", "ARSENAL"], ["CHELSEA", "BRIGHTON"], ["COVENTRY", "HULL"], ["CRYSTAL PALACE", "MAN CITY"], ["LEEDS", "BRENTFORD"], ["LIVERPOOL", "NOTTINGHAM"], ["MAN UTD", "IPSWICH"], ["SUNDERLAND", "FULHAM"], ["TOTTENHAM", "NEWCASTLE"] ],
+            3: [ ["ARSENAL", "CHELSEA"], ["BRENTFORD", "SUNDERLAND"], ["BRIGHTON", "LEEDS"], ["EVERTON", "MAN UTD"], ["FULHAM", "CRYSTAL PALACE"], ["HULL", "ASTON VILLA"], ["IPSWICH", "LIVERPOOL"], ["MAN CITY", "COVENTRY"], ["NEWCASTLE", "BOURNEMOUTH"], ["NOTTINGHAM", "TOTTENHAM"] ],
+            4: [ ["BOURNEMOUTH", "BRENTFORD"], ["ASTON VILLA", "NOTTINGHAM"], ["CHELSEA", "HULL"], ["COVENTRY", "BRIGHTON"], ["CRYSTAL PALACE", "IPSWICH"], ["LEEDS", "NEWCASTLE"], ["LIVERPOOL", "FULHAM"], ["MAN UTD", "MAN CITY"], ["SUNDERLAND", "ARSENAL"], ["TOTTENHAM", "EVERTON"] ],
+            5: [ ["BOURNEMOUTH", "LIVERPOOL"], ["BRENTFORD", "CHELSEA"], ["BRIGHTON", "ARSENAL"], ["EVERTON", "IPSWICH"], ["FULHAM", "MAN UTD"], ["LEEDS", "CRYSTAL PALACE"], ["MAN CITY", "SUNDERLAND"], ["NEWCASTLE", "HULL"], ["NOTTINGHAM", "COVENTRY"], ["TOTTENHAM", "ASTON VILLA"] ],
+            6: [ ["ARSENAL", "LEEDS"], ["ASTON VILLA", "BRENTFORD"], ["CHELSEA", "BOURNEMOUTH"], ["COVENTRY", "NEWCASTLE"], ["CRYSTAL PALACE", "NOTTINGHAM"], ["HULL", "EVERTON"], ["IPSWICH", "FULHAM"], ["LIVERPOOL", "MAN CITY"], ["MAN UTD", "TOTTENHAM"], ["SUNDERLAND", "BRIGHTON"] ],
+            7: [ ["BOURNEMOUTH", "SUNDERLAND"], ["BRENTFORD", "LIVERPOOL"], ["BRIGHTON", "CRYSTAL PALACE"], ["EVERTON", "CHELSEA"], ["FULHAM", "HULL"], ["LEEDS", "MAN UTD"], ["MAN CITY", "IPSWICH"], ["NEWCASTLE", "ASTON VILLA"], ["NOTTINGHAM", "ARSENAL"], ["TOTTENHAM", "COVENTRY"] ],
+            8: [ ["ARSENAL", "EVERTON"], ["ASTON VILLA", "MAN CITY"], ["CHELSEA", "TOTTENHAM"], ["COVENTRY", "FULHAM"], ["CRYSTAL PALACE", "NEWCASTLE"], ["HULL", "BRENTFORD"], ["IPSWICH", "NOTTINGHAM"], ["LIVERPOOL", "BRIGHTON"], ["MAN UTD", "BOURNEMOUTH"], ["SUNDERLAND", "LEEDS"] ],
+            9: [ ["BOURNEMOUTH", "LEEDS"], ["BRENTFORD", "NOTTINGHAM"], ["CHELSEA", "MAN UTD"], ["COVENTRY", "SUNDERLAND"], ["HULL", "IPSWICH"], ["LIVERPOOL", "ARSENAL"], ["MAN CITY", "BRIGHTON"], ["NEWCASTLE", "EVERTON"], ["TOTTENHAM", "CRYSTAL PALACE"] ],
+            10: [ ["ARSENAL", "HULL"], ["BRIGHTON", "BRENTFORD"], ["CRYSTAL PALACE", "LIVERPOOL"], ["EVERTON", "COVENTRY"], ["FULHAM", "NEWCASTLE"], ["IPSWICH", "BOURNEMOUTH"], ["MAN UTD", "ASTON VILLA"], ["NOTTINGHAM", "MAN CITY"], ["SUNDERLAND", "CHELSEA"] ],
+            11: [ ["BRENTFORD", "EVERTON"], ["CHELSEA", "LEEDS"], ["COVENTRY", "CRYSTAL PALACE"], ["HULL", "BRIGHTON"], ["LIVERPOOL", "MAN UTD"], ["MAN CITY", "FULHAM"], ["NEWCASTLE", "ARSENAL"], ["TOTTENHAM", "IPSWICH"] ],
+            12: [ ["ARSENAL", "MAN CITY"], ["BRIGHTON", "NEWCASTLE"], ["CRYSTAL PALACE", "HULL"], ["EVERTON", "LIVERPOOL"], ["FULHAM", "BOURNEMOUTH"], ["IPSWICH", "ASTON VILLA"], ["LEEDS", "COVENTRY"], ["MAN UTD", "BRENTFORD"], ["NOTTINGHAM", "CHELSEA"], ["SUNDERLAND", "TOTTENHAM"] ],
+            13: [ ["BOURNEMOUTH", "BRIGHTON"], ["ASTON VILLA", "EVERTON"], ["BRENTFORD", "ARSENAL"], ["CHELSEA", "CRYSTAL PALACE"], ["COVENTRY", "IPSWICH"], ["HULL", "NOTTINGHAM"], ["LIVERPOOL", "SUNDERLAND"], ["MAN CITY", "LEEDS"], ["NEWCASTLE", "MAN UTD"], ["TOTTENHAM", "FULHAM"] ],
+            14: [ ["BOURNEMOUTH", "HULL"], ["ASTON VILLA", "CRYSTAL PALACE"], ["BRENTFORD", "MAN CITY"], ["CHELSEA", "LIVERPOOL"], ["EVERTON", "FULHAM"], ["LEEDS", "IPSWICH"], ["MAN UTD", "COVENTRY"], ["NEWCASTLE", "SUNDERLAND"], ["NOTTINGHAM", "BRIGHTON"], ["TOTTENHAM", "ARSENAL"] ],
+            15: [ ["ARSENAL", "BOURNEMOUTH"], ["BRIGHTON", "EVERTON"], ["COVENTRY", "ASTON VILLA"], ["CRYSTAL PALACE", "MAN UTD"], ["FULHAM", "BRENTFORD"], ["HULL", "TOTTENHAM"], ["IPSWICH", "NEWCASTLE"], ["LIVERPOOL", "LEEDS"], ["MAN CITY", "CHELSEA"], ["SUNDERLAND", "NOTTINGHAM"] ],
+            16: [ ["BOURNEMOUTH", "COVENTRY"], ["ARSENAL", "MAN UTD"], ["BRENTFORD", "NEWCASTLE"], ["BRIGHTON", "IPSWICH"], ["CHELSEA", "ASTON VILLA"], ["LEEDS", "FULHAM"], ["LIVERPOOL", "TOTTENHAM"], ["MAN CITY", "HULL"], ["NOTTINGHAM", "EVERTON"], ["SUNDERLAND", "CRYSTAL PALACE"] ],
+            17: [ ["ASTON VILLA", "LEEDS"], ["COVENTRY", "CHELSEA"], ["CRYSTAL PALACE", "ARSENAL"], ["EVERTON", "SUNDERLAND"], ["FULHAM", "BRIGHTON"], ["HULL", "LIVERPOOL"], ["IPSWICH", "BRENTFORD"], ["MAN UTD", "NOTTINGHAM"], ["NEWCASTLE", "MAN CITY"], ["TOTTENHAM", "BOURNEMOUTH"] ],
+            18: [ ["ASTON VILLA", "LIVERPOOL"], ["COVENTRY", "BRENTFORD"], ["CRYSTAL PALACE", "BOURNEMOUTH"], ["EVERTON", "MAN CITY"], ["FULHAM", "ARSENAL"], ["HULL", "LEEDS"], ["IPSWICH", "CHELSEA"], ["MAN UTD", "SUNDERLAND"], ["NEWCASTLE", "NOTTINGHAM"], ["TOTTENHAM", "BRIGHTON"] ]
         };
 
         let currentRound = 1;
-        let isAdmin = false;
+        let activeTab = 'fixtures';
+        let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
 
-        function switchTab(tabName) {
+        function switchTab(tabName, btn) {
+            activeTab = tabName;
+            document.querySelectorAll('.btn').forEach(b => b.classList.remove('active-btn'));
+            btn.classList.add('active-btn');
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            if(tabName === 'standings') document.getElementById('standingsTab').classList.add('active');
+            if(tabName === 'standings') {
+                renderStandings();
+                document.getElementById('standingsTab').classList.add('active');
+            }
             if(tabName === 'fixtures') document.getElementById('fixturesTab').classList.add('active');
         }
 
-        function toggleAdmin() {
-            if(!isAdmin) {
-                let pass = prompt("أدخل كلمة مرور الأدمن:");
-                if(pass === "1234") {
-                    isAdmin = true;
-                    document.getElementById('adminPanel').classList.add('active');
-                    renderAdminInputs();
-                } else {
-                    alert("كلمة المرور خاطئة!");
-                }
-            } else {
-                document.getElementById('adminPanel').classList.toggle('active');
-            }
+        function updateScore(round, idx, type, val) {
+            scoresStorage[`r${round}_m${idx}_${type}`] = val;
+            localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
         }
 
         function renderStandings() {
             const tbody = document.getElementById('standingsBody');
             tbody.innerHTML = '';
-            
             teamsData.sort((a, b) => b.pts - a.pts);
 
             teamsData.forEach((team, index) => {
-                let teamInfo = teamsMap[team.key] || { name: team.name, logo: "liverpool.png.WEBP" };
+                let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
                 tbody.innerHTML += `
                     <tr>
                         <td style="font-weight:900;">${index + 1}</td>
                         <td class="team-cell">
-                            <img src="${teamInfo.logo}" class="team-logo" alt="${teamInfo.name}">
+                            <img src="${teamInfo.logo}" alt="${teamInfo.name}">
                             ${teamInfo.name}
                         </td>
                         <td class="gf-col">${team.gf}</td>
@@ -354,44 +307,28 @@
             list.innerHTML = '';
 
             let matches = matchweeks[currentRound] || [];
-            matches.forEach(match => {
+            matches.forEach((match, idx) => {
                 let home = teamsMap[match[0]] || { name: match[0], logo: "" };
                 let away = teamsMap[match[1]] || { name: match[1], logo: "" };
 
+                let homeScore = scoresStorage[`r${currentRound}_m${idx}_home`] ?? '';
+                let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
+
                 list.innerHTML += `
-                    <div class="fixture-card-row">
-                        <div class="fixture-team-box home">
-                            <img src="${home.logo}">
+                    <div class="fixture-row">
+                        <div class="team-box home">
                             <span>${home.name}</span>
+                            <img src="${home.logo}">
                         </div>
-                        <div class="vs-score-center">VS</div>
-                        <div class="fixture-team-box away">
-                            <span>${away.name}</span>
+                        <div class="match-score-center">
+                            <input type="number" class="score-input" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value)">
+                            <span style="font-weight:900;">:</span>
+                            <input type="number" class="score-input" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value)">
+                        </div>
+                        <div class="team-box away">
                             <img src="${away.logo}">
+                            <span>${away.name}</span>
                         </div>
-                    </div>
-                `;
-            });
-        }
-
-        function renderAdminInputs() {
-            const list = document.getElementById('adminFixturesInputs');
-            list.innerHTML = '';
-
-            let matches = matchweeks[currentRound] || [];
-            matches.forEach((match, idx) => {
-                let home = teamsMap[match[0]] || { name: match[0] };
-                let away = teamsMap[match[1]] || { name: match[1] };
-
-                list.innerHTML += `
-                    <div class="admin-match-input">
-                        <span style="font-weight:800; width:35%;">${home.name}</span>
-                        <div>
-                            <input type="number" class="input-pts" placeholder="0">
-                            -
-                            <input type="number" class="input-pts" placeholder="0">
-                        </div>
-                        <span style="font-weight:800; width:35%; text-align:left;">${away.name}</span>
                     </div>
                 `;
             });
@@ -402,15 +339,23 @@
             if(currentRound < 1) currentRound = 1;
             if(currentRound > 18) currentRound = 18;
             renderFixtures();
-            if(isAdmin) renderAdminInputs();
         }
 
-        function saveScores() {
-            alert("تم حفظ نتائج الجولة وتحديث الترتيب العام بنجاح!");
-            renderStandings();
+        function downloadAsImage() {
+            const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
+            const element = document.getElementById(targetId);
+
+            html2canvas(element, {
+                backgroundColor: "#240024",
+                scale: 2
+            }).then(canvas => {
+                let link = document.createElement('a');
+                link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
         }
 
-        // Initialize
         renderStandings();
         renderFixtures();
     </script>
