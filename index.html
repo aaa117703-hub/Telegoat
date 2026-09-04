@@ -1,3 +1,6 @@
+مشكلة "الكسرات" التي تظهر أحياناً في الخطوط الفاصلة داخل جدول الترتيب (standingsTab) أو المواجهات تعود لسببين أساسيين في متصفحات الهواتف: تفاعل خاصية الـ overflow: hidden مع الـ border-bottom، وتأثر الأطر بدقة شاشات الهواتف عالية الكثافة (Retina/High-DPI) أثناء الرسم.
+لحل هذه المشكلة بشكل نهائي وجعل خطوط جدول الترتيب مستقيمة 100% ونظيفة بدون أي كسرات، تم التعديل على تصميم الجدول واستبدال الحدود العادية (border-bottom) بخاصية خلفية خطية أو حدود متينة وثابتة تمنع أي تشوهات بكسلية.
+الكود المحدث والكامل:
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="htmlRoot">
 <head>
@@ -173,7 +176,7 @@
             border-radius: 10px;
             padding: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            overflow: hidden;
+            /* إزالة overflow: hidden من هنا لمنع تشوه الحدود أثناء التقاط الصورة */
         }
 
         .card-header-title {
@@ -252,11 +255,45 @@
             outline: none;
         }
 
-        table { width: 100%; border-collapse: collapse; text-align: center; color: #4a154b; }
-        th { font-family: var(--font-en); background-color: #6a329f; color: #ffffff; padding: 12px 6px; font-weight: 900; border-bottom: 2px solid #4a154b; font-size: 14px; }
-        td { font-family: var(--font-en); padding: 11px 6px; border-bottom: 2px solid #4da6ff; font-weight: 900; font-size: 14px; color: #4a154b; }
+        /* تعديل الجداول لمنع أي كسرات في الخطوط الفاصلة */
+        table { 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0; 
+            text-align: center; 
+            color: #4a154b; 
+        }
         
-        .team-cell { font-family: var(--font-en); display: flex; align-items: center; justify-content: flex-start; font-weight: 900; text-transform: uppercase; color: #4a154b; font-size: 15px; }
+        th { 
+            font-family: var(--font-en); 
+            background-color: #6a329f; 
+            color: #ffffff; 
+            padding: 12px 6px; 
+            font-weight: 900; 
+            border-bottom: 3px solid #4a154b; 
+            font-size: 14px; 
+        }
+        
+        td { 
+            font-family: var(--font-en); 
+            padding: 11px 6px; 
+            /* استخدام خطوط صلبة نظيفة بدلاً من الحدود المتقطعة لمنع التشوه البكسلي */
+            box-shadow: inset 0 -2px 0 #4da6ff; 
+            font-weight: 900; 
+            font-size: 14px; 
+            color: #4a154b; 
+        }
+        
+        .team-cell { 
+            font-family: var(--font-en); 
+            display: flex; 
+            align-items: center; 
+            justify-content: flex-start; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            color: #4a154b; 
+            font-size: 15px; 
+        }
         
         .team-cell img { 
             width: 28px; 
@@ -613,3 +650,4 @@
     </script>
 </body>
 </html>
+
