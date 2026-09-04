@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,47 +30,53 @@
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            font-family: var(--font-ar); 
         }
 
         body { 
             background-color: var(--pl-dark-bg); 
             color: var(--text-white); 
             padding-bottom: 40px; 
+            font-family: var(--font-ar);
         }
 
+        /* تنسيق عام للنصوص حسب اللغة */
+        [data-lang="en"] {
+            font-family: var(--font-en) !important;
+        }
+
+        /* البانر العلوي المتناسق */
         .banner-container {
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
-            max-height: 150px;
-            overflow: hidden;
-            background: linear-gradient(90deg, #00bfff, #00ff88);
+            height: 120px;
+            background: linear-gradient(90deg, #12001e, #38003c, #00ff88);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 25px;
+            border-bottom: 3px solid var(--pl-pink);
         }
         
         .banner-logo-section {
             display: flex;
             align-items: center;
-            gap: 12px;
-            height: 100%;
+            height: 80%;
         }
 
         .banner-logo-section img {
-            max-height: 85%;
+            max-height: 90px;
             object-fit: contain;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
         }
 
         .banner-title-section {
             font-family: var(--font-en);
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 900;
-            color: #38003c;
-            letter-spacing: 2px;
-            text-shadow: 1px 1px 0px rgba(255,255,255,0.4);
+            color: #ffffff;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
         }
 
         .header { 
@@ -90,7 +96,6 @@
         }
 
         .filter-btn, .filter-select {
-            font-family: var(--font-ar);
             background: var(--pl-purple-btn);
             color: #ffffff;
             border: 1px solid var(--border-dark);
@@ -116,9 +121,6 @@
             -webkit-appearance: none;
             padding-right: 15px;
             padding-left: 25px;
-            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: left 8px center;
         }
 
         .round-nav-container {
@@ -251,7 +253,7 @@
 </head>
 <body>
 
-    <!-- البانر المحدث بالشعار الجديد -->
+    <!-- البانر العلوي المتناسق -->
     <div class="banner-container">
         <div class="banner-logo-section">
             <img src="header.png.pdf" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/120x120/000/fff&text=PL'">
@@ -261,13 +263,14 @@
 
     <div class="header">
         <div class="filter-bar">
-            <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')">جدول الترتيب</button>
-            <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
+            <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')" data-ar="جدول الترتيب" data-en="Standings">جدول الترتيب</button>
+            <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')" data-ar="المواجهات" data-en="Fixtures">المواجهات</button>
             
             <select class="filter-select" id="roundSelect" onchange="selectRound(this.value)"></select>
 
-            <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()">تعديل</button>
-            <button class="filter-btn" onclick="downloadAsImage()">حفظ الصورة</button>
+            <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()" data-ar="تعديل" data-en="Edit">تعديل</button>
+            <button class="filter-btn" onclick="downloadAsImage()" data-ar="حفظ الصورة" data-en="Save Image">حفظ الصورة</button>
+            <button class="filter-btn" onclick="toggleLanguage()" id="langBtn">English</button>
         </div>
 
         <div class="round-nav-container">
@@ -294,9 +297,9 @@
                         <thead>
                             <tr>
                                 <th>Pos</th>
-                                <th style="text-align: right; padding-right: 20px;">Club</th>
+                                <th style="text-align: right; padding-right: 20px;" data-ar="النادي" data-en="Club">Club</th>
                                 <th>GF</th>
-                                <th>Pts</th>
+                                <th data-ar="النقاط" data-en="Pts">Pts</th>
                             </tr>
                         </thead>
                         <tbody id="standingsBody"></tbody>
@@ -308,6 +311,22 @@
     </div>
 
     <script>
+        let currentLang = 'ar';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            const htmlRoot = document.getElementById('htmlRoot');
+            htmlRoot.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+            htmlRoot.setAttribute('lang', currentLang);
+            document.getElementById('langBtn').innerText = currentLang === 'ar' ? 'English' : 'عربي';
+
+            // ترجمة الأزرار الثابتة
+            document.querySelectorAll('[data-ar]').forEach(el => {
+                el.innerText = el.getAttribute(`data-${currentLang}`);
+            });
+            renderFixtures();
+        }
+
         const teamsMap = {
             "ARS": { name: "Arsenal", logo: "arsenal.png.WEBP" },
             "AVL": { name: "Aston Villa", logo: "aston_villa.png.WEBP" },
@@ -326,15 +345,10 @@
             "MCI": { name: "Man City", logo: "man_city.png.WEBP" },
             "MUN": { name: "Man Utd", logo: "man_utd.png.WEBP" },
             "NEW": { name: "Newcastle", logo: "newcastle.png.WEBP" },
-            "NOT": { name: "Nott'm Forest", logo: "forest.png.PNG" },
+            "NOT": { name: "Nott'م Forest", logo: "forest.png.PNG" },
             "SUN": { name: "Sunderland", logo: "sunderland.png.WEBP" },
             "TOT": { name: "Spurs", logo: "tottenham.png.WEBP" }
         };
-
-        const initialBasePoints = {};
-        Object.keys(teamsMap).forEach(key => {
-            initialBasePoints[key] = { gf: 0, pts: 0 };
-        });
 
         const matchweeks = {
             1: [["ARS", "COV"], ["HUL", "MUN"], ["EVE", "CRY"], ["IPS", "SUN"], ["NOT", "LEE"], ["BRE", "TOT"], ["BHA", "AVL"], ["MCI", "BOU"], ["NEW", "LIV"], ["FUL", "CHE"]],
@@ -388,7 +402,7 @@
             for(let i=1; i<=38; i++) {
                 let opt = document.createElement('option');
                 opt.value = i;
-                opt.innerText = `الجولة ${i}`;
+                opt.innerText = currentLang === 'ar' ? `الجولة ${i}` : `Gameweek ${i}`;
                 if(i === currentRound) opt.selected = true;
                 select.appendChild(opt);
             }
@@ -415,17 +429,17 @@
 
         function toggleEditMode() {
             if(!editMode) {
-                const pass = prompt("أدخل رمز الحماية للتعديل:");
+                const pass = prompt(currentLang === 'ar' ? "أدخل رمز الحماية للتعديل:" : "Enter password to edit:");
                 if(pass === "1999") {
                     editMode = true;
-                    document.getElementById('editToggleBtn').innerText = "حفظ";
+                    document.getElementById('editToggleBtn').innerText = currentLang === 'ar' ? "حفظ" : "Save";
                     renderFixtures();
                 } else if(pass !== null) {
-                    alert("الرمز غير صحيح!");
+                    alert(currentLang === 'ar' ? "الرمز غير صحيح!" : "Incorrect password!");
                 }
             } else {
                 editMode = false;
-                document.getElementById('editToggleBtn').innerText = "تعديل";
+                document.getElementById('editToggleBtn').innerText = currentLang === 'ar' ? "تعديل" : "Edit";
                 renderFixtures();
                 renderStandings();
             }
@@ -434,11 +448,12 @@
         function updateScore(round, idx, type, val) {
             scoresStorage[`r${round}_m${idx}_${type}`] = val;
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+            renderStandings();
         }
 
         function calculateStandings() {
             let calculated = {};
-            for (let teamKey in initialBasePoints) {
+            for (let teamKey in teamsMap) {
                 calculated[teamKey] = { key: teamKey, gf: 0, pts: 0 };
             }
 
@@ -460,7 +475,7 @@
                             calculated[hKey].pts += 3;
                         } else if (aScore > hScore) {
                             calculated[aKey].pts += 3;
-                        } else if (hScore === aScore) {
+                        } else {
                             calculated[hKey].pts += 1;
                             calculated[aKey].pts += 1;
                         }
@@ -496,7 +511,7 @@
         function renderFixtures() {
             const list = document.getElementById('fixturesList');
             document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
-            document.getElementById('roundSelect').value = currentRound;
+            initRoundDropdown();
             list.innerHTML = '';
 
             let matches = matchweeks[currentRound] || [];
