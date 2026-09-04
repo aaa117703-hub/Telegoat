@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +17,6 @@
 
         :root {
             --pl-dark-bg: #240024;
-            --pl-dark-card: #2f012f;
             --pl-pink: #ff005a;
             --pl-purple-btn: #38003c;
             --text-white: #ffffff;
@@ -30,27 +29,51 @@
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            font-family: var(--font-ar); 
         }
 
         body { 
             background-color: var(--pl-dark-bg); 
             color: var(--text-white); 
             padding-bottom: 40px; 
+            font-family: var(--font-ar);
+        }
+
+        [data-lang="en"] {
+            font-family: var(--font-en) !important;
         }
 
         .banner-container {
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
-            max-height: 150px;
-            overflow: hidden;
+            height: 120px;
+            background: linear-gradient(90deg, #12001e, #38003c, #00ff88);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            border-bottom: 3px solid var(--pl-pink);
         }
-        .banner-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
+        
+        .banner-logo-section {
+            display: flex;
+            align-items: center;
+            height: 80%;
+        }
+
+        .banner-logo-section img {
+            max-height: 90px;
+            object-fit: contain;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+        }
+
+        .banner-title-section {
+            font-family: var(--font-en);
+            font-size: 32px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
         }
 
         .header { 
@@ -70,7 +93,6 @@
         }
 
         .filter-btn, .filter-select {
-            font-family: var(--font-ar);
             background: var(--pl-purple-btn);
             color: #ffffff;
             border: 1px solid var(--border-dark);
@@ -96,9 +118,6 @@
             -webkit-appearance: none;
             padding-right: 15px;
             padding-left: 25px;
-            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: left 8px center;
         }
 
         .round-nav-container {
@@ -140,89 +159,113 @@
 
         .main-container { max-width: 750px; margin: 0 auto; padding: 0 10px; }
 
+        .capture-box {
+            background: linear-gradient(135deg, #4da6ff 0%, #3366ff 50%, #8a2be2 100%);
+            padding: 25px 15px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            width: 1081px;
+            max-width: 100%;
+        }
+
+        .card-box-inner {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .card-header-title {
+            font-family: var(--font-en);
+            text-align: center;
+            font-size: 22px;
+            font-weight: 900;
+            color: #4a154b;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
         .fixture-row { 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            padding: 12px 10px;
-            margin-bottom: 8px;
-            background: var(--pl-dark-card);
-            border-radius: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 8px;
+            margin-bottom: 6px;
+            background: #ffffff;
+            border-bottom: 2px solid #4da6ff;
         }
 
         .team-box {
             font-family: var(--font-en);
             display: flex;
             align-items: center;
-            width: 38%;
-            font-size: 13px;
-            font-weight: 800;
-            color: #ffffff;
+            width: 41%;
+            font-size: 17px;
+            font-weight: 950;
+            color: #4a154b;
             text-transform: uppercase;
         }
         .team-box.home { justify-content: flex-end; text-align: right; }
         .team-box.away { justify-content: flex-start; text-align: left; }
         
         .team-box img {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             object-fit: contain;
-            margin: 0 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            padding: 2px;
+            margin: 0 10px;
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
         }
 
         .match-score-center {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            width: 24%;
-            background: #1a001a;
-            padding: 6px 8px;
+            gap: 8px;
+            width: 18%;
+            background: #6a329f;
+            padding: 8px 10px;
             border-radius: 6px;
-            border: 1px solid var(--border-dark);
+            border: 1px solid #4a154b;
         }
 
         .score-display {
             font-family: var(--font-en);
-            font-size: 14px;
+            font-size: 17px;
             font-weight: 900;
             color: #ffffff;
         }
 
         .score-input {
             font-family: var(--font-en);
-            width: 38px;
-            height: 26px;
+            width: 48px;
+            height: 32px;
             text-align: center;
-            font-size: 12px;
+            font-size: 15px;
             font-weight: 900;
-            background: #2f012f;
+            background: #4a154b;
             color: #ffffff;
-            border: 1px solid var(--pl-pink);
+            border: 1px solid #ffffff;
             border-radius: 4px;
             outline: none;
         }
 
-        .export-area { padding: 10px; background: var(--pl-dark-bg); border-radius: 8px; }
-
-        .standings-card { background: var(--pl-dark-card); border-radius: 8px; overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; color: #ffffff; }
-        th { font-family: var(--font-en); background-color: #1a001a; color: #a892a8; padding: 12px 6px; font-weight: 800; border-bottom: 1px solid var(--border-dark); }
-        td { font-family: var(--font-en); padding: 10px 6px; border-bottom: 1px solid var(--border-dark); font-weight: 800; }
+        table { width: 100%; border-collapse: collapse; text-align: center; color: #4a154b; }
+        th { font-family: var(--font-en); background-color: #6a329f; color: #ffffff; padding: 12px 6px; font-weight: 900; border-bottom: 2px solid #4a154b; font-size: 14px; }
+        td { font-family: var(--font-en); padding: 11px 6px; border-bottom: 2px solid #4da6ff; font-weight: 900; font-size: 14px; color: #4a154b; }
         
-        .team-cell { font-family: var(--font-en); display: flex; align-items: center; justify-content: flex-start; font-weight: 800; text-transform: uppercase; }
+        .team-cell { font-family: var(--font-en); display: flex; align-items: center; justify-content: flex-start; font-weight: 900; text-transform: uppercase; color: #4a154b; font-size: 15px; }
+        
         .team-cell img { 
-            width: 24px; 
-            height: 24px; 
+            width: 28px; 
+            height: 28px; 
             margin-left: 8px; 
             object-fit: contain;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            padding: 2px;
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
         }
 
         .tab-content { display: none; }
@@ -231,20 +274,23 @@
 </head>
 <body>
 
-    <!-- البانر العلوي -->
     <div class="banner-container">
-        <img src="./header.png" alt="TELE GOAT Banner" onerror="this.src='https://dummyimage.com/800x120/240024/ffffff.png&text=TELE+GOAT'">
+        <div class="banner-logo-section">
+            <img src="header.png.pdf" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/120x120/000/fff&text=PL'">
+        </div>
+        <div class="banner-title-section">TELE GOAT</div>
     </div>
 
     <div class="header">
         <div class="filter-bar">
-            <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')">جدول الترتيب</button>
-            <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
+            <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')" data-ar="جدول الترتيب" data-en="Standings">جدول الترتيب</button>
+            <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')" data-ar="المواجهات" data-en="Fixtures">المواجهات</button>
             
             <select class="filter-select" id="roundSelect" onchange="selectRound(this.value)"></select>
 
-            <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()">تعديل</button>
-            <button class="filter-btn" onclick="downloadAsImage()">حفظ الصورة</button>
+            <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()" data-ar="تعديل" data-en="Edit">تعديل</button>
+            <button class="filter-btn" onclick="downloadAsImage()" data-ar="حفظ للألبوم" data-en="Save to Album">حفظ للألبوم</button>
+            <button class="filter-btn" onclick="toggleLanguage()" id="langBtn">English</button>
         </div>
 
         <div class="round-nav-container">
@@ -258,22 +304,26 @@
 
         <!-- Fixtures Tab -->
         <div id="fixturesTab" class="tab-content active">
-            <div id="captureFixtures" class="export-area">
-                <div id="fixturesList"></div>
+            <div id="captureFixtures" class="capture-box">
+                <div class="card-box-inner">
+                    <div class="card-header-title" id="fixturesHeaderTitle">MATCHWEEK 1 RESULTS</div>
+                    <div id="fixturesList"></div>
+                </div>
             </div>
         </div>
 
         <!-- Standings Tab -->
         <div id="standingsTab" class="tab-content">
-            <div id="captureStandings" class="export-area">
-                <div class="standings-card">
+            <div id="captureStandings" class="capture-box">
+                <div class="card-box-inner">
+                    <div class="card-header-title" data-ar="جدول ترتيب الدوري الإنجليزي" data-en="PREMIER LEAGUE STANDINGS">PREMIER LEAGUE STANDINGS</div>
                     <table>
                         <thead>
                             <tr>
-                                <th>Pos</th>
-                                <th style="text-align: right; padding-right: 20px;">Club</th>
-                                <th>GF</th>
-                                <th>Pts</th>
+                                <th style="width: 10%;">Pos</th>
+                                <th style="text-align: right; padding-right: 20px; width: 50%;" data-ar="النادي" data-en="Club">Club</th>
+                                <th style="width: 20%;">GF</th>
+                                <th style="width: 20%;" data-ar="النقاط" data-en="Pts">Pts</th>
                             </tr>
                         </thead>
                         <tbody id="standingsBody"></tbody>
@@ -285,40 +335,83 @@
     </div>
 
     <script>
+        let currentLang = 'ar';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            const htmlRoot = document.getElementById('htmlRoot');
+            htmlRoot.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+            htmlRoot.setAttribute('lang', currentLang);
+            document.getElementById('langBtn').innerText = currentLang === 'ar' ? 'English' : 'عربي';
+
+            document.querySelectorAll('[data-ar]').forEach(el => {
+                el.innerText = el.getAttribute(`data-${currentLang}`);
+            });
+            renderFixtures();
+        }
+
         const teamsMap = {
-            "ARSENAL": { name: "Arsenal", logo: "arsenal.png.WEBP" },
-            "ASTON VILLA": { name: "Aston Villa", logo: "aston_villa.png.WEBP" },
-            "BOURNEMOUTH": { name: "Bournemouth", logo: "bournemouth.png.WEBP" },
-            "BRENTFORD": { name: "Brentford", logo: "brentford.png.PNG" },
-            "BRIGHTON": { name: "Brighton", logo: "brighton.png.WEBP" },
-            "CHELSEA": { name: "Chelsea", logo: "chelsea.png.WEBP" },
-            "COVENTRY": { name: "Coventry", logo: "coventry.png.WEBP" },
-            "CRYSTAL PALACE": { name: "Crystal Palace", logo: "crystal_palace.png.WEBP" },
-            "EVERTON": { name: "Everton", logo: "everton.png.WEBP" },
-            "FULHAM": { name: "Fulham", logo: "fulham.png.WEBP" },
-            "HULL": { name: "Hull", logo: "hull.png.WEBP" },
-            "IPSWICH": { name: "Ipswich", logo: "ipswich.png.WEBP" },
-            "LEEDS": { name: "Leeds", logo: "leeds.png.WEBP" },
-            "LIVERPOOL": { name: "Liverpool", logo: "liverpool.png.WEBP" },
-            "MAN CITY": { name: "Man City", logo: "man_city.png.WEBP" },
-            "MAN UTD": { name: "Man Utd", logo: "man_utd.png.WEBP" },
-            "NEWCASTLE": { name: "Newcastle", logo: "newcastle.png.WEBP" },
-            "NOTTINGHAM": { name: "Nott'm Forest", logo: "forest.png.PNG" },
-            "SUNDERLAND": { name: "Sunderland", logo: "sunderland.png.WEBP" },
-            "TOTTENHAM": { name: "Spurs", logo: "tottenham.png.WEBP" }
+            "ARS": { name: "Arsenal", logo: "arsenal.png.WEBP" },
+            "AVL": { name: "Aston Villa", logo: "aston_villa.png.WEBP" },
+            "BOU": { name: "Bournemouth", logo: "bournemouth.png.WEBP" },
+            "BRE": { name: "Brentford", logo: "brentford.png.PNG" },
+            "BHA": { name: "Brighton", logo: "brighton.png.WEBP" },
+            "CHE": { name: "Chelsea", logo: "chelsea.png.WEBP" },
+            "COV": { name: "Coventry City", logo: "coventry.png.WEBP" },
+            "CRY": { name: "Crystal Palace", logo: "crystal_palace.png.WEBP" },
+            "EVE": { name: "Everton", logo: "everton.png.WEBP" },
+            "FUL": { name: "Fulham", logo: "fulham.png.WEBP" },
+            "HUL": { name: "Hull City", logo: "hull.png.WEBP" },
+            "IPS": { name: "Ipswich Town", logo: "ipswich.png.WEBP" },
+            "LEE": { name: "Leeds United", logo: "leeds.png.WEBP" },
+            "LIV": { name: "Liverpool", logo: "liverpool.png.WEBP" },
+            "MCI": { name: "Manchester City", logo: "man_city.png.WEBP" },
+            "MUN": { name: "Manchester United", logo: "man_utd.png.WEBP" },
+            "NEW": { name: "Newcastle United", logo: "newcastle.png.WEBP" },
+            "NOT": { name: "Nottingham Forest", logo: "forest.png.PNG" },
+            "SUN": { name: "Sunderland", logo: "sunderland.png.WEBP" },
+            "TOT": { name: "Tottenham Hotspur", logo: "tottenham.png.WEBP" }
         };
 
-        const initialBasePoints = {};
-        Object.keys(teamsMap).forEach(key => {
-            initialBasePoints[key] = { gf: 0, pts: 0 };
-        });
-
         const matchweeks = {
-            1: [ ["ARSENAL", "COVENTRY"], ["HULL", "MAN UTD"], ["EVERTON", "CRYSTAL PALACE"], ["IPSWICH", "SUNDERLAND"], ["NOTTINGHAM", "LEEDS"], ["BRENTFORD", "TOTTENHAM"], ["BRIGHTON", "ASTON VILLA"], ["MAN CITY", "BOURNEMOUTH"], ["NEWCASTLE", "LIVERPOOL"], ["FULHAM", "CHELSEA"] ],
-            2: [ ["BOURNEMOUTH", "EVERTON"], ["ASTON VILLA", "ARSENAL"], ["CHELSEA", "BRIGHTON"], ["COVENTRY", "HULL"], ["CRYSTAL PALACE", "MAN CITY"], ["LEEDS", "BRENTFORD"], ["LIVERPOOL", "NOTTINGHAM"], ["MAN UTD", "IPSWICH"], ["SUNDERLAND", "FULHAM"], ["TOTTENHAM", "NEWCASTLE"] ],
-            3: [ ["ARSENAL", "CHELSEA"], ["BRENTFORD", "SUNDERLAND"], ["BRIGHTON", "LEEDS"], ["EVERTON", "MAN UTD"], ["FULHAM", "CRYSTAL PALACE"], ["HULL", "ASTON VILLA"], ["IPSWICH", "LIVERPOOL"], ["MAN CITY", "COVENTRY"], ["NEWCASTLE", "BOURNEMOUTH"], ["NOTTINGHAM", "TOTTENHAM"] ],
-            4: [ ["BOURNEMOUTH", "BRENTFORD"], ["ASTON VILLA", "NOTTINGHAM"], ["CHELSEA", "HULL"], ["COVENTRY", "BRIGHTON"], ["CRYSTAL PALACE", "IPSWICH"], ["LEEDS", "NEWCASTLE"], ["LIVERPOOL", "FULHAM"], ["MAN UTD", "MAN CITY"], ["SUNDERLAND", "ARSENAL"], ["TOTTENHAM", "EVERTON"] ],
-            5: [ ["BOURNEMOUTH", "LIVERPOOL"], ["BRENTFORD", "CHELSEA"], ["BRIGHTON", "ARSENAL"], ["EVERTON", "IPSWICH"], ["FULHAM", "MAN UTD"], ["LEEDS", "CRYSTAL PALACE"], ["MAN CITY", "SUNDERLAND"], ["NEWCASTLE", "HULL"], ["NOTTINGHAM", "COVENTRY"], ["TOTTENHAM", "ASTON VILLA"] ]
+            1: [["ARS", "COV"], ["HUL", "MUN"], ["EVE", "CRY"], ["IPS", "SUN"], ["NOT", "LEE"], ["BRE", "TOT"], ["BHA", "AVL"], ["MCI", "BOU"], ["NEW", "LIV"], ["FUL", "CHE"]],
+            2: [["BOU", "EVE"], ["AVL", "ARS"], ["CHE", "BHA"], ["COV", "HUL"], ["CRY", "MCI"], ["LEE", "BRE"], ["LIV", "NOT"], ["MUN", "IPS"], ["SUN", "FUL"], ["TOT", "NEW"]],
+            3: [["ARS", "CHE"], ["BRE", "SUN"], ["BHA", "LEE"], ["EVE", "MUN"], ["FUL", "CRY"], ["HUL", "AVL"], ["IPS", "LIV"], ["MCI", "COV"], ["NEW", "BOU"], ["NOT", "TOT"]],
+            4: [["BOU", "BRE"], ["AVL", "NOT"], ["CHE", "HUL"], ["COV", "BHA"], ["CRY", "IPS"], ["LEE", "NEW"], ["LIV", "FUL"], ["MUN", "MCI"], ["SUN", "ARS"], ["TOT", "EVE"]],
+            5: [["BOU", "LIV"], ["BRE", "CHE"], ["BHA", "ARS"], ["EVE", "IPS"], ["FUL", "MUN"], ["LEE", "CRY"], ["MCI", "SUN"], ["NEW", "HUL"], ["NOT", "COV"], ["TOT", "AVL"]],
+            6: [["ARS", "LEE"], ["AVL", "BRE"], ["CHE", "BOU"], ["COV", "NEW"], ["CRY", "NOT"], ["HUL", "EVE"], ["IPS", "FUL"], ["LIV", "MCI"], ["MUN", "TOT"], ["SUN", "BHA"]],
+            7: [["BOU", "SUN"], ["BRE", "LIV"], ["BHA", "CRY"], ["EVE", "CHE"], ["FUL", "HUL"], ["LEE", "MUN"], ["MCI", "IPS"], ["NEW", "AVL"], ["NOT", "ARS"], ["TOT", "COV"]],
+            8: [["ARS", "EVE"], ["AVL", "MCI"], ["CHE", "TOT"], ["COV", "FUL"], ["CRY", "NEW"], ["HUL", "BRE"], ["IPS", "NOT"], ["LIV", "BHA"], ["MUN", "BOU"], ["SUN", "LEE"]],
+            9: [["BOU", "LEE"], ["BRE", "NOT"], ["CHE", "MUN"], ["COV", "SUN"], ["HUL", "IPS"], ["LIV", "ARS"], ["MCI", "BHA"], ["NEW", "EVE"], ["TOT", "CRY"], ["AVL", "SUN"]],
+            10: [["ARS", "HUL"], ["BHA", "BRE"], ["CRY", "LIV"], ["EVE", "COV"], ["FUL", "NEW"], ["IPS", "BOU"], ["LEE", "TOT"], ["MUN", "AVL"], ["NOT", "MCI"], ["SUN", "CHE"]],
+            11: [["BRE", "EVE"], ["CHE", "LEE"], ["COV", "CRY"], ["HUL", "BHA"], ["LIV", "MUN"], ["MCI", "FUL"], ["NEW", "ARS"], ["TOT", "IPS"], ["NOT", "SUN"], ["AVL", "CRY"]],
+            12: [["ARS", "MCI"], ["BHA", "NEW"], ["CRY", "HUL"], ["EVE", "LIV"], ["FUL", "BOU"], ["IPS", "AVL"], ["LEE", "COV"], ["MUN", "BRE"], ["NOT", "CHE"], ["SUN", "TOT"]],
+            13: [["BOU", "BHA"], ["AVL", "EVE"], ["BRE", "ARS"], ["CHE", "CRY"], ["COV", "IPS"], ["HUL", "NOT"], ["LIV", "SUN"], ["MCI", "LEE"], ["NEW", "MUN"], ["TOT", "FUL"]],
+            14: [["BOU", "HUL"], ["AVL", "CRY"], ["BRE", "MCI"], ["CHE", "LIV"], ["EVE", "FUL"], ["LEE", "IPS"], ["MUN", "COV"], ["NEW", "SUN"], ["NOT", "BHA"], ["TOT", "ARS"]],
+            15: [["ARS", "BOU"], ["BHA", "EVE"], ["COV", "AVL"], ["CRY", "MUN"], ["FUL", "BRE"], ["HUL", "TOT"], ["IPS", "NEW"], ["LIV", "LEE"], ["MCI", "CHE"], ["SUN", "NOT"]],
+            16: [["BOU", "COV"], ["ARS", "MUN"], ["BRE", "NEW"], ["BHA", "IPS"], ["CHE", "AVL"], ["LEE", "FUL"], ["LIV", "TOT"], ["MCI", "HUL"], ["NOT", "EVE"], ["SUN", "CRY"]],
+            17: [["AVL", "LEE"], ["COV", "CHE"], ["CRY", "ARS"], ["EVE", "SUN"], ["FUL", "BHA"], ["HUL", "LIV"], ["IPS", "BRE"], ["MUN", "NOT"], ["NEW", "MCI"], ["TOT", "BOU"]],
+            18: [["AVL", "LIV"], ["COV", "BRE"], ["CRY", "BOU"], ["EVE", "MCI"], ["FUL", "ARS"], ["HUL", "LEE"], ["IPS", "CHE"], ["MUN", "SUN"], ["NEW", "NOT"], ["TOT", "BHA"]],
+            19: [["BOU", "AVL"], ["ARS", "IPS"], ["BRE", "CRY"], ["BHA", "MUN"], ["CHE", "NEW"], ["LEE", "EVE"], ["LIV", "COV"], ["MCI", "TOT"], ["NOT", "FUL"], ["SUN", "HUL"]],
+            20: [["ARS", "BRE"], ["BHA", "BOU"], ["CRY", "CHE"], ["EVE", "AVL"], ["FUL", "TOT"], ["IPS", "COV"], ["LEE", "MCI"], ["MUN", "NEW"], ["NOT", "HUL"], ["SUN", "LIV"]],
+            21: [["AVL", "EVE"], ["BRE", "BHA"], ["CHE", "SUN"], ["COV", "LIV"], ["CRY", "BOU"], ["FUL", "MUN"], ["HUL", "NEW"], ["LEE", "ARS"], ["MCI", "IPS"], ["TOT", "LEE"]],
+            22: [["BOU", "NOT"], ["ARS", "LEE"], ["BHA", "MCI"], ["EVE", "HUL"], ["IPS", "AVL"], ["LIV", "NEW"], ["MUN", "FUL"], ["NOT", "BOU"], ["SUN", "COV"], ["TOT", "BRE"]],
+            23: [["AVL", "LIV"], ["BRE", "EVE"], ["CHE", "NEW"], ["COV", "MUN"], ["CRY", "SUN"], ["HUL", "ARS"], ["IPS", "LEE"], ["MCI", "BHA"], ["NOT", "FUL"], ["TOT", "BOU"]],
+            24: [["BOU", "COV"], ["ARS", "AVL"], ["BHA", "LIV"], ["EVE", "NOT"], ["FUL", "IPS"], ["LEE", "HUL"], ["MUN", "CRY"], ["NEW", "TOT"], ["SUN", "BRE"], ["MCI", "LEE"]],
+            25: [["AVL", "BOU"], ["BRE", "CRY"], ["COV", "ARS"], ["HUL", "MCI"], ["IPS", "EVE"], ["LEE", "SUN"], ["LIV", "FUL"], ["MUN", "NEW"], ["NOT", "BHA"], ["TOT", "CHE"]],
+            26: [["BOU", "LEE"], ["BHA", "AVL"], ["CHE", "HUL"], ["CRY", "COV"], ["EVE", "LIV"], ["FUL", "NOT"], ["MCI", "BRE"], ["NEW", "MUN"], ["SUN", "IPS"], ["TOT", "ARS"]],
+            27: [["AVL", "CHE"], ["BRE", "FUL"], ["COV", "CRY"], ["HUL", "BOU"], ["IPS", "BHA"], ["LEE", "EVE"], ["LIV", "MUN"], ["MUN", "MCI"], ["NOT", "SUN"], ["TOT", "NEW"]],
+            28: [["ARS", "NOT"], ["BOU", "BRE"], ["BHA", "HUL"], ["CRY", "AVL"], ["EVE", "LEE"], ["FUL", "LIV"], ["MCI", "TOT"], ["NEW", "IPS"], ["SUN", "MUN"], ["CHE", "COV"]],
+            29: [["ARS", "FUL"], ["AVL", "CHE"], ["BRE", "NEW"], ["COV", "LEE"], ["HUL", "CRY"], ["IPS", "MCI"], ["LIV", "BHA"], ["MUN", "EVE"], ["NOT", "BOU"], ["TOT", "SUN"]],
+            30: [["BOU", "IPS"], ["BHA", "COV"], ["CHE", "ARS"], ["CRY", "MCI"], ["EVE", "BRE"], ["FUL", "HUL"], ["LEE", "AVL"], ["LIV", "NOT"], ["NEW", "FUL"], ["SUN", "TOT"]],
+            31: [["ARS", "CRY"], ["AVL", "LEE"], ["BRE", "FUL"], ["COV", "EVE"], ["HUL", "LIV"], ["IPS", "CHE"], ["MCI", "BHA"], ["NOT", "MUN"], ["TOT", "BOU"], ["NEW", "MCI"]],
+            32: [["BOU", "ARS"], ["BHA", "NOT"], ["CHE", "FUL"], ["CRY", "AVL"], ["EVE", "IPS"], ["FUL", "COV"], ["LEE", "TOT"], ["LIV", "BRE"], ["MUN", "HUL"], ["NEW", "MCI"]],
+            33: [["ARS", "NEW"], ["AVL", "CRY"], ["BRE", "LEE"], ["COV", "BHA"], ["HUL", "CHE"], ["IPS", "BOU"], ["MCI", "LIV"], ["NOT", "EVE"], ["TOT", "MUN"], ["FUL", "NEW"]],
+            34: [["BOU", "AVL"], ["BHA", "IPS"], ["CHE", "BRE"], ["CRY", "FUL"], ["EVE", "ARS"], ["FUL", "LEE"], ["LIV", "TOT"], ["MUN", "COV"], ["NEW", "HUL"], ["NOT", "MCI"]],
+            35: [["ARS", "BHA"], ["AVL", "NOT"], ["BRE", "BOU"], ["COV", "CHE"], ["HUL", "CRY"], ["IPS", "MUN"], ["LEE", "LIV"], ["MCI", "EVE"], ["TOT", "FUL"], ["NEW", "FUL"]],
+            36: [["BOU", "MUN"], ["BHA", "FUL"], ["CHE", "IPS"], ["CRY", "BRE"], ["EVE", "AVL"], ["FUL", "MCI"], ["LIV", "COV"], ["NEW", "LEE"], ["NOT", "TOT"], ["SUN", "ARS"]],
+            37: [["ARS", "LIV"], ["AVL", "SUN"], ["BRE", "HUL"], ["COV", "BOU"], ["IPS", "CRY"], ["LEE", "CHE"], ["MCI", "NEW"], ["MUN", "NOT"], ["TOT", "EVE"], ["FUL", "BHA"]],
+            38: [["BOU", "NOT"], ["BHA", "MUN"], ["CHE", "AVL"], ["CRY", "ARS"], ["EVE", "FUL"], ["HUL", "COV"], ["LEE", "BRE"], ["LIV", "IPS"], ["MCI", "SUN"], ["TOT", "NEW"]]
         };
 
         let currentRound = 1;
@@ -329,10 +422,10 @@
         function initRoundDropdown() {
             const select = document.getElementById('roundSelect');
             select.innerHTML = '';
-            for(let i=1; i<=18; i++) {
+            for(let i=1; i<=38; i++) {
                 let opt = document.createElement('option');
                 opt.value = i;
-                opt.innerText = `الجولة ${i}`;
+                opt.innerText = currentLang === 'ar' ? `الجولة ${i}` : `Gameweek ${i}`;
                 if(i === currentRound) opt.selected = true;
                 select.appendChild(opt);
             }
@@ -359,17 +452,17 @@
 
         function toggleEditMode() {
             if(!editMode) {
-                const pass = prompt("أدخل رمز الحماية للتعديل:");
-                if(pass === "1999") {
+                const pass = prompt(currentLang === 'ar' ? "أدخل رمز الحماية للتعديل:" : "Enter password to edit:");
+                if(pass === "024680") {
                     editMode = true;
-                    document.getElementById('editToggleBtn').innerText = "حفظ";
+                    document.getElementById('editToggleBtn').innerText = currentLang === 'ar' ? "حفظ" : "Save";
                     renderFixtures();
                 } else if(pass !== null) {
-                    alert("الرمز غير صحيح!");
+                    alert(currentLang === 'ar' ? "الرمز غير صحيح!" : "Incorrect password!");
                 }
             } else {
                 editMode = false;
-                document.getElementById('editToggleBtn').innerText = "تعديل";
+                document.getElementById('editToggleBtn').innerText = currentLang === 'ar' ? "تعديل" : "Edit";
                 renderFixtures();
                 renderStandings();
             }
@@ -378,11 +471,12 @@
         function updateScore(round, idx, type, val) {
             scoresStorage[`r${round}_m${idx}_${type}`] = val;
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+            renderStandings();
         }
 
         function calculateStandings() {
             let calculated = {};
-            for (let teamKey in initialBasePoints) {
+            for (let teamKey in teamsMap) {
                 calculated[teamKey] = { key: teamKey, gf: 0, pts: 0 };
             }
 
@@ -404,7 +498,7 @@
                             calculated[hKey].pts += 3;
                         } else if (aScore > hScore) {
                             calculated[aKey].pts += 3;
-                        } else if (hScore === aScore) {
+                        } else {
                             calculated[hKey].pts += 1;
                             calculated[aKey].pts += 1;
                         }
@@ -423,6 +517,7 @@
 
             sortedTeams.forEach((team, index) => {
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
+
                 tbody.innerHTML += `
                     <tr>
                         <td style="font-weight:900;">${index + 1}</td>
@@ -431,7 +526,7 @@
                             ${teamInfo.name}
                         </td>
                         <td>${team.gf}</td>
-                        <td style="color:var(--pl-pink); font-size:14px;">${team.pts}</td>
+                        <td style="color:#6a329f; font-size:16px;">${team.pts}</td>
                     </tr>
                 `;
             });
@@ -440,7 +535,8 @@
         function renderFixtures() {
             const list = document.getElementById('fixturesList');
             document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
-            document.getElementById('roundSelect').value = currentRound;
+            document.getElementById('fixturesHeaderTitle').innerText = `MATCHWEEK ${currentRound} RESULTS`;
+            initRoundDropdown();
             list.innerHTML = '';
 
             let matches = matchweeks[currentRound] || [];
@@ -457,7 +553,7 @@
                     <input type="number" class="score-input" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value)">
                 ` : `
                     <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
-                    <span style="font-weight:900; color:#ff005a; font-family: var(--font-en);">VS</span>
+                    <span style="font-weight:900; color:#ffffff; font-family: var(--font-en); font-size:15px;">VS</span>
                     <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
                 `;
 
@@ -482,7 +578,7 @@
         function changeRound(step) {
             currentRound += step;
             if(currentRound < 1) currentRound = 1;
-            if(currentRound > 18) currentRound = 18;
+            if(currentRound > 38) currentRound = 38;
             renderFixtures();
         }
 
@@ -491,15 +587,22 @@
             const element = document.getElementById(targetId);
 
             html2canvas(element, {
-                backgroundColor: "#240024",
-                scale: 2
+                backgroundColor: null,
+                scale: 3,
+                useCORS: true,
+                logging: false
             }).then(canvas => {
                 canvas.toBlob(function(blob) {
+                    let url = URL.createObjectURL(blob);
                     let link = document.createElement('a');
-                    link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings.png`;
-                    link.href = URL.createObjectURL(blob);
+                    link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}_HD.png` : `League_Standings_HD.png`;
+                    link.href = url;
+                    
+                    document.body.appendChild(link);
                     link.click();
-                    URL.revokeObjectURL(link.href);
+                    document.body.removeChild(link);
+                    
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
                 }, 'image/png');
             });
         }
