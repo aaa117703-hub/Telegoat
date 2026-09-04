@@ -39,7 +39,6 @@
             font-family: var(--font-ar);
         }
 
-        /* تنسيق عام للنصوص حسب اللغة */
         [data-lang="en"] {
             font-family: var(--font-en) !important;
         }
@@ -162,15 +161,39 @@
 
         .main-container { max-width: 750px; margin: 0 auto; padding: 0 10px; }
 
+        /* تخصيص خلفية المواجهات الجديدة المطابقة للصورة */
+        #captureFixtures {
+            background: linear-gradient(135deg, #4da6ff 0%, #3366ff 50%, #8a2be2 100%);
+            padding: 25px 15px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .fixtures-card-box {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .fixtures-header-title {
+            font-family: var(--font-en);
+            text-align: center;
+            font-size: 20px;
+            font-weight: 900;
+            color: #4a154b;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
         .fixture-row { 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            padding: 12px 10px;
-            margin-bottom: 8px;
-            background: var(--pl-dark-card);
-            border-radius: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 8px;
+            margin-bottom: 6px;
+            background: #ffffff;
+            border-bottom: 1.5px solid #4da6ff;
         }
 
         .team-box {
@@ -180,39 +203,40 @@
             width: 38%;
             font-size: 13px;
             font-weight: 800;
-            color: #ffffff;
+            color: #4a154b; /* لون أسماء الأندية نفس لون صندوق الوسط */
             text-transform: uppercase;
         }
         .team-box.home { justify-content: flex-end; text-align: right; }
         .team-box.away { justify-content: flex-start; text-align: left; }
         
         .team-box img {
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             object-fit: contain;
             margin: 0 8px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.05);
             border-radius: 50%;
             padding: 2px;
         }
 
+        /* صندوق النتائج الأوسط بنفسجي والخط أبيض */
         .match-score-center {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
             width: 24%;
-            background: #1a001a;
+            background: #6a329f;
             padding: 6px 8px;
             border-radius: 6px;
-            border: 1px solid var(--border-dark);
+            border: 1px solid #4a154b;
         }
 
         .score-display {
             font-family: var(--font-en);
             font-size: 14px;
             font-weight: 900;
-            color: #ffffff;
+            color: #ffffff; /* لون الأرقام والنتائج أبيض */
         }
 
         .score-input {
@@ -222,9 +246,9 @@
             text-align: center;
             font-size: 12px;
             font-weight: 900;
-            background: #2f012f;
+            background: #4a154b;
             color: #ffffff;
-            border: 1px solid var(--pl-pink);
+            border: 1px solid #ffffff;
             border-radius: 4px;
             outline: none;
         }
@@ -284,8 +308,11 @@
 
         <!-- Fixtures Tab -->
         <div id="fixturesTab" class="tab-content active">
-            <div id="captureFixtures" class="export-area">
-                <div id="fixturesList"></div>
+            <div id="captureFixtures">
+                <div class="fixtures-card-box">
+                    <div class="fixtures-header-title" id="fixturesHeaderTitle">MATCHWEEK 1 RESULTS</div>
+                    <div id="fixturesList"></div>
+                </div>
             </div>
         </div>
 
@@ -320,7 +347,6 @@
             htmlRoot.setAttribute('lang', currentLang);
             document.getElementById('langBtn').innerText = currentLang === 'ar' ? 'English' : 'عربي';
 
-            // ترجمة الأزرار الثابتة
             document.querySelectorAll('[data-ar]').forEach(el => {
                 el.innerText = el.getAttribute(`data-${currentLang}`);
             });
@@ -345,7 +371,7 @@
             "MCI": { name: "Man City", logo: "man_city.png.WEBP" },
             "MUN": { name: "Man Utd", logo: "man_utd.png.WEBP" },
             "NEW": { name: "Newcastle", logo: "newcastle.png.WEBP" },
-            "NOT": { name: "Nott'م Forest", logo: "forest.png.PNG" },
+            "NOT": { name: "Nott'm Forest", logo: "forest.png.PNG" },
             "SUN": { name: "Sunderland", logo: "sunderland.png.WEBP" },
             "TOT": { name: "Spurs", logo: "tottenham.png.WEBP" }
         };
@@ -511,6 +537,7 @@
         function renderFixtures() {
             const list = document.getElementById('fixturesList');
             document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
+            document.getElementById('fixturesHeaderTitle').innerText = `MATCHWEEK ${currentRound} RESULTS`;
             initRoundDropdown();
             list.innerHTML = '';
 
@@ -528,7 +555,7 @@
                     <input type="number" class="score-input" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value)">
                 ` : `
                     <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
-                    <span style="font-weight:900; color:#ff005a; font-family: var(--font-en);">VS</span>
+                    <span style="font-weight:900; color:#ffffff; font-family: var(--font-en);">VS</span>
                     <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
                 `;
 
@@ -562,7 +589,7 @@
             const element = document.getElementById(targetId);
 
             html2canvas(element, {
-                backgroundColor: "#240024",
+                backgroundColor: null,
                 scale: 2
             }).then(canvas => {
                 canvas.toBlob(function(blob) {
