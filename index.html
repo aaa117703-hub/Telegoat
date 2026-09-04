@@ -3,233 +3,510 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مواجهات الجولة</title>
+    <title>TELEGRAM GOAT - Premier League</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        /* تحميل الخطوط بنفس الأسماء المحددة في المجلد */
         @font-face {
             font-family: 'SultanCustom';
-            src: url('Sultan.ttf') format('truetype');
+            src: url('./Sultan.ttf') format('truetype');
         }
         @font-face {
             font-family: 'EnglishCustom';
-            src: url('english-font.ttf') format('truetype');
+            src: url('./english-font.ttf') format('truetype');
         }
 
         :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-color: #ffffff;
-            --accent-color: #00ff88;
-            --vs-color: #ffffff; /* كلمة VS باللون الأبيض الناصع */
+            --pl-dark-bg: #240024;
+            --pl-dark-card: #2f012f;
+            --pl-pink: #ff005a;
+            --pl-purple-btn: #38003c;
+            --text-white: #ffffff;
+            --border-dark: #5a055a;
             --font-ar: 'SultanCustom', sans-serif;
             --font-en: 'EnglishCustom', sans-serif;
         }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: var(--font-ar);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: var(--font-ar); 
         }
 
-        /* زر التحويل بين اللغات */
-        .lang-switch {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: var(--card-bg);
-            border: 1px solid var(--accent-color);
-            color: #fff;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            z-index: 10;
+        body { 
+            background-color: var(--pl-dark-bg); 
+            color: var(--text-white); 
+            padding-bottom: 40px; 
         }
 
-        /* حاوية التصميم الكاملة (البانر + المواجهة) */
-        .design-card {
-            background: var(--card-bg);
-            border-radius: 12px;
+        .banner-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            max-height: 150px;
             overflow: hidden;
-            width: 100%;
-            max-width: 550px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-            margin-top: 30px;
         }
-
-        /* البانر العلوي TELE GOAT */
-        .banner-img {
+        .banner-container img {
             width: 100%;
-            height: auto;
-            display: block;
+            height: 100%;
             object-fit: cover;
+            display: block;
         }
 
-        /* منطقة تفاصيل المواجهة */
-        .match-container {
+        .header { 
+            background-color: var(--pl-dark-bg); 
+            color: #ffffff; 
+            padding: 20px 10px; 
+            text-align: center; 
+        }
+
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .filter-btn, .filter-select {
+            font-family: var(--font-ar);
+            background: var(--pl-purple-btn);
+            color: #ffffff;
+            border: 1px solid var(--border-dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #5a055a;
+            border-color: var(--pl-pink);
+        }
+
+        .filter-select {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 15px;
+            padding-left: 25px;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: left 8px center;
+        }
+
+        .round-nav-container {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 20px;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0 10px 0;
         }
 
-        /* أسهم التنقل > و < */
-        .nav-arrow {
-            background: none;
-            border: none;
-            color: var(--accent-color);
-            font-size: 32px;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 0 10px;
-            user-select: none;
-        }
-
-        .nav-arrow:hover {
+        .round-indicator {
+            font-family: var(--font-en);
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 1px;
             color: #ffffff;
         }
 
-        .team {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 35%;
-        }
-
-        .team-logo {
-            width: 65px;
-            height: 65px;
-            object-fit: contain;
-            margin-bottom: 8px;
-        }
-
-        .team-name {
-            font-size: 16px;
-            text-align: center;
-        }
-
-        /* كلمة VS باللون الأبيض الناصع */
-        .vs-badge {
-            color: var(--vs-color);
-            font-size: 26px;
-            font-weight: 900;
-            font-style: italic;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
-        }
-
-        /* زر الحفظ في ألبوم الصور */
-        .save-btn {
-            background: var(--accent-color);
-            color: #000;
-            border: none;
-            padding: 12px 25px;
+        .nav-arrow-btn {
+            background: var(--pl-purple-btn);
+            color: var(--text-white);
+            border: 1px solid var(--border-dark);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
             font-size: 16px;
             font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
         }
+
+        .nav-arrow-btn:hover {
+            background: var(--pl-pink);
+            border-color: var(--pl-pink);
+        }
+
+        .main-container { max-width: 750px; margin: 0 auto; padding: 0 10px; }
+
+        .fixture-row { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 12px 10px;
+            margin-bottom: 8px;
+            background: var(--pl-dark-card);
+            border-radius: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .team-box {
+            font-family: var(--font-en);
+            display: flex;
+            align-items: center;
+            width: 38%;
+            font-size: 13px;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+        .team-box.home { justify-content: flex-end; text-align: right; }
+        .team-box.away { justify-content: flex-start; text-align: left; }
+        
+        .team-box img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            margin: 0 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        .match-score-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 24%;
+            background: #1a001a;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border-dark);
+        }
+
+        .score-display {
+            font-family: var(--font-en);
+            font-size: 14px;
+            font-weight: 900;
+            color: #ffffff;
+        }
+
+        .score-input {
+            font-family: var(--font-en);
+            width: 38px;
+            height: 26px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 900;
+            background: #2f012f;
+            color: #ffffff;
+            border: 1px solid var(--pl-pink);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .export-area { padding: 10px; background: var(--pl-dark-bg); border-radius: 8px; }
+
+        .standings-card { background: var(--pl-dark-card); border-radius: 8px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; color: #ffffff; }
+        th { font-family: var(--font-en); background-color: #1a001a; color: #a892a8; padding: 12px 6px; font-weight: 800; border-bottom: 1px solid var(--border-dark); }
+        td { font-family: var(--font-en); padding: 10px 6px; border-bottom: 1px solid var(--border-dark); font-weight: 800; }
+        
+        .team-cell { font-family: var(--font-en); display: flex; align-items: center; justify-content: flex-start; font-weight: 800; text-transform: uppercase; }
+        .team-cell img { 
+            width: 24px; 
+            height: 24px; 
+            margin-left: 8px; 
+            object-fit: contain;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
     </style>
 </head>
 <body>
 
-    <button class="lang-switch" onclick="toggleLanguage()">EN / عربي</button>
+    <!-- البانر العلوي -->
+    <div class="banner-container">
+        <img src="./header.png" alt="TELE GOAT Banner" onerror="this.src='https://dummyimage.com/800x120/240024/ffffff.png&text=TELE+GOAT'">
+    </div>
 
-    <div class="design-card" id="designCard">
-        <!-- صورة البانر العلوي -->
-        <img src="header.png" alt="Header Banner" class="banner-img">
+    <div class="header">
+        <div class="filter-bar">
+            <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')">جدول الترتيب</button>
+            <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
+            
+            <select class="filter-select" id="roundSelect" onchange="selectRound(this.value)"></select>
 
-        <div class="match-container">
-            <!-- سهم التنقل الأيمن > -->
-            <button class="nav-arrow" onclick="prevMatch()">&gt;</button>
+            <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()">تعديل</button>
+            <button class="filter-btn" onclick="downloadAsImage()">حفظ الصورة</button>
+        </div>
 
-            <div class="team">
-                <img src="" class="team-logo" id="team1Logo" alt="Team 1">
-                <span class="team-name" id="team1Name"></span>
-            </div>
-
-            <!-- كلمة VS باللون الأبيض -->
-            <div class="vs-badge">VS</div>
-
-            <div class="team">
-                <img src="" class="team-logo" id="team2Logo" alt="Team 2">
-                <span class="team-name" id="team2Name"></span>
-            </div>
-
-            <!-- سهم التنقل الأيسر < -->
-            <button class="nav-arrow" onclick="nextMatch()">&lt;</button>
+        <div class="round-nav-container">
+            <button class="nav-arrow-btn" onclick="changeRound(-1)">&lt;</button>
+            <div class="round-indicator" id="currentRoundTitle">MATCHWEEK 1</div>
+            <button class="nav-arrow-btn" onclick="changeRound(1)">&gt;</button>
         </div>
     </div>
 
-    <button class="save-btn" onclick="saveToGallery()">حفظ التصميم في الألبوم</button>
+    <div class="main-container">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <!-- Fixtures Tab -->
+        <div id="fixturesTab" class="tab-content active">
+            <div id="captureFixtures" class="export-area">
+                <div id="fixturesList"></div>
+            </div>
+        </div>
+
+        <!-- Standings Tab -->
+        <div id="standingsTab" class="tab-content">
+            <div id="captureStandings" class="export-area">
+                <div class="standings-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th style="text-align: right; padding-right: 20px;">Club</th>
+                                <th>GF</th>
+                                <th>Pts</th>
+                            </tr>
+                        </thead>
+                        <tbody id="standingsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     <script>
-        const matches = [
-            {
-                team1Ar: "ليفربول", team1En: "Liverpool", logo1: "team1.png",
-                team2Ar: "آرسنال", team2En: "Arsenal", logo2: "team2.png"
-            },
-            {
-                team1Ar: "مانشستر يونايتد", team1En: "Man United", logo1: "team1.png",
-                team2Ar: "نيوكاسل", team2En: "Newcastle", logo2: "team2.png"
+        const teamsMap = {
+            "ARSENAL": { name: "Arsenal", logo: "arsenal.png.WEBP" },
+            "ASTON VILLA": { name: "Aston Villa", logo: "aston_villa.png.WEBP" },
+            "BOURNEMOUTH": { name: "Bournemouth", logo: "bournemouth.png.WEBP" },
+            "BRENTFORD": { name: "Brentford", logo: "brentford.png.PNG" },
+            "BRIGHTON": { name: "Brighton", logo: "brighton.png.WEBP" },
+            "CHELSEA": { name: "Chelsea", logo: "chelsea.png.WEBP" },
+            "COVENTRY": { name: "Coventry", logo: "coventry.png.WEBP" },
+            "CRYSTAL PALACE": { name: "Crystal Palace", logo: "crystal_palace.png.WEBP" },
+            "EVERTON": { name: "Everton", logo: "everton.png.WEBP" },
+            "FULHAM": { name: "Fulham", logo: "fulham.png.WEBP" },
+            "HULL": { name: "Hull", logo: "hull.png.WEBP" },
+            "IPSWICH": { name: "Ipswich", logo: "ipswich.png.WEBP" },
+            "LEEDS": { name: "Leeds", logo: "leeds.png.WEBP" },
+            "LIVERPOOL": { name: "Liverpool", logo: "liverpool.png.WEBP" },
+            "MAN CITY": { name: "Man City", logo: "man_city.png.WEBP" },
+            "MAN UTD": { name: "Man Utd", logo: "man_utd.png.WEBP" },
+            "NEWCASTLE": { name: "Newcastle", logo: "newcastle.png.WEBP" },
+            "NOTTINGHAM": { name: "Nott'm Forest", logo: "forest.png.PNG" },
+            "SUNDERLAND": { name: "Sunderland", logo: "sunderland.png.WEBP" },
+            "TOTTENHAM": { name: "Spurs", logo: "tottenham.png.WEBP" }
+        };
+
+        const initialBasePoints = {};
+        Object.keys(teamsMap).forEach(key => {
+            initialBasePoints[key] = { gf: 0, pts: 0 };
+        });
+
+        const matchweeks = {
+            1: [ ["ARSENAL", "COVENTRY"], ["HULL", "MAN UTD"], ["EVERTON", "CRYSTAL PALACE"], ["IPSWICH", "SUNDERLAND"], ["NOTTINGHAM", "LEEDS"], ["BRENTFORD", "TOTTENHAM"], ["BRIGHTON", "ASTON VILLA"], ["MAN CITY", "BOURNEMOUTH"], ["NEWCASTLE", "LIVERPOOL"], ["FULHAM", "CHELSEA"] ],
+            2: [ ["BOURNEMOUTH", "EVERTON"], ["ASTON VILLA", "ARSENAL"], ["CHELSEA", "BRIGHTON"], ["COVENTRY", "HULL"], ["CRYSTAL PALACE", "MAN CITY"], ["LEEDS", "BRENTFORD"], ["LIVERPOOL", "NOTTINGHAM"], ["MAN UTD", "IPSWICH"], ["SUNDERLAND", "FULHAM"], ["TOTTENHAM", "NEWCASTLE"] ],
+            3: [ ["ARSENAL", "CHELSEA"], ["BRENTFORD", "SUNDERLAND"], ["BRIGHTON", "LEEDS"], ["EVERTON", "MAN UTD"], ["FULHAM", "CRYSTAL PALACE"], ["HULL", "ASTON VILLA"], ["IPSWICH", "LIVERPOOL"], ["MAN CITY", "COVENTRY"], ["NEWCASTLE", "BOURNEMOUTH"], ["NOTTINGHAM", "TOTTENHAM"] ],
+            4: [ ["BOURNEMOUTH", "BRENTFORD"], ["ASTON VILLA", "NOTTINGHAM"], ["CHELSEA", "HULL"], ["COVENTRY", "BRIGHTON"], ["CRYSTAL PALACE", "IPSWICH"], ["LEEDS", "NEWCASTLE"], ["LIVERPOOL", "FULHAM"], ["MAN UTD", "MAN CITY"], ["SUNDERLAND", "ARSENAL"], ["TOTTENHAM", "EVERTON"] ],
+            5: [ ["BOURNEMOUTH", "LIVERPOOL"], ["BRENTFORD", "CHELSEA"], ["BRIGHTON", "ARSENAL"], ["EVERTON", "IPSWICH"], ["FULHAM", "MAN UTD"], ["LEEDS", "CRYSTAL PALACE"], ["MAN CITY", "SUNDERLAND"], ["NEWCASTLE", "HULL"], ["NOTTINGHAM", "COVENTRY"], ["TOTTENHAM", "ASTON VILLA"] ]
+        };
+
+        let currentRound = 1;
+        let activeTab = 'fixtures';
+        let editMode = false;
+        let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
+
+        function initRoundDropdown() {
+            const select = document.getElementById('roundSelect');
+            select.innerHTML = '';
+            for(let i=1; i<=18; i++) {
+                let opt = document.createElement('option');
+                opt.value = i;
+                opt.innerText = `الجولة ${i}`;
+                if(i === currentRound) opt.selected = true;
+                select.appendChild(opt);
             }
-        ];
-
-        let currentIndex = 0;
-        let currentLang = 'ar';
-
-        function updateCard() {
-            const match = matches[currentIndex];
-            document.getElementById('team1Name').textContent = currentLang === 'ar' ? match.team1Ar : match.team1En;
-            document.getElementById('team2Name').textContent = currentLang === 'ar' ? match.team2Ar : match.team2En;
-            document.getElementById('team1Logo').src = match.logo1;
-            document.getElementById('team2Logo').src = match.logo2;
         }
 
-        function toggleLanguage() {
-            currentLang = currentLang === 'ar' ? 'en' : 'ar';
-            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-            document.body.style.fontFamily = currentLang === 'ar' ? 'var(--font-ar)' : 'var(--font-en)';
-            updateCard();
+        function selectRound(val) {
+            currentRound = parseInt(val);
+            renderFixtures();
         }
 
-        function nextMatch() {
-            if (currentIndex < matches.length - 1) {
-                currentIndex++;
-                updateCard();
-            }
-        }
-
-        function prevMatch() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateCard();
-            }
-        }
-
-        function saveToGallery() {
-            const container = document.getElementById('designCard');
-            const arrows = container.querySelectorAll('.nav-arrow');
+        function switchTab(tabName) {
+            activeTab = tabName;
+            document.getElementById('fixturesToggleBtn').classList.toggle('active', tabName === 'fixtures');
+            document.getElementById('standingsToggleBtn').classList.toggle('active', tabName === 'standings');
             
-            arrows.forEach(arrow => arrow.style.visibility = 'hidden');
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            if(tabName === 'standings') {
+                renderStandings();
+                document.getElementById('standingsTab').classList.add('active');
+            } else {
+                document.getElementById('fixturesTab').classList.add('active');
+            }
+        }
 
-            html2canvas(container, { backgroundColor: null, scale: 2 }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `Match_Design_${currentIndex + 1}.png`;
-                link.href = canvas.toDataURL("image/png");
-                link.click();
-                
-                arrows.forEach(arrow => arrow.style.visibility = 'visible');
+        function toggleEditMode() {
+            if(!editMode) {
+                const pass = prompt("أدخل رمز الحماية للتعديل:");
+                if(pass === "1999") {
+                    editMode = true;
+                    document.getElementById('editToggleBtn').innerText = "حفظ";
+                    renderFixtures();
+                } else if(pass !== null) {
+                    alert("الرمز غير صحيح!");
+                }
+            } else {
+                editMode = false;
+                document.getElementById('editToggleBtn').innerText = "تعديل";
+                renderFixtures();
+                renderStandings();
+            }
+        }
+
+        function updateScore(round, idx, type, val) {
+            scoresStorage[`r${round}_m${idx}_${type}`] = val;
+            localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+        }
+
+        function calculateStandings() {
+            let calculated = {};
+            for (let teamKey in initialBasePoints) {
+                calculated[teamKey] = { key: teamKey, gf: 0, pts: 0 };
+            }
+
+            for (let round in matchweeks) {
+                matchweeks[round].forEach((match, idx) => {
+                    let hKey = match[0];
+                    let aKey = match[1];
+                    let hVal = scoresStorage[`r${round}_m${idx}_home`];
+                    let aVal = scoresStorage[`r${round}_m${idx}_away`];
+
+                    if (hVal !== undefined && aVal !== undefined && hVal !== '' && aVal !== '') {
+                        let hScore = parseFloat(hVal);
+                        let aScore = parseFloat(aVal);
+
+                        calculated[hKey].gf += hScore;
+                        calculated[aKey].gf += aScore;
+
+                        if (hScore > aScore) {
+                            calculated[hKey].pts += 3;
+                        } else if (aScore > hScore) {
+                            calculated[aKey].pts += 3;
+                        } else if (hScore === aScore) {
+                            calculated[hKey].pts += 1;
+                            calculated[aKey].pts += 1;
+                        }
+                    }
+                });
+            }
+
+            return Object.values(calculated).sort((a, b) => b.pts - a.pts || b.gf - a.gf);
+        }
+
+        function renderStandings() {
+            const tbody = document.getElementById('standingsBody');
+            tbody.innerHTML = '';
+            
+            let sortedTeams = calculateStandings();
+
+            sortedTeams.forEach((team, index) => {
+                let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:900;">${index + 1}</td>
+                        <td class="team-cell">
+                            <img src="${teamInfo.logo}" alt="${teamInfo.name}">
+                            ${teamInfo.name}
+                        </td>
+                        <td>${team.gf}</td>
+                        <td style="color:var(--pl-pink); font-size:14px;">${team.pts}</td>
+                    </tr>
+                `;
             });
         }
 
-        updateCard();
+        function renderFixtures() {
+            const list = document.getElementById('fixturesList');
+            document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
+            document.getElementById('roundSelect').value = currentRound;
+            list.innerHTML = '';
+
+            let matches = matchweeks[currentRound] || [];
+            matches.forEach((match, idx) => {
+                let home = teamsMap[match[0]] || { name: match[0], logo: "" };
+                let away = teamsMap[match[1]] || { name: match[1], logo: "" };
+
+                let homeScore = scoresStorage[`r${currentRound}_m${idx}_home`] ?? '';
+                let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
+
+                let scoreContent = editMode ? `
+                    <input type="number" class="score-input" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value)">
+                    <span style="font-weight:900; color:#fff;">:</span>
+                    <input type="number" class="score-input" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value)">
+                ` : `
+                    <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
+                    <span style="font-weight:900; color:#ff005a; font-family: var(--font-en);">VS</span>
+                    <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
+                `;
+
+                list.innerHTML += `
+                    <div class="fixture-row">
+                        <div class="team-box home">
+                            <span>${home.name}</span>
+                            <img src="${home.logo}">
+                        </div>
+                        <div class="match-score-center">
+                            ${scoreContent}
+                        </div>
+                        <div class="team-box away">
+                            <img src="${away.logo}">
+                            <span>${away.name}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function changeRound(step) {
+            currentRound += step;
+            if(currentRound < 1) currentRound = 1;
+            if(currentRound > 18) currentRound = 18;
+            renderFixtures();
+        }
+
+        function downloadAsImage() {
+            const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
+            const element = document.getElementById(targetId);
+
+            html2canvas(element, {
+                backgroundColor: "#240024",
+                scale: 2
+            }).then(canvas => {
+                canvas.toBlob(function(blob) {
+                    let link = document.createElement('a');
+                    link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings.png`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }, 'image/png');
+            });
+        }
+
+        initRoundDropdown();
+        renderStandings();
+        renderFixtures();
     </script>
 </body>
 </html>
