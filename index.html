@@ -120,6 +120,14 @@
             padding-left: 25px;
         }
 
+        /* فئة لإخفاء أزرار التعديل والحفظ عن الزوار وعرضها فقط عند تفعيل صلاحية المالك */
+        .admin-only {
+            display: none !important;
+        }
+        .admin-only.visible {
+            display: inline-flex !important;
+        }
+
         .round-nav-container {
             display: flex;
             align-items: center;
@@ -173,7 +181,6 @@
             border-radius: 10px;
             padding: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            /* إزالة overflow: hidden من هنا لمنع تشوه الحدود أثناء التقاط الصورة */
         }
 
         .card-header-title {
@@ -252,7 +259,6 @@
             outline: none;
         }
 
-        /* تعديل الجداول لمنع أي كسرات في الخطوط الفاصلة */
         table { 
             width: 100%; 
             border-collapse: separate; 
@@ -274,7 +280,6 @@
         td { 
             font-family: var(--font-en); 
             padding: 11px 6px; 
-            /* استخدام خطوط صلبة نظيفة بدلاً من الحدود المتقطعة لمنع التشوه البكسلي */
             box-shadow: inset 0 -2px 0 #4da6ff; 
             font-weight: 900; 
             font-size: 14px; 
@@ -312,7 +317,8 @@
         <div class="banner-logo-section">
             <img src="header.png.pdf" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/120x120/000/fff&text=PL'">
         </div>
-        <div class="banner-title-section">TELE GOAT</div>
+        <!-- انقر نقراً مزدوجاً على عنوان البانر لتسجيل الدخول كمسؤول وإظهار أزرار التعديل والحفظ -->
+        <div class="banner-title-section" ondblclick="unlockAdmin()">TELE GOAT</div>
     </div>
 
     <div class="header">
@@ -322,8 +328,10 @@
             
             <select class="filter-select" id="roundSelect" onchange="selectRound(this.value)"></select>
 
-            <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()" data-ar="تعديل" data-en="Edit">تعديل</button>
-            <button class="filter-btn" onclick="downloadAsImage()" data-ar="حفظ للألبوم" data-en="Save to Album">حفظ للألبوم</button>
+            <!-- هذه الأزرار مخفية تماماً عن الزوار وتظهر فقط لك بعد إدخال الرمز -->
+            <button class="filter-btn admin-only" id="editToggleBtn" onclick="toggleEditMode()" data-ar="تعديل" data-en="Edit">تعديل</button>
+            <button class="filter-btn admin-only" id="saveAlbumBtn" onclick="downloadAsImage()" data-ar="حفظ للألبوم" data-en="Save to Album">حفظ للألبوم</button>
+            
             <button class="filter-btn" onclick="toggleLanguage()" id="langBtn">English</button>
         </div>
 
@@ -370,6 +378,32 @@
 
     <script>
         let currentLang = 'ar';
+        let isAdmin = localStorage.getItem('fpl_admin') === 'true';
+
+        function checkAdminStatus() {
+            if (isAdmin) {
+                document.querySelectorAll('.admin-only').forEach(el => el.classList.add('visible'));
+            }
+        }
+
+        function unlockAdmin() {
+            if (!isAdmin) {
+                const pass = prompt(currentLang === 'ar' ? "أدخل رمز الحماية لإظهار أدوات المدير:" : "Enter password to unlock admin tools:");
+                if (pass === "024680") {
+                    isAdmin = true;
+                    localStorage.setItem('fpl_admin', 'true');
+                    checkAdminStatus();
+                    alert(currentLang === 'ar' ? "تم تفعيل صلاحيات المدير بنجاح!" : "Admin tools unlocked successfully!");
+                } else if (pass !== null) {
+                    alert(currentLang === 'ar' ? "الرمز غير صحيح!" : "Incorrect password!");
+                }
+            } else {
+                isAdmin = false;
+                localStorage.removeItem('fpl_admin');
+                document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('visible'));
+                alert(currentLang === 'ar' ? "تم قفل صلاحيات المدير." : "Admin tools locked.");
+            }
+        }
 
         function toggleLanguage() {
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
@@ -641,10 +675,10 @@
             });
         }
 
+        checkAdminStatus();
         initRoundDropdown();
         renderStandings();
         renderFixtures();
     </script>
 </body>
 </html>
-
