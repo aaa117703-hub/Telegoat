@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premier League</title>
-    <!-- استدعاء مكتبة Firebase للربط السحابي -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -87,7 +86,7 @@
         .banner-logo-section img {
             width: 100%;
             height: 100%;
-            object-fit: fill; /* جعل الصورة تتمدد لتملأ المستطيل والإطار بالكامل بانسجام */
+            object-fit: fill;
             display: block;
         }
 
@@ -195,7 +194,6 @@
 
         .main-container { max-width: 800px; margin: 0 auto; padding: 0 10px; }
 
-        /* صندوق إدخال النتائج بالنصوص */
         .bulk-edit-container {
             display: none;
             background: linear-gradient(135deg, #24003c 0%, #160b24 100%);
@@ -412,7 +410,6 @@
 
     <div class="main-container">
 
-        <!-- صندوق إدخال النتائج كنصوص -->
         <div class="bulk-edit-container admin-only" id="bulkEditBox">
             <div style="font-weight: 900; margin-bottom: 8px; font-size: 14px;" data-ar="إدخال النتائج كنصوص (كل سطر مباراة، مثال: أرسنال 2 - 1 تشيلسي أو بالأسماء الإنجليزية):" data-en="Bulk Text Score Entry (Line by line, e.g., Arsenal 2 - 1 Chelsea):">إدخال النتائج كنصوص (كل سطر مباراة، مثال: أرسنال 2 - 1 تشيلسي):</div>
             <textarea id="bulkTextarea" placeholder="أرسنال 2 - 1 تشيلسي&#10;مانشستر يونايتد 3 - 0 ليفربول..."></textarea>
@@ -433,7 +430,7 @@
         <div id="standingsTab" class="tab-content">
             <div id="captureStandings" class="capture-box">
                 <div class="card-box-inner">
-                    <div class="card-header-title" data-ar="جدول ترتيب الدوري الإنجليزي" data-en="PREMIER LEAGUE STANDINGS">PREMIER LEAGUE STANDINGS</div>
+                    <div class="card-header-title" id="standingsHeaderTitle" data-ar="جدول ترتيب الدوري الإنجليزي" data-en="PREMIER LEAGUE STANDINGS">PREMIER LEAGUE STANDINGS</div>
                     <table>
                         <thead>
                             <tr>
@@ -468,7 +465,7 @@
         db.ref('fpl_scores').on('value', (snapshot) => {
             scoresStorage = snapshot.val() || {};
             renderFixtures();
-            renderStandings();
+            if(activeTab === 'standings') renderStandings();
         });
 
         function checkAdminStatus() {
@@ -513,6 +510,7 @@
                 el.innerText = el.getAttribute(`data-${currentLang}`);
             });
             renderFixtures();
+            if(activeTab === 'standings') renderStandings();
         }
 
         const teamsMap = {
@@ -598,6 +596,9 @@
         function selectRound(val) {
             currentRound = parseInt(val);
             renderFixtures();
+            if(activeTab === 'standings') {
+                renderStandings();
+            }
         }
 
         function switchTab(tabName) {
@@ -666,14 +667,18 @@
             alert(currentLang === 'ar' ? "تم تحديث وحفظ النتائج بنجاح!" : "Results updated and saved successfully!");
         }
 
-        function calculateStandings() {
+        // حساب الترتيب التراكمي لغاية الجولة الحالية المحدد (currentRound)
+        function calculateStandingsUpTo(roundLimit) {
             let calculated = {};
             for (let teamKey in teamsMap) {
                 calculated[teamKey] = { key: teamKey, gf: 0, pts: 0 };
             }
 
-            for (let round in matchweeks) {
-                matchweeks[round].forEach((match, idx) => {
+            for (let round = 1; round <= roundLimit; round++) {
+                let roundMatches = matchweeks[round];
+                if(!roundMatches) continue;
+
+                roundMatches.forEach((match, idx) => {
                     let hKey = match[0];
                     let aKey = match[1];
                     let hVal = scoresStorage[`r${round}_m${idx}_home`];
@@ -705,7 +710,12 @@
             const tbody = document.getElementById('standingsBody');
             tbody.innerHTML = '';
             
-            let sortedTeams = calculateStandings();
+            // تحديث عنوان جدول التترتيب ليعكس الجولة الحالية
+            document.getElementById('standingsHeaderTitle').innerText = currentLang === 'ar' ? 
+                `جدول الترتيب - بعد الجولة ${currentRound}` : 
+                `STANDINGS - AFTER GAMEWEEK ${currentRound}`;
+
+            let sortedTeams = calculateStandingsUpTo(currentRound);
 
             sortedTeams.forEach((team, index) => {
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
@@ -772,6 +782,9 @@
             if(currentRound < 1) currentRound = 1;
             if(currentRound > 38) currentRound = 38;
             renderFixtures();
+            if(activeTab === 'standings') {
+                renderStandings();
+            }
         }
 
         function downloadAsImage() {
@@ -788,7 +801,7 @@
                 canvas.toBlob(function(blob) {
                     let url = URL.createObjectURL(blob);
                     let link = document.createElement('a');
-                    link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}_HD.png` : `League_Standings_HD.png`;
+                    link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}_HD.png` : `League_Standings_Gw${currentRound}_HD.png`;
                     link.href = url;
                     
                     document.body.appendChild(link);
