@@ -1,18 +1,13 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="htmlRoot">
+<html lang="en" dir="ltr" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premier League</title>
-    <!-- استدعاء مكتبة Firebase للربط السحابي -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        @font-face {
-            font-family: 'SultanCustom';
-            src: url('./Sultan.ttf') format('truetype');
-        }
         @font-face {
             font-family: 'EnglishCustom';
             src: url('./english-font.ttf') format('truetype');
@@ -26,7 +21,6 @@
             --pl-purple: #38003c;
             --text-white: #ffffff;
             --border-color: #3b1854;
-            --font-ar: 'SultanCustom', sans-serif;
             --font-en: 'EnglishCustom', sans-serif;
         }
 
@@ -47,11 +41,7 @@
             background-color: var(--bg-main); 
             color: var(--text-white); 
             padding-bottom: 50px; 
-            font-family: var(--font-ar);
-        }
-
-        [data-lang="en"] {
-            font-family: var(--font-en) !important;
+            font-family: var(--font-en);
         }
 
         img {
@@ -123,6 +113,7 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             min-height: 41px;
+            font-family: var(--font-en);
         }
 
         .filter-btn:hover, .filter-btn.active {
@@ -136,6 +127,7 @@
             -webkit-appearance: none;
             padding-right: 20px;
             padding-left: 30px;
+            font-family: var(--font-en);
         }
 
         .admin-only {
@@ -185,6 +177,7 @@
             align-items: center;
             justify-content: center;
             transition: 0.2s;
+            font-family: var(--font-en);
         }
 
         .nav-arrow-btn:hover {
@@ -201,7 +194,7 @@
             border-radius: 16px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.5);
             border: 1px solid var(--border-color);
-            width: 1081px;
+            width: 100%;
             max-width: 100%;
         }
 
@@ -335,7 +328,6 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* تصميم أيقونة التحميل الدائرية وعلامة الصح */
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -355,38 +347,32 @@
 
     <div class="banner-container">
         <div class="banner-logo-section">
-            <img src="header.png.pdf" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/800x130/38003c/ffffff&text=PREMIER+LEAGUE'">
+            <img src="header.png" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/800x130/38003c/ffffff&text=PREMIER+LEAGUE'">
         </div>
     </div>
 
     <div class="header">
         <div class="filter-bar">
-            <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')" data-ar="المواجهات" data-en="Fixtures">المواجهات</button>
-            <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')" data-ar="جدول الترتيب" data-en="Standings">جدول الترتيب</button>
+            <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">Fixtures</button>
+            <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
             
             <select class="filter-select" id="roundSelect" onchange="selectRound(this.value)"></select>
 
-            <!-- أدوات المدير مخفية تماماً للزوار ولا تظهر إلا بررمز 1999 -->
-            <button class="filter-btn admin-only" id="editToggleBtn" onclick="toggleEditMode()" data-ar="تعديل مباشر" data-en="Live Edit">تعديل مباشر</button>
-            <button class="filter-btn admin-only" id="saveAllBtn" onclick="saveAllCurrentRound()" data-ar="حفظ المواجهات" data-en="Save Matches">حفظ المواجهات</button>
-            
-            <!-- زر الحفظ للألبوم المتاح للجميع دائماً -->
-            <button class="filter-btn" onclick="downloadAsImage()" data-ar="حفظ للألبوم" data-en="Save to Album">حفظ للألبوم</button>
-            
-            <button class="filter-btn" onclick="toggleLanguage()" id="langBtn">English</button>
+            <!-- Admin Only - Hidden from visitors -->
+            <button class="filter-btn admin-only" id="editToggleBtn" onclick="toggleEditMode()">Live Edit</button>
+            <button class="filter-btn admin-only" id="saveAllBtn" onclick="saveAllCurrentRound()">Save Matches</button>
+            <button class="filter-btn admin-only" onclick="downloadAsImage()">Save to Album</button>
         </div>
 
         <div class="round-nav-container">
-            <button class="nav-arrow-btn" onclick="changeRound(-1)">&lt;</button>
-            <!-- النقر المزدوج هنا على كلمة الماتش (أو النص بالكامل) لإظهار نافذة إدخال الرمز 1999 -->
+            <button class="nav-arrow-btn" onclick="changeRound(-1)">‹</button>
             <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockAdmin()">MATCHWEEK 1</div>
-            <button class="nav-arrow-btn" onclick="changeRound(1)">&gt;</button>
+            <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
         </div>
     </div>
 
     <div class="main-container">
 
-        <!-- تبويب المواجهات -->
         <div id="fixturesTab" class="tab-content active">
             <div id="captureFixtures" class="capture-box">
                 <div class="card-box-inner">
@@ -396,18 +382,17 @@
             </div>
         </div>
 
-        <!-- تبويب جدول الترتيب -->
         <div id="standingsTab" class="tab-content">
             <div id="captureStandings" class="capture-box">
                 <div class="card-box-inner">
-                    <div class="card-header-title" id="standingsHeaderTitle" data-ar="جدول ترتيب الدوري الإنجليزي" data-en="STANDINGS - AFTER GAMEWEEK 1">STANDINGS - AFTER GAMEWEEK 1</div>
+                    <div class="card-header-title" id="standingsHeaderTitle">STANDINGS - AFTER GAMEWEEK 1</div>
                     <table>
                         <thead>
                             <tr>
                                 <th style="width: 10%;">Pos</th>
-                                <th style="text-align: right; padding-right: 20px; width: 50%;" data-ar="النادي" data-en="Club">Club</th>
+                                <th style="text-align: right; padding-right: 20px; width: 50%;">Club</th>
                                 <th style="width: 20%;">GF</th>
-                                <th style="width: 20%;" data-ar="النقاط" data-en="Pts">Pts</th>
+                                <th style="width: 20%;">Pts</th>
                             </tr>
                         </thead>
                         <tbody id="standingsBody"></tbody>
@@ -428,14 +413,13 @@
         }
         const db = firebase.database();
 
-        let currentLang = 'ar';
         let isAdmin = localStorage.getItem('fpl_admin') === 'true';
         let editMode = isAdmin;
         let scoresStorage = {};
         let currentRound = 1;
         let activeTab = 'fixtures';
+        let isSaving = false;
 
-        // مزامنة فورية ومستمرة للنتائج من قاعدة البيانات لضمان حفظ واستمرار البيانات دائماً
         db.ref('fpl_scores').on('value', (snapshot) => {
             scoresStorage = snapshot.val() || {};
             renderFixtures();
@@ -455,64 +439,48 @@
 
         function unlockAdmin() {
             if (!isAdmin) {
-                const pass = prompt(currentLang === 'ar' ? "أدخل رمز الحماية لإظهار أدوات المدير:" : "Enter password to unlock admin tools:");
+                const pass = prompt("Enter password to unlock admin tools:");
                 if (pass === "1999") {
                     isAdmin = true;
                     editMode = true;
                     localStorage.setItem('fpl_admin', 'true');
                     checkAdminStatus();
                     renderFixtures();
-                    alert(currentLang === 'ar' ? "تم تفعيل صلاحيات المدير بنجاح!" : "Admin tools unlocked successfully!");
+                    alert("Admin tools unlocked successfully!");
                 } else if (pass !== null) {
-                    alert(currentLang === 'ar' ? "الرمز غير صحيح!" : "Incorrect password!");
+                    alert("Incorrect password!");
                 }
             } else {
                 editMode = !editMode;
                 const editBtn = document.getElementById('editToggleBtn');
                 if (editBtn) {
-                    editBtn.innerText = editMode ? (currentLang === 'ar' ? "إيقاف التعديل" : "Lock Edit") : (currentLang === 'ar' ? "تعديل مباشر" : "Live Edit");
+                    editBtn.innerText = editMode ? "Lock Edit" : "Live Edit";
                 }
                 renderFixtures();
             }
         }
 
-        function toggleLanguage() {
-            currentLang = currentLang === 'ar' ? 'en' : 'ar';
-            const htmlRoot = document.getElementById('htmlRoot');
-            htmlRoot.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
-            htmlRoot.setAttribute('lang', currentLang);
-            document.getElementById('langBtn').innerText = currentLang === 'ar' ? 'English' : 'عربي';
-
-            document.querySelectorAll('[data-ar]').forEach(el => {
-                el.innerText = el.getAttribute(`data-${currentLang}`);
-            });
-            renderFixtures();
-            if(activeTab === 'standings') {
-                renderStandings();
-            }
-        }
-
         const teamsMap = {
-            "ARS": { name: "Arsenal", arName: "ارسنال", logo: "arsenal.png.WEBP" },
-            "AVL": { name: "Aston Villa", arName: "استون فيلا", logo: "aston_villa.png.WEBP" },
-            "BOU": { name: "Bournemouth", arName: "بورنموث", logo: "bournemouth.png.WEBP" },
-            "BRE": { name: "Brentford", arName: "برينتفورد", logo: "brentford.png.PNG" },
-            "BHA": { name: "Brighton", arName: "برايتون", logo: "brighton.png.WEBP" },
-            "CHE": { name: "Chelsea", arName: "تشيلسي", logo: "chelsea.png.WEBP" },
-            "COV": { name: "Coventry City", arName: "كوفنتري سيتي", logo: "coventry.png.WEBP" },
-            "CRY": { name: "Crystal Palace", arName: "كريستال بالاس", logo: "crystal_palace.png.WEBP" },
-            "EVE": { name: "Everton", arName: "إيفرتون", logo: "everton.png.WEBP" },
-            "FUL": { name: "Fulham", arName: "فولهام", logo: "fulham.png.WEBP" },
-            "HUL": { name: "Hull City", arName: "هال سيتي", logo: "hull.png.WEBP" },
-            "IPS": { name: "Ipswich Town", arName: "إبسويتش تاون", logo: "ipswich.png.WEBP" },
-            "LEE": { name: "Leeds United", arName: "ليدز يونايتد", logo: "leeds.png.WEBP" },
-            "LIV": { name: "Liverpool", arName: "ليفربول", logo: "liverpool.png.WEBP" },
-            "MCI": { name: "Manchester City", arName: "مانشستر سيتي", logo: "man_city.png.WEBP" },
-            "MUN": { name: "Manchester United", arName: "مانشستر يونايتد", logo: "man_utd.png.WEBP" },
-            "NEW": { name: "Newcastle United", arName: "نيوكاسل يونايتد", logo: "newcastle.png.WEBP" },
-            "NOT": { name: "Nottingham Forest", arName: "نوتنغهام فورست", logo: "forest.png.PNG" },
-            "SUN": { name: "Sunderland", arName: "سندرلاند", logo: "sunderland.png.WEBP" },
-            "TOT": { name: "Tottenham Hotspur", arName: "توتنهام", logo: "tottenham.png.WEBP" }
+            "ARS": { name: "Arsenal", logo: "img/arsenal.png" },
+            "AVL": { name: "Aston Villa", logo: "img/aston_villa.png" },
+            "BOU": { name: "Bournemouth", logo: "img/bournemouth.png" },
+            "BRE": { name: "Brentford", logo: "img/brentford.png" },
+            "BHA": { name: "Brighton", logo: "img/brighton.png" },
+            "CHE": { name: "Chelsea", logo: "img/chelsea.png" },
+            "COV": { name: "Coventry City", logo: "img/coventry.png" },
+            "CRY": { name: "Crystal Palace", logo: "img/crystal_palace.png" },
+            "EVE": { name: "Everton", logo: "img/everton.png" },
+            "FUL": { name: "Fulham", logo: "img/fulham.png" },
+            "HUL": { name: "Hull City", logo: "img/hull.png" },
+            "IPS": { name: "Ipswich Town", logo: "img/ipswich.png" },
+            "LEE": { name: "Leeds United", logo: "img/leeds.png" },
+            "LIV": { name: "Liverpool", logo: "img/liverpool.png" },
+            "MCI": { name: "Manchester City", logo: "img/man_city.png" },
+            "MUN": { name: "Manchester United", logo: "img/man_utd.png" },
+            "NEW": { name: "Newcastle United", logo: "img/newcastle.png" },
+            "NOT": { name: "Nottingham Forest", logo: "img/forest.png" },
+            "SUN": { name: "Sunderland", logo: "img/sunderland.png" },
+            "TOT": { name: "Tottenham Hotspur", logo: "img/tottenham.png" }
         };
 
         const matchweeks = {
@@ -524,9 +492,9 @@
             6: [["ARS", "LEE"], ["AVL", "BRE"], ["CHE", "BOU"], ["COV", "NEW"], ["CRY", "NOT"], ["HUL", "EVE"], ["IPS", "FUL"], ["LIV", "MCI"], ["MUN", "TOT"], ["SUN", "BHA"]],
             7: [["BOU", "SUN"], ["BRE", "LIV"], ["BHA", "CRY"], ["EVE", "CHE"], ["FUL", "HUL"], ["LEE", "MUN"], ["MCI", "IPS"], ["NEW", "AVL"], ["NOT", "ARS"], ["TOT", "COV"]],
             8: [["ARS", "EVE"], ["AVL", "MCI"], ["CHE", "TOT"], ["COV", "FUL"], ["CRY", "NEW"], ["HUL", "BRE"], ["IPS", "NOT"], ["LIV", "BHA"], ["MUN", "BOU"], ["SUN", "LEE"]],
-            9: [["BOU", "LEE"], ["BRE", "NOT"], ["CHE", "MUN"], ["COV", "SUN"], ["HUL", "IPS"], ["LIV", "ARS"], ["MCI", "BHA"], ["NEW", "EVE"], ["TOT", "CRY"], ["AVL", "SUN"]],
+            9: [["BOU", "LEE"], ["BRE", "NOT"], ["CHE", "MUN"], ["COV", "SUN"], ["HUL", "IPS"], ["LIV", "ARS"], ["MCI", "BHA"], ["NEW", "EVE"], ["TOT", "CRY"]],
             10: [["ARS", "HUL"], ["BHA", "BRE"], ["CRY", "LIV"], ["EVE", "COV"], ["FUL", "NEW"], ["IPS", "BOU"], ["LEE", "TOT"], ["MUN", "AVL"], ["NOT", "MCI"], ["SUN", "CHE"]],
-            11: [["BRE", "EVE"], ["CHE", "LEE"], ["COV", "CRY"], ["HUL", "BHA"], ["LIV", "MUN"], ["MCI", "FUL"], ["NEW", "ARS"], ["TOT", "IPS"], ["NOT", "SUN"], ["AVL", "CRY"]],
+            11: [["BRE", "EVE"], ["CHE", "LEE"], ["COV", "CRY"], ["HUL", "BHA"], ["LIV", "MUN"], ["MCI", "FUL"], ["NEW", "ARS"], ["TOT", "IPS"]],
             12: [["ARS", "MCI"], ["BHA", "NEW"], ["CRY", "HUL"], ["EVE", "LIV"], ["FUL", "BOU"], ["IPS", "AVL"], ["LEE", "COV"], ["MUN", "BRE"], ["NOT", "CHE"], ["SUN", "TOT"]],
             13: [["BOU", "BHA"], ["AVL", "EVE"], ["BRE", "ARS"], ["CHE", "CRY"], ["COV", "IPS"], ["HUL", "NOT"], ["LIV", "SUN"], ["MCI", "LEE"], ["NEW", "MUN"], ["TOT", "FUL"]],
             14: [["BOU", "HUL"], ["AVL", "CRY"], ["BRE", "MCI"], ["CHE", "LIV"], ["EVE", "FUL"], ["LEE", "IPS"], ["MUN", "COV"], ["NEW", "SUN"], ["NOT", "BHA"], ["TOT", "ARS"]],
@@ -562,7 +530,7 @@
             for(let i=1; i<=38; i++) {
                 let opt = document.createElement('option');
                 opt.value = i;
-                opt.innerText = currentLang === 'ar' ? `الجولة ${i}` : `Gameweek ${i}`;
+                opt.innerText = `Gameweek ${i}`;
                 if(i === currentRound) opt.selected = true;
                 select.appendChild(opt);
             }
@@ -596,17 +564,17 @@
             editMode = !editMode;
             const editBtn = document.getElementById('editToggleBtn');
             if(editBtn) {
-                editBtn.innerText = editMode ? (currentLang === 'ar' ? "إيقاف التعديل" : "Lock Edit") : (currentLang === 'ar' ? "تعديل مباشر" : "Live Edit");
+                editBtn.innerText = editMode ? "Lock Edit" : "Live Edit";
             }
             renderFixtures();
         }
 
         function saveAllCurrentRound() {
-            if(!isAdmin) return;
+            if(!isAdmin || isSaving) return;
             let btn = document.getElementById('saveAllBtn');
             let originalHTML = btn.innerHTML;
             
-            // إظهار مؤشر التحميل الدائري السريع
+            isSaving = true;
             btn.innerHTML = `<span class="spinner"></span>`;
             btn.disabled = true;
 
@@ -624,21 +592,21 @@
             });
 
             db.ref('fpl_scores').update(updates, (error) => {
+                isSaving = false;
                 if (error) {
-                    alert(currentLang === 'ar' ? "فشل حفظ المواجهات!" : "Failed to save matches!");
+                    alert("Failed to save matches!");
                     btn.innerHTML = originalHTML;
                     btn.disabled = false;
                 } else {
-                    // إظهار علامة الصح (✓) عند نجاح الحفظ
                     btn.innerHTML = `✓`;
                     setTimeout(() => {
                         btn.innerHTML = originalHTML;
                         btn.disabled = false;
                     }, 1200);
 
-                    if(activeTab === 'standings') {
-                        renderStandings();
-                    }
+                    // Auto switch to standings after saving
+                    switchTab('standings');
+                    renderStandings();
                 }
             });
         }
@@ -678,120 +646,13 @@
                 });
             }
 
-            return Object.values(calculated).sort((a, b) => b.pts - a.pts || b.gf - a.gf);
+            // Sort by points first, then goals scored
+            return Object.values(calculated).sort((a, b) => {
+                if (b.pts !== a.pts) return b.pts - a.pts;
+                return b.gf - a.gf;
+            });
         }
 
         function renderStandings() {
             const tbody = document.getElementById('standingsBody');
-            tbody.innerHTML = '';
-            
-            document.getElementById('standingsHeaderTitle').innerText = currentLang === 'ar' ? `جدول الترتيب - بعد الجولة ${currentRound}` : `STANDINGS - AFTER GAMEWEEK ${currentRound}`;
-
-            let sortedTeams = calculateStandingsUpTo(currentRound);
-
-            sortedTeams.forEach((team, index) => {
-                let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
-                let displayName = currentLang === 'ar' ? (teamInfo.arName || teamInfo.name) : teamInfo.name;
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="font-weight:900;">${index + 1}</td>
-                        <td class="team-cell">
-                            <img src="${teamInfo.logo}" alt="${teamInfo.name}">
-                            ${displayName}
-                        </td>
-                        <td>${team.gf}</td>
-                        <td style="color:#ff005a; font-size:17px;">${team.pts}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        function renderFixtures() {
-            const list = document.getElementById('fixturesList');
-            document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
-            document.getElementById('fixturesHeaderTitle').innerText = currentLang === 'ar' ? `نتائج الجولة ${currentRound}` : `MATCHWEEK ${currentRound} RESULTS`;
-            initRoundDropdown();
-            list.innerHTML = '';
-
-            let matches = matchweeks[currentRound] || [];
-            matches.forEach((match, idx) => {
-                let home = teamsMap[match[0]] || { name: match[0], logo: "" };
-                let away = teamsMap[match[1]] || { name: match[1], logo: "" };
-
-                let homeName = currentLang === 'ar' ? (home.arName || home.name) : home.name;
-                let awayName = currentLang === 'ar' ? (away.arName || away.name) : away.name;
-
-                let homeScore = scoresStorage[`r${currentRound}_m${idx}_home`] ?? '';
-                let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
-
-                let scoreContent = (editMode && isAdmin) ? `
-                    <div style="display:flex; align-items:center; gap:5px;">
-                        <input type="number" id="home_r${currentRound}_m${idx}" class="score-input" value="${homeScore}" placeholder="0">
-                        <span style="font-weight:900; color:#fff;">:</span>
-                        <input type="number" id="away_r${currentRound}_m${idx}" class="score-input" value="${awayScore}" placeholder="0">
-                    </div>
-                ` : `
-                    <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
-                    <span style="font-weight:900; color:#ffffff; font-family: var(--font-en); font-size:16px;">VS</span>
-                    <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
-                `;
-
-                list.innerHTML += `
-                    <div class="fixture-row">
-                        <div class="team-box home">
-                            <span>${homeName}</span>
-                            <img src="${home.logo}">
-                        </div>
-                        <div class="match-score-center">
-                            ${scoreContent}
-                        </div>
-                        <div class="team-box away">
-                            <img src="${away.logo}">
-                            <span>${awayName}</span>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function changeRound(step) {
-            currentRound += step;
-            if(currentRound < 1) currentRound = 1;
-            if(currentRound > 38) currentRound = 38;
-            renderFixtures();
-            if(activeTab === 'standings') {
-                renderStandings();
-            }
-        }
-
-        function downloadAsImage() {
-            const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
-            const element = document.getElementById(targetId);
-
-            html2canvas(element, {
-                backgroundColor: null,
-                scale: 3,
-                useCORS: true,
-                logging: false
-            }).then(canvas => {
-                canvas.toBlob(function(blob) {
-                    let url = URL.createObjectURL(blob);
-                    let link = document.createElement('a');
-                    link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}_HD.png` : `League_Standings_Gw${currentRound}_HD.png`;
-                    link.href = url;
-                    
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    
-                    setTimeout(() => URL.revokeObjectURL(url), 1000);
-                }, 'image/png');
-            });
-        }
-
-        checkAdminStatus();
-        initRoundDropdown();
-    </script>
-</body>
-</html>
+            tbody
