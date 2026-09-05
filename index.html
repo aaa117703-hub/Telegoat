@@ -248,7 +248,7 @@
 
         .export-area { border-radius: 8px; }
 
-        /* جدول الترتيب مع الشعار الجديد تحت الـ GW مباشرة */
+        /* جدول الترتيب مع الشعار المضاف تحت الـ GW مباشرة */
         #captureStandings {
             display: flex;
             background: #ffffff;
@@ -295,8 +295,9 @@
         }
 
         .sidebar-logo-center img {
-            width: 55px;
-            height: 55px;
+            width: 65px;
+            height: auto;
+            max-height: 80px;
             object-fit: contain;
             filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
         }
@@ -414,9 +415,12 @@
                 <div class="standings-sidebar">
                     <div class="sidebar-top-section">
                         <div class="sidebar-round-text" id="sidebarRoundText">GW 1</div>
+                        
+                        <!-- مكان شعار الدوري الإنجليزي الجديد -->
                         <div class="sidebar-logo-center">
-                            <img src="new.logo.png" alt="Logo" onerror="this.style.display='none'">
+                            <img src="data:image/png;base64,(ضع الكود الطويل هنا)" alt="شعار الدوري الإنجليزي الممتاز">
                         </div>
+
                     </div>
                     <div class="sidebar-logo-bottom">
                         <div class="sidebar-logo-text">TELEGOAT</div>
