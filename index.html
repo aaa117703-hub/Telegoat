@@ -96,7 +96,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
             margin-top: 15px;
             position: relative;
@@ -107,14 +107,14 @@
             background: var(--bg-card);
             color: var(--text-white);
             border: 1px solid var(--border-color);
-            padding: 10px 20px;
+            padding: 10px 16px;
             border-radius: 25px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 800;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             outline: none;
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -156,16 +156,14 @@
             filter: invert(1);
         }
 
-        .admin-only {
-            display: none !important;
+        /* عناصر التحكم الخاصة بالمسؤول مخفية افتراضياً */
+        .admin-controls {
+            display: none;
         }
-        .admin-only.visible {
-            display: inline-flex !important;
-            border-color: var(--pl-pink) !important;
-            background: #4a0020 !important;
+        .admin-controls.visible {
+            display: inline-flex;
         }
 
-        /* زر الحفظ العام في الشريط العلوي */
         .save-all-btn {
             background: var(--pl-green) !important;
             color: #0d0614 !important;
@@ -173,7 +171,6 @@
         }
         .save-all-btn:hover {
             background: #00cc6a !important;
-            border-color: #00cc6a !important;
         }
 
         .round-nav-container {
@@ -223,9 +220,8 @@
             position: relative;
         }
 
-        .nav-arrow-btn:hover, .nav-arrow-btn:active {
+        .nav-arrow-btn:hover {
             background: var(--pl-pink);
-            color: var(--text-white);
             border-color: var(--pl-pink);
             transform: scale(1.05);
         }
@@ -386,18 +382,19 @@
             <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">Fixtures</button>
             <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
             
-            <button class="filter-btn admin-only" id="editToggleBtn" onclick="toggleEditMode()">Edit</button>
-            <!-- زر الحفظ العام للجولة في الأعلى -->
-            <button class="filter-btn admin-only save-all-btn" id="saveAllBtn" onclick="saveAllCurrentRound()">حفظ النتائج</button>
+            <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()">Edit</button>
             
-            <button class="download-icon-btn admin-only" id="saveAlbumBtn" onclick="downloadAsImage()" title="Save to Album">
+            <!-- زر الحفظ العام وزر التنزيل يظهران فقط عند تفعيل وضع التعديل -->
+            <button class="filter-btn save-all-btn admin-controls" id="saveAllBtn" onclick="saveAllCurrentRound()">حفظ النتائج</button>
+            
+            <button class="download-icon-btn admin-controls" id="saveAlbumBtn" onclick="downloadAsImage()" title="Save to Album">
                 <img src="https://i.imgur.com/8381Wd0.png" alt="Download" onerror="this.src='https://img.icons8.com/ios-filled/50/ffffff/download.png'">
             </button>
         </div>
 
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">❮</button>
-            <div class="round-indicator" id="currentRoundTitle" onclick="changeRound(1)">MATCHWEEK 1</div>
+            <div class="round-indicator" id="currentRoundTitle" onclick="unlockAdmin()">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(1)">❯</button>
         </div>
     </div>
@@ -445,37 +442,67 @@
         const db = firebase.database();
 
         let isAdmin = localStorage.getItem('fpl_admin') === 'true';
+        let editMode = false;
         let scoresStorage = {};
+        let currentRound = 1;
+        let activeTab = 'fixtures';
 
+        // جلب البيانات مباشرة من فايربيس وتحديث الشاشة فوراً
         db.ref('fpl_scores').on('value', (snapshot) => {
-            try {
-                scoresStorage = snapshot.val() || {};
-                renderFixtures();
-                if(activeTab === 'standings') renderStandings();
-            } catch (error) {
-                console.error("Firebase error:", error);
+            scoresStorage = snapshot.val() || {};
+            renderFixtures();
+            if (activeTab === 'standings') {
+                renderStandings();
             }
         });
 
-        function checkAdminStatus() {
+        function updateAdminUI() {
+            const adminControls = document.querySelectorAll('.admin-controls');
+            const editBtn = document.getElementById('editToggleBtn');
+
             if (isAdmin) {
-                document.querySelectorAll('.admin-only').forEach(el => el.classList.add('visible'));
+                editBtn.style.borderColor = 'var(--pl-pink)';
+                editBtn.style.background = '#4a0020';
+                if (editMode) {
+                    adminControls.forEach(el => el.classList.add('visible'));
+                    editBtn.innerText = "Lock Edit";
+                } else {
+                    adminControls.forEach(el => el.classList.remove('visible'));
+                    editBtn.innerText = "Edit Mode";
+                }
             } else {
-                document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('visible'));
+                adminControls.forEach(el => el.classList.remove('visible'));
+                editBtn.style.borderColor = 'var(--border-color)';
+                editBtn.style.background = 'var(--bg-card)';
+                editBtn.innerText = "Edit";
             }
         }
 
-        document.getElementById('currentRoundTitle').addEventListener('click', () => {
-            let pass = prompt("Enter password to unlock admin tools:");
-            if (pass === "1999") {
-                isAdmin = true;
-                localStorage.setItem('fpl_admin', 'true');
-                checkAdminStatus();
-                alert("Admin tools unlocked successfully!");
-            } else if (pass !== null) {
-                alert("Incorrect password!");
+        function unlockAdmin() {
+            if (!isAdmin) {
+                let pass = prompt("Enter password to unlock admin tools:");
+                if (pass === "1999") {
+                    isAdmin = true;
+                    localStorage.setItem('fpl_admin', 'true');
+                    editMode = true;
+                    updateAdminUI();
+                    renderFixtures();
+                    alert("Admin tools unlocked successfully!");
+                } else if (pass !== null) {
+                    alert("Incorrect password!");
+                }
             }
-        });
+        }
+
+        function toggleEditMode() {
+            if (!isAdmin) {
+                unlockAdmin();
+                return;
+            }
+            editMode = !editMode;
+            updateAdminUI();
+            renderFixtures();
+        }
 
         const teamsMap = {
             "ARS": { name: "Arsenal", logo: "arsenal.png.WEBP" },
@@ -541,10 +568,6 @@
             38: [["BOU", "NOT"], ["BHA", "MUN"], ["CHE", "AVL"], ["CRY", "ARS"], ["EVE", "FUL"], ["HUL", "COV"], ["LEE", "BRE"], ["LIV", "IPS"], ["MCI", "SUN"], ["TOT", "NEW"]]
         };
 
-        let currentRound = 1;
-        let activeTab = 'fixtures';
-        let editMode = false;
-
         function switchTab(tabName) {
             activeTab = tabName;
             document.getElementById('fixturesToggleBtn').classList.toggle('active', tabName === 'fixtures');
@@ -560,32 +583,27 @@
             }
         }
 
-        function toggleEditMode() {
-            if(!isAdmin) return;
-            editMode = !editMode;
-            document.getElementById('editToggleBtn').innerText = editMode ? "Lock Edit" : "Edit";
-            renderFixtures();
-        }
-
-        // دالة حفظ كل نتائج الجولة الحالية دفعة واحدة وتحديث الترتيب
+        // حفظ كل نتائج الجولة الحالية دفعة واحدة
         function saveAllCurrentRound() {
             if(!isAdmin) return;
             let matches = matchweeks[currentRound] || [];
             let updates = {};
 
             matches.forEach((match, idx) => {
-                let homeVal = document.getElementById(`home_r${currentRound}_m${idx}`).value;
-                let awayVal = document.getElementById(`away_r${currentRound}_m${idx}`).value;
-
-                updates[`r${currentRound}_m${idx}_home`] = homeVal;
-                updates[`r${currentRound}_m${idx}_away`] = awayVal;
+                let homeInput = document.getElementById(`home_r${currentRound}_m${idx}`);
+                let awayInput = document.getElementById(`away_r${currentRound}_m${idx}`);
+                
+                if (homeInput && awayInput) {
+                    updates[`r${currentRound}_m${idx}_home`] = homeInput.value;
+                    updates[`r${currentRound}_m${idx}_away`] = awayInput.value;
+                }
             });
 
             db.ref('fpl_scores').update(updates, (error) => {
                 if (error) {
                     alert("Failed to save results!");
                 } else {
-                    alert(`Matchweek ${currentRound} results saved successfully and standings updated!`);
+                    alert(`Matchweek ${currentRound} results saved successfully!`);
                     if(activeTab === 'standings') {
                         renderStandings();
                     }
@@ -737,7 +755,7 @@
             });
         }
 
-        checkAdminStatus();
+        updateAdminUI();
         renderFixtures();
     </script>
 </body>
