@@ -165,6 +165,17 @@
             background: #4a0020 !important;
         }
 
+        /* زر الحفظ العام في الشريط العلوي */
+        .save-all-btn {
+            background: var(--pl-green) !important;
+            color: #0d0614 !important;
+            border-color: var(--pl-green) !important;
+        }
+        .save-all-btn:hover {
+            background: #00cc6a !important;
+            border-color: #00cc6a !important;
+        }
+
         .round-nav-container {
             display: flex;
             align-items: center;
@@ -314,27 +325,6 @@
             outline: none;
         }
 
-        /* زر الحفظ اليدوي */
-        .save-match-btn {
-            background: var(--pl-green);
-            color: #0d0614;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-weight: 900;
-            cursor: pointer;
-            font-size: 12px;
-            margin-top: 10px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            transition: 0.2s;
-        }
-        .save-match-btn:hover {
-            background: #00cc6a;
-            transform: scale(1.05);
-        }
-
         table { 
             width: 100%; 
             border-collapse: separate; 
@@ -397,6 +387,9 @@
             <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
             
             <button class="filter-btn admin-only" id="editToggleBtn" onclick="toggleEditMode()">Edit</button>
+            <!-- زر الحفظ العام للجولة في الأعلى -->
+            <button class="filter-btn admin-only save-all-btn" id="saveAllBtn" onclick="saveAllCurrentRound()">حفظ النتائج</button>
+            
             <button class="download-icon-btn admin-only" id="saveAlbumBtn" onclick="downloadAsImage()" title="Save to Album">
                 <img src="https://i.imgur.com/8381Wd0.png" alt="Download" onerror="this.src='https://img.icons8.com/ios-filled/50/ffffff/download.png'">
             </button>
@@ -474,7 +467,7 @@
 
         document.getElementById('currentRoundTitle').addEventListener('click', () => {
             let pass = prompt("Enter password to unlock admin tools:");
-            if (pass === "024680") {
+            if (pass === "1999") {
                 isAdmin = true;
                 localStorage.setItem('fpl_admin', 'true');
                 checkAdminStatus();
@@ -574,16 +567,30 @@
             renderFixtures();
         }
 
-        // دالة الحفظ اليدوي لكل مباراة عند الضغط على زر Save
-        function saveMatchScore(round, idx) {
+        // دالة حفظ كل نتائج الجولة الحالية دفعة واحدة وتحديث الترتيب
+        function saveAllCurrentRound() {
             if(!isAdmin) return;
-            let homeVal = document.getElementById(`home_r${round}_m${idx}`).value;
-            let awayVal = document.getElementById(`away_r${round}_m${idx}`).value;
+            let matches = matchweeks[currentRound] || [];
+            let updates = {};
 
-            db.ref(`fpl_scores/r${round}_m${idx}_home`).set(homeVal);
-            db.ref(`fpl_scores/r${round}_m${idx}_away`).set(awayVal);
-            
-            alert(`Match ${idx + 1} saved successfully!`);
+            matches.forEach((match, idx) => {
+                let homeVal = document.getElementById(`home_r${currentRound}_m${idx}`).value;
+                let awayVal = document.getElementById(`away_r${currentRound}_m${idx}`).value;
+
+                updates[`r${currentRound}_m${idx}_home`] = homeVal;
+                updates[`r${currentRound}_m${idx}_away`] = awayVal;
+            });
+
+            db.ref('fpl_scores').update(updates, (error) => {
+                if (error) {
+                    alert("Failed to save results!");
+                } else {
+                    alert(`Matchweek ${currentRound} results saved successfully and standings updated!`);
+                    if(activeTab === 'standings') {
+                        renderStandings();
+                    }
+                }
+            });
         }
 
         function calculateStandingsUpTo(roundLimit) {
@@ -664,13 +671,10 @@
                 let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
 
                 let scoreContent = (editMode && isAdmin) ? `
-                    <div style="display:flex; flex-direction:column; align-items:center;">
-                        <div style="display:flex; align-items:center; gap:5px;">
-                            <input type="number" id="home_r${currentRound}_m${idx}" class="score-input" value="${homeScore}" placeholder="0">
-                            <span style="font-weight:900; color:#fff;">:</span>
-                            <input type="number" id="away_r${currentRound}_m${idx}" class="score-input" value="${awayScore}" placeholder="0">
-                        </div>
-                        <button class="save-match-btn" onclick="saveMatchScore(${currentRound}, ${idx})">Save</button>
+                    <div style="display:flex; align-items:center; gap:5px;">
+                        <input type="number" id="home_r${currentRound}_m${idx}" class="score-input" value="${homeScore}" placeholder="0">
+                        <span style="font-weight:900; color:#fff;">:</span>
+                        <input type="number" id="away_r${currentRound}_m${idx}" class="score-input" value="${awayScore}" placeholder="0">
                     </div>
                 ` : `
                     <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
@@ -684,7 +688,7 @@
                             <span>${home.name}</span>
                             <img src="${home.logo}">
                         </div>
-                        <div class="match-score-center" style="${(editMode && isAdmin) ? 'padding: 12px 5px;' : ''}">
+                        <div class="match-score-center">
                             ${scoreContent}
                         </div>
                         <div class="team-box away">
