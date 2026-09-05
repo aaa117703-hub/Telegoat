@@ -135,6 +135,8 @@
             font-weight: 900;
             letter-spacing: 1px;
             color: #ffffff;
+            cursor: pointer;
+            user-select: none;
         }
 
         .nav-arrow-btn {
@@ -160,15 +162,41 @@
 
         .main-container { max-width: 750px; margin: 0 auto; padding: 0 10px; }
 
+        /* Fixtures Tab Background (Image 2 Style) */
+        #captureFixtures {
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #3281ff 0%, #00d2ff 45%, #a835ff 100%), #4b92ff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 4px solid #ffffff;
+        }
+
+        .fixtures-header-box {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .fixtures-header-title {
+            font-family: var(--font-en);
+            font-size: 20px;
+            font-weight: 900;
+            color: #38003c;
+            letter-spacing: 1px;
+        }
+
         .fixture-row { 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            padding: 12px 10px;
+            padding: 10px 12px;
             margin-bottom: 8px;
-            background: var(--pl-dark-card);
+            background: #ffffff;
             border-radius: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .team-box {
@@ -178,18 +206,18 @@
             width: 38%;
             font-size: 13px;
             font-weight: 800;
-            color: #ffffff;
+            color: #38003c;
             text-transform: uppercase;
         }
         .team-box.home { justify-content: flex-end; text-align: right; }
         .team-box.away { justify-content: flex-start; text-align: left; }
         
         .team-box img {
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             object-fit: contain;
-            margin: 0 8px;
-            background: rgba(255, 255, 255, 0.1);
+            margin: 0 6px;
+            background: rgba(0, 0, 0, 0.05);
             border-radius: 50%;
             padding: 2px;
         }
@@ -199,11 +227,10 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            width: 24%;
-            background: #1a001a;
+            width: 22%;
+            background: #7138f5;
             padding: 6px 8px;
             border-radius: 6px;
-            border: 1px solid var(--border-dark);
         }
 
         .score-display {
@@ -215,34 +242,104 @@
 
         .score-input {
             font-family: var(--font-en);
-            width: 38px;
+            width: 36px;
             height: 26px;
             text-align: center;
             font-size: 12px;
             font-weight: 900;
-            background: #2f012f;
-            color: #ffffff;
-            border: 1px solid var(--pl-pink);
+            background: #ffffff;
+            color: #38003c;
+            border: 1px solid #7138f5;
             border-radius: 4px;
             outline: none;
         }
 
-        .export-area { padding: 10px; background: var(--pl-dark-bg); border-radius: 8px; }
+        .export-area { border-radius: 8px; }
 
-        .standings-card { background: var(--pl-dark-card); border-radius: 8px; overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; color: #ffffff; }
-        th { font-family: var(--font-en); background-color: #1a001a; color: #a892a8; padding: 12px 6px; font-weight: 800; border-bottom: 1px solid var(--border-dark); }
-        td { font-family: var(--font-en); padding: 10px 6px; border-bottom: 1px solid var(--border-dark); font-weight: 800; }
+        /* Standings Tab Background (Image 3 Style) */
+        #captureStandings {
+            display: flex;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid #e0e0e0;
+        }
+
+        .standings-sidebar {
+            width: 130px;
+            background: linear-gradient(180deg, #8138f8 0%, #10b981 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 25px 10px;
+            color: #ffffff;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .standings-sidebar img {
+            width: 65px;
+            height: 65px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .standings-sidebar .sidebar-brand {
+            font-family: var(--font-en);
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+
+        .standings-content-area {
+            flex-grow: 1;
+            background: #f4f5f7;
+            position: relative;
+        }
+
+        .standings-card { 
+            background: transparent; 
+            border-radius: 0; 
+            overflow: hidden; 
+        }
+
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; color: #333; }
         
-        .team-cell { font-family: var(--font-en); display: flex; align-items: center; justify-content: flex-start; font-weight: 800; text-transform: uppercase; }
+        th { 
+            font-family: var(--font-en); 
+            background-color: transparent; 
+            color: #38003c; 
+            padding: 14px 6px; 
+            font-weight: 900; 
+            border-bottom: 2px solid #38003c; 
+        }
+
+        td { 
+            font-family: var(--font-en); 
+            padding: 9px 6px; 
+            border-bottom: 1px solid #e2e8f0; 
+            font-weight: 800; 
+        }
+        
+        .team-cell { 
+            font-family: var(--font-en); 
+            display: flex; 
+            align-items: center; 
+            justify-content: flex-start; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            color: #1a1a1a;
+        }
         .team-cell img { 
-            width: 24px; 
-            height: 24px; 
+            width: 22px; 
+            height: 22px; 
             margin-left: 8px; 
             object-fit: contain;
-            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            padding: 2px;
         }
 
         .tab-content { display: none; }
@@ -266,13 +363,15 @@
             
             <select class="filter-select" id="roundSelect" onchange="selectRound(this.value)"></select>
 
-            <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()">تعديل</button>
+            <!-- زر التعديل مخفي افتراضياً -->
+            <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()" style="display: none;">تعديل</button>
             <button class="filter-btn" onclick="downloadAsImage()">حفظ الصورة</button>
         </div>
 
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">&lt;</button>
-            <div class="round-indicator" id="currentRoundTitle">MATCHWEEK 1</div>
+            <!-- تم إضافة دقة النقر المزدوج هنا -->
+            <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(1)">&gt;</button>
         </div>
     </div>
@@ -282,6 +381,9 @@
         <!-- Fixtures Tab -->
         <div id="fixturesTab" class="tab-content active">
             <div id="captureFixtures" class="export-area">
+                <div class="fixtures-header-box">
+                    <div class="fixtures-header-title" id="fixturesBannerTitle">MATCHWEEK RESULTS</div>
+                </div>
                 <div id="fixturesList"></div>
             </div>
         </div>
@@ -289,18 +391,24 @@
         <!-- Standings Tab -->
         <div id="standingsTab" class="tab-content">
             <div id="captureStandings" class="export-area">
-                <div class="standings-card">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Pos</th>
-                                <th style="text-align: right; padding-right: 20px;">Club</th>
-                                <th>GF</th>
-                                <th>Pts</th>
-                            </tr>
-                        </thead>
-                        <tbody id="standingsBody"></tbody>
-                    </table>
+                <div class="standings-sidebar">
+                    <img src="header.png.pdf" alt="Logo" onerror="this.src='https://dummyimage.com/120x120/fff/000&text=GOAT'">
+                    <div class="sidebar-brand">TELEGRAM<br>G O A T</div>
+                </div>
+                <div class="standings-content-area">
+                    <div class="standings-card">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Pos</th>
+                                    <th style="text-align: right; padding-right: 20px;">Club</th>
+                                    <th>GF</th>
+                                    <th>Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody id="standingsBody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -413,19 +521,26 @@
             }
         }
 
+        // دالة فتح وضع التعديل بالنقر المزدوج على كلمة Matchweek وإدخال الرمز 1999
+        function unlockEditWithPassword() {
+            const pass = prompt("أدخل رمز الحماية لتفعيل زر التعديل:");
+            if(pass === "1999") {
+                document.getElementById('editToggleBtn').style.display = "inline-flex";
+                alert("تم إظهار زر التعديل بنجاح!");
+            } else if(pass !== null) {
+                alert("الرمز غير صحيح!");
+            }
+        }
+
         function toggleEditMode() {
             if(!editMode) {
-                const pass = prompt("أدخل رمز الحماية للتعديل:");
-                if(pass === "1999") {
-                    editMode = true;
-                    document.getElementById('editToggleBtn').innerText = "حفظ";
-                    renderFixtures();
-                } else if(pass !== null) {
-                    alert("الرمز غير صحيح!");
-                }
+                editMode = true;
+                document.getElementById('editToggleBtn').innerText = "حفظ";
+                renderFixtures();
             } else {
                 editMode = false;
                 document.getElementById('editToggleBtn').innerText = "تعديل";
+                document.getElementById('editToggleBtn').style.display = "none"; // إخفاء الزر مجدداً بعد الحفظ لزيادة الأمان
                 renderFixtures();
                 renderStandings();
             }
@@ -487,7 +602,7 @@
                             ${teamInfo.name}
                         </td>
                         <td>${team.gf}</td>
-                        <td style="color:var(--pl-pink); font-size:14px;">${team.pts}</td>
+                        <td style="color:#7138f5; font-size:14px;">${team.pts}</td>
                     </tr>
                 `;
             });
@@ -513,7 +628,7 @@
                     <input type="number" class="score-input" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value)">
                 ` : `
                     <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
-                    <span style="font-weight:900; color:#ff005a; font-family: var(--font-en);">VS</span>
+                    <span style="font-weight:900; color:#ffffff; font-family: var(--font-en);">VS</span>
                     <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
                 `;
 
@@ -547,8 +662,9 @@
             const element = document.getElementById(targetId);
 
             html2canvas(element, {
-                backgroundColor: "#240024",
-                scale: 2
+                backgroundColor: activeTab === 'fixtures' ? null : "#ffffff",
+                scale: 2,
+                useCORS: true
             }).then(canvas => {
                 canvas.toBlob(function(blob) {
                     let link = document.createElement('a');
