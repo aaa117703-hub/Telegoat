@@ -185,6 +185,13 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
+        /* تنسيق المستطيل المضيء باللون الأحمر خصيصاً للجولة التاسعة أو العناصر المحددة */
+        .fixture-row.benar-highlight {
+            border: 2px solid #ff005a;
+            box-shadow: 0 0 12px rgba(255, 0, 90, 0.7);
+            background: #fff5f8;
+        }
+
         .team-box {
             font-family: var(--font-en);
             display: flex;
@@ -242,7 +249,7 @@
 
         .export-area { border-radius: 8px; }
 
-        /* جدول الترتيب بتصميم الشريط الجانبي */
+        /* جدول الترتيب بتصميم الشريط الجانبي والشعار المتدرج الجديد */
         #captureStandings {
             display: flex;
             background: #ffffff;
@@ -274,9 +281,25 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
+        /* مكان اللوجو الجديد (new.logo.png) الملون بالتدريج ليتناسق مع الجدول والشريط */
         .sidebar-logo-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .sidebar-logo-bottom img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .sidebar-logo-text {
             font-family: var(--font-en);
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 900;
             letter-spacing: 1.5px;
             color: #ffffff;
@@ -379,7 +402,10 @@
             <div id="captureStandings" class="export-area">
                 <div class="standings-sidebar">
                     <div class="sidebar-round-text" id="sidebarRoundText">GW 1</div>
-                    <div class="sidebar-logo-bottom">TELEGOAT</div>
+                    <div class="sidebar-logo-bottom">
+                        <img src="new.logo.png" alt="Logo" onerror="this.style.display='none'">
+                        <div class="sidebar-logo-text">TELEGOAT</div>
+                    </div>
                 </div>
                 <div class="standings-content-area">
                     <div class="standings-card">
@@ -623,8 +649,11 @@
                     <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
                 `;
 
+                // تطبيق التنسيق المضيء (benar) في حال رغبت بتفعيله لعنصر أو جولة معينة
+                let highlightClass = (currentRound === 9 && idx === 0) ? 'benar-highlight' : '';
+
                 list.innerHTML += `
-                    <div class="fixture-row">
+                    <div class="fixture-row ${highlightClass}">
                         <div class="team-box home">
                             <span>${home.name}</span>
                             <img src="${home.logo}">
