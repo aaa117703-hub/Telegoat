@@ -314,6 +314,27 @@
             outline: none;
         }
 
+        /* زر الحفظ اليدوي */
+        .save-match-btn {
+            background: var(--pl-green);
+            color: #0d0614;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 900;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            transition: 0.2s;
+        }
+        .save-match-btn:hover {
+            background: #00cc6a;
+            transform: scale(1.05);
+        }
+
         table { 
             width: 100%; 
             border-collapse: separate; 
@@ -553,10 +574,16 @@
             renderFixtures();
         }
 
-        function updateScore(round, idx, type, val) {
+        // دالة الحفظ اليدوي لكل مباراة عند الضغط على زر Save
+        function saveMatchScore(round, idx) {
             if(!isAdmin) return;
-            let key = `r${round}_m${idx}_${type}`;
-            db.ref('fpl_scores/' + key).set(val);
+            let homeVal = document.getElementById(`home_r${round}_m${idx}`).value;
+            let awayVal = document.getElementById(`away_r${round}_m${idx}`).value;
+
+            db.ref(`fpl_scores/r${round}_m${idx}_home`).set(homeVal);
+            db.ref(`fpl_scores/r${round}_m${idx}_away`).set(awayVal);
+            
+            alert(`Match ${idx + 1} saved successfully!`);
         }
 
         function calculateStandingsUpTo(roundLimit) {
@@ -637,9 +664,14 @@
                 let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
 
                 let scoreContent = (editMode && isAdmin) ? `
-                    <input type="number" class="score-input" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value)">
-                    <span style="font-weight:900; color:#fff;">:</span>
-                    <input type="number" class="score-input" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value)">
+                    <div style="display:flex; flex-direction:column; align-items:center;">
+                        <div style="display:flex; align-items:center; gap:5px;">
+                            <input type="number" id="home_r${currentRound}_m${idx}" class="score-input" value="${homeScore}" placeholder="0">
+                            <span style="font-weight:900; color:#fff;">:</span>
+                            <input type="number" id="away_r${currentRound}_m${idx}" class="score-input" value="${awayScore}" placeholder="0">
+                        </div>
+                        <button class="save-match-btn" onclick="saveMatchScore(${currentRound}, ${idx})">Save</button>
+                    </div>
                 ` : `
                     <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
                     <span style="font-weight:900; color:#ffffff; font-size:16px;">VS</span>
@@ -652,7 +684,7 @@
                             <span>${home.name}</span>
                             <img src="${home.logo}">
                         </div>
-                        <div class="match-score-center">
+                        <div class="match-score-center" style="${(editMode && isAdmin) ? 'padding: 12px 5px;' : ''}">
                             ${scoreContent}
                         </div>
                         <div class="team-box away">
