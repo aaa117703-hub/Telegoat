@@ -17,6 +17,7 @@
 
         :root {
             --pl-dark-bg: #240024;
+            --pl-dark-card: #2f012f;
             --pl-pink: #ff005a;
             --pl-purple-btn: #38003c;
             --text-white: #ffffff;
@@ -40,18 +41,15 @@
 
         .banner-container {
             width: 100%;
-            max-width: 750px;
-            margin: 15px auto;
-            max-height: 140px;
+            max-width: 800px;
+            margin: 0 auto;
+            max-height: 150px;
             overflow: hidden;
             background: linear-gradient(90deg, #00bfff, #00ff88);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 20px;
-            border-radius: 16px;
-            border: 3px solid #ff005a;
-            box-shadow: 0 0 15px rgba(255, 0, 90, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.4);
         }
         
         .banner-logo-section {
@@ -78,7 +76,7 @@
         .header { 
             background-color: var(--pl-dark-bg); 
             color: #ffffff; 
-            padding: 10px 10px 20px 10px; 
+            padding: 20px 10px; 
             text-align: center; 
         }
 
@@ -164,6 +162,7 @@
 
         .main-container { max-width: 750px; margin: 0 auto; padding: 0 10px; }
 
+        /* Fixtures Tab Background (Image 2 Style) */
         #captureFixtures {
             padding: 30px 20px;
             background: linear-gradient(135deg, #3281ff 0%, #00d2ff 45%, #a835ff 100%), #4b92ff;
@@ -213,15 +212,14 @@
         .team-box.home { justify-content: flex-end; text-align: right; }
         .team-box.away { justify-content: flex-start; text-align: left; }
         
-        /* إزالة التقويس الخلفي (border-radius) والخلفية السوداء لشعارات الفرق نهائياً */
         .team-box img {
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             object-fit: contain;
             margin: 0 6px;
-            background: transparent;
-            border-radius: 0;
-            padding: 0;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 50%;
+            padding: 2px;
         }
 
         .match-score-center {
@@ -258,7 +256,7 @@
 
         .export-area { border-radius: 8px; }
 
-        /* Standings Tab & Sidebar Layout */
+        /* Standings Tab Background (Image 3 Style) */
         #captureStandings {
             display: flex;
             background: #ffffff;
@@ -270,34 +268,31 @@
 
         .standings-sidebar {
             width: 130px;
-            background: linear-gradient(180deg, #6c32f8 0%, #3281ff 50%, #10b981 100%);
+            background: linear-gradient(180deg, #8138f8 0%, #10b981 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
             padding: 25px 10px;
             color: #ffffff;
             text-align: center;
             flex-shrink: 0;
         }
 
-        /* تنسيق كلمة GW مع رقم الجولة (مثلاً GW 1, GW 2...) بالأعلى وبشكل متناسق */
-        .sidebar-round-text {
-            font-family: var(--font-en);
-            font-size: 24px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        .standings-sidebar img {
+            width: 65px;
+            height: 65px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
 
-        /* شعار الدوري الإنجليزي في الأسفل داخل الشريط الملون بالتدريج */
-        .sidebar-logo-bottom {
-            width: 75px;
-            height: auto;
-            object-fit: contain;
-            mix-blend-mode: luminosity;
-            filter: brightness(0) invert(1);
+        .standings-sidebar .sidebar-brand {
+            font-family: var(--font-en);
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            line-height: 1.2;
         }
 
         .standings-content-area {
@@ -339,16 +334,12 @@
             text-transform: uppercase; 
             color: #1a1a1a;
         }
-        
-        /* إزالة التقويس الخلفي (border-radius) والخلفية السوداء لشعارات جدول الترتيب تماماً */
         .team-cell img { 
-            width: 24px; 
-            height: 24px; 
+            width: 22px; 
+            height: 22px; 
             margin-left: 8px; 
             object-fit: contain;
-            background: transparent;
-            border-radius: 0;
-            padding: 0;
+            border-radius: 50%;
         }
 
         .tab-content { display: none; }
@@ -357,6 +348,7 @@
 </head>
 <body>
 
+    <!-- البانر المحدث بالشعار الجديد -->
     <div class="banner-container">
         <div class="banner-logo-section">
             <img src="header.png.pdf" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/120x120/000/fff&text=PL'">
@@ -371,12 +363,14 @@
             
             <select class="filter-select" id="roundSelect" onchange="selectRound(this.value)"></select>
 
+            <!-- زر التعديل مخفي افتراضياً -->
             <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()" style="display: none;">تعديل</button>
             <button class="filter-btn" onclick="downloadAsImage()">حفظ الصورة</button>
         </div>
 
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">&lt;</button>
+            <!-- تم إضافة دقة النقر المزدوج هنا -->
             <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(1)">&gt;</button>
         </div>
@@ -398,8 +392,8 @@
         <div id="standingsTab" class="tab-content">
             <div id="captureStandings" class="export-area">
                 <div class="standings-sidebar">
-                    <div class="sidebar-round-text" id="sidebarRoundText">GW 1</div>
-                    <img src="new-logo.png" class="sidebar-logo-bottom" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/80x100/fff/38003c&text=PL+Lion'">
+                    <img src="header.png.pdf" alt="Logo" onerror="this.src='https://dummyimage.com/120x120/fff/000&text=GOAT'">
+                    <div class="sidebar-brand">TELEGRAM<br>G O A T</div>
                 </div>
                 <div class="standings-content-area">
                     <div class="standings-card">
@@ -511,7 +505,6 @@
         function selectRound(val) {
             currentRound = parseInt(val);
             renderFixtures();
-            updateSidebarRound();
         }
 
         function switchTab(tabName) {
@@ -522,18 +515,13 @@
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             if(tabName === 'standings') {
                 renderStandings();
-                updateSidebarRound();
                 document.getElementById('standingsTab').classList.add('active');
             } else {
                 document.getElementById('fixturesTab').classList.add('active');
             }
         }
 
-        function updateSidebarRound() {
-            // تحديث نص الجولة ليصبح بالصيغة المطلوبة GW 1, GW 2 ... الخ
-            document.getElementById('sidebarRoundText').innerText = `GW ${currentRound}`;
-        }
-
+        // دالة فتح وضع التعديل بالنقر المزدوج على كلمة Matchweek وإدخال الرمز 1999
         function unlockEditWithPassword() {
             const pass = prompt("أدخل رمز الحماية لتفعيل زر التعديل:");
             if(pass === "1999") {
@@ -552,7 +540,7 @@
             } else {
                 editMode = false;
                 document.getElementById('editToggleBtn').innerText = "تعديل";
-                document.getElementById('editToggleBtn').style.display = "none";
+                document.getElementById('editToggleBtn').style.display = "none"; // إخفاء الزر مجدداً بعد الحفظ لزيادة الأمان
                 renderFixtures();
                 renderStandings();
             }
@@ -574,7 +562,7 @@
                     let hKey = match[0];
                     let aKey = match[1];
                     let hVal = scoresStorage[`r${round}_m${idx}_home`];
-                    let aVal = scoresStorage[`r${round}_m${idx}_outside`];
+                    let aVal = scoresStorage[`r${round}_m${idx}_away`];
 
                     if (hVal !== undefined && aVal !== undefined && hVal !== '' && aVal !== '') {
                         let hScore = parseFloat(hVal);
@@ -667,7 +655,6 @@
             if(currentRound < 1) currentRound = 1;
             if(currentRound > 38) currentRound = 38;
             renderFixtures();
-            updateSidebarRound();
         }
 
         function downloadAsImage() {
@@ -681,7 +668,7 @@
             }).then(canvas => {
                 canvas.toBlob(function(blob) {
                     let link = document.createElement('a');
-                    link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings_GW${currentRound}.png`;
+                    link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings.png`;
                     link.href = URL.createObjectURL(blob);
                     link.click();
                     URL.revokeObjectURL(link.href);
@@ -692,7 +679,6 @@
         initRoundDropdown();
         renderStandings();
         renderFixtures();
-        updateSidebarRound();
     </script>
 </body>
 </html>
