@@ -117,10 +117,12 @@
             cursor: pointer;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             outline: none;
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            min-height: 41px;
         }
 
         .filter-btn:hover, .filter-btn.active {
@@ -141,17 +143,6 @@
         }
         .admin-only.visible {
             display: inline-flex !important;
-            border-color: var(--pl-pink) !important;
-            background: #4a0020 !important;
-        }
-
-        .save-all-btn {
-            background: var(--pl-green) !important;
-            color: #0d0614 !important;
-            border-color: var(--pl-green) !important;
-        }
-        .save-all-btn:hover {
-            background: #00cc6a !important;
         }
 
         .round-nav-container {
@@ -203,51 +194,6 @@
         }
 
         .main-container { max-width: 800px; margin: 0 auto; padding: 0 10px; }
-
-        .bulk-edit-container {
-            display: none;
-            background: linear-gradient(135deg, #24003c 0%, #160b24 100%);
-            border: 2px solid var(--pl-pink);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 20px rgba(255,0,90,0.2);
-        }
-        .bulk-edit-container.visible {
-            display: block;
-        }
-        .bulk-edit-container textarea {
-            width: 100%;
-            height: 120px;
-            background: #0d0614;
-            color: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 10px;
-            font-family: var(--font-ar);
-            font-size: 15px;
-            outline: none;
-            resize: vertical;
-        }
-        .bulk-edit-container textarea:focus {
-            border-color: var(--pl-pink);
-        }
-        .bulk-btn-save {
-            background: var(--pl-pink);
-            color: #fff;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 6px;
-            font-weight: 900;
-            cursor: pointer;
-            margin-top: 10px;
-            font-family: var(--font-ar);
-            transition: 0.2s;
-        }
-        .bulk-btn-save:hover {
-            background: #ff2870;
-            box-shadow: 0 0 10px var(--pl-pink);
-        }
 
         .capture-box {
             background: linear-gradient(135deg, #1e0d33 0%, #120621 100%);
@@ -388,6 +334,21 @@
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        /* تصميم أيقونة التحميل الدائرية وعلامة الصح */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.6s linear infinite;
+        }
     </style>
 </head>
 <body>
@@ -405,9 +366,9 @@
             
             <select class="filter-select" id="roundSelect" onchange="selectRound(this.value)"></select>
 
-            <!-- أدوات المدير -->
+            <!-- أدوات المدير مخفية تماماً للزوار ولا تظهر إلا بررمز 1999 -->
             <button class="filter-btn admin-only" id="editToggleBtn" onclick="toggleEditMode()" data-ar="تعديل مباشر" data-en="Live Edit">تعديل مباشر</button>
-            <button class="filter-btn save-all-btn admin-only" id="saveAllBtn" onclick="saveAllCurrentRound()" data-ar="حفظ النتائج" data-en="Save Results">حفظ النتائج</button>
+            <button class="filter-btn admin-only" id="saveAllBtn" onclick="saveAllCurrentRound()" data-ar="حفظ المواجهات" data-en="Save Matches">حفظ المواجهات</button>
             
             <!-- زر الحفظ للألبوم المتاح للجميع دائماً -->
             <button class="filter-btn" onclick="downloadAsImage()" data-ar="حفظ للألبوم" data-en="Save to Album">حفظ للألبوم</button>
@@ -417,19 +378,13 @@
 
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">&lt;</button>
+            <!-- النقر المزدوج هنا على كلمة الماتش (أو النص بالكامل) لإظهار نافذة إدخال الرمز 1999 -->
             <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockAdmin()">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(1)">&gt;</button>
         </div>
     </div>
 
     <div class="main-container">
-
-        <!-- صندوق إدخال النتائج كنصوص -->
-        <div class="bulk-edit-container admin-only" id="bulkEditBox">
-            <div style="font-weight: 900; margin-bottom: 8px; font-size: 14px;" data-ar="إدخال النتائج كنصوص (كل سطر مباراة، مثال: أرسنال 2 - 1 تشيلسي أو بالأسماء الإنجليزية):" data-en="Bulk Text Score Entry (Line by line, e.g., Arsenal 2 - 1 Chelsea):">إدخال النتائج كنصوص (كل سطر مباراة، مثال: أرسنال 2 - 1 تشيلسي):</div>
-            <textarea id="bulkTextarea" placeholder="أرسنال 2 - 1 تشيلسي&#10;مانشستر يونايتد 3 - 0 ليفربول..."></textarea>
-            <button class="bulk-btn-save" onclick="processBulkText()" data-ar="تحديث وحفظ الجولة" data-en="Update & Save Round">تحديث وحفظ الجولة</button>
-        </div>
 
         <!-- تبويب المواجهات -->
         <div id="fixturesTab" class="tab-content active">
@@ -480,6 +435,7 @@
         let currentRound = 1;
         let activeTab = 'fixtures';
 
+        // مزامنة فورية ومستمرة للنتائج من قاعدة البيانات لضمان حفظ واستمرار البيانات دائماً
         db.ref('fpl_scores').on('value', (snapshot) => {
             scoresStorage = snapshot.val() || {};
             renderFixtures();
@@ -494,7 +450,6 @@
                 adminControls.forEach(el => el.classList.add('visible'));
             } else {
                 adminControls.forEach(el => el.classList.remove('visible'));
-                document.getElementById('bulkEditBox').classList.remove('visible');
             }
         }
 
@@ -513,8 +468,10 @@
                 }
             } else {
                 editMode = !editMode;
-                document.getElementById('editToggleBtn').innerText = editMode ? (currentLang === 'ar' ? "إيقاف التعديل" : "Lock Edit") : (currentLang === 'ar' ? "تعديل مباشر" : "Live Edit");
-                document.getElementById('bulkEditBox').classList.toggle('visible', editMode);
+                const editBtn = document.getElementById('editToggleBtn');
+                if (editBtn) {
+                    editBtn.innerText = editMode ? (currentLang === 'ar' ? "إيقاف التعديل" : "Lock Edit") : (currentLang === 'ar' ? "تعديل مباشر" : "Live Edit");
+                }
                 renderFixtures();
             }
         }
@@ -637,13 +594,22 @@
         function toggleEditMode() {
             if(!isAdmin) return;
             editMode = !editMode;
-            document.getElementById('editToggleBtn').innerText = editMode ? (currentLang === 'ar' ? "إيقاف التعديل" : "Lock Edit") : (currentLang === 'ar' ? "تعديل مباشر" : "Live Edit");
-            document.getElementById('bulkEditBox').classList.toggle('visible', editMode);
+            const editBtn = document.getElementById('editToggleBtn');
+            if(editBtn) {
+                editBtn.innerText = editMode ? (currentLang === 'ar' ? "إيقاف التعديل" : "Lock Edit") : (currentLang === 'ar' ? "تعديل مباشر" : "Live Edit");
+            }
             renderFixtures();
         }
 
         function saveAllCurrentRound() {
             if(!isAdmin) return;
+            let btn = document.getElementById('saveAllBtn');
+            let originalHTML = btn.innerHTML;
+            
+            // إظهار مؤشر التحميل الدائري السريع
+            btn.innerHTML = `<span class="spinner"></span>`;
+            btn.disabled = true;
+
             let matches = matchweeks[currentRound] || [];
             let updates = {};
 
@@ -659,55 +625,17 @@
 
             db.ref('fpl_scores').update(updates, (error) => {
                 if (error) {
-                    alert(currentLang === 'ar' ? "فشل حفظ النتائج!" : "Failed to save results!");
+                    alert(currentLang === 'ar' ? "فشل حفظ المواجهات!" : "Failed to save matches!");
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
                 } else {
-                    alert(currentLang === 'ar' ? `تم حفظ نتائج الجولة ${currentRound} بنجاح!` : `Matchweek ${currentRound} results saved successfully!`);
-                    if(activeTab === 'standings') {
-                        renderStandings();
-                    }
-                }
-            });
-        }
+                    // إظهار علامة الصح (✓) عند نجاح الحفظ
+                    btn.innerHTML = `✓`;
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.disabled = false;
+                    }, 1200);
 
-        function processBulkText() {
-            if(!isAdmin) return;
-            let text = document.getElementById('bulkTextarea').value;
-            let lines = text.split('\n');
-            let matches = matchweeks[currentRound] || [];
-            let updates = {};
-
-            lines.forEach(line => {
-                line = line.trim();
-                if(!line) return;
-                
-                let scoreMatch = line.match(/(\d+)\s*[-–:]\s*(\d+)/);
-                if(!scoreMatch) return;
-
-                let hScore = scoreMatch[1];
-                let aScore = scoreMatch[2];
-
-                let parts = line.split(/[\d\-–:]+/);
-                if(parts.length < 2) return;
-                let team1Text = parts[0].trim().toLowerCase();
-                let team2Text = parts[parts.length - 1].trim().toLowerCase();
-
-                matches.forEach((match, idx) => {
-                    let hTeam = teamsMap[match[0]];
-                    let aTeam = teamsMap[match[1]];
-
-                    let hMatch = team1Text.includes(hTeam.name.toLowerCase()) || (hTeam.arName && team1Text.includes(hTeam.arName));
-                    let aMatch = team2Text.includes(aTeam.name.toLowerCase()) || (aTeam.arName && team2Text.includes(aTeam.arName));
-
-                    if(hMatch && aMatch) {
-                        updates[`r${currentRound}_m${idx}_home`] = hScore;
-                        updates[`r${currentRound}_m${idx}_away`] = aScore;
-                    }
-                });
-            });
-
-            db.ref('fpl_scores').update(updates, (error) => {
-                if(!error) {
-                    alert(currentLang === 'ar' ? "تم تحديث وحفظ النتائج بنجاح!" : "Results updated and saved successfully!");
                     if(activeTab === 'standings') {
                         renderStandings();
                     }
