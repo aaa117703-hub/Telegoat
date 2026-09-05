@@ -29,6 +29,37 @@
             --font-en: 'EnglishCustom', sans-serif;
         }
 
+        /* تنسيقات الوضع الليلي / المضيء الجديدة */
+        body.light-mode {
+            --bg-main: #f0f2f5;
+            --bg-card: #ffffff;
+            --text-white: #222222;
+            --border-color: #dccdff;
+            --pl-purple: #e2d1f0;
+        }
+
+        /* مؤشر التحميل */
+        #loading-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .spinner {
+            width: 50px; height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--pl-pink);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         * { 
             box-sizing: border-box; 
             margin: 0; 
@@ -47,6 +78,7 @@
             color: var(--text-white); 
             padding-bottom: 50px; 
             font-family: var(--font-ar);
+            transition: background 0.3s, color 0.3s;
         }
 
         [data-lang="en"] {
@@ -382,6 +414,11 @@
 </head>
 <body>
 
+    <!-- مؤشر التحميل المتطور -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
     <div class="banner-container">
         <div class="banner-logo-section">
             <img src="header.png.pdf" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/800x130/38003c/ffffff&text=PREMIER+LEAGUE'">
@@ -399,6 +436,8 @@
             <button class="filter-btn admin-only" id="saveAlbumBtn" onclick="downloadAsImage()" data-ar="حفظ للألبوم" data-en="Save to Album">حفظ للألبوم</button>
             
             <button class="filter-btn" onclick="toggleLanguage()" id="langBtn">English</button>
+            <!-- زر الوضع الليلي/النهاري الجديد -->
+            <button class="filter-btn" onclick="toggleTheme()" id="themeBtn">🌓</button>
         </div>
 
         <div class="round-nav-container">
@@ -462,11 +501,40 @@
         let isAdmin = localStorage.getItem('fpl_admin') === 'true';
         let scoresStorage = {};
 
+        // إدارة ظهور مؤشر التحميل ومعالجة أخطاء الاتصال بـ Firebase آمنة
+        function showLoading(show) {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) overlay.style.display = show ? 'flex' : 'none';
+        }
+
+        showLoading(true);
+
         db.ref('fpl_scores').on('value', (snapshot) => {
-            scoresStorage = snapshot.val() || {};
-            renderFixtures();
-            if(activeTab === 'standings') renderStandings();
+            try {
+                scoresStorage = snapshot.val() || {};
+                renderFixtures();
+                if(activeTab === 'standings') renderStandings();
+            } catch (error) {
+                console.error("خطأ في معالجة بيانات Firebase:", error);
+            } finally {
+                showLoading(false);
+            }
+        }, (error) => {
+            showLoading(false);
+            console.error("فشل الاتصال بقاعدة البيانات:", error);
+            alert(currentLang === 'ar' ? "عذراً، تعذر الاتصال بقاعدة البيانات. تحقق من اتصالك بالإنترنت." : "Failed to connect to database. Check your connection.");
         });
+
+        // دالة الوضع الليلي والنهاري
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            localStorage.setItem('fpl_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        }
+
+        // استرجاع الثيم عند التحميل
+        if(localStorage.getItem('fpl_theme') === 'light') {
+            document.body.classList.add('light-mode');
+        }
 
         function checkAdminStatus() {
             if (isAdmin) {
@@ -667,7 +735,6 @@
             alert(currentLang === 'ar' ? "تم تحديث وحفظ النتائج بنجاح!" : "Results updated and saved successfully!");
         }
 
-        // حساب الترتيب التراكمي لغاية الجولة الحالية المحدد (currentRound)
         function calculateStandingsUpTo(roundLimit) {
             let calculated = {};
             for (let teamKey in teamsMap) {
@@ -710,7 +777,6 @@
             const tbody = document.getElementById('standingsBody');
             tbody.innerHTML = '';
             
-            // تحديث عنوان جدول التترتيب ليعكس الجولة الحالية
             document.getElementById('standingsHeaderTitle').innerText = currentLang === 'ar' ? 
                 `جدول الترتيب - بعد الجولة ${currentRound}` : 
                 `STANDINGS - AFTER GAMEWEEK ${currentRound}`;
@@ -789,6 +855,7 @@
 
         function downloadAsImage() {
             if(!isAdmin) return;
+            showLoading(true);
             const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
             const element = document.getElementById(targetId);
 
@@ -798,6 +865,7 @@
                 useCORS: true,
                 logging: false
             }).then(canvas => {
+                showLoading(false);
                 canvas.toBlob(function(blob) {
                     let url = URL.createObjectURL(blob);
                     let link = document.createElement('a');
@@ -810,6 +878,10 @@
                     
                     setTimeout(() => URL.revokeObjectURL(url), 1000);
                 }, 'image/png');
+            }).catch(err => {
+                showLoading(false);
+                console.error("فشل تصوير الشاشة:", err);
+                alert(currentLang === 'ar' ? "حدث خطأ أثناء حفظ الصورة." : "Error saving image.");
             });
         }
 
