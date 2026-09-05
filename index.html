@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premier League</title>
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -12,10 +11,6 @@
         @font-face {
             font-family: 'EnglishCustom';
             src: url('english-font.ttf') format('truetype');
-        }
-        @font-face {
-            font-family: 'SultanCustom';
-            src: url('Sultan.ttf') format('truetype');
         }
 
         :root {
@@ -326,12 +321,8 @@
 
         /* ===== SPINNER ===== */
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         .spinner {
             display: inline-block;
@@ -370,31 +361,24 @@
 </head>
 <body>
 
-    <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
 
-    <!-- ===== BANNER (Glowing Red Border) ===== -->
     <div class="banner-container">
         <img src="header.png" alt="Premier League" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'banner-fallback\'>⚽ PREMIER LEAGUE</div>'">
     </div>
 
-    <!-- ===== HEADER ===== -->
     <div class="header">
         <div class="filter-bar">
-            <!-- Tab Buttons -->
             <button class="filter-btn active" id="fixturesTabBtn" onclick="switchTab('fixtures')">Fixtures</button>
             <button class="filter-btn" id="standingsTabBtn" onclick="switchTab('standings')">Standings</button>
 
-            <!-- Round Dropdown -->
             <select class="filter-select" id="roundSelect" onchange="selectRound(this.value)"></select>
 
-            <!-- ADMIN ONLY (Hidden for visitors) -->
             <button class="filter-btn admin-only" id="editToggleBtn" onclick="toggleEditMode()">Live Edit</button>
             <button class="filter-btn admin-only" id="saveAllBtn" onclick="saveAllCurrentRound()">Save Matches</button>
             <button class="filter-btn admin-only" onclick="downloadAsImage()">Save to Album</button>
         </div>
 
-        <!-- Round Navigation -->
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">‹</button>
             <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockAdmin()">MATCHWEEK 1</div>
@@ -402,10 +386,8 @@
         </div>
     </div>
 
-    <!-- ===== MAIN CONTENT ===== -->
     <div class="main-container">
 
-        <!-- Fixtures Tab -->
         <div id="fixturesTab" class="tab-content active">
             <div id="captureFixtures" class="capture-box">
                 <div class="card-box-inner">
@@ -415,7 +397,6 @@
             </div>
         </div>
 
-        <!-- Standings Tab -->
         <div id="standingsTab" class="tab-content">
             <div id="captureStandings" class="capture-box">
                 <div class="card-box-inner">
@@ -461,488 +442,73 @@
         let toastTimeout = null;
 
         // ============================================================
-        // 3. TEAMS MAP (Keys must match matchweeks)
+        // 3. TEAMS MAP
         // ============================================================
         const teamsMap = {
-            "ARS": { name: "Arsenal", logo: "img/arsenal.png" },
-            "AVL": { name: "Aston Villa", logo: "img/aston_villa.png" },
-            "BOU": { name: "Bournemouth", logo: "img/bournemouth.png" },
-            "BRE": { name: "Brentford", logo: "img/brentford.png" },
-            "BHA": { name: "Brighton", logo: "img/brighton.png" },
-            "CHE": { name: "Chelsea", logo: "img/chelsea.png" },
-            "COV": { name: "Coventry City", logo: "img/coventry.png" },
-            "CRY": { name: "Crystal Palace", logo: "img/crystal_palace.png" },
-            "EVE": { name: "Everton", logo: "img/everton.png" },
-            "FUL": { name: "Fulham", logo: "img/fulham.png" },
-            "HUL": { name: "Hull City", logo: "img/hull.png" },
-            "IPS": { name: "Ipswich Town", logo: "img/ipswich.png" },
-            "LEE": { name: "Leeds United", logo: "img/leeds.png" },
-            "LIV": { name: "Liverpool", logo: "img/liverpool.png" },
-            "MCI": { name: "Manchester City", logo: "img/man_city.png" },
-            "MUN": { name: "Manchester United", logo: "img/man_utd.png" },
-            "NEW": { name: "Newcastle United", logo: "img/newcastle.png" },
-            "NOT": { name: "Nottingham Forest", logo: "img/forest.png" },
-            "SUN": { name: "Sunderland", logo: "img/sunderland.png" },
-            "TOT": { name: "Tottenham Hotspur", logo: "img/tottenham.png" }
+            "ARS": { name: "Arsenal", logo: "img/arsenal.png.WEBP" },
+            "AVL": { name: "Aston Villa", logo: "img/aston_villa.png.WEBP" },
+            "BOU": { name: "Bournemouth", logo: "img/bournemouth.png.WEBP" },
+            "BRE": { name: "Brentford", logo: "img/brentford.png.PNG" },
+            "BHA": { name: "Brighton", logo: "img/brighton.png.WEBP" },
+            "CHE": { name: "Chelsea", logo: "img/chelsea.png.WEBP" },
+            "COV": { name: "Coventry City", logo: "img/coventry.png.WEBP" },
+            "CRY": { name: "Crystal Palace", logo: "img/crystal_palace.png.WEBP" },
+            "EVE": { name: "Everton", logo: "img/everton.png.WEBP" },
+            "FUL": { name: "Fulham", logo: "img/fulham.png.WEBP" },
+            "HUL": { name: "Hull City", logo: "img/hull.png.WEBP" },
+            "IPS": { name: "Ipswich Town", logo: "img/ipswich.png.WEBP" },
+            "LEE": { name: "Leeds United", logo: "img/leeds.png.WEBP" },
+            "LIV": { name: "Liverpool", logo: "img/liverpool.png.WEBP" },
+            "MCI": { name: "Manchester City", logo: "img/man_city.png.WEBP" },
+            "MUN": { name: "Manchester United", logo: "img/man_utd.png.WEBP" },
+            "NEW": { name: "Newcastle United", logo: "img/newcastle.png.WEBP" },
+            "NOT": { name: "Nottingham Forest", logo: "img/forest.png.PNG" },
+            "SUN": { name: "Sunderland", logo: "img/sunderland.png.WEBP" },
+            "TOT": { name: "Tottenham Hotspur", logo: "img/tottenham.png.WEBP" }
         };
 
         // ============================================================
         // 4. FIXTURES (1 to 38)
         // ============================================================
         const matchweeks = {
-            1: [
-                ["ARS", "COV"],
-                ["HUL", "MUN"],
-                ["EVE", "CRY"],
-                ["IPS", "SUN"],
-                ["NOT", "LEE"],
-                ["BRE", "TOT"],
-                ["BHA", "AVL"],
-                ["MCI", "BOU"],
-                ["NEW", "LIV"],
-                ["FUL", "CHE"]
-            ],
-            2: [
-                ["BOU", "EVE"],
-                ["AVL", "ARS"],
-                ["CHE", "BHA"],
-                ["COV", "HUL"],
-                ["CRY", "MCI"],
-                ["LEE", "BRE"],
-                ["LIV", "NOT"],
-                ["MUN", "IPS"],
-                ["SUN", "FUL"],
-                ["TOT", "NEW"]
-            ],
-            3: [
-                ["ARS", "CHE"],
-                ["BRE", "SUN"],
-                ["BHA", "LEE"],
-                ["EVE", "MUN"],
-                ["FUL", "CRY"],
-                ["HUL", "AVL"],
-                ["IPS", "LIV"],
-                ["MCI", "COV"],
-                ["NEW", "BOU"],
-                ["NOT", "TOT"]
-            ],
-            4: [
-                ["BOU", "BRE"],
-                ["AVL", "NOT"],
-                ["CHE", "HUL"],
-                ["COV", "BHA"],
-                ["CRY", "IPS"],
-                ["LEE", "NEW"],
-                ["LIV", "FUL"],
-                ["MUN", "MCI"],
-                ["SUN", "ARS"],
-                ["TOT", "EVE"]
-            ],
-            5: [
-                ["BOU", "LIV"],
-                ["BRE", "CHE"],
-                ["BHA", "ARS"],
-                ["EVE", "IPS"],
-                ["FUL", "MUN"],
-                ["LEE", "CRY"],
-                ["MCI", "SUN"],
-                ["NEW", "HUL"],
-                ["NOT", "COV"],
-                ["TOT", "AVL"]
-            ],
-            6: [
-                ["ARS", "LEE"],
-                ["AVL", "BRE"],
-                ["CHE", "BOU"],
-                ["COV", "NEW"],
-                ["CRY", "NOT"],
-                ["HUL", "EVE"],
-                ["IPS", "FUL"],
-                ["LIV", "MCI"],
-                ["MUN", "TOT"],
-                ["SUN", "BHA"]
-            ],
-            7: [
-                ["BOU", "SUN"],
-                ["BRE", "LIV"],
-                ["BHA", "CRY"],
-                ["EVE", "CHE"],
-                ["FUL", "HUL"],
-                ["LEE", "MUN"],
-                ["MCI", "IPS"],
-                ["NEW", "AVL"],
-                ["NOT", "ARS"],
-                ["TOT", "COV"]
-            ],
-            8: [
-                ["ARS", "EVE"],
-                ["AVL", "MCI"],
-                ["CHE", "TOT"],
-                ["COV", "FUL"],
-                ["CRY", "NEW"],
-                ["HUL", "BRE"],
-                ["IPS", "NOT"],
-                ["LIV", "BHA"],
-                ["MUN", "BOU"],
-                ["SUN", "LEE"]
-            ],
-            9: [
-                ["BOU", "LEE"],
-                ["BRE", "NOT"],
-                ["CHE", "MUN"],
-                ["COV", "SUN"],
-                ["HUL", "IPS"],
-                ["LIV", "ARS"],
-                ["MCI", "BHA"],
-                ["NEW", "EVE"],
-                ["TOT", "CRY"]
-            ],
-            10: [
-                ["ARS", "HUL"],
-                ["BHA", "BRE"],
-                ["CRY", "LIV"],
-                ["EVE", "COV"],
-                ["FUL", "NEW"],
-                ["IPS", "BOU"],
-                ["LEE", "TOT"],
-                ["MUN", "AVL"],
-                ["NOT", "MCI"],
-                ["SUN", "CHE"]
-            ],
-            11: [
-                ["BRE", "EVE"],
-                ["CHE", "LEE"],
-                ["COV", "CRY"],
-                ["HUL", "BHA"],
-                ["LIV", "MUN"],
-                ["MCI", "FUL"],
-                ["NEW", "ARS"],
-                ["TOT", "IPS"]
-            ],
-            12: [
-                ["ARS", "MCI"],
-                ["BHA", "NEW"],
-                ["CRY", "HUL"],
-                ["EVE", "LIV"],
-                ["FUL", "BOU"],
-                ["IPS", "AVL"],
-                ["LEE", "COV"],
-                ["MUN", "BRE"],
-                ["NOT", "CHE"],
-                ["SUN", "TOT"]
-            ],
-            13: [
-                ["BOU", "BHA"],
-                ["AVL", "EVE"],
-                ["BRE", "ARS"],
-                ["CHE", "CRY"],
-                ["COV", "IPS"],
-                ["HUL", "NOT"],
-                ["LIV", "SUN"],
-                ["MCI", "LEE"],
-                ["NEW", "MUN"],
-                ["TOT", "FUL"]
-            ],
-            14: [
-                ["BOU", "HUL"],
-                ["AVL", "CRY"],
-                ["BRE", "MCI"],
-                ["CHE", "LIV"],
-                ["EVE", "FUL"],
-                ["LEE", "IPS"],
-                ["MUN", "COV"],
-                ["NEW", "SUN"],
-                ["NOT", "BHA"],
-                ["TOT", "ARS"]
-            ],
-            15: [
-                ["ARS", "BOU"],
-                ["BHA", "EVE"],
-                ["COV", "AVL"],
-                ["CRY", "MUN"],
-                ["FUL", "BRE"],
-                ["HUL", "TOT"],
-                ["IPS", "NEW"],
-                ["LIV", "LEE"],
-                ["MCI", "CHE"],
-                ["SUN", "NOT"]
-            ],
-            16: [
-                ["BOU", "COV"],
-                ["ARS", "MUN"],
-                ["BRE", "NEW"],
-                ["BHA", "IPS"],
-                ["CHE", "AVL"],
-                ["LEE", "FUL"],
-                ["LIV", "TOT"],
-                ["MCI", "HUL"],
-                ["NOT", "EVE"],
-                ["SUN", "CRY"]
-            ],
-            17: [
-                ["AVL", "LEE"],
-                ["COV", "CHE"],
-                ["CRY", "ARS"],
-                ["EVE", "SUN"],
-                ["FUL", "BHA"],
-                ["HUL", "LIV"],
-                ["IPS", "BRE"],
-                ["MUN", "NOT"],
-                ["NEW", "MCI"],
-                ["TOT", "BOU"]
-            ],
-            18: [
-                ["AVL", "LIV"],
-                ["COV", "BRE"],
-                ["CRY", "BOU"],
-                ["EVE", "MCI"],
-                ["FUL", "ARS"],
-                ["HUL", "LEE"],
-                ["IPS", "CHE"],
-                ["MUN", "SUN"],
-                ["NEW", "NOT"],
-                ["TOT", "BHA"]
-            ],
-            19: [
-                ["BOU", "AVL"],
-                ["ARS", "IPS"],
-                ["BRE", "CRY"],
-                ["BHA", "MUN"],
-                ["CHE", "NEW"],
-                ["LEE", "EVE"],
-                ["LIV", "COV"],
-                ["MCI", "TOT"],
-                ["NOT", "FUL"],
-                ["SUN", "HUL"]
-            ],
-            20: [
-                ["ARS", "BRE"],
-                ["BHA", "BOU"],
-                ["CRY", "CHE"],
-                ["EVE", "AVL"],
-                ["FUL", "TOT"],
-                ["IPS", "COV"],
-                ["LEE", "MCI"],
-                ["MUN", "NEW"],
-                ["NOT", "HUL"],
-                ["SUN", "LIV"]
-            ],
-            21: [
-                ["AVL", "EVE"],
-                ["BRE", "BHA"],
-                ["CHE", "SUN"],
-                ["COV", "LIV"],
-                ["CRY", "BOU"],
-                ["FUL", "MUN"],
-                ["HUL", "NEW"],
-                ["LEE", "ARS"],
-                ["MCI", "IPS"],
-                ["TOT", "LEE"]
-            ],
-            22: [
-                ["BOU", "NOT"],
-                ["ARS", "LEE"],
-                ["BHA", "MCI"],
-                ["EVE", "HUL"],
-                ["IPS", "AVL"],
-                ["LIV", "NEW"],
-                ["MUN", "FUL"],
-                ["NOT", "BOU"],
-                ["SUN", "COV"],
-                ["TOT", "BRE"]
-            ],
-            23: [
-                ["AVL", "LIV"],
-                ["BRE", "EVE"],
-                ["CHE", "NEW"],
-                ["COV", "MUN"],
-                ["CRY", "SUN"],
-                ["HUL", "ARS"],
-                ["IPS", "LEE"],
-                ["MCI", "BHA"],
-                ["NOT", "FUL"],
-                ["TOT", "BOU"]
-            ],
-            24: [
-                ["BOU", "COV"],
-                ["ARS", "AVL"],
-                ["BHA", "LIV"],
-                ["EVE", "NOT"],
-                ["FUL", "IPS"],
-                ["LEE", "HUL"],
-                ["MUN", "CRY"],
-                ["NEW", "TOT"],
-                ["SUN", "BRE"],
-                ["MCI", "LEE"]
-            ],
-            25: [
-                ["AVL", "BOU"],
-                ["BRE", "CRY"],
-                ["COV", "ARS"],
-                ["HUL", "MCI"],
-                ["IPS", "EVE"],
-                ["LEE", "SUN"],
-                ["LIV", "FUL"],
-                ["MUN", "NEW"],
-                ["NOT", "BHA"],
-                ["TOT", "CHE"]
-            ],
-            26: [
-                ["BOU", "LEE"],
-                ["BHA", "AVL"],
-                ["CHE", "HUL"],
-                ["CRY", "COV"],
-                ["EVE", "LIV"],
-                ["FUL", "NOT"],
-                ["MCI", "BRE"],
-                ["NEW", "MUN"],
-                ["SUN", "IPS"],
-                ["TOT", "ARS"]
-            ],
-            27: [
-                ["AVL", "CHE"],
-                ["BRE", "FUL"],
-                ["COV", "CRY"],
-                ["HUL", "BOU"],
-                ["IPS", "BHA"],
-                ["LEE", "EVE"],
-                ["LIV", "MUN"],
-                ["MUN", "MCI"],
-                ["NOT", "SUN"],
-                ["TOT", "NEW"]
-            ],
-            28: [
-                ["ARS", "NOT"],
-                ["BOU", "BRE"],
-                ["BHA", "HUL"],
-                ["CRY", "AVL"],
-                ["EVE", "LEE"],
-                ["FUL", "LIV"],
-                ["MCI", "TOT"],
-                ["NEW", "IPS"],
-                ["SUN", "MUN"],
-                ["CHE", "COV"]
-            ],
-            29: [
-                ["ARS", "FUL"],
-                ["AVL", "CHE"],
-                ["BRE", "NEW"],
-                ["COV", "LEE"],
-                ["HUL", "CRY"],
-                ["IPS", "MCI"],
-                ["LIV", "BHA"],
-                ["MUN", "EVE"],
-                ["NOT", "BOU"],
-                ["TOT", "SUN"]
-            ],
-            30: [
-                ["BOU", "IPS"],
-                ["BHA", "COV"],
-                ["CHE", "ARS"],
-                ["CRY", "MCI"],
-                ["EVE", "BRE"],
-                ["FUL", "HUL"],
-                ["LEE", "AVL"],
-                ["LIV", "NOT"],
-                ["NEW", "FUL"],
-                ["SUN", "TOT"]
-            ],
-            31: [
-                ["ARS", "CRY"],
-                ["AVL", "LEE"],
-                ["BRE", "FUL"],
-                ["COV", "EVE"],
-                ["HUL", "LIV"],
-                ["IPS", "CHE"],
-                ["MCI", "BHA"],
-                ["NOT", "MUN"],
-                ["TOT", "BOU"],
-                ["NEW", "MCI"]
-            ],
-            32: [
-                ["BOU", "ARS"],
-                ["BHA", "NOT"],
-                ["CHE", "FUL"],
-                ["CRY", "AVL"],
-                ["EVE", "IPS"],
-                ["FUL", "COV"],
-                ["LEE", "TOT"],
-                ["LIV", "BRE"],
-                ["MUN", "HUL"],
-                ["NEW", "MCI"]
-            ],
-            33: [
-                ["ARS", "NEW"],
-                ["AVL", "CRY"],
-                ["BRE", "LEE"],
-                ["COV", "BHA"],
-                ["HUL", "CHE"],
-                ["IPS", "BOU"],
-                ["MCI", "LIV"],
-                ["NOT", "EVE"],
-                ["TOT", "MUN"],
-                ["FUL", "NEW"]
-            ],
-            34: [
-                ["BOU", "AVL"],
-                ["BHA", "IPS"],
-                ["CHE", "BRE"],
-                ["CRY", "FUL"],
-                ["EVE", "ARS"],
-                ["FUL", "LEE"],
-                ["LIV", "TOT"],
-                ["MUN", "COV"],
-                ["NEW", "HUL"],
-                ["NOT", "MCI"]
-            ],
-            35: [
-                ["ARS", "BHA"],
-                ["AVL", "NOT"],
-                ["BRE", "BOU"],
-                ["COV", "CHE"],
-                ["HUL", "CRY"],
-                ["IPS", "MUN"],
-                ["LEE", "LIV"],
-                ["MCI", "EVE"],
-                ["TOT", "FUL"],
-                ["NEW", "FUL"]
-            ],
-            36: [
-                ["BOU", "MUN"],
-                ["BHA", "FUL"],
-                ["CHE", "IPS"],
-                ["CRY", "BRE"],
-                ["EVE", "AVL"],
-                ["FUL", "MCI"],
-                ["LIV", "COV"],
-                ["NEW", "LEE"],
-                ["NOT", "TOT"],
-                ["SUN", "ARS"]
-            ],
-            37: [
-                ["ARS", "LIV"],
-                ["AVL", "SUN"],
-                ["BRE", "HUL"],
-                ["COV", "BOU"],
-                ["IPS", "CRY"],
-                ["LEE", "CHE"],
-                ["MCI", "NEW"],
-                ["MUN", "NOT"],
-                ["TOT", "EVE"],
-                ["FUL", "BHA"]
-            ],
-            38: [
-                ["BOU", "NOT"],
-                ["BHA", "MUN"],
-                ["CHE", "AVL"],
-                ["CRY", "ARS"],
-                ["EVE", "FUL"],
-                ["HUL", "COV"],
-                ["LEE", "BRE"],
-                ["LIV", "IPS"],
-                ["MCI", "SUN"],
-                ["TOT", "NEW"]
-            ]
+            1: [["ARS", "COV"], ["HUL", "MUN"], ["EVE", "CRY"], ["IPS", "SUN"], ["NOT", "LEE"], ["BRE", "TOT"], ["BHA", "AVL"], ["MCI", "BOU"], ["NEW", "LIV"], ["FUL", "CHE"]],
+            2: [["BOU", "EVE"], ["AVL", "ARS"], ["CHE", "BHA"], ["COV", "HUL"], ["CRY", "MCI"], ["LEE", "BRE"], ["LIV", "NOT"], ["MUN", "IPS"], ["SUN", "FUL"], ["TOT", "NEW"]],
+            3: [["ARS", "CHE"], ["BRE", "SUN"], ["BHA", "LEE"], ["EVE", "MUN"], ["FUL", "CRY"], ["HUL", "AVL"], ["IPS", "LIV"], ["MCI", "COV"], ["NEW", "BOU"], ["NOT", "TOT"]],
+            4: [["BOU", "BRE"], ["AVL", "NOT"], ["CHE", "HUL"], ["COV", "BHA"], ["CRY", "IPS"], ["LEE", "NEW"], ["LIV", "FUL"], ["MUN", "MCI"], ["SUN", "ARS"], ["TOT", "EVE"]],
+            5: [["BOU", "LIV"], ["BRE", "CHE"], ["BHA", "ARS"], ["EVE", "IPS"], ["FUL", "MUN"], ["LEE", "CRY"], ["MCI", "SUN"], ["NEW", "HUL"], ["NOT", "COV"], ["TOT", "AVL"]],
+            6: [["ARS", "LEE"], ["AVL", "BRE"], ["CHE", "BOU"], ["COV", "NEW"], ["CRY", "NOT"], ["HUL", "EVE"], ["IPS", "FUL"], ["LIV", "MCI"], ["MUN", "TOT"], ["SUN", "BHA"]],
+            7: [["BOU", "SUN"], ["BRE", "LIV"], ["BHA", "CRY"], ["EVE", "CHE"], ["FUL", "HUL"], ["LEE", "MUN"], ["MCI", "IPS"], ["NEW", "AVL"], ["NOT", "ARS"], ["TOT", "COV"]],
+            8: [["ARS", "EVE"], ["AVL", "MCI"], ["CHE", "TOT"], ["COV", "FUL"], ["CRY", "NEW"], ["HUL", "BRE"], ["IPS", "NOT"], ["LIV", "BHA"], ["MUN", "BOU"], ["SUN", "LEE"]],
+            9: [["BOU", "LEE"], ["BRE", "NOT"], ["CHE", "MUN"], ["COV", "SUN"], ["HUL", "IPS"], ["LIV", "ARS"], ["MCI", "BHA"], ["NEW", "EVE"], ["TOT", "CRY"]],
+            10: [["ARS", "HUL"], ["BHA", "BRE"], ["CRY", "LIV"], ["EVE", "COV"], ["FUL", "NEW"], ["IPS", "BOU"], ["LEE", "TOT"], ["MUN", "AVL"], ["NOT", "MCI"], ["SUN", "CHE"]],
+            11: [["BRE", "EVE"], ["CHE", "LEE"], ["COV", "CRY"], ["HUL", "BHA"], ["LIV", "MUN"], ["MCI", "FUL"], ["NEW", "ARS"], ["TOT", "IPS"]],
+            12: [["ARS", "MCI"], ["BHA", "NEW"], ["CRY", "HUL"], ["EVE", "LIV"], ["FUL", "BOU"], ["IPS", "AVL"], ["LEE", "COV"], ["MUN", "BRE"], ["NOT", "CHE"], ["SUN", "TOT"]],
+            13: [["BOU", "BHA"], ["AVL", "EVE"], ["BRE", "ARS"], ["CHE", "CRY"], ["COV", "IPS"], ["HUL", "NOT"], ["LIV", "SUN"], ["MCI", "LEE"], ["NEW", "MUN"], ["TOT", "FUL"]],
+            14: [["BOU", "HUL"], ["AVL", "CRY"], ["BRE", "MCI"], ["CHE", "LIV"], ["EVE", "FUL"], ["LEE", "IPS"], ["MUN", "COV"], ["NEW", "SUN"], ["NOT", "BHA"], ["TOT", "ARS"]],
+            15: [["ARS", "BOU"], ["BHA", "EVE"], ["COV", "AVL"], ["CRY", "MUN"], ["FUL", "BRE"], ["HUL", "TOT"], ["IPS", "NEW"], ["LIV", "LEE"], ["MCI", "CHE"], ["SUN", "NOT"]],
+            16: [["BOU", "COV"], ["ARS", "MUN"], ["BRE", "NEW"], ["BHA", "IPS"], ["CHE", "AVL"], ["LEE", "FUL"], ["LIV", "TOT"], ["MCI", "HUL"], ["NOT", "EVE"], ["SUN", "CRY"]],
+            17: [["AVL", "LEE"], ["COV", "CHE"], ["CRY", "ARS"], ["EVE", "SUN"], ["FUL", "BHA"], ["HUL", "LIV"], ["IPS", "BRE"], ["MUN", "NOT"], ["NEW", "MCI"], ["TOT", "BOU"]],
+            18: [["AVL", "LIV"], ["COV", "BRE"], ["CRY", "BOU"], ["EVE", "MCI"], ["FUL", "ARS"], ["HUL", "LEE"], ["IPS", "CHE"], ["MUN", "SUN"], ["NEW", "NOT"], ["TOT", "BHA"]],
+            19: [["BOU", "AVL"], ["ARS", "IPS"], ["BRE", "CRY"], ["BHA", "MUN"], ["CHE", "NEW"], ["LEE", "EVE"], ["LIV", "COV"], ["MCI", "TOT"], ["NOT", "FUL"], ["SUN", "HUL"]],
+            20: [["ARS", "BRE"], ["BHA", "BOU"], ["CRY", "CHE"], ["EVE", "AVL"], ["FUL", "TOT"], ["IPS", "COV"], ["LEE", "MCI"], ["MUN", "NEW"], ["NOT", "HUL"], ["SUN", "LIV"]],
+            21: [["AVL", "EVE"], ["BRE", "BHA"], ["CHE", "SUN"], ["COV", "LIV"], ["CRY", "BOU"], ["FUL", "MUN"], ["HUL", "NEW"], ["LEE", "ARS"], ["MCI", "IPS"], ["TOT", "LEE"]],
+            22: [["BOU", "NOT"], ["ARS", "LEE"], ["BHA", "MCI"], ["EVE", "HUL"], ["IPS", "AVL"], ["LIV", "NEW"], ["MUN", "FUL"], ["NOT", "BOU"], ["SUN", "COV"], ["TOT", "BRE"]],
+            23: [["AVL", "LIV"], ["BRE", "EVE"], ["CHE", "NEW"], ["COV", "MUN"], ["CRY", "SUN"], ["HUL", "ARS"], ["IPS", "LEE"], ["MCI", "BHA"], ["NOT", "FUL"], ["TOT", "BOU"]],
+            24: [["BOU", "COV"], ["ARS", "AVL"], ["BHA", "LIV"], ["EVE", "NOT"], ["FUL", "IPS"], ["LEE", "HUL"], ["MUN", "CRY"], ["NEW", "TOT"], ["SUN", "BRE"], ["MCI", "LEE"]],
+            25: [["AVL", "BOU"], ["BRE", "CRY"], ["COV", "ARS"], ["HUL", "MCI"], ["IPS", "EVE"], ["LEE", "SUN"], ["LIV", "FUL"], ["MUN", "NEW"], ["NOT", "BHA"], ["TOT", "CHE"]],
+            26: [["BOU", "LEE"], ["BHA", "AVL"], ["CHE", "HUL"], ["CRY", "COV"], ["EVE", "LIV"], ["FUL", "NOT"], ["MCI", "BRE"], ["NEW", "MUN"], ["SUN", "IPS"], ["TOT", "ARS"]],
+            27: [["AVL", "CHE"], ["BRE", "FUL"], ["COV", "CRY"], ["HUL", "BOU"], ["IPS", "BHA"], ["LEE", "EVE"], ["LIV", "MUN"], ["MUN", "MCI"], ["NOT", "SUN"], ["TOT", "NEW"]],
+            28: [["ARS", "NOT"], ["BOU", "BRE"], ["BHA", "HUL"], ["CRY", "AVL"], ["EVE", "LEE"], ["FUL", "LIV"], ["MCI", "TOT"], ["NEW", "IPS"], ["SUN", "MUN"], ["CHE", "COV"]],
+            29: [["ARS", "FUL"], ["AVL", "CHE"], ["BRE", "NEW"], ["COV", "LEE"], ["HUL", "CRY"], ["IPS", "MCI"], ["LIV", "BHA"], ["MUN", "EVE"], ["NOT", "BOU"], ["TOT", "SUN"]],
+            30: [["BOU", "IPS"], ["BHA", "COV"], ["CHE", "ARS"], ["CRY", "MCI"], ["EVE", "BRE"], ["FUL", "HUL"], ["LEE", "AVL"], ["LIV", "NOT"], ["NEW", "FUL"], ["SUN", "TOT"]],
+            31: [["ARS", "CRY"], ["AVL", "LEE"], ["BRE", "FUL"], ["COV", "EVE"], ["HUL", "LIV"], ["IPS", "CHE"], ["MCI", "BHA"], ["NOT", "MUN"], ["TOT", "BOU"], ["NEW", "MCI"]],
+            32: [["BOU", "ARS"], ["BHA", "NOT"], ["CHE", "FUL"], ["CRY", "AVL"], ["EVE", "IPS"], ["FUL", "COV"], ["LEE", "TOT"], ["LIV", "BRE"], ["MUN", "HUL"], ["NEW", "MCI"]],
+            33: [["ARS", "NEW"], ["AVL", "CRY"], ["BRE", "LEE"], ["COV", "BHA"], ["HUL", "CHE"], ["IPS", "BOU"], ["MCI", "LIV"], ["NOT", "EVE"], ["TOT", "MUN"], ["FUL", "NEW"]],
+            34: [["BOU", "AVL"], ["BHA", "IPS"], ["CHE", "BRE"], ["CRY", "FUL"], ["EVE", "ARS"], ["FUL", "LEE"], ["LIV", "TOT"], ["MUN", "COV"], ["NEW", "HUL"], ["NOT", "MCI"]],
+            35: [["ARS", "BHA"], ["AVL", "NOT"], ["BRE", "BOU"], ["COV", "CHE"], ["HUL", "CRY"], ["IPS", "MUN"], ["LEE", "LIV"], ["MCI", "EVE"], ["TOT", "FUL"], ["NEW", "FUL"]],
+            36: [["BOU", "MUN"], ["BHA", "FUL"], ["CHE", "IPS"], ["CRY", "BRE"], ["EVE", "AVL"], ["FUL", "MCI"], ["LIV", "COV"], ["NEW", "LEE"], ["NOT", "TOT"], ["SUN", "ARS"]],
+            37: [["ARS", "LIV"], ["AVL", "SUN"], ["BRE", "HUL"], ["COV", "BOU"], ["IPS", "CRY"], ["LEE", "CHE"], ["MCI", "NEW"], ["MUN", "NOT"], ["TOT", "EVE"], ["FUL", "BHA"]],
+            38: [["BOU", "NOT"], ["BHA", "MUN"], ["CHE", "AVL"], ["CRY", "ARS"], ["EVE", "FUL"], ["HUL", "COV"], ["LEE", "BRE"], ["LIV", "IPS"], ["MCI", "SUN"], ["TOT", "NEW"]]
         };
 
         // ============================================================
@@ -966,11 +532,10 @@
         }
 
         // ============================================================
-        // 6. UNLOCK ADMIN (Double-click on MATCHWEEK)
+        // 6. UNLOCK ADMIN
         // ============================================================
         function unlockAdmin() {
             if (isAdmin) {
-                // Toggle edit mode if already admin
                 editMode = !editMode;
                 document.getElementById('editToggleBtn').textContent = editMode ? "Lock Edit" : "Live Edit";
                 renderFixtures();
@@ -997,7 +562,7 @@
         }
 
         // ============================================================
-        // 7. FIREBASE LISTENER (Real-time sync)
+        // 7. FIREBASE LISTENER
         // ============================================================
         db.ref('fpl_scores').on('value', (snapshot) => {
             scoresStorage = snapshot.val() || {};
@@ -1023,8 +588,7 @@
 
             const matches = matchweeks[currentRound] || [];
             if (!matches.length) {
-                list.innerHTML =
-                    `<div style="text-align:center;padding:30px;color:#888;font-size:18px;">No fixtures available</div>`;
+                list.innerHTML = `<div style="text-align:center;padding:30px;color:#888;font-size:18px;">No fixtures available</div>`;
                 return;
             }
 
@@ -1072,14 +636,13 @@
         }
 
         // ============================================================
-        // 9. RENDER STANDINGS (Sorted by Pts then GF)
+        // 9. RENDER STANDINGS
         // ============================================================
         function renderStandings() {
             const tbody = document.getElementById('standingsBody');
             const header = document.getElementById('standingsHeaderTitle');
             header.textContent = `STANDINGS - GAMEWEEK ${currentRound}`;
 
-            // Calculate points up to current round
             let calc = {};
             for (let key in teamsMap) {
                 calc[key] = { key: key, gf: 0, pts: 0 };
@@ -1100,8 +663,7 @@
                         calc[aKey].gf += aS;
                         if (hS > aS) calc[hKey].pts += 3;
                         else if (aS > hS) calc[aKey].pts += 3;
-                        else { calc[hKey].pts += 1;
-                            calc[aKey].pts += 1; }
+                        else { calc[hKey].pts += 1; calc[aKey].pts += 1; }
                     }
                 });
             }
@@ -1165,7 +727,7 @@
         }
 
         // ============================================================
-        // 11. SAVE MATCHES TO FIREBASE (Admin only)
+        // 11. SAVE MATCHES TO FIREBASE
         // ============================================================
         function saveAllCurrentRound() {
             if (!isAdmin || isSaving) return;
@@ -1190,7 +752,8 @@
             db.ref('fpl_scores').update(updates, (error) => {
                 isSaving = false;
                 if (error) {
-                    alert("Failed to save!");
+                    console.error("Firebase Save Error:", error);
+                    alert("❌ Failed to save! Check console for details.\nMake sure Firebase Rules allow write.");
                     btn.innerHTML = originalHTML;
                     btn.disabled = false;
                 } else {
@@ -1200,7 +763,6 @@
                         btn.innerHTML = originalHTML;
                         btn.disabled = false;
                     }, 1200);
-                    // Auto switch to standings after save
                     switchTab('standings');
                     renderStandings();
                 }
@@ -1208,7 +770,7 @@
         }
 
         // ============================================================
-        // 12. DOWNLOAD IMAGE (Admin only)
+        // 12. DOWNLOAD IMAGE
         // ============================================================
         function downloadAsImage() {
             if (!isAdmin) return;
@@ -1222,13 +784,12 @@
                 logging: false
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = activeTab === 'fixtures' ?
-                    `Matchweek_${currentRound}.png` :
-                    `Standings_GW${currentRound}.png`;
+                link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `Standings_GW${currentRound}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
                 showToast("📸 Image downloaded!");
-            }).catch(() => {
+            }).catch((err) => {
+                console.error("Image capture error:", err);
                 alert("Failed to generate image.");
             });
         }
