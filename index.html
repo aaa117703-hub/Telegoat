@@ -140,11 +140,7 @@
         }
 
         .filter-select {
-            appearance: none;
-            -webkit-appearance: none;
-            padding-right: 20px;
-            padding-left: 30px;
-            cursor: pointer;
+            display: none; /* إخفاء القائمة المنسدلة المزعجة ومنع ظهورها كدائرة فارغة */
         }
 
         .admin-only {
@@ -411,8 +407,6 @@
             <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')" data-ar="المواجهات" data-en="Fixtures">المواجهات</button>
             <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')" data-ar="جدول الترتيب" data-en="Standings">جدول الترتيب</button>
             
-            <select class="filter-select" id="roundSelect" onchange="selectRound(this.value)"></select>
-
             <button class="filter-btn admin-only" id="editToggleBtn" onclick="toggleEditMode()" data-ar="تعديل" data-en="Edit">تعديل</button>
             <button class="filter-btn admin-only" id="saveAlbumBtn" onclick="downloadAsImage()" data-ar="حفظ للألبوم" data-en="Save to Album">حفظ للألبوم</button>
             
@@ -422,7 +416,7 @@
 
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">❮</button>
-            <div class="round-indicator" id="currentRoundTitle" onclick="openRoundSelector()">MATCHWEEK 1</div>
+            <div class="round-indicator" id="currentRoundTitle" onclick="changeRound(1)">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(1)">❯</button>
         </div>
     </div>
@@ -478,8 +472,6 @@
         let currentLang = 'ar';
         let isAdmin = localStorage.getItem('fpl_admin') === 'true';
         let scoresStorage = {};
-
-        renderFixtures();
 
         db.ref('fpl_scores').on('value', (snapshot) => {
             try {
@@ -613,30 +605,6 @@
         let activeTab = 'fixtures';
         let editMode = false;
 
-        function initRoundDropdown() {
-            const select = document.getElementById('roundSelect');
-            select.innerHTML = '';
-            for(let i=1; i<=38; i++) {
-                let opt = document.createElement('option');
-                opt.value = i;
-                opt.innerText = currentLang === 'ar' ? `الجولة ${i}` : `Gameweek ${i}`;
-                if(i === currentRound) opt.selected = true;
-                select.appendChild(opt);
-            }
-        }
-
-        function selectRound(val) {
-            currentRound = parseInt(val);
-            renderFixtures();
-            if(activeTab === 'standings') {
-                renderStandings();
-            }
-        }
-
-        function openRoundSelector() {
-            document.getElementById('roundSelect').focus();
-        }
-
         function switchTab(tabName) {
             activeTab = tabName;
             document.getElementById('fixturesToggleBtn').classList.toggle('active', tabName === 'fixtures');
@@ -647,6 +615,7 @@
                 renderStandings();
                 document.getElementById('standingsTab').classList.add('active');
             } else {
+                renderFixtures();
                 document.getElementById('fixturesTab').classList.add('active');
             }
         }
@@ -772,7 +741,6 @@
             const list = document.getElementById('fixturesList');
             document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
             document.getElementById('fixturesHeaderTitle').innerText = `MATCHWEEK ${currentRound} RESULTS`;
-            initRoundDropdown();
             list.innerHTML = '';
 
             let matches = matchweeks[currentRound] || [];
@@ -803,7 +771,7 @@
                             ${scoreContent}
                         </div>
                         <div class="team-box away">
-                            <img src="${away.logo}">
+                            <img src="${home.logo}">
                             <span>${away.name}</span>
                         </div>
                     </div>
@@ -850,7 +818,7 @@
         }
 
         checkAdminStatus();
-        initRoundDropdown();
+        renderFixtures();
     </script>
 </body>
 </html>
