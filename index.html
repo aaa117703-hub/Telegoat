@@ -39,21 +39,17 @@
             padding-bottom: 40px; 
         }
 
-        /* تعديل البانر ليكون بحواف دائرية وإطار مضيء باللون الأحمر */
         .banner-container {
             width: 100%;
-            max-width: 750px;
-            margin: 15px auto;
-            max-height: 140px;
+            max-width: 800px;
+            margin: 0 auto;
+            max-height: 150px;
             overflow: hidden;
             background: linear-gradient(90deg, #00bfff, #00ff88);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 20px;
-            border-radius: 16px;
-            border: 3px solid #ff005a;
-            box-shadow: 0 0 15px rgba(255, 0, 90, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.4);
         }
         
         .banner-logo-section {
@@ -80,7 +76,7 @@
         .header { 
             background-color: var(--pl-dark-bg); 
             color: #ffffff; 
-            padding: 10px 10px 20px 10px; 
+            padding: 20px 10px; 
             text-align: center; 
         }
 
@@ -260,7 +256,7 @@
 
         .export-area { border-radius: 8px; }
 
-        /* Standings Tab Background & New Sidebar Logo (Image 3 & Image 4 Style) */
+        /* Standings Tab Background (Image 3 Style) */
         #captureStandings {
             display: flex;
             background: #ffffff;
@@ -271,26 +267,32 @@
         }
 
         .standings-sidebar {
-            width: 140px;
+            width: 130px;
             background: linear-gradient(180deg, #8138f8 0%, #10b981 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 20px 8px;
+            justify-content: flex-start;
+            padding: 25px 10px;
             color: #ffffff;
             text-align: center;
             flex-shrink: 0;
         }
 
-        /* إفراغ الخلفية البيضاء للشعار الجديد وجعله متناسقاً */
         .standings-sidebar img {
-            width: 95px;
-            height: auto;
+            width: 65px;
+            height: 65px;
             object-fit: contain;
-            margin-bottom: 5px;
-            mix-blend-mode: luminosity;
-            filter: brightness(0) invert(1);
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .standings-sidebar .sidebar-brand {
+            font-family: var(--font-en);
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            line-height: 1.2;
         }
 
         .standings-content-area {
@@ -346,7 +348,7 @@
 </head>
 <body>
 
-    <!-- البانر بحواف دائرية وإطار مضيء أحمر -->
+    <!-- البانر المحدث بالشعار الجديد -->
     <div class="banner-container">
         <div class="banner-logo-section">
             <img src="header.png.pdf" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/120x120/000/fff&text=PL'">
@@ -361,14 +363,14 @@
             
             <select class="filter-select" id="roundSelect" onchange="selectRound(this.value)"></select>
 
-            <!-- زر التعديل مخفي افتراضياً ولا يظهر إلا عند النقر المزدوج وإدخال 1999 -->
+            <!-- زر التعديل مخفي افتراضياً -->
             <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()" style="display: none;">تعديل</button>
             <button class="filter-btn" onclick="downloadAsImage()">حفظ الصورة</button>
         </div>
 
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">&lt;</button>
-            <!-- النقر المزدوج هنا لإدخال الرمز 1999 وإظهار زر التعديل -->
+            <!-- تم إضافة دقة النقر المزدوج هنا -->
             <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(1)">&gt;</button>
         </div>
@@ -390,8 +392,8 @@
         <div id="standingsTab" class="tab-content">
             <div id="captureStandings" class="export-area">
                 <div class="standings-sidebar">
-                    <!-- الشعار الجديد مكان Telegram Goat مع إفراغ الخلفية وتناسق تام -->
-                    <img src="new-logo.png" alt="Premier League Logo" onerror="this.src='https://dummyimage.com/100x120/fff/38003c&text=PL+Lion'">
+                    <img src="header.png.pdf" alt="Logo" onerror="this.src='https://dummyimage.com/120x120/fff/000&text=GOAT'">
+                    <div class="sidebar-brand">TELEGRAM<br>G O A T</div>
                 </div>
                 <div class="standings-content-area">
                     <div class="standings-card">
@@ -519,7 +521,7 @@
             }
         }
 
-        // فتح زر التعديل عند النقر المزدوج على كلمة Matchweek وإدخال الرمز 1999
+        // دالة فتح وضع التعديل بالنقر المزدوج على كلمة Matchweek وإدخال الرمز 1999
         function unlockEditWithPassword() {
             const pass = prompt("أدخل رمز الحماية لتفعيل زر التعديل:");
             if(pass === "1999") {
@@ -538,7 +540,7 @@
             } else {
                 editMode = false;
                 document.getElementById('editToggleBtn').innerText = "تعديل";
-                document.getElementById('editToggleBtn').style.display = "none"; // إخفاء زر التعديل مجدداً بعد الحفظ للأمان
+                document.getElementById('editToggleBtn').style.display = "none"; // إخفاء الزر مجدداً بعد الحفظ لزيادة الأمان
                 renderFixtures();
                 renderStandings();
             }
@@ -651,7 +653,7 @@
         function changeRound(step) {
             currentRound += step;
             if(currentRound < 1) currentRound = 1;
-            if(currentRound > 38) currentRound > 38 ? currentRound = 38 : null;
+            if(currentRound > 38) currentRound = 38;
             renderFixtures();
         }
 
