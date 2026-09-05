@@ -156,7 +156,7 @@
             filter: invert(1);
         }
 
-        /* عناصر التحكم الخاصة بالمسؤول مخفية تماماً عن الزوار الافتراضيين */
+        /* عناصر التحكم مخفية تماماً بافتراض عدم الدخول */
         .admin-controls {
             display: none !important;
         }
@@ -382,7 +382,7 @@
             <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">Fixtures</button>
             <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
             
-            <!-- أزرار التحكم مخفية تماماً عن الزوار ولا تظهر إلا للمسؤول بعد إدخال الكود -->
+            <!-- أزرار التحكم مخفية افتراضياً للعامة ولا تظهر إلا للمسؤول -->
             <button class="filter-btn save-all-btn admin-controls" id="saveAllBtn" onclick="saveAllCurrentRound()">حفظ النتائج</button>
             
             <button class="download-icon-btn admin-controls" id="saveAlbumBtn" onclick="downloadAsImage()" title="Save to Album">
@@ -392,7 +392,7 @@
 
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">❮</button>
-            <div class="round-indicator" id="currentRoundTitle" onclick="unlockAdmin()">MATCHWEEK 1</div>
+            <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockAdmin()">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(1)">❯</button>
         </div>
     </div>
@@ -440,12 +440,12 @@
         const db = firebase.database();
 
         let isAdmin = localStorage.getItem('fpl_admin') === 'true';
-        let editMode = isAdmin; // إذا كان مسؤولاً مسبقاً، يُفعل وضع التعديل تلقائياً
+        let editMode = isAdmin; 
         let scoresStorage = {};
         let currentRound = 1;
         let activeTab = 'fixtures';
 
-        // مزامنة فورية للنتائج من قاعدة البيانات
+        // استماع فوري للنتائج وتحديث العرض والجدول تلقائياً
         db.ref('fpl_scores').on('value', (snapshot) => {
             scoresStorage = snapshot.val() || {};
             renderFixtures();
@@ -463,6 +463,7 @@
             }
         }
 
+        // فتح وضع التعديل حصرياً بالنقر المزدوج (Double Click) وإدخال كلمة المرور
         function unlockAdmin() {
             if (!isAdmin) {
                 let pass = prompt("Enter password to unlock admin tools:");
@@ -477,7 +478,6 @@
                     alert("Incorrect password!");
                 }
             } else {
-                // إذا كان مسجلاً، الضغط يغير وضع التعديل أو يبقيه
                 editMode = !editMode;
                 renderFixtures();
             }
