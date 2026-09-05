@@ -156,12 +156,12 @@
             filter: invert(1);
         }
 
-        /* عناصر التحكم الخاصة بالمسؤول مخفية افتراضياً */
+        /* عناصر التحكم الخاصة بالمسؤول مخفية تماماً عن الزوار الافتراضيين */
         .admin-controls {
-            display: none;
+            display: none !important;
         }
         .admin-controls.visible {
-            display: inline-flex;
+            display: inline-flex !important;
         }
 
         .save-all-btn {
@@ -382,9 +382,7 @@
             <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">Fixtures</button>
             <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
             
-            <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()">Edit</button>
-            
-            <!-- زر الحفظ العام وزر التنزيل يظهران فقط عند تفعيل وضع التعديل -->
+            <!-- أزرار التحكم مخفية تماماً عن الزوار ولا تظهر إلا للمسؤول بعد إدخال الكود -->
             <button class="filter-btn save-all-btn admin-controls" id="saveAllBtn" onclick="saveAllCurrentRound()">حفظ النتائج</button>
             
             <button class="download-icon-btn admin-controls" id="saveAlbumBtn" onclick="downloadAsImage()" title="Save to Album">
@@ -442,12 +440,12 @@
         const db = firebase.database();
 
         let isAdmin = localStorage.getItem('fpl_admin') === 'true';
-        let editMode = false;
+        let editMode = isAdmin; // إذا كان مسؤولاً مسبقاً، يُفعل وضع التعديل تلقائياً
         let scoresStorage = {};
         let currentRound = 1;
         let activeTab = 'fixtures';
 
-        // جلب البيانات مباشرة من فايربيس وتحديث الشاشة فوراً
+        // مزامنة فورية للنتائج من قاعدة البيانات
         db.ref('fpl_scores').on('value', (snapshot) => {
             scoresStorage = snapshot.val() || {};
             renderFixtures();
@@ -458,23 +456,10 @@
 
         function updateAdminUI() {
             const adminControls = document.querySelectorAll('.admin-controls');
-            const editBtn = document.getElementById('editToggleBtn');
-
             if (isAdmin) {
-                editBtn.style.borderColor = 'var(--pl-pink)';
-                editBtn.style.background = '#4a0020';
-                if (editMode) {
-                    adminControls.forEach(el => el.classList.add('visible'));
-                    editBtn.innerText = "Lock Edit";
-                } else {
-                    adminControls.forEach(el => el.classList.remove('visible'));
-                    editBtn.innerText = "Edit Mode";
-                }
+                adminControls.forEach(el => el.classList.add('visible'));
             } else {
                 adminControls.forEach(el => el.classList.remove('visible'));
-                editBtn.style.borderColor = 'var(--border-color)';
-                editBtn.style.background = 'var(--bg-card)';
-                editBtn.innerText = "Edit";
             }
         }
 
@@ -483,25 +468,19 @@
                 let pass = prompt("Enter password to unlock admin tools:");
                 if (pass === "1999") {
                     isAdmin = true;
-                    localStorage.setItem('fpl_admin', 'true');
                     editMode = true;
+                    localStorage.setItem('fpl_admin', 'true');
                     updateAdminUI();
                     renderFixtures();
                     alert("Admin tools unlocked successfully!");
                 } else if (pass !== null) {
                     alert("Incorrect password!");
                 }
+            } else {
+                // إذا كان مسجلاً، الضغط يغير وضع التعديل أو يبقيه
+                editMode = !editMode;
+                renderFixtures();
             }
-        }
-
-        function toggleEditMode() {
-            if (!isAdmin) {
-                unlockAdmin();
-                return;
-            }
-            editMode = !editMode;
-            updateAdminUI();
-            renderFixtures();
         }
 
         const teamsMap = {
@@ -583,7 +562,6 @@
             }
         }
 
-        // حفظ كل نتائج الجولة الحالية دفعة واحدة
         function saveAllCurrentRound() {
             if(!isAdmin) return;
             let matches = matchweeks[currentRound] || [];
