@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="htmlRoot">
+<html lang="en" dir="ltr" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,14 +29,6 @@
             --font-en: 'EnglishCustom', sans-serif;
         }
 
-        body.light-mode {
-            --bg-main: #f0f2f5;
-            --bg-card: #ffffff;
-            --text-white: #222222;
-            --border-color: #dccdff;
-            --pl-purple: #e2d1f0;
-        }
-
         * { 
             box-sizing: border-box; 
             margin: 0; 
@@ -54,12 +46,7 @@
             background-color: var(--bg-main); 
             color: var(--text-white); 
             padding-bottom: 50px; 
-            font-family: var(--font-ar);
-            transition: background 0.3s, color 0.3s;
-        }
-
-        [data-lang="en"] {
-            font-family: var(--font-en) !important;
+            font-family: var(--font-en);
         }
 
         img {
@@ -116,7 +103,7 @@
             z-index: 10;
         }
 
-        .filter-btn, .filter-select {
+        .filter-btn {
             background: var(--bg-card);
             color: var(--text-white);
             border: 1px solid var(--border-color);
@@ -131,6 +118,7 @@
             outline: none;
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-family: var(--font-en);
         }
 
         .filter-btn:hover, .filter-btn.active {
@@ -139,8 +127,33 @@
             box-shadow: 0 0 15px rgba(255,0,90,0.3);
         }
 
-        .filter-select {
-            display: none; /* إخفاء القائمة المنسدلة المزعجة ومنع ظهورها كدائرة فارغة */
+        .download-icon-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            outline: none;
+        }
+
+        .download-icon-btn:hover {
+            background: var(--pl-purple);
+            border-color: var(--pl-pink);
+            box-shadow: 0 0 15px rgba(255,0,90,0.3);
+            transform: scale(1.05);
+        }
+
+        .download-icon-btn img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            filter: invert(1);
         }
 
         .admin-only {
@@ -228,7 +241,7 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 10px;
-            font-family: var(--font-ar);
+            font-family: var(--font-en);
             font-size: 15px;
             outline: none;
             resize: vertical;
@@ -245,7 +258,7 @@
             font-weight: 900;
             cursor: pointer;
             margin-top: 10px;
-            font-family: var(--font-ar);
+            font-family: var(--font-en);
             transition: 0.2s;
         }
         .bulk-btn-save:hover {
@@ -404,14 +417,13 @@
 
     <div class="header">
         <div class="filter-bar">
-            <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')" data-ar="المواجهات" data-en="Fixtures">المواجهات</button>
-            <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')" data-ar="جدول الترتيب" data-en="Standings">جدول الترتيب</button>
+            <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">Fixtures</button>
+            <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
             
-            <button class="filter-btn admin-only" id="editToggleBtn" onclick="toggleEditMode()" data-ar="تعديل" data-en="Edit">تعديل</button>
-            <button class="filter-btn admin-only" id="saveAlbumBtn" onclick="downloadAsImage()" data-ar="حفظ للألبوم" data-en="Save to Album">حفظ للألبوم</button>
-            
-            <button class="filter-btn" onclick="toggleLanguage()" id="langBtn">English</button>
-            <button class="filter-btn" onclick="toggleTheme()" id="themeBtn">🌓</button>
+            <button class="filter-btn admin-only" id="editToggleBtn" onclick="toggleEditMode()">Edit</button>
+            <button class="download-icon-btn admin-only" id="saveAlbumBtn" onclick="downloadAsImage()" title="Save to Album">
+                <img src="https://i.imgur.com/8381Wd0.png" alt="Download" onerror="this.src='https://img.icons8.com/ios-filled/50/ffffff/download.png'">
+            </button>
         </div>
 
         <div class="round-nav-container">
@@ -424,9 +436,9 @@
     <div class="main-container">
 
         <div class="bulk-edit-container admin-only" id="bulkEditBox">
-            <div style="font-weight: 900; margin-bottom: 8px; font-size: 14px;" data-ar="إدخال النتائج كنصوص (كل سطر مباراة، مثال: أرسنال 2 - 1 تشيلسي أو بالأسماء الإنجليزية):" data-en="Bulk Text Score Entry (Line by line, e.g., Arsenal 2 - 1 Chelsea):">إدخال النتائج كنصوص (كل سطر مباراة، مثال: أرسنال 2 - 1 تشيلسي):</div>
-            <textarea id="bulkTextarea" placeholder="أرسنال 2 - 1 تشيلسي&#10;مانشستر يونايتد 3 - 0 ليفربول..."></textarea>
-            <button class="bulk-btn-save" onclick="processBulkText()" data-ar="تحديث وحفظ الجولة" data-en="Update & Save Round">تحديث وحفظ الجولة</button>
+            <div style="font-weight: 900; margin-bottom: 8px; font-size: 14px;">Bulk Text Score Entry (Line by line, e.g., Arsenal 2 - 1 Chelsea):</div>
+            <textarea id="bulkTextarea" placeholder="Arsenal 2 - 1 Chelsea&#10;Manchester United 3 - 0 Liverpool..."></textarea>
+            <button class="bulk-btn-save" onclick="processBulkText()">Update & Save Round</button>
         </div>
 
         <div id="fixturesTab" class="tab-content active">
@@ -441,14 +453,14 @@
         <div id="standingsTab" class="tab-content">
             <div id="captureStandings" class="capture-box">
                 <div class="card-box-inner">
-                    <div class="card-header-title" id="standingsHeaderTitle" data-ar="جدول ترتيب الدوري الإنجليزي" data-en="PREMIER LEAGUE STANDINGS">PREMIER LEAGUE STANDINGS</div>
+                    <div class="card-header-title" id="standingsHeaderTitle">STANDINGS - AFTER GAMEWEEK 1</div>
                     <table>
                         <thead>
                             <tr>
                                 <th style="width: 10%;">Pos</th>
-                                <th style="text-align: right; padding-right: 20px; width: 50%;" data-ar="النادي" data-en="Club">Club</th>
+                                <th style="text-align: left; padding-left: 20px; width: 50%;">Club</th>
                                 <th style="width: 20%;">GF</th>
-                                <th style="width: 20%;" data-ar="النقاط" data-en="Pts">Pts</th>
+                                <th style="width: 20%;">Pts</th>
                             </tr>
                         </thead>
                         <tbody id="standingsBody"></tbody>
@@ -469,7 +481,6 @@
         }
         const db = firebase.database();
 
-        let currentLang = 'ar';
         let isAdmin = localStorage.getItem('fpl_admin') === 'true';
         let scoresStorage = {};
 
@@ -479,18 +490,9 @@
                 renderFixtures();
                 if(activeTab === 'standings') renderStandings();
             } catch (error) {
-                console.error("خطأ في معالجة بيانات Firebase:", error);
+                console.error("Firebase error:", error);
             }
         });
-
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            localStorage.setItem('fpl_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
-        }
-
-        if(localStorage.getItem('fpl_theme') === 'light') {
-            document.body.classList.add('light-mode');
-        }
 
         function checkAdminStatus() {
             if (isAdmin) {
@@ -501,63 +503,40 @@
             }
         }
 
-        function unlockAdmin() {
-            if (!isAdmin) {
-                const pass = prompt(currentLang === 'ar' ? "أدخل رمز الحماية لإظهار أدوات المدير:" : "Enter password to unlock admin tools:");
-                if (pass === "024680") {
-                    isAdmin = true;
-                    localStorage.setItem('fpl_admin', 'true');
-                    checkAdminStatus();
-                    alert(currentLang === 'ar' ? "تم تفعيل صلاحيات المدير بنجاح!" : "Admin tools unlocked successfully!");
-                } else if (pass !== null) {
-                    alert(currentLang === 'ar' ? "الرمز غير صحيح!" : "Incorrect password!");
-                }
-            } else {
-                isAdmin = false;
-                localStorage.removeItem('fpl_admin');
+        // تفعيل أو إلغاء صلاحيات المدير عبر النقر الثلاثي على العنوان أو الكود
+        document.getElementById('currentRoundTitle').addEventListener('click', () => {
+            let pass = prompt("Enter password to unlock admin tools:");
+            if (pass === "024680") {
+                isAdmin = true;
+                localStorage.setItem('fpl_admin', 'true');
                 checkAdminStatus();
-                editMode = false;
-                document.getElementById('editToggleBtn').innerText = currentLang === 'ar' ? "تعديل" : "Edit";
-                renderFixtures();
-                alert(currentLang === 'ar' ? "تم قفل صلاحيات المدير." : "Admin tools locked.");
+                alert("Admin tools unlocked successfully!");
+            } else if (pass !== null) {
+                alert("Incorrect password!");
             }
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'ar' ? 'en' : 'ar';
-            const htmlRoot = document.getElementById('htmlRoot');
-            htmlRoot.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
-            htmlRoot.setAttribute('lang', currentLang);
-            document.getElementById('langBtn').innerText = currentLang === 'ar' ? 'English' : 'عربي';
-
-            document.querySelectorAll('[data-ar]').forEach(el => {
-                el.innerText = el.getAttribute(`data-${currentLang}`);
-            });
-            renderFixtures();
-            if(activeTab === 'standings') renderStandings();
-        }
+        });
 
         const teamsMap = {
-            "ARS": { name: "Arsenal", arName: "ارسنال", logo: "arsenal.png.WEBP" },
-            "AVL": { name: "Aston Villa", arName: "استون فيلا", logo: "aston_villa.png.WEBP" },
-            "BOU": { name: "Bournemouth", arName: "بورنموث", logo: "bournemouth.png.WEBP" },
-            "BRE": { name: "Brentford", arName: "برينتفورد", logo: "brentford.png.PNG" },
-            "BHA": { name: "Brighton", arName: "برايتون", logo: "brighton.png.WEBP" },
-            "CHE": { name: "Chelsea", arName: "تشيلسي", logo: "chelsea.png.WEBP" },
-            "COV": { name: "Coventry City", arName: "كوفنتري سيتي", logo: "coventry.png.WEBP" },
-            "CRY": { name: "Crystal Palace", arName: "كريستال بالاس", logo: "crystal_palace.png.WEBP" },
-            "EVE": { name: "Everton", arName: "إيفرتون", logo: "everton.png.WEBP" },
-            "FUL": { name: "Fulham", arName: "فولهام", logo: "fulham.png.WEBP" },
-            "HUL": { name: "Hull City", arName: "هال سيتي", logo: "hull.png.WEBP" },
-            "IPS": { name: "Ipswich Town", arName: "إبسويتش تاون", logo: "ipswich.png.WEBP" },
-            "LEE": { name: "Leeds United", arName: "ليدز يونايتد", logo: "leeds.png.WEBP" },
-            "LIV": { name: "Liverpool", arName: "ليفربول", logo: "liverpool.png.WEBP" },
-            "MCI": { name: "Manchester City", arName: "مانشستر سيتي", logo: "man_city.png.WEBP" },
-            "MUN": { name: "Manchester United", arName: "مانشستر يونايتد", logo: "man_utd.png.WEBP" },
-            "NEW": { name: "Newcastle United", arName: "نيوكاسل يونايتد", logo: "newcastle.png.WEBP" },
-            "NOT": { name: "Nottingham Forest", arName: "نوتنغهام فورست", logo: "forest.png.PNG" },
-            "SUN": { name: "Sunderland", arName: "سندرلاند", logo: "sunderland.png.WEBP" },
-            "TOT": { name: "Tottenham Hotspur", arName: "توتنهام", logo: "tottenham.png.WEBP" }
+            "ARS": { name: "Arsenal", logo: "arsenal.png.WEBP" },
+            "AVL": { name: "Aston Villa", logo: "aston_villa.png.WEBP" },
+            "BOU": { name: "Bournemouth", logo: "bournemouth.png.WEBP" },
+            "BRE": { name: "Brentford", logo: "brentford.png.PNG" },
+            "BHA": { name: "Brighton", logo: "brighton.png.WEBP" },
+            "CHE": { name: "Chelsea", logo: "chelsea.png.WEBP" },
+            "COV": { name: "Coventry City", logo: "coventry.png.WEBP" },
+            "CRY": { name: "Crystal Palace", logo: "crystal_palace.png.WEBP" },
+            "EVE": { name: "Everton", logo: "everton.png.WEBP" },
+            "FUL": { name: "Fulham", logo: "fulham.png.WEBP" },
+            "HUL": { name: "Hull City", logo: "hull.png.WEBP" },
+            "IPS": { name: "Ipswich Town", logo: "ipswich.png.WEBP" },
+            "LEE": { name: "Leeds United", logo: "leeds.png.WEBP" },
+            "LIV": { name: "Liverpool", logo: "liverpool.png.WEBP" },
+            "MCI": { name: "Manchester City", logo: "man_city.png.WEBP" },
+            "MUN": { name: "Manchester United", logo: "man_utd.png.WEBP" },
+            "NEW": { name: "Newcastle United", logo: "newcastle.png.WEBP" },
+            "NOT": { name: "Nottingham Forest", logo: "forest.png.PNG" },
+            "SUN": { name: "Sunderland", logo: "sunderland.png.WEBP" },
+            "TOT": { name: "Tottenham Hotspur", logo: "tottenham.png.WEBP" }
         };
 
         const matchweeks = {
@@ -623,7 +602,7 @@
         function toggleEditMode() {
             if(!isAdmin) return;
             editMode = !editMode;
-            document.getElementById('editToggleBtn').innerText = editMode ? (currentLang === 'ar' ? "إيقاف التعديل" : "Lock Edit") : (currentLang === 'ar' ? "تعديل" : "Edit");
+            document.getElementById('editToggleBtn').innerText = editMode ? "Lock Edit" : "Edit";
             document.getElementById('bulkEditBox').classList.toggle('visible', editMode);
             renderFixtures();
         }
@@ -659,8 +638,8 @@
                     let hTeam = teamsMap[match[0]];
                     let aTeam = teamsMap[match[1]];
 
-                    let hMatch = team1Text.includes(hTeam.name.toLowerCase()) || (hTeam.arName && team1Text.includes(hTeam.arName));
-                    let aMatch = team2Text.includes(aTeam.name.toLowerCase()) || (aTeam.arName && team2Text.includes(aTeam.arName));
+                    let hMatch = team1Text.includes(hTeam.name.toLowerCase());
+                    let aMatch = team2Text.includes(aTeam.name.toLowerCase());
 
                     if(hMatch && aMatch) {
                         db.ref(`fpl_scores/r${currentRound}_m${idx}_home`).set(hScore);
@@ -669,7 +648,7 @@
                 });
             });
 
-            alert(currentLang === 'ar' ? "تم تحديث وحفظ النتائج بنجاح!" : "Results updated and saved successfully!");
+            alert("Results updated and saved successfully!");
         }
 
         function calculateStandingsUpTo(roundLimit) {
@@ -714,9 +693,7 @@
             const tbody = document.getElementById('standingsBody');
             tbody.innerHTML = '';
             
-            document.getElementById('standingsHeaderTitle').innerText = currentLang === 'ar' ? 
-                `جدول الترتيب - بعد الجولة ${currentRound}` : 
-                `STANDINGS - AFTER GAMEWEEK ${currentRound}`;
+            document.getElementById('standingsHeaderTitle').innerText = `STANDINGS - AFTER GAMEWEEK ${currentRound}`;
 
             let sortedTeams = calculateStandingsUpTo(currentRound);
 
@@ -757,7 +734,7 @@
                     <input type="number" class="score-input" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value)">
                 ` : `
                     <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
-                    <span style="font-weight:900; color:#ffffff; font-family: var(--font-en); font-size:16px;">VS</span>
+                    <span style="font-weight:900; color:#ffffff; font-size:16px;">VS</span>
                     <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
                 `;
 
@@ -771,7 +748,7 @@
                             ${scoreContent}
                         </div>
                         <div class="team-box away">
-                            <img src="${home.logo}">
+                            <img src="${away.logo}">
                             <span>${away.name}</span>
                         </div>
                     </div>
@@ -790,7 +767,6 @@
         }
 
         function downloadAsImage() {
-            if(!isAdmin) return;
             const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
             const element = document.getElementById(targetId);
 
@@ -813,7 +789,7 @@
                     setTimeout(() => URL.revokeObjectURL(url), 1000);
                 }, 'image/png');
             }).catch(err => {
-                console.error("فشل تصوير الشاشة:", err);
+                console.error("Capture failed:", err);
             });
         }
 
