@@ -37,7 +37,7 @@
             user-select: none;
         }
 
-        input, textarea {
+        input {
             -webkit-user-select: text;
             user-select: text;
         }
@@ -221,51 +221,6 @@
 
         .main-container { max-width: 800px; margin: 0 auto; padding: 0 10px; }
 
-        .bulk-edit-container {
-            display: none;
-            background: linear-gradient(135deg, #24003c 0%, #160b24 100%);
-            border: 2px solid var(--pl-pink);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 20px rgba(255,0,90,0.2);
-        }
-        .bulk-edit-container.visible {
-            display: block;
-        }
-        .bulk-edit-container textarea {
-            width: 100%;
-            height: 120px;
-            background: #0d0614;
-            color: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 10px;
-            font-family: var(--font-en);
-            font-size: 15px;
-            outline: none;
-            resize: vertical;
-        }
-        .bulk-edit-container textarea:focus {
-            border-color: var(--pl-pink);
-        }
-        .bulk-btn-save {
-            background: var(--pl-pink);
-            color: #fff;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 6px;
-            font-weight: 900;
-            cursor: pointer;
-            margin-top: 10px;
-            font-family: var(--font-en);
-            transition: 0.2s;
-        }
-        .bulk-btn-save:hover {
-            background: #ff2870;
-            box-shadow: 0 0 10px var(--pl-pink);
-        }
-
         .capture-box {
             background: linear-gradient(135deg, #1e0d33 0%, #120621 100%);
             padding: 25px 15px;
@@ -435,12 +390,6 @@
 
     <div class="main-container">
 
-        <div class="bulk-edit-container admin-only" id="bulkEditBox">
-            <div style="font-weight: 900; margin-bottom: 8px; font-size: 14px;">Bulk Text Score Entry (Line by line, e.g., Arsenal 2 - 1 Chelsea):</div>
-            <textarea id="bulkTextarea" placeholder="Arsenal 2 - 1 Chelsea&#10;Manchester United 3 - 0 Liverpool..."></textarea>
-            <button class="bulk-btn-save" onclick="processBulkText()">Update & Save Round</button>
-        </div>
-
         <div id="fixturesTab" class="tab-content active">
             <div id="captureFixtures" class="capture-box">
                 <div class="card-box-inner">
@@ -499,11 +448,9 @@
                 document.querySelectorAll('.admin-only').forEach(el => el.classList.add('visible'));
             } else {
                 document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('visible'));
-                document.getElementById('bulkEditBox').classList.remove('visible');
             }
         }
 
-        // تفعيل أو إلغاء صلاحيات المدير عبر النقر الثلاثي على العنوان أو الكود
         document.getElementById('currentRoundTitle').addEventListener('click', () => {
             let pass = prompt("Enter password to unlock admin tools:");
             if (pass === "024680") {
@@ -603,7 +550,6 @@
             if(!isAdmin) return;
             editMode = !editMode;
             document.getElementById('editToggleBtn').innerText = editMode ? "Lock Edit" : "Edit";
-            document.getElementById('bulkEditBox').classList.toggle('visible', editMode);
             renderFixtures();
         }
 
@@ -611,44 +557,6 @@
             if(!isAdmin) return;
             let key = `r${round}_m${idx}_${type}`;
             db.ref('fpl_scores/' + key).set(val);
-        }
-
-        function processBulkText() {
-            if(!isAdmin) return;
-            let text = document.getElementById('bulkTextarea').value;
-            let lines = text.split('\n');
-            let matches = matchweeks[currentRound] || [];
-
-            lines.forEach(line => {
-                line = line.trim();
-                if(!line) return;
-                
-                let scoreMatch = line.match(/(\d+)\s*[-–:]\s*(\d+)/);
-                if(!scoreMatch) return;
-
-                let hScore = scoreMatch[1];
-                let aScore = scoreMatch[2];
-
-                let parts = line.split(/[\d\-–:]+/);
-                if(parts.length < 2) return;
-                let team1Text = parts[0].trim().toLowerCase();
-                let team2Text = parts[parts.length - 1].trim().toLowerCase();
-
-                matches.forEach((match, idx) => {
-                    let hTeam = teamsMap[match[0]];
-                    let aTeam = teamsMap[match[1]];
-
-                    let hMatch = team1Text.includes(hTeam.name.toLowerCase());
-                    let aMatch = team2Text.includes(aTeam.name.toLowerCase());
-
-                    if(hMatch && aMatch) {
-                        db.ref(`fpl_scores/r${currentRound}_m${idx}_home`).set(hScore);
-                        db.ref(`fpl_scores/r${currentRound}_m${idx}_away`).set(aScore);
-                    }
-                });
-            });
-
-            alert("Results updated and saved successfully!");
         }
 
         function calculateStandingsUpTo(roundLimit) {
