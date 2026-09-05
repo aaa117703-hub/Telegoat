@@ -38,7 +38,7 @@
             padding-bottom: 40px; 
         }
 
-        /* تنسيق البنر العلوي ليتطابق تماماً مع إطار عرض الجداول والمواجهات (عرض 750 بكسل مع تدوير وإطار أنيق) */
+        /* تنسيق البنر العلوي */
         .banner-container {
             width: 100%;
             max-width: 750px;
@@ -185,7 +185,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
-        /* تنسيق المستطيل المضيء باللون الأحمر خصيصاً للجولة التاسعة */
         .fixture-row.benar-highlight {
             border: 2px solid #ff005a;
             box-shadow: 0 0 12px rgba(255, 0, 90, 0.7);
@@ -249,7 +248,7 @@
 
         .export-area { border-radius: 8px; }
 
-        /* جدول الترتيب بتصميم الشريط الجانبي والشعار المتدرج الجديد */
+        /* جدول الترتيب مع تمركز الشعار تماماً في المنتصف */
         #captureStandings {
             display: flex;
             background: #ffffff;
@@ -281,20 +280,28 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* مكان اللوجو الجديد (new.logo.png) الملون بالتدريج ليتناسق مع الجدول والشريط */
+        /* حاوية الشعار في المنتصف تماماً */
+        .sidebar-logo-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin: auto 0; /* تأخذ المنتصف تماماً بين العنصر العلوي والسفلي */
+        }
+
+        .sidebar-logo-center img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+        }
+
         .sidebar-logo-bottom {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
             width: 100%;
-        }
-
-        .sidebar-logo-bottom img {
-            width: 45px;
-            height: 45px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
         .sidebar-logo-text {
@@ -402,8 +409,13 @@
             <div id="captureStandings" class="export-area">
                 <div class="standings-sidebar">
                     <div class="sidebar-round-text" id="sidebarRoundText">GW 1</div>
-                    <div class="sidebar-logo-bottom">
+                    
+                    <!-- الشعار في المنتصف تماماً بين رقم الجولة واسم TELEGOAT -->
+                    <div class="sidebar-logo-center">
                         <img src="new.logo.png" alt="Logo" onerror="this.style.display='none'">
+                    </div>
+
+                    <div class="sidebar-logo-bottom">
                         <div class="sidebar-logo-text">TELEGOAT</div>
                     </div>
                 </div>
@@ -649,7 +661,6 @@
                     <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
                 `;
 
-                // تطبيق التنسيق المضيء (benar) في الجولة التاسعة فقط (أو أي عنصر مطلوب)
                 let highlightClass = (currentRound === 9 && idx === 0) ? 'benar-highlight' : '';
 
                 list.innerHTML += `
