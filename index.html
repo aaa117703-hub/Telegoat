@@ -44,6 +44,56 @@
             padding: 0 10px;
         }
 
+        /* ===== Overlay التحميل وعلامة الصح ===== */
+        #saveFeedback {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        #saveFeedback .content {
+            background: #1e0d33;
+            padding: 40px 50px;
+            border-radius: 20px;
+            border: 3px solid #ff005a;
+            box-shadow: 0 0 50px rgba(255,0,90,0.3);
+            text-align: center;
+        }
+        #saveFeedback .spinner-big {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            border-top-color: #ff005a;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 15px auto;
+        }
+        #saveFeedback .checkmark {
+            font-size: 70px;
+            color: #00ff87;
+            font-weight: 900;
+            text-shadow: 0 0 30px rgba(0,255,135,0.5);
+            margin: 0 auto 10px auto;
+        }
+        #saveFeedback .status-text {
+            font-family: var(--font-en);
+            font-size: 18px;
+            color: #ffffff;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         .banner-container {
             position: relative;
             width: 100%;
@@ -287,32 +337,6 @@
             border: 1px solid #7138f5;
             border-radius: 4px;
             outline: none;
-        }
-
-        .spinner-small {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: #ffffff;
-            animation: spin 0.6s linear infinite;
-            margin-right: 3px;
-        }
-
-        .save-indicator {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 900;
-            color: #00ff87;
-            margin-right: 3px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         /* ===== جدول الترتيب ===== */
@@ -630,6 +654,15 @@
 </head>
 <body>
 
+    <!-- ===== Overlay التحميل وعلامة الصح ===== -->
+    <div id="saveFeedback">
+        <div class="content">
+            <div id="feedbackSpinner" class="spinner-big"></div>
+            <div id="feedbackCheck" class="checkmark" style="display:none;">✓</div>
+            <div id="feedbackText" class="status-text">جاري الحفظ...</div>
+        </div>
+    </div>
+
     <div class="banner-container">
         <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
         
@@ -863,6 +896,10 @@
             if (pass === "1999") {
                 const editBtn = document.getElementById('editToggleBtn');
                 editBtn.classList.add('visible');
+                // تغيير النص فوراً إلى "حفظ"
+                editBtn.innerText = "حفظ";
+                editMode = true;
+                renderFixtures();
                 alert("تم إظهار زر التعديل بنجاح!");
             } else if (pass !== null) {
                 alert("الرمز غير صحيح!");
@@ -871,77 +908,79 @@
 
         function toggleEditMode() {
             const btn = document.getElementById('editToggleBtn');
+            
+            // إذا لم يكن في وضع التعديل، ندخل فيه
             if (!editMode) {
                 editMode = true;
                 btn.innerText = "حفظ";
                 renderFixtures();
-            } else {
-                if (isSaving) return;
-                const btnSave = document.getElementById('editToggleBtn');
-                const originalHTML = btnSave.innerHTML;
-                btnSave.innerHTML = `<span class="spinner-small"></span>`;
-                btnSave.disabled = true;
-                isSaving = true;
+                return;
+            }
+            
+            // === وضع التعديل ===
+            // نبدأ بالحفظ
+            if (isSaving) return;
+            
+            // إظهار الـ Overlay مع Spinner
+            const overlay = document.getElementById('saveFeedback');
+            const spinner = document.getElementById('feedbackSpinner');
+            const check = document.getElementById('feedbackCheck');
+            const text = document.getElementById('feedbackText');
+            
+            spinner.style.display = 'block';
+            check.style.display = 'none';
+            text.innerText = 'جاري الحفظ...';
+            overlay.style.display = 'flex';
+            
+            // جمع البيانات
+            const matches = matchweeks[currentRound] || [];
+            const updates = {};
+            matches.forEach((match, idx) => {
+                const homeInput = document.getElementById(`home_r${currentRound}_m${idx}`);
+                const awayInput = document.getElementById(`away_r${currentRound}_m${idx}`);
+                if (homeInput && awayInput) {
+                    updates[`r${currentRound}_m${idx}_home`] = homeInput.value;
+                    updates[`r${currentRound}_m${idx}_away`] = awayInput.value;
+                }
+            });
 
-                const matches = matchweeks[currentRound] || [];
-                const updates = {};
-                matches.forEach((match, idx) => {
-                    const homeInput = document.getElementById(`home_r${currentRound}_m${idx}`);
-                    const awayInput = document.getElementById(`away_r${currentRound}_m${idx}`);
-                    if (homeInput && awayInput) {
-                        updates[`r${currentRound}_m${idx}_home`] = homeInput.value;
-                        updates[`r${currentRound}_m${idx}_away`] = awayInput.value;
-                    }
-                });
+            isSaving = true;
+            btn.disabled = true;
 
-                db.ref('fpl_scores').update(updates, (error) => {
-                    isSaving = false;
-                    btnSave.disabled = false;
-                    if (error) {
-                        alert("❌ فشل حفظ النتائج في السحابة! تأكد من الرابط وقواعد Firebase.");
-                        btnSave.innerHTML = originalHTML;
-                    } else {
-                        btnSave.innerHTML = `✓`;
-                        setTimeout(() => {
-                            btnSave.innerHTML = originalHTML;
-                        }, 1500);
+            db.ref('fpl_scores').update(updates, (error) => {
+                isSaving = false;
+                btn.disabled = false;
+                
+                if (error) {
+                    // فشل الحفظ
+                    spinner.style.display = 'none';
+                    check.style.display = 'none';
+                    text.innerText = '❌ فشل الحفظ!';
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                    }, 1500);
+                    alert("❌ فشل حفظ النتائج في السحابة! تأكد من الرابط وقواعد Firebase.");
+                } else {
+                    // نجاح الحفظ
+                    spinner.style.display = 'none';
+                    check.style.display = 'block';
+                    text.innerText = 'تم الحفظ بنجاح';
+                    
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                        // إيقاف وضع التعديل والعودة إلى العرض العادي
                         editMode = false;
-                        btnSave.innerText = "تعديل";
+                        btn.innerText = "تعديل";
                         renderFixtures();
                         renderStandings();
-                        alert("✅ تم حفظ النتائج في السحابة وعرضها للجميع!");
-                    }
-                });
-            }
+                    }, 1500);
+                }
+            });
         }
 
         function updateScore(round, idx, type, val, inputElement) {
+            // نُحدّث التخزين المحلي مباشرة دون حفظ تلقائي
             scoresStorage[`r${round}_m${idx}_${type}`] = val;
-
-            const center = inputElement.closest('.match-score-center');
-            if (!center) return;
-
-            let indicator = center.querySelector('.save-indicator');
-            if (!indicator) {
-                indicator = document.createElement('span');
-                indicator.className = 'save-indicator';
-                center.appendChild(indicator);
-            }
-
-            indicator.innerHTML = '<span class="spinner-small"></span>';
-            indicator.style.color = '#ffffff';
-
-            if (indicator._timeout) clearTimeout(indicator._timeout);
-
-            indicator._timeout = setTimeout(() => {
-                indicator.innerHTML = '✓';
-                indicator.style.color = '#00ff87';
-                indicator.style.fontWeight = '900';
-                
-                indicator._timeout = setTimeout(() => {
-                    indicator.remove();
-                }, 700);
-            }, 400);
         }
 
         // ============================================================
@@ -1074,7 +1113,7 @@
         }
 
         // ============================================================
-        // 8. FIREBASE LISTENER + AUTO-MIGRATION + INIT FIX
+        // 8. FIREBASE LISTENER + AUTO-MIGRATION
         // ============================================================
         db.ref('fpl_scores').once('value', (snapshot) => {
             const data = snapshot.val() || {};
@@ -1117,7 +1156,6 @@
         // ============================================================
         initRoundDropdown();
         updateSidebarRound();
-        // تأكد من عرض الجولة الأولى عند التحميل
         renderFixtures();
         renderStandings();
     </script>
