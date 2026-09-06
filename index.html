@@ -300,21 +300,30 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
             width: 22%;
             background: #7138f5;
-            padding: 4px 6px;
+            padding: 4px 8px;
             border-radius: 6px;
             position: relative;
             min-width: 60px;
             flex-shrink: 0;
         }
 
+        /* ===== تعديل حجم أرقام النتائج ===== */
         .score-display {
             font-family: var(--font-en);
-            font-size: 13px;
+            font-size: 16px; /* تكبير الأرقام من 13px إلى 16px */
             font-weight: 900;
             color: #ffffff;
+        }
+
+        /* ===== تعديل حجم كلمة VS ===== */
+        .vs-text {
+            font-weight: 900;
+            color: #ffffff;
+            font-family: var(--font-en);
+            font-size: 14px; /* حجم معتدل */
         }
 
         .score-input {
@@ -344,7 +353,7 @@
 
         /* ===== التعديل الرئيسي: الجزء الملون (الجانب الأيسر) ===== */
         .standings-sidebar {
-            width: 140px; /* زيادة العرض */
+            width: 140px;
             background: linear-gradient(180deg, #6C2BD9 0%, #3B82F6 50%, #10B981 100%);
             display: flex;
             flex-direction: column;
@@ -360,7 +369,7 @@
 
         .standings-sidebar img {
             width: 200%;
-            max-width: 330px; /* تكبير الشعار بشكل ملحوظ */
+            max-width: 330px;
             height: auto;
             object-fit: contain;
             filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
@@ -463,7 +472,11 @@
             .team-box { font-size: 10px !important; width: 34%; letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
             .team-box img { width: 18px; height: 18px; margin: 0 3px; }
             .match-score-center { width: 24%; min-width: 50px; padding: 3px 4px; }
-            .score-display { font-size: 11px; }
+            
+            /* تعديل حجم الأرقام في الشاشات الصغيرة */
+            .score-display { font-size: 14px; } /* تكبير مناسب للشاشات الصغيرة */
+            .vs-text { font-size: 12px; }
+            
             .score-input { width: 26px; height: 18px; font-size: 10px; }
             
             /* تعديل الجانب الملون في الشاشات الصغيرة */
@@ -485,7 +498,7 @@
             }
             
             .standings-sidebar img {
-                max-width: 170px; /* تكبير أكبر في الشاشات الصغيرة */
+                max-width: 170px;
             }
             
             .standings-content-area {
@@ -853,7 +866,7 @@
                     <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
                 ` : `
                     <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
-                    <span style="font-weight:900; color:#ffffff; font-family: var(--font-en);">VS</span>
+                    <span class="vs-text">VS</span>
                     <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
                 `;
 
