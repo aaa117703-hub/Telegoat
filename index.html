@@ -235,6 +235,7 @@
             background: #7138f5;
             padding: 6px 8px;
             border-radius: 6px;
+            position: relative;
         }
 
         .score-display {
@@ -256,6 +257,33 @@
             border: 1px solid #7138f5;
             border-radius: 4px;
             outline: none;
+        }
+
+        /* ===== Spinner & Save Indicator ===== */
+        .spinner-small {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 0.6s linear infinite;
+            margin-right: 4px;
+        }
+
+        .save-indicator {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 900;
+            color: #00ff87;
+            margin-right: 4px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .export-area { border-radius: 8px; }
@@ -607,9 +635,42 @@
             }
         }
 
-        function updateScore(round, idx, type, val) {
+        // ===== دالة التحديث مع مؤشر الحفظ (Spinner + Checkmark) =====
+        function updateScore(round, idx, type, val, inputElement) {
+            // حفظ القيمة في localStorage
             scoresStorage[`r${round}_m${idx}_${type}`] = val;
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+
+            // إيجاد العنصر الأب (match-score-center) لإظهار المؤشر فيه
+            const center = inputElement.closest('.match-score-center');
+            if (!center) return;
+
+            // إزالة أي مؤشر قديم
+            let indicator = center.querySelector('.save-indicator');
+            if (!indicator) {
+                indicator = document.createElement('span');
+                indicator.className = 'save-indicator';
+                center.appendChild(indicator);
+            }
+
+            // عرض Spinner
+            indicator.innerHTML = '<span class="spinner-small"></span>';
+            indicator.style.color = '#ffffff';
+
+            // مسح الـ timeout السابق إن وجد
+            if (indicator._timeout) clearTimeout(indicator._timeout);
+
+            // بعد 400 مللي، نغير إلى علامة صح
+            indicator._timeout = setTimeout(() => {
+                indicator.innerHTML = '✓';
+                indicator.style.color = '#00ff87';
+                indicator.style.fontWeight = '900';
+                
+                // بعد 700 مللي، نزيل المؤشر نهائياً
+                indicator._timeout = setTimeout(() => {
+                    indicator.remove();
+                }, 700);
+            }, 400);
         }
 
         function calculateStandings() {
@@ -684,9 +745,9 @@
                 let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
 
                 let scoreContent = editMode ? `
-                    <input type="number" class="score-input" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value)">
+                    <input type="number" class="score-input" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
                     <span style="font-weight:900; color:#fff;">:</span>
-                    <input type="number" class="score-input" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value)">
+                    <input type="number" class="score-input" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
                 ` : `
                     <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
                     <span style="font-weight:900; color:#ffffff; font-family: var(--font-en);">VS</span>
