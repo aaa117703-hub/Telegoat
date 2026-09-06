@@ -42,7 +42,7 @@
             padding: 0 10px;
         }
 
-        /* ===== TOAST (رسالة منبثقة صغيرة) ===== */
+        /* ===== TOAST ===== */
         #toast {
             position: fixed;
             bottom: 30px;
@@ -76,11 +76,6 @@
             border-radius: 50%;
             border-top-color: #ff005a;
             animation: spin 0.6s linear infinite;
-        }
-        #toast .toast-check {
-            color: #00ff87;
-            font-size: 22px;
-            font-weight: 900;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -199,7 +194,6 @@
             font-weight: 900;
             letter-spacing: 1px;
             color: #ffffff;
-            cursor: pointer;
             user-select: none;
             text-align: center;
         }
@@ -350,48 +344,56 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* توسيط المحتوى عمودياً */
+            justify-content: center;
             padding: 20px 8px;
             color: #ffffff;
             text-align: center;
             flex-shrink: 0;
+            gap: 15px;
         }
 
-        /* ===== النص العمودي الجديد ===== */
-        .sidebar-vertical-text {
-            font-family: var(--font-en);
-            font-size: 18px;
-            font-weight: 900;
-            letter-spacing: 4px;
-            color: #ffffff;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
+        .sidebar-logo-top img {
+            width: 60px;
+            height: auto;
+            max-height: 70px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+        }
+
+        .sidebar-title {
             cursor: pointer;
-            padding: 10px 5px;
+            text-align: center;
+            padding: 8px 5px;
             border: 2px dashed transparent;
+            border-radius: 10px;
             transition: 0.3s ease;
             user-select: none;
-            line-height: 1.6;
         }
 
-        .sidebar-vertical-text:hover {
-            border-color: rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
+        .sidebar-title:hover {
+            border-color: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.08);
         }
 
-        .sidebar-vertical-text .season-year {
+        .sidebar-premier {
+            font-family: var(--font-en);
             font-size: 22px;
-            letter-spacing: 5px;
-            color: #ffdd57;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            font-weight: 900;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 2px 8px rgba(0,0,0,0.5);
+            letter-spacing: 1.5px;
+            line-height: 1.2;
         }
 
-        /* ===== إزالة العناصر القديمة في الشريط الجانبي ===== */
-        .sidebar-top-section,
-        .sidebar-logo-bottom {
-            display: none !important;
+        .sidebar-season {
+            font-family: var(--font-en);
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+            margin-top: 4px;
+            opacity: 0.9;
         }
 
         .standings-content-area {
@@ -463,19 +465,17 @@
         .glow-green {
             border-bottom: 3px solid #00ff87;
             box-shadow: 0 4px 15px rgba(0, 255, 135, 0.6);
-            transition: 0.3s ease;
         }
 
         .glow-red {
             border-bottom: 3px solid #ff005a;
             box-shadow: 0 4px 15px rgba(255, 0, 90, 0.6);
-            transition: 0.3s ease;
         }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* ===== تحسينات للشاشات الصغيرة (موبايل) ===== */
+        /* ===== موبايل ===== */
         @media screen and (max-width: 600px) {
             body {
                 padding: 0 5px;
@@ -579,18 +579,20 @@
                 justify-content: center;
                 align-items: center;
                 border-radius: 16px 16px 0 0;
+                gap: 10px;
             }
 
-            .sidebar-vertical-text {
-                font-size: 14px;
-                writing-mode: horizontal-tb;
-                letter-spacing: 2px;
-                padding: 5px 15px;
-                border: none;
+            .sidebar-logo-top img {
+                width: 40px;
+                max-height: 50px;
             }
 
-            .sidebar-vertical-text .season-year {
+            .sidebar-premier {
                 font-size: 16px;
+            }
+
+            .sidebar-season {
+                font-size: 11px;
             }
 
             .standings-content-area {
@@ -643,7 +645,6 @@
             }
         }
 
-        /* ===== تحسينات للشاشات المتوسطة (آيباد صغير) ===== */
         @media screen and (min-width: 601px) and (max-width: 768px) {
             .banner-tab-btn, .banner-tab-select {
                 font-size: 11px;
@@ -672,17 +673,12 @@
             .standings-sidebar {
                 width: 100px;
             }
-
-            .sidebar-vertical-text {
-                font-size: 15px;
-                letter-spacing: 3px;
-            }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== TOAST (رسالة منبثقة صغيرة) ===== -->
+    <!-- ===== TOAST ===== -->
     <div id="toast">
         <span id="toastContent">جاري الحفظ...</span>
     </div>
@@ -721,24 +717,14 @@
         <div id="standingsTab" class="tab-content">
             <div id="captureStandings" class="export-area">
                 <div class="standings-sidebar">
-                    <!-- النص العمودي الجديد -->
-                    <div class="sidebar-vertical-text" id="sidebarVerticalTitle" ondblclick="unlockEditWithPassword()">
-                        <span>P</span>
-                        <span>r</span>
-                        <span>e</span>
-                        <span>m</span>
-                        <span>i</span>
-                        <span>e</span>
-                        <span>r</span>
-                        <br>
-                        <span>L</span>
-                        <span>e</span>
-                        <span>a</span>
-                        <span>g</span>
-                        <span>u</span>
-                        <span>e</span>
-                        <br>
-                        <span class="season-year">2026/27</span>
+                    <!-- شعار الدوري (الأسد) -->
+                    <div class="sidebar-logo-top">
+                        <img id="sidebarLogoImg" src="https://raw.githubusercontent.com/aaa117703-hub/Telegoat/04053eed0a5281bbf6625859ca6e9fc84451944f/Premier_league.png.svg" alt="Premier League Logo" onerror="this.style.display='none'">
+                    </div>
+                    <!-- النص القابل للنقر المزدوج -->
+                    <div class="sidebar-title" ondblclick="unlockEditWithPassword()">
+                        <div class="sidebar-premier">Premier League</div>
+                        <div class="sidebar-season">2026/27 Season</div>
                     </div>
                 </div>
                 <div class="standings-content-area">
@@ -763,7 +749,7 @@
 
     <script>
         // ============================================================
-        // 1. STATE & VARIABLES
+        // 1. STATE
         // ============================================================
         let isAdmin = localStorage.getItem('fpl_admin') === 'true';
         let editMode = isAdmin;
@@ -773,7 +759,7 @@
         let isSaving = false;
 
         // ============================================================
-        // 2. TOAST FUNCTION
+        // 2. TOAST
         // ============================================================
         let toastTimeout = null;
         function showToast(msg, isSuccess = false) {
@@ -796,7 +782,7 @@
         }
 
         // ============================================================
-        // 3. BANNER & LOGO ERROR HANDLING
+        // 3. BANNER ERROR
         // ============================================================
         let bannerAttempts = 0;
         const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png"];
@@ -923,7 +909,6 @@
         // ============================================================
         function unlockEditWithPassword() {
             if (isAdmin) {
-                // إذا كان المدير مفعلاً بالفعل، نبدل وضع التعديل
                 editMode = !editMode;
                 const btn = document.getElementById('editToggleBtn');
                 if (editMode) {
@@ -996,7 +981,7 @@
         }
 
         // ============================================================
-        // 8. RENDER & CALCULATE
+        // 8. RENDER
         // ============================================================
         function calculateStandings() {
             let calculated = {};
@@ -1043,11 +1028,10 @@
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
                 let position = index + 1;
                 
-                // تحديد الفئة: المركز الأول أخضر، المراكز 17-20 أحمر
                 let rowClass = '';
                 if (position === 1) {
                     rowClass = 'glow-green';
-                } else if (position >= 17 && position <= 20) {
+                } else if (position === 17) {
                     rowClass = 'glow-red';
                 }
                 
@@ -1134,7 +1118,7 @@
         }
 
         // ============================================================
-        // 9. AUTO-SAVE LOCALSTORAGE BACKUP
+        // 9. AUTO-SAVE
         // ============================================================
         setInterval(() => {
             if (Object.keys(scoresStorage).length > 0) {
