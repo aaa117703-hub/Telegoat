@@ -67,7 +67,7 @@
             bottom: 4%;
             right: 2%;
             display: flex;
-            background: #5d8eb6; /* لون متناسق لتغطية الأزرار القديمة في البنر */
+            background: #5d8eb6; 
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -419,9 +419,8 @@
 <body>
 
     <div class="banner-container">
-        <!-- ██████████████████████ التعديل هنا ██████████████████████ -->
-        <img src="image_5.png.jpg" alt="Premier League Banner" onerror="this.src='https://dummyimage.com/750x180/00bfff/fff&text=Banner+Missing'">
-        <!-- ██████████████████████ انتهى التعديل ██████████████████████ -->
+        <!-- نظام ذكي لتجربة عدة صيغ لتفادي مشاكل الامتداد وتخزين المتصفح -->
+        <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
         
         <!-- الأزرار المدمجة داخل البنر -->
         <div class="banner-overlay-tabs">
@@ -494,6 +493,18 @@
     </div>
 
     <script>
+        // دالة تلقائية لتجربة صيغ مختلفة للبنر في حال فشل تحميل الصيغة الحالية
+        let bannerAttempts = 0;
+        const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png"];
+        function handleBannerError(img) {
+            bannerAttempts++;
+            if (bannerAttempts < bannerSources.length) {
+                img.src = bannerSources[bannerAttempts];
+            } else {
+                img.src = 'https://dummyimage.com/750x180/00bfff/fff&text=Banner+Missing';
+            }
+        }
+
         const teamsMap = {
             "ARS": { name: "Arsenal", logo: "arsenal.png.WEBP" },
             "AVL": { name: "Aston Villa", logo: "aston_villa.png.WEBP" },
