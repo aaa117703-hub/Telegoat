@@ -119,6 +119,14 @@
             color: #fff;
         }
 
+        /* زر التعديل مخفي افتراضياً */
+        .admin-edit-btn {
+            display: none !important;
+        }
+        .admin-edit-btn.visible {
+            display: inline-flex !important;
+        }
+
         .header { 
             background-color: var(--pl-dark-bg); 
             color: #ffffff; 
@@ -259,7 +267,7 @@
             outline: none;
         }
 
-        /* ===== Spinner & Save Indicator ===== */
+        /* Spinner & Save Indicator */
         .spinner-small {
             display: inline-block;
             width: 14px;
@@ -422,6 +430,8 @@
             <button class="banner-tab-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
             <button class="banner-tab-btn" id="standingsToggleBtn" onclick="switchTab('standings')">جدول الترتيب</button>
             <button class="banner-tab-btn" onclick="downloadAsImage()">حفظ الصورة</button>
+            <!-- زر التعديل المخفي -->
+            <button class="banner-tab-btn admin-edit-btn" id="editToggleBtn" onclick="toggleEditMode()">تعديل</button>
         </div>
     </div>
 
@@ -611,41 +621,41 @@
             document.getElementById('sidebarRoundText').innerText = `GW ${currentRound}`;
         }
 
+        // ===== إظهار زر التعديل عند الضغط مرتين على MATCHWEEK =====
         function unlockEditWithPassword() {
             const pass = prompt("أدخل رمز الحماية لتفعيل زر التعديل:");
-            if(pass === "1999") {
-                document.getElementById('editToggleBtn').style.display = "inline-flex";
+            if (pass === "1999") {
+                const editBtn = document.getElementById('editToggleBtn');
+                editBtn.classList.add('visible');
                 alert("تم إظهار زر التعديل بنجاح!");
-            } else if(pass !== null) {
+            } else if (pass !== null) {
                 alert("الرمز غير صحيح!");
             }
         }
 
+        // ===== تبديل وضع التعديل وتغيير النص =====
         function toggleEditMode() {
-            if(!editMode) {
+            const btn = document.getElementById('editToggleBtn');
+            if (!editMode) {
                 editMode = true;
-                document.getElementById('editToggleBtn').innerText = "حفظ";
+                btn.innerText = "حفظ";
                 renderFixtures();
             } else {
                 editMode = false;
-                document.getElementById('editToggleBtn').innerText = "تعديل";
-                document.getElementById('editToggleBtn').style.display = "none";
+                btn.innerText = "تعديل";
                 renderFixtures();
                 renderStandings();
             }
         }
 
-        // ===== دالة التحديث مع مؤشر الحفظ (Spinner + Checkmark) =====
+        // ===== دالة التحديث مع Spinner + Checkmark =====
         function updateScore(round, idx, type, val, inputElement) {
-            // حفظ القيمة في localStorage
             scoresStorage[`r${round}_m${idx}_${type}`] = val;
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
 
-            // إيجاد العنصر الأب (match-score-center) لإظهار المؤشر فيه
             const center = inputElement.closest('.match-score-center');
             if (!center) return;
 
-            // إزالة أي مؤشر قديم
             let indicator = center.querySelector('.save-indicator');
             if (!indicator) {
                 indicator = document.createElement('span');
@@ -653,20 +663,16 @@
                 center.appendChild(indicator);
             }
 
-            // عرض Spinner
             indicator.innerHTML = '<span class="spinner-small"></span>';
             indicator.style.color = '#ffffff';
 
-            // مسح الـ timeout السابق إن وجد
             if (indicator._timeout) clearTimeout(indicator._timeout);
 
-            // بعد 400 مللي، نغير إلى علامة صح
             indicator._timeout = setTimeout(() => {
                 indicator.innerHTML = '✓';
                 indicator.style.color = '#00ff87';
                 indicator.style.fontWeight = '900';
                 
-                // بعد 700 مللي، نزيل المؤشر نهائياً
                 indicator._timeout = setTimeout(() => {
                     indicator.remove();
                 }, 700);
