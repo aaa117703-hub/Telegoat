@@ -350,7 +350,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center; /* تعديل لتموضع المحتوى في المنتصف عمودياً */
+            gap: 20px; /* مسافة متساوية بين العناصر */
             padding: 20px 8px;
             color: #ffffff;
             text-align: center;
@@ -361,7 +362,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 15px; /* تعديل المسافة بين رقم الجولة واللوجو */
         }
 
         .sidebar-round-text {
@@ -386,6 +387,7 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
+            margin-top: 10px; /* إضافة مسافة بسيطة قبل كلمة TELEGOAT لتتوسط الشكل تماماً */
         }
 
         .sidebar-logo-text {
@@ -931,7 +933,6 @@
             isSaving = true;
             btn.disabled = true;
 
-            // حفظ محلياً في localStorage
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
 
             setTimeout(() => {
