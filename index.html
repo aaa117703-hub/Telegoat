@@ -228,12 +228,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
-        .fixture-row.benar-highlight {
-            border: 2px solid #ff005a;
-            box-shadow: 0 0 12px rgba(255, 0, 90, 0.7);
-            background: #fff5f8;
-        }
-
         .team-box {
             font-family: var(--font-en);
             display: flex;
@@ -419,7 +413,7 @@
 <body>
 
     <div class="banner-container">
-        <!-- نظام ذكي لتجربة عدة صيغ لتفادي مشاكل الامتداد وتخزين المتصفح -->
+        <!-- نظام ذكي لتجربة عدة صيغ للبنر -->
         <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
         
         <!-- الأزرار المدمجة داخل البنر -->
@@ -464,7 +458,8 @@
                         <div class="sidebar-round-text" id="sidebarRoundText">GW 1</div>
                         
                         <div class="sidebar-logo-center">
-                            <img src="data:image/png;base64,(ضع الكود الطويل هنا)" alt="شعار الدوري الإنجليزي الممتاز">
+                            <!-- نظام ذكي لجلب شعار جانب جدول الترتيب تلقائياً بأي امتداد متوفر -->
+                            <img id="sidebarLogoImg" src="Premier_league_logo.png" alt="شعار الدوري الإنجليزي الممتاز" onerror="handleLogoError(this)">
                         </div>
 
                     </div>
@@ -493,7 +488,7 @@
     </div>
 
     <script>
-        // دالة تلقائية لتجربة صيغ مختلفة للبنر في حال فشل تحميل الصيغة الحالية
+        // دالة تلقائية لتجربة صيغ مختلفة للبنر
         let bannerAttempts = 0;
         const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png"];
         function handleBannerError(img) {
@@ -502,6 +497,18 @@
                 img.src = bannerSources[bannerAttempts];
             } else {
                 img.src = 'https://dummyimage.com/750x180/00bfff/fff&text=Banner+Missing';
+            }
+        }
+
+        // دالة تلقائية لتجربة صيغ مختلفة لشعار جدول الترتيب
+        let logoAttempts = 0;
+        const logoSources = ["Premier_league_logo.png", "Premier_league_logo.PNG", "Premier_league_logo.webp", "logo.png", "banner.png"];
+        function handleLogoError(img) {
+            logoAttempts++;
+            if (logoAttempts < logoSources.length) {
+                img.src = logoSources[logoAttempts];
+            } else {
+                img.style.display = 'none'; // إخفاء في حال عدم وجود أي صورة نهائياً
             }
         }
 
@@ -726,10 +733,8 @@
                     <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
                 `;
 
-                let highlightClass = (currentRound === 9 && idx === 0) ? 'benar-highlight' : '';
-
                 list.innerHTML += `
-                    <div class="fixture-row ${highlightClass}">
+                    <div class="fixture-row">
                         <div class="team-box home">
                             <span>${home.name}</span>
                             <img src="${home.logo}">
