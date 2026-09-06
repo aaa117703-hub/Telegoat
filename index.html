@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TELEGRAM GOAT - Premier League</title>
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -237,7 +236,7 @@
             font-weight: 800;
             color: #38003c;
             text-transform: uppercase;
-            white-space: nowrap; /* منع الالتفاف */
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -450,6 +449,37 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
+        /* ===== تذييل الصورة والاسم ===== */
+        .footer-credit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.12);
+            font-family: var(--font-ar);
+            font-size: 13px;
+            color: #ffffff;
+            text-align: center;
+            backdrop-filter: blur(4px);
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-credit img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #00ff87;
+            box-shadow: 0 0 20px rgba(0, 255, 135, 0.7), 0 0 40px rgba(0, 255, 135, 0.3);
+            flex-shrink: 0;
+        }
+
         /* ===== تحسينات للشاشات الصغيرة (موبايل) ===== */
         @media screen and (max-width: 600px) {
             body {
@@ -510,7 +540,7 @@
             }
 
             .team-box {
-                font-size: 10px !important; /* تصغير الخط في الموبايل */
+                font-size: 10px !important;
                 width: 34%;
                 letter-spacing: -0.2px;
                 white-space: nowrap;
@@ -595,6 +625,17 @@
                 height: 16px;
                 margin-left: 4px;
             }
+
+            .footer-credit {
+                font-size: 11px;
+                padding: 8px 12px;
+                gap: 8px;
+            }
+
+            .footer-credit img {
+                width: 30px;
+                height: 30px;
+            }
         }
 
         /* ===== تحسينات للشاشات المتوسطة (آيباد صغير) ===== */
@@ -653,15 +694,23 @@
 
     <div class="main-container">
 
+        <!-- ===== Fixtures Tab ===== -->
         <div id="fixturesTab" class="tab-content active">
             <div id="captureFixtures" class="export-area">
                 <div class="fixtures-header-box">
                     <div class="fixtures-header-title" id="fixturesBannerTitle">MATCHWEEK RESULTS</div>
                 </div>
                 <div id="fixturesList"></div>
+
+                <!-- تذييل الصورة والاسم داخل المواجهات -->
+                <div class="footer-credit">
+                    <img src="img/owner.png" alt="عقيل ال رويعي" onerror="this.style.display='none'">
+                    <span>الموقع مصمم كاملاً بواسطة عقيل ال رويعي</span>
+                </div>
             </div>
         </div>
 
+        <!-- ===== Standings Tab ===== -->
         <div id="standingsTab" class="tab-content">
             <div id="captureStandings" class="export-area">
                 <div class="standings-sidebar">
@@ -690,6 +739,12 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- تذييل الصورة والاسم داخل الترتيب -->
+                <div class="footer-credit" style="margin-top: 15px; margin-bottom: 5px;">
+                    <img src="img/owner.png" alt="عقيل ال رويعي" onerror="this.style.display='none'">
+                    <span>الموقع مصمم كاملاً بواسطة عقيل ال رويعي</span>
+                </div>
             </div>
         </div>
 
@@ -697,10 +752,10 @@
 
     <script>
         // ============================================================
-        // 1. FIREBASE CONFIG (عدل الرابط هنا بعد إنشاء القاعدة)
+        // 1. FIREBASE CONFIG
         // ============================================================
         const firebaseConfig = {
-            databaseURL: "https://telegram-goat-default-rtdb.firebaseio.com/" // غيّر هذا الرابط
+            databaseURL: "https://telegram-goat-default-rtdb.firebaseio.com/"
         };
         
         if (!firebase.apps.length) {
@@ -744,7 +799,7 @@
         }
 
         // ============================================================
-        // 4. TEAMS MAP (Crystal Palace بالاسم الكامل)
+        // 4. TEAMS MAP
         // ============================================================
         const teamsMap = {
             "ARS": { name: "Arsenal", logo: "arsenal.png.WEBP" },
@@ -775,7 +830,7 @@
         });
 
         // ============================================================
-        // 5. MATCHWEEKS (FULL 1-38)
+        // 5. MATCHWEEKS (1-38)
         // ============================================================
         const matchweeks = {
             1: [["ARS", "COV"], ["HUL", "MUN"], ["EVE", "CRY"], ["IPS", "SUN"], ["NOT", "LEE"], ["BRE", "TOT"], ["BHA", "AVL"], ["MCI", "BOU"], ["NEW", "LIV"], ["FUL", "CHE"]],
@@ -876,7 +931,6 @@
                 btn.innerText = "حفظ";
                 renderFixtures();
             } else {
-                // ===== حفظ جميع النتائج في Firebase =====
                 if (isSaving) return;
                 const btnSave = document.getElementById('editToggleBtn');
                 const originalHTML = btnSave.innerHTML;
@@ -906,7 +960,6 @@
                         setTimeout(() => {
                             btnSave.innerHTML = originalHTML;
                         }, 1500);
-                        // إيقاف وضع التعديل
                         editMode = false;
                         btnSave.innerText = "تعديل";
                         renderFixtures();
@@ -917,7 +970,6 @@
             }
         }
 
-        // ===== تحديث النتيجة محلياً أولاً =====
         function updateScore(round, idx, type, val, inputElement) {
             scoresStorage[`r${round}_m${idx}_${type}`] = val;
 
@@ -1077,7 +1129,7 @@
         }
 
         // ============================================================
-        // 8. FIREBASE LISTENER (استقبال البيانات السحابية فوراً)
+        // 8. FIREBASE LISTENER
         // ============================================================
         db.ref('fpl_scores').on('value', (snapshot) => {
             const data = snapshot.val() || {};
