@@ -164,11 +164,9 @@
             color: #fff;
         }
 
+        /* إخفاء زر التعديل بشكل مطلق وافتراضي للجميع */
         .admin-edit-btn {
             display: none !important;
-        }
-        .admin-edit-btn.visible {
-            display: inline-flex !important;
         }
 
         .header { 
@@ -450,161 +448,33 @@
         .tab-content.active { display: block; }
 
         @media screen and (max-width: 600px) {
-            body {
-                padding: 0 5px;
-            }
-
-            .banner-container {
-                border-width: 3px;
-                border-radius: 16px;
-            }
-
-            .banner-overlay-tabs {
-                bottom: 4%;
-                right: 1%;
-                max-width: 98%;
-                border-radius: 6px;
-                padding: 3px 0;
-                gap: 0;
-            }
-
-            .banner-tab-btn, .banner-tab-select {
-                font-size: 10px;
-                padding: 5px 6px;
-                min-width: 35px;
-                flex: 1 1 20%;
-            }
-
-            .banner-tab-select {
-                min-width: 45px;
-                padding-right: 6px;
-                padding-left: 14px;
-                background-size: 7px;
-            }
-
-            .round-indicator {
-                font-size: 15px;
-            }
-
-            .nav-arrow-btn {
-                width: 30px;
-                height: 30px;
-                font-size: 14px;
-            }
-
-            #captureFixtures {
-                padding: 15px 10px;
-                border-radius: 16px;
-                border-width: 3px;
-            }
-
-            .fixtures-header-title {
-                font-size: 16px;
-            }
-
-            .fixture-row {
-                padding: 6px 8px;
-                flex-wrap: nowrap;
-            }
-
-            .team-box {
-                font-size: 10px !important;
-                width: 34%;
-                letter-spacing: -0.2px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .team-box img {
-                width: 18px;
-                height: 18px;
-                margin: 0 3px;
-            }
-
-            .match-score-center {
-                width: 24%;
-                min-width: 50px;
-                padding: 3px 4px;
-            }
-
-            .score-display {
-                font-size: 11px;
-            }
-
-            .score-input {
-                width: 26px;
-                height: 18px;
-                font-size: 10px;
-            }
-
-            #captureStandings {
-                flex-direction: column;
-                border-radius: 16px;
-                border-width: 3px;
-                overflow: hidden;
-            }
-
-            .standings-sidebar {
-                width: 100%;
-                flex-direction: row;
-                padding: 10px;
-                justify-content: center;
-                align-items: center;
-                border-radius: 16px 16px 0 0;
-                min-height: 80px;
-            }
-
-            .standings-sidebar img {
-                max-width: 100px;
-            }
-
-            .standings-content-area {
-                min-width: unset;
-                width: 100%;
-                padding: 5px;
-                overflow-x: auto;
-                display: block !important;
-                border-radius: 0 0 16px 16px;
-            }
-
-            .standings-card {
-                padding: 5px 0;
-            }
-
-            table {
-                font-size: 10px;
-                display: table !important;
-                width: 100%;
-            }
-
-            th {
-                font-size: 10px;
-                padding: 6px 4px;
-            }
-
-            td {
-                font-size: 10px;
-                padding: 6px 4px;
-            }
-
-            .team-cell {
-                font-size: 10px;
-            }
-
-            .team-cell img {
-                width: 16px;
-                height: 16px;
-                margin-left: 4px;
-            }
-
-            .glow-green, .glow-red {
-                border-bottom-width: 2px;
-                box-shadow: 0 2px 12px rgba(0, 255, 135, 0.6);
-            }
-            .glow-red {
-                box-shadow: 0 2px 12px rgba(255, 0, 90, 0.6);
-            }
+            body { padding: 0 5px; }
+            .banner-container { border-width: 3px; border-radius: 16px; }
+            .banner-overlay-tabs { bottom: 4%; right: 1%; max-width: 98%; border-radius: 6px; padding: 3px 0; gap: 0; }
+            .banner-tab-btn, .banner-tab-select { font-size: 10px; padding: 5px 6px; min-width: 35px; flex: 1 1 20%; }
+            .banner-tab-select { min-width: 45px; padding-right: 6px; padding-left: 14px; background-size: 7px; }
+            .round-indicator { font-size: 15px; }
+            .nav-arrow-btn { width: 30px; height: 30px; font-size: 14px; }
+            #captureFixtures { padding: 15px 10px; border-radius: 16px; border-width: 3px; }
+            .fixtures-header-title { font-size: 16px; }
+            .fixture-row { padding: 6px 8px; flex-wrap: nowrap; }
+            .team-box { font-size: 10px !important; width: 34%; letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .team-box img { width: 18px; height: 18px; margin: 0 3px; }
+            .match-score-center { width: 24%; min-width: 50px; padding: 3px 4px; }
+            .score-display { font-size: 11px; }
+            .score-input { width: 26px; height: 18px; font-size: 10px; }
+            #captureStandings { flex-direction: column; border-radius: 16px; border-width: 3px; overflow: hidden; }
+            .standings-sidebar { width: 100%; flex-direction: row; padding: 10px; justify-content: center; align-items: center; border-radius: 16px 16px 0 0; min-height: 80px; }
+            .standings-sidebar img { max-width: 100px; }
+            .standings-content-area { min-width: unset; width: 100%; padding: 5px; overflow-x: auto; display: block !important; border-radius: 0 0 16px 16px; }
+            .standings-card { padding: 5px 0; }
+            table { font-size: 10px; display: table !important; width: 100%; }
+            th { font-size: 10px; padding: 6px 4px; }
+            td { font-size: 10px; padding: 6px 4px; }
+            .team-cell { font-size: 10px; }
+            .team-cell img { width: 16px; height: 16px; margin-left: 4px; }
+            .glow-green, .glow-red { border-bottom-width: 2px; box-shadow: 0 2px 12px rgba(0, 255, 135, 0.6); }
+            .glow-red { box-shadow: 0 2px 12px rgba(255, 0, 90, 0.6); }
         }
     </style>
 </head>
@@ -622,14 +492,15 @@
             <button class="banner-tab-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
             <button class="banner-tab-btn" id="standingsToggleBtn" onclick="switchTab('standings')">الترتيب</button>
             <button class="banner-tab-btn" onclick="downloadAsImage()">حفظ الصورة</button>
-            <button class="banner-tab-btn admin-edit-btn" id="editToggleBtn" onclick="toggleEditMode()">تعديل</button>
+            <!-- زر التعديل مخفي تماماً ولن يظهر إلا بعد إدخال كلمة المرور -->
+            <button class="banner-tab-btn admin-edit-btn" id="editToggleBtn" onclick="toggleEditMode()" style="display: none !important;">تعديل</button>
         </div>
     </div>
 
     <div class="header">
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">&lt;</button>
-            <!-- هنا تم إضافة خاصية النقر المزدوج ondblclick لطلب الرمز 1999 -->
+            <!-- النقر المزدوج هنا يطلب رمز 1999 لفتح صلاحيات التعديل -->
             <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(1)">&gt;</button>
         </div>
@@ -673,22 +544,13 @@
 
     <script>
         // ============================================================
-        // 1. STATE
+        // 1. STATE & SECURITY (إلغاء الحفظ التلقائي لصلاحيات المشرف بالمتصفح لتأكيد الحماية)
         // ============================================================
-        let isAdmin = localStorage.getItem('fpl_admin') === 'true';
-        let editMode = isAdmin;
+        let editMode = false;
         let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
         let currentRound = 1;
         let activeTab = 'fixtures';
         let isSaving = false;
-
-        // عند فتح الصفحة، إذا كان مسجلاً كمشرف، نظهر زر التعديل فوراً
-        window.addEventListener('DOMContentLoaded', () => {
-            if (isAdmin) {
-                const editBtn = document.getElementById('editToggleBtn');
-                if(editBtn) editBtn.classList.add('visible');
-            }
-        });
 
         // ============================================================
         // 2. TOAST
@@ -839,11 +701,9 @@
         function unlockEditWithPassword() {
             const pass = prompt("أدخل رمز الحماية لتفعيل زر التعديل:");
             if (pass === "1999") {
-                isAdmin = true;
                 editMode = true;
-                localStorage.setItem('fpl_admin', 'true');
                 const editBtn = document.getElementById('editToggleBtn');
-                editBtn.classList.add('visible');
+                editBtn.style.setProperty('display', 'inline-flex', 'important');
                 editBtn.innerText = "حفظ";
                 renderFixtures();
                 alert("تم تفعيل صلاحيات المدير بنجاح!");
@@ -886,6 +746,7 @@
                 btn.disabled = false;
                 showToast("تم الحفظ بنجاح ✅", true);
                 editMode = false;
+                btn.style.setProperty('display', 'none', 'important');
                 btn.innerText = "تعديل";
                 renderFixtures();
                 renderStandings();
