@@ -38,8 +38,9 @@
             padding-bottom: 40px; 
         }
 
-        /* تنسيق البنر العلوي */
+        /* تنسيق البنر العلوي والتبويبات المدمجة */
         .banner-container {
+            position: relative;
             width: 100%;
             max-width: 750px;
             margin: 15px auto;
@@ -54,10 +55,62 @@
 
         .banner-container img {
             width: 100%;
-            height: 120px;
+            height: auto;
             object-fit: cover;
             object-position: center;
             display: block;
+        }
+
+        /* حاوية الأزرار فوق البنر */
+        .banner-overlay-tabs {
+            position: absolute;
+            bottom: 4%;
+            right: 2%;
+            display: flex;
+            background: #5d8eb6; /* لون مقارب للون الأزرار الأصلية في الصورة لتغطيتها */
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .banner-tab-btn, .banner-tab-select {
+            background: transparent;
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            font-family: var(--font-ar);
+            font-weight: 900;
+            font-size: 13px;
+            cursor: pointer;
+            outline: none;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner-tab-btn:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .banner-tab-btn.active {
+            background: var(--pl-purple-btn);
+        }
+
+        .banner-tab-select {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 15px;
+            padding-left: 28px;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: left 8px center;
+            border-left: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .banner-tab-select option {
+            background: var(--pl-purple-btn);
+            color: #fff;
         }
 
         .header { 
@@ -67,16 +120,16 @@
             text-align: center; 
         }
 
-        .filter-bar {
+        .controls-bar {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
-        .filter-btn, .filter-select {
+        .filter-btn {
             font-family: var(--font-ar);
             background: var(--pl-purple-btn);
             color: #ffffff;
@@ -93,19 +146,9 @@
             transition: 0.2s;
         }
 
-        .filter-btn:hover, .filter-btn.active {
+        .filter-btn:hover {
             background: #5a055a;
             border-color: var(--pl-pink);
-        }
-
-        .filter-select {
-            appearance: none;
-            -webkit-appearance: none;
-            padding-right: 15px;
-            padding-left: 25px;
-            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: left 8px center;
         }
 
         .round-nav-container {
@@ -248,7 +291,7 @@
 
         .export-area { border-radius: 8px; }
 
-        /* جدول الترتيب مع الشعار المضاف تحت الـ GW مباشرة */
+        /* جدول الترتيب */
         #captureStandings {
             display: flex;
             background: #ffffff;
@@ -376,16 +419,20 @@
 <body>
 
     <div class="banner-container">
-        <img src="banner.png" alt="Premier League Banner" onerror="this.src='https://dummyimage.com/750x120/00bfff/fff&text=Banner+Missing'">
+        <!-- الصورة الجديدة -->
+        <img src="image_5.png" alt="Premier League Banner" onerror="this.src='https://dummyimage.com/750x180/00bfff/fff&text=Banner+Missing'">
+        
+        <!-- الأزرار المدمجة داخل البنر -->
+        <div class="banner-overlay-tabs">
+            <select class="banner-tab-select" id="roundSelect" onchange="selectRound(this.value)"></select>
+            <button class="banner-tab-btn" id="standingsToggleBtn" onclick="switchTab('standings')">جدول الترتيب</button>
+            <button class="banner-tab-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
+        </div>
     </div>
 
     <div class="header">
-        <div class="filter-bar">
-            <button class="filter-btn" id="standingsToggleBtn" onclick="switchTab('standings')">جدول الترتيب</button>
-            <button class="filter-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
-            
-            <select class="filter-select" id="roundSelect" onchange="selectRound(this.value)"></select>
-
+        <div class="controls-bar">
+            <!-- أزرار الحفظ والتعديل تبقى أسفل البنر -->
             <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()" style="display: none;">تعديل</button>
             <button class="filter-btn" onclick="downloadAsImage()">حفظ الصورة</button>
         </div>
@@ -416,8 +463,8 @@
                     <div class="sidebar-top-section">
                         <div class="sidebar-round-text" id="sidebarRoundText">GW 1</div>
                         
-                        <!-- مكان شعار الدوري الإنجليزي الجديد -->
                         <div class="sidebar-logo-center">
+                            <!-- ضع الكود الطويل هنا (Base64) كما تم الاتفاق سابقاً -->
                             <img src="data:image/png;base64,(ضع الكود الطويل هنا)" alt="شعار الدوري الإنجليزي الممتاز">
                         </div>
 
