@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TELEGRAM GOAT - Premier League</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -36,6 +36,10 @@
             background-color: var(--pl-dark-bg); 
             color: var(--text-white); 
             padding-bottom: 40px; 
+            /* تثبيت عرض الموبايل ليطابق تصميم الأيباد بشكل متناسق ومصغر */
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto;
         }
 
         /* تنسيق البنر العلوي والتبويبات المدمجة */
