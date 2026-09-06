@@ -1176,11 +1176,11 @@
                 e.stopPropagation();
                 if (isPlaying) {
                     audioEl.pause();
-                    toggleBtn.innerHTML = '🔇';
+                    toggleBtn.innerHTML = '+';
                     isPlaying = false;
                 } else {
                     audioEl.play().catch(() => {});
-                    toggleBtn.innerHTML = '🔊';
+                    toggleBtn.innerHTML = '-';
                     isPlaying = true;
                 }
             });
