@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TELEGRAM GOAT - Premier League</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @font-face {
@@ -234,6 +237,9 @@
             font-weight: 800;
             color: #38003c;
             text-transform: uppercase;
+            white-space: nowrap; /* منع الالتفاف */
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .team-box.home { justify-content: flex-end; text-align: right; }
         .team-box.away { justify-content: flex-start; text-align: left; }
@@ -246,6 +252,7 @@
             background: transparent;
             border-radius: 0;
             padding: 0;
+            flex-shrink: 0;
         }
 
         .match-score-center {
@@ -259,6 +266,7 @@
             border-radius: 6px;
             position: relative;
             min-width: 60px;
+            flex-shrink: 0;
         }
 
         .score-display {
@@ -502,8 +510,12 @@
             }
 
             .team-box {
-                font-size: 10px;
+                font-size: 10px !important; /* تصغير الخط في الموبايل */
                 width: 34%;
+                letter-spacing: -0.2px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .team-box img {
@@ -656,7 +668,6 @@
                     <div class="sidebar-top-section">
                         <div class="sidebar-round-text" id="sidebarRoundText">GW 1</div>
                         <div class="sidebar-logo-center">
-                            <!-- تم تغيير الرابط هنا -->
                             <img id="sidebarLogoImg" src="https://raw.githubusercontent.com/aaa117703-hub/Telegoat/04053eed0a5281bbf6625859ca6e9fc84451944f/Premier_league.png.svg" alt="شعار الدوري الإنجليزي الممتاز" onerror="handleLogoError(this)">
                         </div>
                     </div>
@@ -685,6 +696,31 @@
     </div>
 
     <script>
+        // ============================================================
+        // 1. FIREBASE CONFIG (عدل الرابط هنا بعد إنشاء القاعدة)
+        // ============================================================
+        const firebaseConfig = {
+            databaseURL: "https://telegram-goat-default-rtdb.firebaseio.com/" // غيّر هذا الرابط
+        };
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        // ============================================================
+        // 2. STATE & VARIABLES
+        // ============================================================
+        let isAdmin = localStorage.getItem('fpl_admin') === 'true';
+        let editMode = isAdmin;
+        let scoresStorage = {};
+        let currentRound = 1;
+        let activeTab = 'fixtures';
+        let isSaving = false;
+
+        // ============================================================
+        // 3. BANNER & LOGO ERROR HANDLING
+        // ============================================================
         let bannerAttempts = 0;
         const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png"];
         function handleBannerError(img) {
@@ -707,6 +743,9 @@
             }
         }
 
+        // ============================================================
+        // 4. TEAMS MAP (Crystal Palace بالاسم الكامل)
+        // ============================================================
         const teamsMap = {
             "ARS": { name: "Arsenal", logo: "arsenal.png.WEBP" },
             "AVL": { name: "Aston Villa", logo: "aston_villa.png.WEBP" },
@@ -735,6 +774,9 @@
             initialBasePoints[key] = { gf: 0, pts: 0 };
         });
 
+        // ============================================================
+        // 5. MATCHWEEKS (FULL 1-38)
+        // ============================================================
         const matchweeks = {
             1: [["ARS", "COV"], ["HUL", "MUN"], ["EVE", "CRY"], ["IPS", "SUN"], ["NOT", "LEE"], ["BRE", "TOT"], ["BHA", "AVL"], ["MCI", "BOU"], ["NEW", "LIV"], ["FUL", "CHE"]],
             2: [["BOU", "EVE"], ["AVL", "ARS"], ["CHE", "BHA"], ["COV", "HUL"], ["CRY", "MCI"], ["LEE", "BRE"], ["LIV", "NOT"], ["MUN", "IPS"], ["SUN", "FUL"], ["TOT", "NEW"]],
@@ -776,11 +818,9 @@
             38: [["BOU", "NOT"], ["BHA", "MUN"], ["CHE", "AVL"], ["CRY", "ARS"], ["EVE", "FUL"], ["HUL", "COV"], ["LEE", "BRE"], ["LIV", "IPS"], ["MCI", "SUN"], ["TOT", "NEW"]]
         };
 
-        let currentRound = 1;
-        let activeTab = 'fixtures';
-        let editMode = false;
-        let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
-
+        // ============================================================
+        // 6. FUNCTIONS
+        // ============================================================
         function initRoundDropdown() {
             const select = document.getElementById('roundSelect');
             select.innerHTML = '';
@@ -836,16 +876,50 @@
                 btn.innerText = "حفظ";
                 renderFixtures();
             } else {
-                editMode = false;
-                btn.innerText = "تعديل";
-                renderFixtures();
-                renderStandings();
+                // ===== حفظ جميع النتائج في Firebase =====
+                if (isSaving) return;
+                const btnSave = document.getElementById('editToggleBtn');
+                const originalHTML = btnSave.innerHTML;
+                btnSave.innerHTML = `<span class="spinner-small"></span>`;
+                btnSave.disabled = true;
+                isSaving = true;
+
+                const matches = matchweeks[currentRound] || [];
+                const updates = {};
+                matches.forEach((match, idx) => {
+                    const homeInput = document.getElementById(`home_r${currentRound}_m${idx}`);
+                    const awayInput = document.getElementById(`away_r${currentRound}_m${idx}`);
+                    if (homeInput && awayInput) {
+                        updates[`r${currentRound}_m${idx}_home`] = homeInput.value;
+                        updates[`r${currentRound}_m${idx}_away`] = awayInput.value;
+                    }
+                });
+
+                db.ref('fpl_scores').update(updates, (error) => {
+                    isSaving = false;
+                    btnSave.disabled = false;
+                    if (error) {
+                        alert("❌ فشل حفظ النتائج في السحابة! تأكد من الرابط وقواعد Firebase.");
+                        btnSave.innerHTML = originalHTML;
+                    } else {
+                        btnSave.innerHTML = `✓`;
+                        setTimeout(() => {
+                            btnSave.innerHTML = originalHTML;
+                        }, 1500);
+                        // إيقاف وضع التعديل
+                        editMode = false;
+                        btnSave.innerText = "تعديل";
+                        renderFixtures();
+                        renderStandings();
+                        alert("✅ تم حفظ النتائج في السحابة وعرضها للجميع!");
+                    }
+                });
             }
         }
 
+        // ===== تحديث النتيجة محلياً أولاً =====
         function updateScore(round, idx, type, val, inputElement) {
             scoresStorage[`r${round}_m${idx}_${type}`] = val;
-            localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
 
             const center = inputElement.closest('.match-score-center');
             if (!center) return;
@@ -873,6 +947,9 @@
             }, 400);
         }
 
+        // ============================================================
+        // 7. RENDER & CALCULATE
+        // ============================================================
         function calculateStandings() {
             let calculated = {};
             for (let teamKey in initialBasePoints) {
@@ -945,9 +1022,9 @@
                 let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
 
                 let scoreContent = editMode ? `
-                    <input type="number" class="score-input" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
+                    <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
                     <span style="font-weight:900; color:#fff;">:</span>
-                    <input type="number" class="score-input" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
+                    <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
                 ` : `
                     <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
                     <span style="font-weight:900; color:#ffffff; font-family: var(--font-en);">VS</span>
@@ -999,6 +1076,21 @@
             });
         }
 
+        // ============================================================
+        // 8. FIREBASE LISTENER (استقبال البيانات السحابية فوراً)
+        // ============================================================
+        db.ref('fpl_scores').on('value', (snapshot) => {
+            const data = snapshot.val() || {};
+            scoresStorage = data;
+            renderFixtures();
+            if (activeTab === 'standings') {
+                renderStandings();
+            }
+        });
+
+        // ============================================================
+        // 9. INIT
+        // ============================================================
         initRoundDropdown();
         renderStandings();
         renderFixtures();
