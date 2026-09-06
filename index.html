@@ -65,12 +65,11 @@
             display: block;
         }
 
-        /* ===== الأزرار المدمجة ===== */
+        /* ===== الأزرار المدمجة (في أسفل البنر) ===== */
         .banner-overlay-tabs {
             position: absolute;
-            bottom: 8%;
+            bottom: 4%;
             right: 2%;
-            left: 2%;
             display: flex;
             background: #5d8eb6; 
             border-radius: 8px;
@@ -81,13 +80,14 @@
             justify-content: center;
             gap: 0;
             padding: 2px;
+            max-width: 96%;
         }
 
         .banner-tab-btn, .banner-tab-select {
             background: transparent;
             color: #ffffff;
             border: none;
-            padding: 8px 10px;
+            padding: 8px 12px;
             font-family: var(--font-ar);
             font-weight: 900;
             font-size: 12px;
@@ -456,26 +456,26 @@
             }
 
             .banner-overlay-tabs {
-                bottom: 5%;
+                bottom: 4%;
                 right: 1%;
-                left: 1%;
+                max-width: 98%;
                 border-radius: 6px;
                 padding: 3px 0;
                 gap: 0;
             }
 
             .banner-tab-btn, .banner-tab-select {
-                font-size: 11px;
-                padding: 6px 6px;
-                min-width: 40px;
+                font-size: 10px;
+                padding: 5px 6px;
+                min-width: 35px;
                 flex: 1 1 20%;
             }
 
             .banner-tab-select {
-                min-width: 50px;
+                min-width: 45px;
                 padding-right: 6px;
-                padding-left: 16px;
-                background-size: 8px;
+                padding-left: 14px;
+                background-size: 7px;
             }
 
             .round-indicator {
@@ -502,36 +502,36 @@
             }
 
             .team-box {
-                font-size: 11px;
+                font-size: 10px;
                 width: 34%;
             }
 
             .team-box img {
-                width: 20px;
-                height: 20px;
+                width: 18px;
+                height: 18px;
                 margin: 0 3px;
             }
 
             .match-score-center {
                 width: 24%;
-                min-width: 55px;
+                min-width: 50px;
                 padding: 3px 4px;
             }
 
             .score-display {
-                font-size: 12px;
+                font-size: 11px;
             }
 
             .score-input {
-                width: 28px;
-                height: 20px;
-                font-size: 11px;
+                width: 26px;
+                height: 18px;
+                font-size: 10px;
             }
 
             .standings-sidebar {
                 width: 100%;
                 flex-direction: row;
-                padding: 10px;
+                padding: 8px;
                 justify-content: space-around;
                 flex-wrap: wrap;
                 gap: 5px;
@@ -539,21 +539,21 @@
 
             .sidebar-top-section {
                 flex-direction: row;
-                gap: 8px;
+                gap: 6px;
                 align-items: center;
             }
 
             .sidebar-round-text {
-                font-size: 16px;
+                font-size: 14px;
             }
 
             .sidebar-logo-center img {
-                width: 40px;
-                max-height: 50px;
+                width: 35px;
+                max-height: 45px;
             }
 
             .sidebar-logo-text {
-                font-size: 10px;
+                font-size: 9px;
             }
 
             .standings-content-area {
@@ -562,26 +562,26 @@
             }
 
             table {
-                font-size: 10px;
+                font-size: 9px;
             }
 
             th {
-                font-size: 11px;
-                padding: 8px 2px;
+                font-size: 10px;
+                padding: 6px 2px;
             }
 
             td {
-                font-size: 10px;
+                font-size: 9px;
                 padding: 4px 2px;
             }
 
             .team-cell {
-                font-size: 10px;
+                font-size: 9px;
             }
 
             .team-cell img {
-                width: 16px;
-                height: 16px;
+                width: 14px;
+                height: 14px;
                 margin-left: 4px;
             }
         }
