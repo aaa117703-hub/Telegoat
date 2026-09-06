@@ -36,13 +36,11 @@
             background-color: var(--pl-dark-bg); 
             color: var(--text-white); 
             padding-bottom: 40px; 
-            /* تثبيت عرض الموبايل ليطابق تصميم الأيباد بشكل متناسق ومصغر */
             width: 100%;
             max-width: 750px;
             margin: 0 auto;
         }
 
-        /* تنسيق البنر العلوي والتبويبات المدمجة */
         .banner-container {
             position: relative;
             width: 100%;
@@ -65,7 +63,6 @@
             display: block;
         }
 
-        /* حاوية الأزرار فوق البنر */
         .banner-overlay-tabs {
             position: absolute;
             bottom: 4%;
@@ -75,26 +72,30 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            direction: rtl;
+            flex-wrap: wrap;
+            gap: 0;
         }
 
         .banner-tab-btn, .banner-tab-select {
             background: transparent;
             color: #ffffff;
             border: none;
-            padding: 10px 18px;
+            padding: 8px 14px;
             font-family: var(--font-ar);
             font-weight: 900;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             outline: none;
             transition: 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
+            white-space: nowrap;
         }
 
         .banner-tab-btn:hover {
-            background: rgba(0,0,0,0.1);
+            background: rgba(0,0,0,0.15);
         }
 
         .banner-tab-btn.active {
@@ -104,12 +105,13 @@
         .banner-tab-select {
             appearance: none;
             -webkit-appearance: none;
-            padding-right: 15px;
-            padding-left: 28px;
-            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            padding-right: 12px;
+            padding-left: 24px;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="10" viewBox="0 0 24 24" width="10" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
             background-repeat: no-repeat;
-            background-position: left 8px center;
+            background-position: left 6px center;
             border-left: 1px solid rgba(255,255,255,0.2);
+            min-width: 70px;
         }
 
         .banner-tab-select option {
@@ -122,37 +124,6 @@
             color: #ffffff; 
             padding: 5px 10px 15px 10px; 
             text-align: center; 
-        }
-
-        .controls-bar {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 5px;
-        }
-
-        .filter-btn {
-            font-family: var(--font-ar);
-            background: var(--pl-purple-btn);
-            color: #ffffff;
-            border: 1px solid var(--border-dark);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            outline: none;
-            transition: 0.2s;
-        }
-
-        .filter-btn:hover {
-            background: #5a055a;
-            border-color: var(--pl-pink);
         }
 
         .round-nav-container {
@@ -289,7 +260,6 @@
 
         .export-area { border-radius: 8px; }
 
-        /* جدول الترتيب */
         #captureStandings {
             display: flex;
             background: #ffffff;
@@ -417,24 +387,17 @@
 <body>
 
     <div class="banner-container">
-        <!-- نظام ذكي لتجربة عدة صيغ للبنر -->
         <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
         
-        <!-- الأزرار المدمجة داخل البنر -->
         <div class="banner-overlay-tabs">
             <select class="banner-tab-select" id="roundSelect" onchange="selectRound(this.value)"></select>
-            <button class="banner-tab-btn" id="standingsToggleBtn" onclick="switchTab('standings')">جدول الترتيب</button>
             <button class="banner-tab-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
+            <button class="banner-tab-btn" id="standingsToggleBtn" onclick="switchTab('standings')">جدول الترتيب</button>
+            <button class="banner-tab-btn" onclick="downloadAsImage()">حفظ الصورة</button>
         </div>
     </div>
 
     <div class="header">
-        <div class="controls-bar">
-            <!-- أزرار التحكم وحفظ الصورة متناسقة بجانب بعضها -->
-            <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()" style="display: none;">تعديل</button>
-            <button class="filter-btn" onclick="downloadAsImage()">حفظ الصورة</button>
-        </div>
-
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">&lt;</button>
             <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
@@ -444,7 +407,6 @@
 
     <div class="main-container">
 
-        <!-- Fixtures Tab -->
         <div id="fixturesTab" class="tab-content active">
             <div id="captureFixtures" class="export-area">
                 <div class="fixtures-header-box">
@@ -454,18 +416,14 @@
             </div>
         </div>
 
-        <!-- Standings Tab -->
         <div id="standingsTab" class="tab-content">
             <div id="captureStandings" class="export-area">
                 <div class="standings-sidebar">
                     <div class="sidebar-top-section">
                         <div class="sidebar-round-text" id="sidebarRoundText">GW 1</div>
-                        
                         <div class="sidebar-logo-center">
-                            <!-- نظام ذكي لجلب شعار جانب جدول الترتيب تلقائياً بأي امتداد متوفر -->
                             <img id="sidebarLogoImg" src="Premier_league_logo.png" alt="شعار الدوري الإنجليزي الممتاز" onerror="handleLogoError(this)">
                         </div>
-
                     </div>
                     <div class="sidebar-logo-bottom">
                         <div class="sidebar-logo-text">TELEGOAT</div>
@@ -492,7 +450,6 @@
     </div>
 
     <script>
-        // دالة تلقائية لتجربة صيغ مختلفة للبنر
         let bannerAttempts = 0;
         const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png"];
         function handleBannerError(img) {
@@ -504,7 +461,6 @@
             }
         }
 
-        // دالة تلقائية لتجربة صيغ مختلفة لشعار جدول الترتيب
         let logoAttempts = 0;
         const logoSources = ["Premier_league_logo.png", "Premier_league_logo.PNG", "Premier_league_logo.webp", "logo.png", "banner.png"];
         function handleLogoError(img) {
@@ -512,7 +468,7 @@
             if (logoAttempts < logoSources.length) {
                 img.src = logoSources[logoAttempts];
             } else {
-                img.style.display = 'none'; // إخفاء في حال عدم وجود أي صورة نهائياً
+                img.style.display = 'none';
             }
         }
 
