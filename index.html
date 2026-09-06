@@ -342,23 +342,25 @@
             width: 100%;
         }
 
+        /* ===== التعديل الرئيسي: الجزء الملون (الجانب الأيسر) ===== */
         .standings-sidebar {
-            width: 340px; /* مضاعفة عرض الشريط الجانبي ليتناسب مع الشعار الأكبر بكثير */
-            background: linear-gradient(180deg, #6c32f8 0%, #3281ff 50%, #10b981 100%);
+            width: 220px; /* زيادة العرض */
+            background: linear-gradient(180deg, #6C2BD9 0%, #3B82F6 50%, #10B981 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px 10px;
+            padding: 30px 15px;
             color: #ffffff;
             text-align: center;
             flex-shrink: 0;
-            min-height: 200px;
+            min-height: 280px;
+            border-radius: 16px 0 0 16px;
         }
 
         .standings-sidebar img {
             width: 100%;
-            max-width: 320px; /* مضاعفة حجم الشعار للضعف في الشاشات العادية */
+            max-width: 190px; /* تكبير الشعار بشكل ملحوظ */
             height: auto;
             object-fit: contain;
             filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
@@ -446,7 +448,8 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        @media screen and (max-width: 768px) {
+        /* ===== التعديل للشاشات الصغيرة ===== */
+        @media screen and (max-width: 600px) {
             body { padding: 0 5px; }
             .banner-container { border-width: 3px; border-radius: 16px; }
             .banner-overlay-tabs { bottom: 4%; right: 1%; max-width: 98%; border-radius: 6px; padding: 3px 0; gap: 0; }
@@ -462,10 +465,38 @@
             .match-score-center { width: 24%; min-width: 50px; padding: 3px 4px; }
             .score-display { font-size: 11px; }
             .score-input { width: 26px; height: 18px; font-size: 10px; }
-            #captureStandings { flex-direction: column; border-radius: 16px; border-width: 3px; overflow: hidden; }
-            .standings-sidebar { width: 100%; flex-direction: row; padding: 10px; justify-content: center; align-items: center; border-radius: 16px 16px 0 0; min-height: 100px; }
-            .standings-sidebar img { max-width: 260px; } /* مضاعفة حجم الشعار للضعف على أجهزة الأيباد والموبايل */
-            .standings-content-area { min-width: unset; width: 100%; padding: 5px; overflow-x: auto; display: block !important; border-radius: 0 0 16px 16px; }
+            
+            /* تعديل الجانب الملون في الشاشات الصغيرة */
+            #captureStandings {
+                flex-direction: column;
+                border-radius: 16px;
+                border-width: 3px;
+                overflow: hidden;
+            }
+            
+            .standings-sidebar {
+                width: 100%;
+                flex-direction: row;
+                padding: 15px 10px;
+                justify-content: center;
+                align-items: center;
+                border-radius: 16px 16px 0 0;
+                min-height: 100px;
+            }
+            
+            .standings-sidebar img {
+                max-width: 170px; /* تكبير أكبر في الشاشات الصغيرة */
+            }
+            
+            .standings-content-area {
+                min-width: unset;
+                width: 100%;
+                padding: 5px;
+                overflow-x: auto;
+                display: block !important;
+                border-radius: 0 0 16px 16px;
+            }
+            
             .standings-card { padding: 5px 0; }
             table { font-size: 10px; display: table !important; width: 100%; }
             th { font-size: 10px; padding: 6px 4px; }
