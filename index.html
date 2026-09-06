@@ -37,7 +37,7 @@
             color: var(--text-white); 
             padding-bottom: 40px; 
             width: 100%;
-            max-width: 768px; /* عرض مناسب للآيباد */
+            max-width: 768px;
             margin: 0 auto;
             padding: 0 10px;
         }
@@ -68,8 +68,9 @@
         /* ===== الأزرار المدمجة ===== */
         .banner-overlay-tabs {
             position: absolute;
-            bottom: 4%;
+            bottom: 8%;
             right: 2%;
+            left: 2%;
             display: flex;
             background: #5d8eb6; 
             border-radius: 8px;
@@ -77,15 +78,16 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             direction: rtl;
             flex-wrap: wrap;
+            justify-content: center;
             gap: 0;
-            max-width: 96%;
+            padding: 2px;
         }
 
         .banner-tab-btn, .banner-tab-select {
             background: transparent;
             color: #ffffff;
             border: none;
-            padding: 8px 12px;
+            padding: 8px 10px;
             font-family: var(--font-ar);
             font-weight: 900;
             font-size: 12px;
@@ -111,8 +113,8 @@
         .banner-tab-select {
             appearance: none;
             -webkit-appearance: none;
-            padding-right: 10px;
-            padding-left: 22px;
+            padding-right: 8px;
+            padding-left: 20px;
             background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="10" viewBox="0 0 24 24" width="10" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
             background-repeat: no-repeat;
             background-position: left 6px center;
@@ -454,21 +456,25 @@
             }
 
             .banner-overlay-tabs {
-                bottom: 3%;
+                bottom: 5%;
                 right: 1%;
+                left: 1%;
                 border-radius: 6px;
+                padding: 3px 0;
+                gap: 0;
             }
 
             .banner-tab-btn, .banner-tab-select {
-                font-size: 10px;
-                padding: 6px 8px;
+                font-size: 11px;
+                padding: 6px 6px;
                 min-width: 40px;
+                flex: 1 1 20%;
             }
 
             .banner-tab-select {
                 min-width: 50px;
                 padding-right: 6px;
-                padding-left: 18px;
+                padding-left: 16px;
                 background-size: 8px;
             }
 
@@ -496,7 +502,7 @@
             }
 
             .team-box {
-                font-size: 10px;
+                font-size: 11px;
                 width: 34%;
             }
 
@@ -508,18 +514,18 @@
 
             .match-score-center {
                 width: 24%;
-                min-width: 50px;
+                min-width: 55px;
                 padding: 3px 4px;
             }
 
             .score-display {
-                font-size: 11px;
+                font-size: 12px;
             }
 
             .score-input {
                 width: 28px;
                 height: 20px;
-                font-size: 10px;
+                font-size: 11px;
             }
 
             .standings-sidebar {
