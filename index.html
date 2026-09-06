@@ -606,36 +606,6 @@
                 box-shadow: 0 2px 12px rgba(255, 0, 90, 0.6);
             }
         }
-
-        @media screen and (min-width: 601px) and (max-width: 768px) {
-            .banner-tab-btn, .banner-tab-select {
-                font-size: 11px;
-                padding: 7px 10px;
-            }
-
-            .team-box {
-                font-size: 11px;
-            }
-
-            .team-box img {
-                width: 22px;
-                height: 22px;
-            }
-
-            .score-display {
-                font-size: 12px;
-            }
-
-            .score-input {
-                width: 30px;
-                height: 22px;
-                font-size: 11px;
-            }
-
-            .standings-sidebar {
-                width: 100px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -659,6 +629,7 @@
     <div class="header">
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">&lt;</button>
+            <!-- هنا تم إضافة خاصية النقر المزدوج ondblclick لطلب الرمز 1999 -->
             <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(1)">&gt;</button>
         </div>
@@ -710,6 +681,14 @@
         let currentRound = 1;
         let activeTab = 'fixtures';
         let isSaving = false;
+
+        // عند فتح الصفحة، إذا كان مسجلاً كمشرف، نظهر زر التعديل فوراً
+        window.addEventListener('DOMContentLoaded', () => {
+            if (isAdmin) {
+                const editBtn = document.getElementById('editToggleBtn');
+                if(editBtn) editBtn.classList.add('visible');
+            }
+        });
 
         // ============================================================
         // 2. TOAST
@@ -777,7 +756,9 @@
         const initialBasePoints = {};
         Object.keys(teamsMap).forEach(key => {
             initialBasePoints[key] = { gf: 0, pts: 0 };
-        });// ============================================================
+        });
+
+        // ============================================================
         // 5. MATCHWEEKS (1-38)
         // ============================================================
         const matchweeks = {
