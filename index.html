@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TELEGRAM GOAT - Premier League</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @font-face {
@@ -720,30 +718,17 @@
 
     <script>
         // ============================================================
-        // 1. FIREBASE CONFIG
-        // ============================================================
-        const firebaseConfig = {
-            databaseURL: "https://telegram-goat-default-rtdb.firebaseio.com/"
-        };
-        
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.database();
-
-        // ============================================================
-        // 2. STATE & VARIABLES
+        // 1. STATE & VARIABLES
         // ============================================================
         let isAdmin = localStorage.getItem('fpl_admin') === 'true';
         let editMode = isAdmin;
-        let scoresStorage = {};
+        let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
         let currentRound = 1;
         let activeTab = 'fixtures';
         let isSaving = false;
-        let migrationDone = false;
 
         // ============================================================
-        // 3. TOAST FUNCTION
+        // 2. TOAST FUNCTION
         // ============================================================
         let toastTimeout = null;
         function showToast(msg, isSuccess = false) {
@@ -766,7 +751,7 @@
         }
 
         // ============================================================
-        // 4. BANNER & LOGO ERROR HANDLING
+        // 3. BANNER & LOGO ERROR HANDLING
         // ============================================================
         let bannerAttempts = 0;
         const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png"];
@@ -791,7 +776,7 @@
         }
 
         // ============================================================
-        // 5. TEAMS MAP
+        // 4. TEAMS MAP
         // ============================================================
         const teamsMap = {
             "ARS": { name: "Arsenal", logo: "arsenal.png.WEBP" },
@@ -822,7 +807,7 @@
         });
 
         // ============================================================
-        // 6. MATCHWEEKS (1-38)
+        // 5. MATCHWEEKS (1-38)
         // ============================================================
         const matchweeks = {
             1: [["ARS", "COV"], ["HUL", "MUN"], ["EVE", "CRY"], ["IPS", "SUN"], ["NOT", "LEE"], ["BRE", "TOT"], ["BHA", "AVL"], ["MCI", "BOU"], ["NEW", "LIV"], ["FUL", "CHE"]],
@@ -866,7 +851,7 @@
         };
 
         // ============================================================
-        // 7. FUNCTIONS
+        // 6. FUNCTIONS
         // ============================================================
         function initRoundDropdown() {
             const select = document.getElementById('roundSelect');
@@ -931,38 +916,33 @@
             
             if (isSaving) return;
             
-            // عرض toast جاري الحفظ
             showToast("جاري الحفظ...", false);
             
             const matches = matchweeks[currentRound] || [];
-            const updates = {};
             matches.forEach((match, idx) => {
                 const homeInput = document.getElementById(`home_r${currentRound}_m${idx}`);
                 const awayInput = document.getElementById(`away_r${currentRound}_m${idx}`);
                 if (homeInput && awayInput) {
-                    updates[`r${currentRound}_m${idx}_home`] = homeInput.value;
-                    updates[`r${currentRound}_m${idx}_away`] = awayInput.value;
+                    scoresStorage[`r${currentRound}_m${idx}_home`] = homeInput.value;
+                    scoresStorage[`r${currentRound}_m${idx}_away`] = awayInput.value;
                 }
             });
 
             isSaving = true;
             btn.disabled = true;
 
-            db.ref('fpl_scores').update(updates, (error) => {
+            // حفظ محلياً في localStorage
+            localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+
+            setTimeout(() => {
                 isSaving = false;
                 btn.disabled = false;
-                
-                if (error) {
-                    showToast("❌ فشل الحفظ!", false);
-                    alert("❌ فشل حفظ النتائج في السحابة!");
-                } else {
-                    showToast("تم الحفظ بنجاح ✅", true);
-                    editMode = false;
-                    btn.innerText = "تعديل";
-                    renderFixtures();
-                    renderStandings();
-                }
-            });
+                showToast("تم الحفظ بنجاح ✅", true);
+                editMode = false;
+                btn.innerText = "تعديل";
+                renderFixtures();
+                renderStandings();
+            }, 300);
         }
 
         function updateScore(round, idx, type, val, inputElement) {
@@ -970,7 +950,7 @@
         }
 
         // ============================================================
-        // 8. RENDER & CALCULATE
+        // 7. RENDER & CALCULATE
         // ============================================================
         function calculateStandings() {
             let calculated = {};
@@ -1099,43 +1079,8 @@
         }
 
         // ============================================================
-        // 9. FIREBASE LISTENER + AUTO-MIGRATION (دمج البيانات)
+        // 8. AUTO-SAVE LOCALSTORAGE BACKUP
         // ============================================================
-        db.ref('fpl_scores').once('value', (snapshot) => {
-            const data = snapshot.val() || {};
-            
-            // دمج البيانات السحابية مع المحلية (لا نستبدلها)
-            const localData = JSON.parse(localStorage.getItem('fpl_scores')) || {};
-            
-            // إذا كانت Firebase فارغة ولكن المحلية فيها بيانات، نرفعها
-            if (Object.keys(data).length === 0 && Object.keys(localData).length > 0 && !migrationDone) {
-                db.ref('fpl_scores').update(localData, (error) => {
-                    if (!error) {
-                        migrationDone = true;
-                        scoresStorage = localData;
-                        renderFixtures();
-                        renderStandings();
-                        showToast("✅ تم ترحيل نتائجك المحلية إلى السحابة!", true);
-                    }
-                });
-            } else {
-                // ندمج السحابي مع المحلي (المحلي أولاً ثم السحابي يكتب فوقه)
-                scoresStorage = { ...localData, ...data };
-                renderFixtures();
-                renderStandings();
-            }
-        });
-
-        db.ref('fpl_scores').on('child_changed', (snapshot) => {
-            const key = snapshot.key;
-            scoresStorage[key] = snapshot.val();
-            renderFixtures();
-            if (activeTab === 'standings') {
-                renderStandings();
-            }
-        });
-
-        // حفظ البيانات محلياً عند أي تغيير (لحماية النتائج)
         setInterval(() => {
             if (Object.keys(scoresStorage).length > 0) {
                 localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
@@ -1143,7 +1088,7 @@
         }, 5000);
 
         // ============================================================
-        // 10. INIT
+        // 9. INIT
         // ============================================================
         initRoundDropdown();
         updateSidebarRound();
