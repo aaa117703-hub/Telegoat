@@ -656,7 +656,8 @@
                     <div class="sidebar-top-section">
                         <div class="sidebar-round-text" id="sidebarRoundText">GW 1</div>
                         <div class="sidebar-logo-center">
-                            <img id="sidebarLogoImg" src="Premier_league_logo.png" alt="شعار الدوري الإنجليزي الممتاز" onerror="handleLogoError(this)">
+                            <!-- تم تغيير الرابط هنا -->
+                            <img id="sidebarLogoImg" src="https://raw.githubusercontent.com/aaa117703-hub/Telegoat/04053eed0a5281bbf6625859ca6e9fc84451944f/Premier_league.png.svg" alt="شعار الدوري الإنجليزي الممتاز" onerror="handleLogoError(this)">
                         </div>
                     </div>
                     <div class="sidebar-logo-bottom">
@@ -696,7 +697,7 @@
         }
 
         let logoAttempts = 0;
-        const logoSources = ["Premier_league_logo.png", "Premier_league_logo.PNG", "Premier_league_logo.webp", "logo.png", "banner.png"];
+        const logoSources = ["https://raw.githubusercontent.com/aaa117703-hub/Telegoat/04053eed0a5281bbf6625859ca6e9fc84451944f/Premier_league.png.svg", "Premier_league_logo.png", "Premier_league_logo.PNG", "Premier_league_logo.webp", "logo.png", "banner.png"];
         function handleLogoError(img) {
             logoAttempts++;
             if (logoAttempts < logoSources.length) {
