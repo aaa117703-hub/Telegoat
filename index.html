@@ -67,7 +67,7 @@
             bottom: 4%;
             right: 2%;
             display: flex;
-            background: #5d8eb6; /* لون مقارب للون الأزرار الأصلية في الصورة لتغطيتها */
+            background: #5d8eb6; /* لون متناسق لتغطية الأزرار القديمة في البنر */
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -419,7 +419,7 @@
 <body>
 
     <div class="banner-container">
-        <!-- الصورة الجديدة -->
+        <!-- استخدام صورة image_5.png المرفوعة محلياً -->
         <img src="image_5.png" alt="Premier League Banner" onerror="this.src='https://dummyimage.com/750x180/00bfff/fff&text=Banner+Missing'">
         
         <!-- الأزرار المدمجة داخل البنر -->
@@ -432,7 +432,7 @@
 
     <div class="header">
         <div class="controls-bar">
-            <!-- أزرار الحفظ والتعديل تبقى أسفل البنر -->
+            <!-- أزرار التحكم وحفظ الصورة متناسقة بجانب بعضها -->
             <button class="filter-btn" id="editToggleBtn" onclick="toggleEditMode()" style="display: none;">تعديل</button>
             <button class="filter-btn" onclick="downloadAsImage()">حفظ الصورة</button>
         </div>
@@ -464,7 +464,6 @@
                         <div class="sidebar-round-text" id="sidebarRoundText">GW 1</div>
                         
                         <div class="sidebar-logo-center">
-                            <!-- ضع الكود الطويل هنا (Base64) كما تم الاتفاق سابقاً -->
                             <img src="data:image/png;base64,(ضع الكود الطويل هنا)" alt="شعار الدوري الإنجليزي الممتاز">
                         </div>
 
