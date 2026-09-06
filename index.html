@@ -1,6 +1,4 @@
-import os
-
-html_content = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -410,56 +408,9 @@ html_content = """<!DOCTYPE html>
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
-        /* نافذة علامة الصح الخضراء عند الحفظ */
-        #successToast {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.7);
-            background: rgba(16, 185, 129, 0.95);
-            color: white;
-            padding: 25px 35px;
-            border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        #successToast.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-.success-checkmark {
-            width: 60px;
-            height: 60px;
-            background: #ffffff;
-            color: #10b981;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: 900;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
     </style>
 </head>
 <body>
-
-    <!-- علامة الصح الخضراء بمنتصف الشاشة عند الحفظ -->
-    <div id="successToast">
-        <div class="success-checkmark">✓</div>
-        <div style="font-family: var(--font-ar); font-size: 16px; font-weight: 900;">تم الحفظ بنجاح</div>
-    </div>
 
     <div class="banner-container">
         <!-- نظام ذكي لتجربة عدة صيغ للبنر -->
@@ -507,8 +458,8 @@ html_content = """<!DOCTYPE html>
                         <div class="sidebar-round-text" id="sidebarRoundText">GW 1</div>
                         
                         <div class="sidebar-logo-center">
-                            <!-- الشعار المخصص المرفوع Premier_league.png -->
-                            <img id="sidebarLogoImg" src="Premier_league.png" alt="شعار الدوري الإنجليزي الممتاز" onerror="handleLogoError(this)">
+                            <!-- نظام ذكي لجلب شعار جانب جدول الترتيب تلقائياً بأي امتداد متوفر -->
+                            <img id="sidebarLogoImg" src="Premier_league_logo.png" alt="شعار الدوري الإنجليزي الممتاز" onerror="handleLogoError(this)">
                         </div>
 
                     </div>
@@ -537,6 +488,7 @@ html_content = """<!DOCTYPE html>
     </div>
 
     <script>
+        // دالة تلقائية لتجربة صيغ مختلفة للبنر
         let bannerAttempts = 0;
         const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png"];
         function handleBannerError(img) {
@@ -548,14 +500,15 @@ html_content = """<!DOCTYPE html>
             }
         }
 
+        // دالة تلقائية لتجربة صيغ مختلفة لشعار جدول الترتيب
         let logoAttempts = 0;
-        const logoSources = ["Premier_league.png", "Premier_league.PNG", "Premier_league_logo.png", "logo.png"];
+        const logoSources = ["Premier_league_logo.png", "Premier_league_logo.PNG", "Premier_league_logo.webp", "logo.png", "banner.png"];
         function handleLogoError(img) {
             logoAttempts++;
             if (logoAttempts < logoSources.length) {
                 img.src = logoSources[logoAttempts];
             } else {
-                img.style.display = 'none';
+                img.style.display = 'none'; // إخفاء في حال عدم وجود أي صورة نهائياً
             }
         }
 
@@ -680,14 +633,6 @@ html_content = """<!DOCTYPE html>
             }
         }
 
-        function showSuccessToast() {
-            const toast = document.getElementById('successToast');
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 1800);
-        }
-
         function toggleEditMode() {
             if(!editMode) {
                 editMode = true;
@@ -699,7 +644,6 @@ html_content = """<!DOCTYPE html>
                 document.getElementById('editToggleBtn').style.display = "none";
                 renderFixtures();
                 renderStandings();
-                showSuccessToast(); // إظهار علامة الصح الخضراء عند الحفظ
             }
         }
 
@@ -841,9 +785,3 @@ html_content = """<!DOCTYPE html>
     </script>
 </body>
 </html>
-"""
-
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
-
-print("تم تحديث ملف index.html بنجاح.")
