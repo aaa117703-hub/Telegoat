@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TELEGRAM GOAT - Premier League</title>
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -237,7 +236,7 @@
             font-weight: 800;
             color: #38003c;
             text-transform: uppercase;
-            white-space: nowrap; /* منع الالتفاف */
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -510,7 +509,7 @@
             }
 
             .team-box {
-                font-size: 10px !important; /* تصغير الخط في الموبايل */
+                font-size: 10px !important;
                 width: 34%;
                 letter-spacing: -0.2px;
                 white-space: nowrap;
@@ -697,7 +696,7 @@
 
     <script>
         // ============================================================
-        // 1. FIREBASE CONFIG (عدل الرابط هنا بعد إنشاء القاعدة)
+        // 1. FIREBASE CONFIG
         // ============================================================
         const firebaseConfig = {
             databaseURL: "https://telegram-goat-default-rtdb.firebaseio.com/" // غيّر هذا الرابط
@@ -717,6 +716,7 @@
         let currentRound = 1;
         let activeTab = 'fixtures';
         let isSaving = false;
+        let migrationDone = false;
 
         // ============================================================
         // 3. BANNER & LOGO ERROR HANDLING
@@ -744,7 +744,7 @@
         }
 
         // ============================================================
-        // 4. TEAMS MAP (Crystal Palace بالاسم الكامل)
+        // 4. TEAMS MAP
         // ============================================================
         const teamsMap = {
             "ARS": { name: "Arsenal", logo: "arsenal.png.WEBP" },
@@ -775,7 +775,7 @@
         });
 
         // ============================================================
-        // 5. MATCHWEEKS (FULL 1-38)
+        // 5. MATCHWEEKS (1-38)
         // ============================================================
         const matchweeks = {
             1: [["ARS", "COV"], ["HUL", "MUN"], ["EVE", "CRY"], ["IPS", "SUN"], ["NOT", "LEE"], ["BRE", "TOT"], ["BHA", "AVL"], ["MCI", "BOU"], ["NEW", "LIV"], ["FUL", "CHE"]],
@@ -876,7 +876,6 @@
                 btn.innerText = "حفظ";
                 renderFixtures();
             } else {
-                // ===== حفظ جميع النتائج في Firebase =====
                 if (isSaving) return;
                 const btnSave = document.getElementById('editToggleBtn');
                 const originalHTML = btnSave.innerHTML;
@@ -906,7 +905,6 @@
                         setTimeout(() => {
                             btnSave.innerHTML = originalHTML;
                         }, 1500);
-                        // إيقاف وضع التعديل
                         editMode = false;
                         btnSave.innerText = "تعديل";
                         renderFixtures();
@@ -917,7 +915,6 @@
             }
         }
 
-        // ===== تحديث النتيجة محلياً أولاً =====
         function updateScore(round, idx, type, val, inputElement) {
             scoresStorage[`r${round}_m${idx}_${type}`] = val;
 
@@ -1077,11 +1074,42 @@
         }
 
         // ============================================================
-        // 8. FIREBASE LISTENER (استقبال البيانات السحابية فوراً)
+        // 8. FIREBASE LISTENER + AUTO-MIGRATION
         // ============================================================
-        db.ref('fpl_scores').on('value', (snapshot) => {
+        db.ref('fpl_scores').once('value', (snapshot) => {
             const data = snapshot.val() || {};
-            scoresStorage = data;
+            
+            // إذا كانت Firebase فارغة، نأخذ البيانات من Local Storage ونرفعها
+            if (Object.keys(data).length === 0 && !migrationDone) {
+                const localData = JSON.parse(localStorage.getItem('fpl_scores')) || {};
+                if (Object.keys(localData).length > 0) {
+                    db.ref('fpl_scores').update(localData, (error) => {
+                        if (!error) {
+                            migrationDone = true;
+                            scoresStorage = localData;
+                            renderFixtures();
+                            renderStandings();
+                            alert("✅ تم ترحيل نتائجك المحلية إلى السحابة! الآن جميع الزوار يشاهدونها.");
+                        }
+                    });
+                } else {
+                    // لا توجد بيانات محلية ولا سحابية
+                    scoresStorage = {};
+                    renderFixtures();
+                    renderStandings();
+                }
+            } else {
+                // Firebase ليست فارغة، نستخدمها كمصدر أساسي
+                scoresStorage = data;
+                renderFixtures();
+                renderStandings();
+            }
+        });
+
+        // استماع للتحديثات اللاحقة من Firebase
+        db.ref('fpl_scores').on('child_changed', (snapshot) => {
+            const key = snapshot.key;
+            scoresStorage[key] = snapshot.val();
             renderFixtures();
             if (activeTab === 'standings') {
                 renderStandings();
@@ -1092,8 +1120,6 @@
         // 9. INIT
         // ============================================================
         initRoundDropdown();
-        renderStandings();
-        renderFixtures();
         updateSidebarRound();
     </script>
 </body>
