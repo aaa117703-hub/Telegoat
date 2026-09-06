@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TELEGRAM GOAT - Premier League</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- استدعاء مكتبة Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @font-face {
             font-family: 'SultanCustom';
@@ -312,18 +310,20 @@
             flex-shrink: 0;
         }
 
+        /* ===== تعديل حجم أرقام النتائج ===== */
         .score-display {
             font-family: var(--font-en);
-            font-size: 16px;
+            font-size: 16px; /* تكبير الأرقام من 13px إلى 16px */
             font-weight: 900;
             color: #ffffff;
         }
 
+        /* ===== تعديل حجم كلمة VS ===== */
         .vs-text {
             font-weight: 900;
             color: #ffffff;
             font-family: var(--font-en);
-            font-size: 14px;
+            font-size: 14px; /* حجم معتدل */
         }
 
         .score-input {
@@ -351,6 +351,7 @@
             width: 100%;
         }
 
+        /* ===== التعديل الرئيسي: الجزء الملون (الجانب الأيسر) ===== */
         .standings-sidebar {
             width: 140px;
             background: linear-gradient(180deg, #6C2BD9 0%, #3B82F6 50%, #10B981 100%);
@@ -456,6 +457,7 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
+        /* ===== التعديل للشاشات الصغيرة ===== */
         @media screen and (max-width: 600px) {
             body { padding: 0 5px; }
             .banner-container { border-width: 3px; border-radius: 16px; }
@@ -470,15 +472,21 @@
             .team-box { font-size: 10px !important; width: 34%; letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
             .team-box img { width: 18px; height: 18px; margin: 0 3px; }
             .match-score-center { width: 24%; min-width: 50px; padding: 3px 4px; }
-            .score-display { font-size: 14px; }
+            
+            /* تعديل حجم الأرقام في الشاشات الصغيرة */
+            .score-display { font-size: 14px; } /* تكبير مناسب للشاشات الصغيرة */
             .vs-text { font-size: 12px; }
+            
             .score-input { width: 26px; height: 18px; font-size: 10px; }
+            
+            /* تعديل الجانب الملون في الشاشات الصغيرة */
             #captureStandings {
                 flex-direction: column;
                 border-radius: 16px;
                 border-width: 3px;
                 overflow: hidden;
             }
+            
             .standings-sidebar {
                 width: 100%;
                 flex-direction: row;
@@ -488,9 +496,11 @@
                 border-radius: 16px 16px 0 0;
                 min-height: 100px;
             }
+            
             .standings-sidebar img {
                 max-width: 170px;
             }
+            
             .standings-content-area {
                 min-width: unset;
                 width: 100%;
@@ -499,6 +509,7 @@
                 display: block !important;
                 border-radius: 0 0 16px 16px;
             }
+            
             .standings-card { padding: 5px 0; }
             table { font-size: 10px; display: table !important; width: 100%; }
             th { font-size: 10px; padding: 6px 4px; }
@@ -573,11 +584,6 @@
     </div>
 
     <script>
-        // إعدادات اتصال Supabase
-        const SUPABASE_URL = 'https://qzsteswrannqsrnlytzl.supabase.co';
-        const SUPABASE_ANON_KEY = 'Sb_publishable_Qa5O7t1wbhPhnTLBtHEfQg_hYYNdxYJ';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         let editMode = false;
         let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
         let currentRound = 1;
@@ -717,7 +723,7 @@
 
         function unlockEditWithPassword() {
             const pass = prompt("أدخل رمز الحماية لتفعيل زر التعديل:");
-            if (pass === "1000") {
+            if (pass === "1999") {
                 editMode = true;
                 const editBtn = document.getElementById('editToggleBtn');
                 editBtn.style.setProperty('display', 'inline-flex', 'important');
