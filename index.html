@@ -199,8 +199,6 @@
             font-weight: 900;
             letter-spacing: 1px;
             color: #ffffff;
-            cursor: pointer;
-            user-select: none;
             text-align: center;
         }
 
@@ -350,52 +348,26 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between; /* توزيع العناصر بين الأعلى والأسفل تماماً */
+            justify-content: center;
             padding: 20px 8px;
             color: #ffffff;
             text-align: center;
             flex-shrink: 0;
         }
 
-        .sidebar-top-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .sidebar-round-text {
+        .sidebar-title-vertical {
             font-family: var(--font-en);
-            font-size: 20px;
+            font-size: 17px;
             font-weight: 900;
             letter-spacing: 1px;
             color: #ffffff;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .sidebar-logo-center img {
-            width: 55px;
-            height: auto;
-            max-height: 70px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
-        }
-
-        .sidebar-logo-bottom {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-
-        .sidebar-logo-text {
-            font-family: var(--font-en);
-            font-size: 12px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            text-transform: uppercase;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            line-height: 1.4;
         }
 
         .standings-content-area {
@@ -461,6 +433,16 @@
             background: transparent;
             border-radius: 0;
             padding: 0;
+        }
+
+        /* خطوط مضيئة للمراكز */
+        tr.leader-row td {
+            box-shadow: inset 0 2px 0 #00ff87, inset 0 -2px 0 #00ff87;
+            background-color: rgba(0, 255, 135, 0.08);
+        }
+        tr.relegation-row td {
+            box-shadow: inset 0 2px 0 #ff005a, inset 0 -2px 0 #ff005a;
+            background-color: rgba(255, 0, 90, 0.08);
         }
 
         .tab-content { display: none; }
@@ -567,10 +549,14 @@
                 width: 100%;
                 flex-direction: row;
                 padding: 10px;
-                justify-content: space-around;
-                flex-wrap: wrap;
-                gap: 5px;
+                justify-content: center;
                 border-radius: 16px 16px 0 0;
+            }
+
+            .sidebar-title-vertical {
+                writing-mode: horizontal-tb;
+                transform: none;
+                font-size: 15px;
             }
 
             .standings-content-area {
@@ -667,7 +653,7 @@
     <div class="header">
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">&lt;</button>
-            <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
+            <div class="round-indicator" id="currentRoundTitle">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(1)">&gt;</button>
         </div>
     </div>
@@ -686,15 +672,7 @@
         <div id="standingsTab" class="tab-content">
             <div id="captureStandings" class="export-area">
                 <div class="standings-sidebar">
-                    <div class="sidebar-top-section">
-                        <div class="sidebar-round-text" id="sidebarRoundText">GW 1</div>
-                        <div class="sidebar-logo-center">
-                            <img id="sidebarLogoImg" src="https://raw.githubusercontent.com/aaa117703-hub/Telegoat/04053eed0a5281bbf6625859ca6e9fc84451944f/Premier_league.png.svg" alt="شعار الدوري الإنجليزي الممتاز" onerror="handleLogoError(this)">
-                        </div>
-                    </div>
-                    <div class="sidebar-logo-bottom">
-                        <div class="sidebar-logo-text">TELEGOAT</div>
-                    </div>
+                    <div class="sidebar-title-vertical" ondblclick="unlockEditWithPassword()">Premier League 26/27</div>
                 </div>
                 <div class="standings-content-area">
                     <div class="standings-card">
@@ -751,7 +729,7 @@
         }
 
         // ============================================================
-        // 3. BANNER & LOGO ERROR HANDLING
+        // 3. BANNER ERROR HANDLING
         // ============================================================
         let bannerAttempts = 0;
         const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png"];
@@ -761,17 +739,6 @@
                 img.src = bannerSources[bannerAttempts];
             } else {
                 img.src = 'https://dummyimage.com/768x180/00bfff/fff&text=Banner+Missing';
-            }
-        }
-
-        let logoAttempts = 0;
-        const logoSources = ["https://raw.githubusercontent.com/aaa117703-hub/Telegoat/04053eed0a5281bbf6625859ca6e9fc84451944f/Premier_league.png.svg", "Premier_league_logo.png", "Premier_league_logo.PNG", "Premier_league_logo.webp", "logo.png", "banner.png"];
-        function handleLogoError(img) {
-            logoAttempts++;
-            if (logoAttempts < logoSources.length) {
-                img.src = logoSources[logoAttempts];
-            } else {
-                img.style.display = 'none';
             }
         }
 
@@ -868,7 +835,6 @@
         function selectRound(val) {
             currentRound = parseInt(val);
             renderFixtures();
-            updateSidebarRound();
         }
 
         function switchTab(tabName) {
@@ -879,15 +845,10 @@
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             if(tabName === 'standings') {
                 renderStandings();
-                updateSidebarRound();
                 document.getElementById('standingsTab').classList.add('active');
             } else {
                 document.getElementById('fixturesTab').classList.add('active');
             }
-        }
-
-        function updateSidebarRound() {
-            document.getElementById('sidebarRoundText').innerText = `GW ${currentRound}`;
         }
 
         function unlockEditWithPassword() {
@@ -991,11 +952,23 @@
             tbody.innerHTML = '';
             
             let sortedTeams = calculateStandings();
+            let totalTeams = sortedTeams.length;
 
             sortedTeams.forEach((team, index) => {
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
+                let rowClass = "";
+                
+                // المركز الأول
+                if (index === 0) {
+                    rowClass = "leader-row";
+                } 
+                // المراكز الثلاثة الأخيرة (مثلاً 18، 19، 20)
+                else if (index >= totalTeams - 3) {
+                    rowClass = "relegation-row";
+                }
+
                 tbody.innerHTML += `
-                    <tr>
+                    <tr class="${rowClass}">
                         <td style="font-weight:900;">${index + 1}</td>
                         <td class="team-cell">
                             <img src="${teamInfo.logo}" alt="${teamInfo.name}">
@@ -1055,7 +1028,6 @@
             if(currentRound < 1) currentRound = 1;
             if(currentRound > 38) currentRound = 38;
             renderFixtures();
-            updateSidebarRound();
         }
 
         function downloadAsImage() {
@@ -1090,7 +1062,6 @@
         // 9. INIT
         // ============================================================
         initRoundDropdown();
-        updateSidebarRound();
         renderFixtures();
         renderStandings();
     </script>
