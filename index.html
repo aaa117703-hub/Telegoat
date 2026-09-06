@@ -350,52 +350,48 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between; /* توزيع العناصر بين الأعلى والأسفل تماماً */
+            justify-content: center; /* توسيط المحتوى عمودياً */
             padding: 20px 8px;
             color: #ffffff;
             text-align: center;
             flex-shrink: 0;
         }
 
-        .sidebar-top-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .sidebar-round-text {
+        /* ===== النص العمودي الجديد ===== */
+        .sidebar-vertical-text {
             font-family: var(--font-en);
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 900;
-            letter-spacing: 1px;
+            letter-spacing: 4px;
             color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            cursor: pointer;
+            padding: 10px 5px;
+            border: 2px dashed transparent;
+            transition: 0.3s ease;
+            user-select: none;
+            line-height: 1.6;
         }
 
-        .sidebar-logo-center img {
-            width: 55px;
-            height: auto;
-            max-height: 70px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+        .sidebar-vertical-text:hover {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
         }
 
+        .sidebar-vertical-text .season-year {
+            font-size: 22px;
+            letter-spacing: 5px;
+            color: #ffdd57;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        /* ===== إزالة العناصر القديمة في الشريط الجانبي ===== */
+        .sidebar-top-section,
         .sidebar-logo-bottom {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-
-        .sidebar-logo-text {
-            font-family: var(--font-en);
-            font-size: 12px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            text-transform: uppercase;
+            display: none !important;
         }
 
         .standings-content-area {
@@ -461,6 +457,19 @@
             background: transparent;
             border-radius: 0;
             padding: 0;
+        }
+
+        /* ===== الخطوط المضيئة ===== */
+        .glow-green {
+            border-bottom: 3px solid #00ff87;
+            box-shadow: 0 4px 15px rgba(0, 255, 135, 0.6);
+            transition: 0.3s ease;
+        }
+
+        .glow-red {
+            border-bottom: 3px solid #ff005a;
+            box-shadow: 0 4px 15px rgba(255, 0, 90, 0.6);
+            transition: 0.3s ease;
         }
 
         .tab-content { display: none; }
@@ -567,10 +576,21 @@
                 width: 100%;
                 flex-direction: row;
                 padding: 10px;
-                justify-content: space-around;
-                flex-wrap: wrap;
-                gap: 5px;
+                justify-content: center;
+                align-items: center;
                 border-radius: 16px 16px 0 0;
+            }
+
+            .sidebar-vertical-text {
+                font-size: 14px;
+                writing-mode: horizontal-tb;
+                letter-spacing: 2px;
+                padding: 5px 15px;
+                border: none;
+            }
+
+            .sidebar-vertical-text .season-year {
+                font-size: 16px;
             }
 
             .standings-content-area {
@@ -611,6 +631,16 @@
                 height: 16px;
                 margin-left: 4px;
             }
+
+            .glow-green {
+                border-bottom-width: 2px;
+                box-shadow: 0 2px 10px rgba(0, 255, 135, 0.5);
+            }
+
+            .glow-red {
+                border-bottom-width: 2px;
+                box-shadow: 0 2px 10px rgba(255, 0, 90, 0.5);
+            }
         }
 
         /* ===== تحسينات للشاشات المتوسطة (آيباد صغير) ===== */
@@ -642,6 +672,11 @@
             .standings-sidebar {
                 width: 100px;
             }
+
+            .sidebar-vertical-text {
+                font-size: 15px;
+                letter-spacing: 3px;
+            }
         }
     </style>
 </head>
@@ -667,7 +702,7 @@
     <div class="header">
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(-1)">&lt;</button>
-            <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
+            <div class="round-indicator" id="currentRoundTitle">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(1)">&gt;</button>
         </div>
     </div>
@@ -686,14 +721,24 @@
         <div id="standingsTab" class="tab-content">
             <div id="captureStandings" class="export-area">
                 <div class="standings-sidebar">
-                    <div class="sidebar-top-section">
-                        <div class="sidebar-round-text" id="sidebarRoundText">GW 1</div>
-                        <div class="sidebar-logo-center">
-                            <img id="sidebarLogoImg" src="https://raw.githubusercontent.com/aaa117703-hub/Telegoat/04053eed0a5281bbf6625859ca6e9fc84451944f/Premier_league.png.svg" alt="شعار الدوري الإنجليزي الممتاز" onerror="handleLogoError(this)">
-                        </div>
-                    </div>
-                    <div class="sidebar-logo-bottom">
-                        <div class="sidebar-logo-text">TELEGOAT</div>
+                    <!-- النص العمودي الجديد -->
+                    <div class="sidebar-vertical-text" id="sidebarVerticalTitle" ondblclick="unlockEditWithPassword()">
+                        <span>P</span>
+                        <span>r</span>
+                        <span>e</span>
+                        <span>m</span>
+                        <span>i</span>
+                        <span>e</span>
+                        <span>r</span>
+                        <br>
+                        <span>L</span>
+                        <span>e</span>
+                        <span>a</span>
+                        <span>g</span>
+                        <span>u</span>
+                        <span>e</span>
+                        <br>
+                        <span class="season-year">2026/27</span>
                     </div>
                 </div>
                 <div class="standings-content-area">
@@ -761,17 +806,6 @@
                 img.src = bannerSources[bannerAttempts];
             } else {
                 img.src = 'https://dummyimage.com/768x180/00bfff/fff&text=Banner+Missing';
-            }
-        }
-
-        let logoAttempts = 0;
-        const logoSources = ["https://raw.githubusercontent.com/aaa117703-hub/Telegoat/04053eed0a5281bbf6625859ca6e9fc84451944f/Premier_league.png.svg", "Premier_league_logo.png", "Premier_league_logo.PNG", "Premier_league_logo.webp", "logo.png", "banner.png"];
-        function handleLogoError(img) {
-            logoAttempts++;
-            if (logoAttempts < logoSources.length) {
-                img.src = logoSources[logoAttempts];
-            } else {
-                img.style.display = 'none';
             }
         }
 
@@ -868,7 +902,6 @@
         function selectRound(val) {
             currentRound = parseInt(val);
             renderFixtures();
-            updateSidebarRound();
         }
 
         function switchTab(tabName) {
@@ -879,26 +912,40 @@
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             if(tabName === 'standings') {
                 renderStandings();
-                updateSidebarRound();
                 document.getElementById('standingsTab').classList.add('active');
             } else {
                 document.getElementById('fixturesTab').classList.add('active');
             }
         }
 
-        function updateSidebarRound() {
-            document.getElementById('sidebarRoundText').innerText = `GW ${currentRound}`;
-        }
-
+        // ============================================================
+        // 7. UNLOCK ADMIN (Double-click on "Premier League" in sidebar)
+        // ============================================================
         function unlockEditWithPassword() {
+            if (isAdmin) {
+                // إذا كان المدير مفعلاً بالفعل، نبدل وضع التعديل
+                editMode = !editMode;
+                const btn = document.getElementById('editToggleBtn');
+                if (editMode) {
+                    btn.innerText = "حفظ";
+                    btn.classList.add('visible');
+                } else {
+                    btn.innerText = "تعديل";
+                }
+                renderFixtures();
+                return;
+            }
+            
             const pass = prompt("أدخل رمز الحماية لتفعيل زر التعديل:");
             if (pass === "1999") {
+                isAdmin = true;
+                editMode = true;
+                localStorage.setItem('fpl_admin', 'true');
                 const editBtn = document.getElementById('editToggleBtn');
                 editBtn.classList.add('visible');
                 editBtn.innerText = "حفظ";
-                editMode = true;
                 renderFixtures();
-                alert("تم إظهار زر التعديل بنجاح!");
+                alert("تم تفعيل صلاحيات المدير بنجاح!");
             } else if (pass !== null) {
                 alert("الرمز غير صحيح!");
             }
@@ -949,7 +996,7 @@
         }
 
         // ============================================================
-        // 7. RENDER & CALCULATE
+        // 8. RENDER & CALCULATE
         // ============================================================
         function calculateStandings() {
             let calculated = {};
@@ -994,9 +1041,19 @@
 
             sortedTeams.forEach((team, index) => {
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
+                let position = index + 1;
+                
+                // تحديد الفئة: المركز الأول أخضر، المراكز 17-20 أحمر
+                let rowClass = '';
+                if (position === 1) {
+                    rowClass = 'glow-green';
+                } else if (position >= 17 && position <= 20) {
+                    rowClass = 'glow-red';
+                }
+                
                 tbody.innerHTML += `
-                    <tr>
-                        <td style="font-weight:900;">${index + 1}</td>
+                    <tr class="${rowClass}">
+                        <td style="font-weight:900;">${position}</td>
                         <td class="team-cell">
                             <img src="${teamInfo.logo}" alt="${teamInfo.name}">
                             ${teamInfo.name}
@@ -1055,7 +1112,6 @@
             if(currentRound < 1) currentRound = 1;
             if(currentRound > 38) currentRound = 38;
             renderFixtures();
-            updateSidebarRound();
         }
 
         function downloadAsImage() {
@@ -1078,7 +1134,7 @@
         }
 
         // ============================================================
-        // 8. AUTO-SAVE LOCALSTORAGE BACKUP
+        // 9. AUTO-SAVE LOCALSTORAGE BACKUP
         // ============================================================
         setInterval(() => {
             if (Object.keys(scoresStorage).length > 0) {
@@ -1087,10 +1143,9 @@
         }, 5000);
 
         // ============================================================
-        // 9. INIT
+        // 10. INIT
         // ============================================================
         initRoundDropdown();
-        updateSidebarRound();
         renderFixtures();
         renderStandings();
     </script>
