@@ -344,7 +344,7 @@
 
         /* ===== التعديل الرئيسي: الجزء الملون (الجانب الأيسر) ===== */
         .standings-sidebar {
-            width: 220px; /* زيادة العرض */
+            width: 180px; /* زيادة العرض */
             background: linear-gradient(180deg, #6C2BD9 0%, #3B82F6 50%, #10B981 100%);
             display: flex;
             flex-direction: column;
@@ -360,7 +360,7 @@
 
         .standings-sidebar img {
             width: 100%;
-            max-width: 190px; /* تكبير الشعار بشكل ملحوظ */
+            max-width: 220px; /* تكبير الشعار بشكل ملحوظ */
             height: auto;
             object-fit: contain;
             filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
@@ -754,7 +754,7 @@
             setTimeout(() => {
                 isSaving = false;
                 btn.disabled = false;
-                showToast("تم الحفظ بنجاح ✅", true);
+                showToast("تم الحفظ ✓", true);
                 editMode = false;
                 btn.style.setProperty('display', 'none', 'important');
                 btn.innerText = "تعديل";
