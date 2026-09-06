@@ -334,7 +334,6 @@
             outline: none;
         }
 
-        /* ===== جدول الترتيب ===== */
         #captureStandings {
             display: flex;
             flex-wrap: wrap;
@@ -435,7 +434,6 @@
             padding: 0;
         }
 
-        /* ===== الخطوط المضيئة ===== */
         .glow-green {
             border-bottom: 2px solid #00ff87;
             box-shadow: 0 4px 20px rgba(0, 255, 135, 0.8);
@@ -736,4 +734,339 @@
             }, 2500);
         }
 
-        // ===========================================================
+        // ============================================================
+        // 3. BANNER ERROR
+        // ============================================================
+        let bannerAttempts = 0;
+        const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png"];
+        function handleBannerError(img) {
+            bannerAttempts++;
+            if (bannerAttempts < bannerSources.length) {
+                img.src = bannerSources[bannerAttempts];
+            } else {
+                img.src = 'https://dummyimage.com/768x180/00bfff/fff&text=Banner+Missing';
+            }
+        }
+
+        // ============================================================
+        // 4. TEAMS MAP
+        // ============================================================
+        const teamsMap = {
+            "ARS": { name: "Arsenal", logo: "arsenal.png.WEBP" },
+            "AVL": { name: "Aston Villa", logo: "aston_villa.png.WEBP" },
+            "BOU": { name: "Bournemouth", logo: "bournemouth.png.WEBP" },
+            "BRE": { name: "Brentford", logo: "brentford.png.PNG" },
+            "BHA": { name: "Brighton", logo: "brighton.png.WEBP" },
+            "CHE": { name: "Chelsea", logo: "chelsea.png.WEBP" },
+            "COV": { name: "Coventry", logo: "coventry.png.WEBP" },
+            "CRY": { name: "Crystal Palace", logo: "crystal_palace.png.WEBP" },
+            "EVE": { name: "Everton", logo: "everton.png.WEBP" },
+            "FUL": { name: "Fulham", logo: "fulham.png.WEBP" },
+            "HUL": { name: "Hull", logo: "hull.png.WEBP" },
+            "IPS": { name: "Ipswich", logo: "ipswich.png.WEBP" },
+            "LEE": { name: "Leeds", logo: "leeds.png.WEBP" },
+            "LIV": { name: "Liverpool", logo: "liverpool.png.WEBP" },
+            "MCI": { name: "Man City", logo: "man_city.png.WEBP" },
+            "MUN": { name: "Man Utd", logo: "man_utd.png.WEBP" },
+            "NEW": { name: "Newcastle", logo: "newcastle.png.WEBP" },
+            "NOT": { name: "Nott'm Forest", logo: "forest.png.PNG" },
+            "SUN": { name: "Sunderland", logo: "sunderland.png.WEBP" },
+            "TOT": { name: "Spurs", logo: "tottenham.png.WEBP" }
+        };
+
+        const initialBasePoints = {};
+        Object.keys(teamsMap).forEach(key => {
+            initialBasePoints[key] = { gf: 0, pts: 0 };
+        });// ============================================================
+        // 5. MATCHWEEKS (1-38)
+        // ============================================================
+        const matchweeks = {
+            1: [["ARS", "COV"], ["HUL", "MUN"], ["EVE", "CRY"], ["IPS", "SUN"], ["NOT", "LEE"], ["BRE", "TOT"], ["BHA", "AVL"], ["MCI", "BOU"], ["NEW", "LIV"], ["FUL", "CHE"]],
+            2: [["BOU", "EVE"], ["AVL", "ARS"], ["CHE", "BHA"], ["COV", "HUL"], ["CRY", "MCI"], ["LEE", "BRE"], ["LIV", "NOT"], ["MUN", "IPS"], ["SUN", "FUL"], ["TOT", "NEW"]],
+            3: [["ARS", "CHE"], ["BRE", "SUN"], ["BHA", "LEE"], ["EVE", "MUN"], ["FUL", "CRY"], ["HUL", "AVL"], ["IPS", "LIV"], ["MCI", "COV"], ["NEW", "BOU"], ["NOT", "TOT"]],
+            4: [["BOU", "BRE"], ["AVL", "NOT"], ["CHE", "HUL"], ["COV", "BHA"], ["CRY", "IPS"], ["LEE", "NEW"], ["LIV", "FUL"], ["MUN", "MCI"], ["SUN", "ARS"], ["TOT", "EVE"]],
+            5: [["BOU", "LIV"], ["BRE", "CHE"], ["BHA", "ARS"], ["EVE", "IPS"], ["FUL", "MUN"], ["LEE", "CRY"], ["MCI", "SUN"], ["NEW", "HUL"], ["NOT", "COV"], ["TOT", "AVL"]],
+            6: [["ARS", "LEE"], ["AVL", "BRE"], ["CHE", "BOU"], ["COV", "NEW"], ["CRY", "NOT"], ["HUL", "EVE"], ["IPS", "FUL"], ["LIV", "MCI"], ["MUN", "TOT"], ["SUN", "BHA"]],
+            7: [["BOU", "SUN"], ["BRE", "LIV"], ["BHA", "CRY"], ["EVE", "CHE"], ["FUL", "HUL"], ["LEE", "MUN"], ["MCI", "IPS"], ["NEW", "AVL"], ["NOT", "ARS"], ["TOT", "COV"]],
+            8: [["ARS", "EVE"], ["AVL", "MCI"], ["CHE", "TOT"], ["COV", "FUL"], ["CRY", "NEW"], ["HUL", "BRE"], ["IPS", "NOT"], ["LIV", "BHA"], ["MUN", "BOU"], ["SUN", "LEE"]],
+            9: [["BOU", "LEE"], ["BRE", "NOT"], ["CHE", "MUN"], ["COV", "SUN"], ["HUL", "IPS"], ["LIV", "ARS"], ["MCI", "BHA"], ["NEW", "EVE"], ["TOT", "CRY"], ["AVL", "FUL"]],
+            10: [["ARS", "HUL"], ["BHA", "BRE"], ["CRY", "LIV"], ["EVE", "COV"], ["FUL", "NEW"], ["IPS", "BOU"], ["LEE", "TOT"], ["MUN", "AVL"], ["NOT", "MCI"], ["SUN", "CHE"]],
+            11: [["BRE", "EVE"], ["CHE", "LEE"], ["COV", "CRY"], ["HUL", "BHA"], ["LIV", "MUN"], ["MCI", "FUL"], ["NEW", "ARS"], ["TOT", "IPS"], ["NOT", "SUN"], ["AVL", "CRY"]],
+            12: [["ARS", "MCI"], ["BHA", "NEW"], ["CRY", "HUL"], ["EVE", "LIV"], ["FUL", "BOU"], ["IPS", "AVL"], ["LEE", "COV"], ["MUN", "BRE"], ["NOT", "CHE"], ["SUN", "TOT"]],
+            13: [["BOU", "BHA"], ["AVL", "EVE"], ["BRE", "ARS"], ["CHE", "CRY"], ["COV", "IPS"], ["HUL", "NOT"], ["LIV", "SUN"], ["MCI", "LEE"], ["NEW", "MUN"], ["TOT", "FUL"]],
+            14: [["BOU", "HUL"], ["AVL", "CRY"], ["BRE", "MCI"], ["CHE", "LIV"], ["EVE", "FUL"], ["LEE", "IPS"], ["MUN", "COV"], ["NEW", "SUN"], ["NOT", "BHA"], ["TOT", "ARS"]],
+            15: [["ARS", "BOU"], ["BHA", "EVE"], ["COV", "AVL"], ["CRY", "MUN"], ["FUL", "BRE"], ["HUL", "TOT"], ["IPS", "NEW"], ["LIV", "LEE"], ["MCI", "CHE"], ["SUN", "NOT"]],
+            16: [["BOU", "COV"], ["ARS", "MUN"], ["BRE", "NEW"], ["BHA", "IPS"], ["CHE", "AVL"], ["LEE", "FUL"], ["LIV", "TOT"], ["MCI", "HUL"], ["NOT", "EVE"], ["SUN", "CRY"]],
+            17: [["AVL", "LEE"], ["COV", "CHE"], ["CRY", "ARS"], ["EVE", "SUN"], ["FUL", "BHA"], ["HUL", "LIV"], ["IPS", "BRE"], ["MUN", "NOT"], ["NEW", "MCI"], ["TOT", "BOU"]],
+            18: [["AVL", "LIV"], ["COV", "BRE"], ["CRY", "BOU"], ["EVE", "MCI"], ["FUL", "ARS"], ["HUL", "LEE"], ["IPS", "CHE"], ["MUN", "SUN"], ["NEW", "NOT"], ["TOT", "BHA"]],
+            19: [["BOU", "AVL"], ["ARS", "IPS"], ["BRE", "CRY"], ["BHA", "MUN"], ["CHE", "NEW"], ["LEE", "EVE"], ["LIV", "COV"], ["MCI", "TOT"], ["NOT", "FUL"], ["SUN", "HUL"]],
+            20: [["ARS", "BRE"], ["BHA", "BOU"], ["CRY", "CHE"], ["EVE", "AVL"], ["FUL", "TOT"], ["IPS", "COV"], ["LEE", "MCI"], ["MUN", "NEW"], ["NOT", "HUL"], ["SUN", "LIV"]],
+            21: [["AVL", "EVE"], ["BRE", "BHA"], ["CHE", "SUN"], ["COV", "LIV"], ["CRY", "BOU"], ["FUL", "MUN"], ["HUL", "NEW"], ["LEE", "ARS"], ["MCI", "IPS"], ["TOT", "LEE"]],
+            22: [["BOU", "NOT"], ["ARS", "LEE"], ["BHA", "MCI"], ["EVE", "HUL"], ["IPS", "AVL"], ["LIV", "NEW"], ["MUN", "FUL"], ["NOT", "BOU"], ["SUN", "COV"], ["TOT", "BRE"]],
+            23: [["AVL", "LIV"], ["BRE", "EVE"], ["CHE", "NEW"], ["COV", "MUN"], ["CRY", "SUN"], ["HUL", "ARS"], ["IPS", "LEE"], ["MCI", "BHA"], ["NOT", "FUL"], ["TOT", "BOU"]],
+            24: [["BOU", "COV"], ["ARS", "AVL"], ["BHA", "LIV"], ["EVE", "NOT"], ["FUL", "IPS"], ["LEE", "HUL"], ["MUN", "CRY"], ["NEW", "TOT"], ["SUN", "BRE"], ["MCI", "LEE"]],
+            25: [["AVL", "BOU"], ["BRE", "CRY"], ["COV", "ARS"], ["HUL", "MCI"], ["IPS", "EVE"], ["LEE", "SUN"], ["LIV", "FUL"], ["MUN", "NEW"], ["NOT", "BHA"], ["TOT", "CHE"]],
+            26: [["BOU", "LEE"], ["BHA", "AVL"], ["CHE", "HUL"], ["CRY", "COV"], ["EVE", "LIV"], ["FUL", "NOT"], ["MCI", "BRE"], ["NEW", "MUN"], ["SUN", "IPS"], ["TOT", "ARS"]],
+            27: [["AVL", "CHE"], ["BRE", "FUL"], ["COV", "CRY"], ["HUL", "BOU"], ["IPS", "BHA"], ["LEE", "EVE"], ["LIV", "MUN"], ["MUN", "MCI"], ["NOT", "SUN"], ["TOT", "NEW"]],
+            28: [["ARS", "NOT"], ["BOU", "BRE"], ["BHA", "HUL"], ["CRY", "AVL"], ["EVE", "LEE"], ["FUL", "LIV"], ["MCI", "TOT"], ["NEW", "IPS"], ["SUN", "MUN"], ["CHE", "COV"]],
+            29: [["ARS", "FUL"], ["AVL", "CHE"], ["BRE", "NEW"], ["COV", "LEE"], ["HUL", "CRY"], ["IPS", "MCI"], ["LIV", "BHA"], ["MUN", "EVE"], ["NOT", "BOU"], ["TOT", "SUN"]],
+            30: [["BOU", "IPS"], ["BHA", "COV"], ["CHE", "ARS"], ["CRY", "MCI"], ["EVE", "BRE"], ["FUL", "HUL"], ["LEE", "AVL"], ["LIV", "NOT"], ["NEW", "FUL"], ["SUN", "TOT"]],
+            31: [["ARS", "CRY"], ["AVL", "LEE"], ["BRE", "FUL"], ["COV", "EVE"], ["HUL", "LIV"], ["IPS", "CHE"], ["MCI", "BHA"], ["NOT", "MUN"], ["TOT", "BOU"], ["NEW", "MCI"]],
+            32: [["BOU", "ARS"], ["BHA", "NOT"], ["CHE", "FUL"], ["CRY", "AVL"], ["EVE", "IPS"], ["FUL", "COV"], ["LEE", "TOT"], ["LIV", "BRE"], ["MUN", "HUL"], ["NEW", "MCI"]],
+            33: [["ARS", "NEW"], ["AVL", "CRY"], ["BRE", "LEE"], ["COV", "BHA"], ["HUL", "CHE"], ["IPS", "BOU"], ["MCI", "LIV"], ["NOT", "EVE"], ["TOT", "MUN"], ["FUL", "NEW"]],
+            34: [["BOU", "AVL"], ["BHA", "IPS"], ["CHE", "BRE"], ["CRY", "FUL"], ["EVE", "ARS"], ["FUL", "LEE"], ["LIV", "TOT"], ["MUN", "COV"], ["NEW", "HUL"], ["NOT", "MCI"]],
+            35: [["ARS", "BHA"], ["AVL", "NOT"], ["BRE", "BOU"], ["COV", "CHE"], ["HUL", "CRY"], ["IPS", "MUN"], ["LEE", "LIV"], ["MCI", "EVE"], ["TOT", "FUL"], ["NEW", "FUL"]],
+            36: [["BOU", "MUN"], ["BHA", "FUL"], ["CHE", "IPS"], ["CRY", "BRE"], ["EVE", "AVL"], ["FUL", "MCI"], ["LIV", "COV"], ["NEW", "LEE"], ["NOT", "TOT"], ["SUN", "ARS"]],
+            37: [["ARS", "LIV"], ["AVL", "SUN"], ["BRE", "HUL"], ["COV", "BOU"], ["IPS", "CRY"], ["LEE", "CHE"], ["MCI", "NEW"], ["MUN", "NOT"], ["TOT", "EVE"], ["FUL", "BHA"]],
+            38: [["BOU", "NOT"], ["BHA", "MUN"], ["CHE", "AVL"], ["CRY", "ARS"], ["EVE", "FUL"], ["HUL", "COV"], ["LEE", "BRE"], ["LIV", "IPS"], ["MCI", "SUN"], ["TOT", "NEW"]]
+        };
+
+        // ============================================================
+        // 6. FUNCTIONS
+        // ============================================================
+        function initRoundDropdown() {
+            const select = document.getElementById('roundSelect');
+            select.innerHTML = '';
+            for(let i=1; i<=38; i++) {
+                let opt = document.createElement('option');
+                opt.value = i;
+                opt.innerText = `الجولة ${i}`;
+                if(i === currentRound) opt.selected = true;
+                select.appendChild(opt);
+            }
+        }
+
+        function selectRound(val) {
+            currentRound = parseInt(val);
+            renderFixtures();
+        }
+
+        function switchTab(tabName) {
+            activeTab = tabName;
+            document.getElementById('fixturesToggleBtn').classList.toggle('active', tabName === 'fixtures');
+            document.getElementById('standingsToggleBtn').classList.toggle('active', tabName === 'standings');
+            
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            if(tabName === 'standings') {
+                renderStandings();
+                document.getElementById('standingsTab').classList.add('active');
+            } else {
+                document.getElementById('fixturesTab').classList.add('active');
+            }
+        }
+
+        function unlockEditWithPassword() {
+            const pass = prompt("أدخل رمز الحماية لتفعيل زر التعديل:");
+            if (pass === "1999") {
+                isAdmin = true;
+                editMode = true;
+                localStorage.setItem('fpl_admin', 'true');
+                const editBtn = document.getElementById('editToggleBtn');
+                editBtn.classList.add('visible');
+                editBtn.innerText = "حفظ";
+                renderFixtures();
+                alert("تم تفعيل صلاحيات المدير بنجاح!");
+            } else if (pass !== null) {
+                alert("الرمز غير صحيح!");
+            }
+        }
+
+        function toggleEditMode() {
+            const btn = document.getElementById('editToggleBtn');
+            
+            if (!editMode) {
+                editMode = true;
+                btn.innerText = "حفظ";
+                renderFixtures();
+                return;
+            }
+            
+            if (isSaving) return;
+            
+            showToast("جاري الحفظ...", false);
+            
+            const matches = matchweeks[currentRound] || [];
+            matches.forEach((match, idx) => {
+                const homeInput = document.getElementById(`home_r${currentRound}_m${idx}`);
+                const awayInput = document.getElementById(`away_r${currentRound}_m${idx}`);
+                if (homeInput && awayInput) {
+                    scoresStorage[`r${currentRound}_m${idx}_home`] = homeInput.value;
+                    scoresStorage[`r${currentRound}_m${idx}_away`] = awayInput.value;
+                }
+            });
+
+            isSaving = true;
+            btn.disabled = true;
+
+            localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+
+            setTimeout(() => {
+                isSaving = false;
+                btn.disabled = false;
+                showToast("تم الحفظ بنجاح ✅", true);
+                editMode = false;
+                btn.innerText = "تعديل";
+                renderFixtures();
+                renderStandings();
+            }, 300);
+        }
+
+        function updateScore(round, idx, type, val, inputElement) {
+            scoresStorage[`r${round}_m${idx}_${type}`] = val;
+        }
+
+        // ============================================================
+        // 7. RENDER
+        // ============================================================
+        function calculateStandings() {
+            let calculated = {};
+            for (let teamKey in initialBasePoints) {
+                calculated[teamKey] = { key: teamKey, gf: 0, pts: 0 };
+            }
+
+            for (let round in matchweeks) {
+                matchweeks[round].forEach((match, idx) => {
+                    let hKey = match[0];
+                    let aKey = match[1];
+                    let hVal = scoresStorage[`r${round}_m${idx}_home`];
+                    let aVal = scoresStorage[`r${round}_m${idx}_away`];
+
+                    if (hVal !== undefined && aVal !== undefined && hVal !== '' && aVal !== '') {
+                        let hScore = parseFloat(hVal);
+                        let aScore = parseFloat(aVal);
+
+                        calculated[hKey].gf += hScore;
+                        calculated[aKey].gf += aScore;
+
+                        if (hScore > aScore) {
+                            calculated[hKey].pts += 3;
+                        } else if (aScore > hScore) {
+                            calculated[aKey].pts += 3;
+                        } else if (hScore === aScore) {
+                            calculated[hKey].pts += 1;
+                            calculated[aKey].pts += 1;
+                        }
+                    }
+                });
+            }
+
+            return Object.values(calculated).sort((a, b) => b.pts - a.pts || b.gf - a.gf);
+        }
+
+        function renderStandings() {
+            const tbody = document.getElementById('standingsBody');
+            tbody.innerHTML = '';
+            
+            let sortedTeams = calculateStandings();
+
+            sortedTeams.forEach((team, index) => {
+                let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
+                let position = index + 1;
+                
+                let rowClass = '';
+                if (position === 1) {
+                    rowClass = 'glow-green';
+                } else if (position === 17) {
+                    rowClass = 'glow-red';
+                }
+                
+                tbody.innerHTML += `
+                    <tr class="${rowClass}">
+                        <td style="font-weight:900;">${position}</td>
+                        <td class="team-cell">
+                            <img src="${teamInfo.logo}" alt="${teamInfo.name}">
+                            ${teamInfo.name}
+                        </td>
+                        <td>${team.gf}</td>
+                        <td style="color:#7138f5; font-size:12px;">${team.pts}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderFixtures() {
+            const list = document.getElementById('fixturesList');
+            document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
+            document.getElementById('roundSelect').value = currentRound;
+            list.innerHTML = '';
+
+            let matches = matchweeks[currentRound] || [];
+            matches.forEach((match, idx) => {
+                let home = teamsMap[match[0]] || { name: match[0], logo: "" };
+                let away = teamsMap[match[1]] || { name: match[1], logo: "" };
+
+                let homeScore = scoresStorage[`r${currentRound}_m${idx}_home`] ?? '';
+                let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
+
+                let scoreContent = editMode ? `
+                    <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
+                    <span style="font-weight:900; color:#fff;">:</span>
+                    <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
+                ` : `
+                    <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
+                    <span style="font-weight:900; color:#ffffff; font-family: var(--font-en);">VS</span>
+                    <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
+                `;
+
+                list.innerHTML += `
+                    <div class="fixture-row">
+                        <div class="team-box home">
+                            <span>${home.name}</span>
+                            <img src="${home.logo}">
+                        </div>
+                        <div class="match-score-center">
+                            ${scoreContent}
+                        </div>
+                        <div class="team-box away">
+                            <img src="${away.logo}">
+                            <span>${away.name}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function changeRound(step) {
+            currentRound += step;
+            if(currentRound < 1) currentRound = 1;
+            if(currentRound > 38) currentRound = 38;
+            renderFixtures();
+        }
+
+        function downloadAsImage() {
+            const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
+            const element = document.getElementById(targetId);
+
+            html2canvas(element, {
+                backgroundColor: activeTab === 'fixtures' ? null : "#ffffff",
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
+                canvas.toBlob(function(blob) {
+                    let link = document.createElement('a');
+                    link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings_GW${currentRound}.png`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }, 'image/png');
+            });
+        }
+
+        // ============================================================
+        // 8. AUTO-SAVE
+        // ============================================================
+        setInterval(() => {
+            if (Object.keys(scoresStorage).length > 0) {
+                localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+            }
+        }, 5000);
+
+        // ============================================================
+        // 9. INIT
+        // ============================================================
+        initRoundDropdown();
+        renderFixtures();
+        renderStandings();
+    </script>
+</body>
+</html>
