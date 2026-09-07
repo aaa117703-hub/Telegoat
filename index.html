@@ -408,7 +408,6 @@
             border-collapse: collapse;
             text-align: center;
             font-size: 10px;
-            /* الحجم الأصلي */
             color: #333;
             display: table !important;
         }
@@ -421,16 +420,15 @@
             font-weight: 900;
             border-bottom: 2px solid #38003c;
             font-size: 10px;
-            /* الحجم الأصلي */
         }
 
         td {
             font-family: var(--font-en);
             padding: 10px 6px;
+            /* التعليماة رقم 6: خطوط أفقية مستقيمة (border-bottom) تفصل بين كل فريق والذي يليه */
             border-bottom: 1px solid #e2e8f0;
             font-weight: 800;
-            font-size: 10px;
-            /* الحجم الأصلي */
+            font-size: 10px; /* التعليماة رقم 9: إعادة حجم الخطوط إلى الأصل (10px للجدول وth وtd) */
             background-clip: padding-box;
             vertical-align: middle;
         }
@@ -439,15 +437,13 @@
             border: none;
         }
 
-        /* الخطوط الفاصلة بالألوان المطلوبة */
-        tr.glow-green td {
+        /* التعليمات 7 و 8: الخط الأخضر والأحمر المخصص بين الصفوف */
+        tr.custom-green-border td {
             border-bottom: 3px solid #00ff87 !important;
-            box-shadow: 0 2px 12px rgba(0, 255, 135, 0.3);
         }
 
-        tr.glow-red td {
+        tr.custom-red-border td {
             border-bottom: 3px solid #ff005a !important;
-            box-shadow: 0 2px 12px rgba(255, 0, 90, 0.3);
         }
 
         .team-cell {
@@ -458,8 +454,7 @@
             font-weight: 800;
             text-transform: uppercase;
             color: #1a1a1a;
-            font-size: 13px;
-            /* تكبير الأسماء فقط */
+            font-size: 14px; /* التعليماة رقم 9: تكبير الأسماء (team-cell) فقط */
             gap: 6px;
         }
 
@@ -477,23 +472,26 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
             vertical-align: middle;
         }
 
         .pos-container .pos-number {
             font-weight: 900;
-            font-size: 16px;
-            /* تكبير الأرقام فقط */
+            font-size: 16px; /* التعليماة رقم 9: تكبير الأرقام (pos-number) فقط */
             color: #1a1a1a;
+            min-width: 20px;
+            text-align: center;
         }
 
+        /* التعليماة رقم 1: محاذاة الأيقونات أفقياً مع الرقم */
         .pos-indicator-img {
             width: 14px;
             height: 14px;
             object-fit: contain;
             vertical-align: middle;
             display: inline-block;
+            flex-shrink: 0;
         }
 
         .tab-content {
@@ -614,7 +612,6 @@
             }
             table {
                 font-size: 10px;
-                /* حجم أصلي في الشاشات الصغيرة */
                 display: table !important;
                 width: 100%;
             }
@@ -628,7 +625,6 @@
             }
             .team-cell {
                 font-size: 12px;
-                /* تكبير الأسماء في الهواتف */
             }
             .team-cell img {
                 width: 16px;
@@ -636,34 +632,28 @@
             }
             .pos-container .pos-number {
                 font-size: 14px;
-                /* تكبير الأرقام في الهواتف */
             }
             .pos-indicator-img {
                 width: 12px;
                 height: 12px;
             }
-            tr.glow-green td,
-            tr.glow-red td {
-                border-bottom-width: 3px !important;
-            }
         }
 
-        /* تحسين للآيباد */
         @media screen and (min-width: 601px) and (max-width: 1024px) {
             table {
-                font-size: 12px;
+                font-size: 10px;
             }
             th {
-                font-size: 12px;
+                font-size: 10px;
             }
             td {
-                font-size: 12px;
+                font-size: 10px;
             }
             .team-cell {
-                font-size: 14px;
+                font-size: 13px;
             }
             .pos-container .pos-number {
-                font-size: 17px;
+                font-size: 16px;
             }
         }
     </style>
@@ -1389,17 +1379,6 @@
             return calculateStandingsUpToRound(currentRound);
         }
 
-        // دالة مساعدة للحصول على أيقونة السهم (نص بديل في حال عدم وجود الصور)
-        function getIndicatorIcon(position, oldPos) {
-            if (position < oldPos) {
-                return '▲'; // سهم أخضر (صعود)
-            } else if (position > oldPos) {
-                return '▼'; // سهم أحمر (نزول)
-            } else {
-                return '▬'; // خط أصفر (بقاء)
-            }
-        }
-
         function renderStandings() {
             const tbody = document.getElementById('standingsBody');
             tbody.innerHTML = '';
@@ -1418,29 +1397,25 @@
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
                 let position = index + 1;
 
-                // تحديد لون الخط الفاصل بين الصفوف
+                // التعليمات 7 و 8: خط أفقي أخضر بين 1 و 2، وأحمر بين 17 و 18
                 let rowClass = '';
                 if (position === 1) {
-                    rowClass = 'glow-green'; // أخضر بين المركز 1 و 2
+                    rowClass = 'custom-green-border';
                 } else if (position === 17) {
-                    rowClass = 'glow-red'; // أحمر بين المركز 17 و 18
+                    rowClass = 'custom-red-border';
                 }
 
                 let indicatorHtml = '';
                 if (currentRound >= 3 && prevRanks[team.key] !== undefined) {
                     let oldPos = prevRanks[team.key];
-                    let icon = getIndicatorIcon(position, oldPos);
-                    let color = '';
-                    if (position < oldPos) color = '#00ff87';
-                    else if (position > oldPos) color = '#ff005a';
-                    else color = '#ffcc00';
+                    let icon = position < oldPos ? '▲' : (position > oldPos ? '▼' : '▬');
+                    let color = position < oldPos ? '#00ff87' : (position > oldPos ? '#ff005a' : '#ffcc00');
 
-                    // عرض صورة السهم، وفي حال عدم وجودها نعرض النص البديل
+                    // التعليماة رقم 1: استخدام الأيقونات المطلوبة (▲ أخضر للصعود، ▼ أحمر للنزول، ▬ أصفر للبقاء)
                     const imgSrc = position < oldPos ? 'arrow_up_green.png' :
-                        position > oldPos ? 'arrow_down_red.png' :
-                        'equal_yellow.png';
+                        (position > oldPos ? 'arrow_down_red.png' : 'equal_yellow.png');
 
-                    indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="indicator" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\\'color:${color};font-size:18px;font-weight:900;\\'>${icon}</span>'">`;
+                    indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="indicator" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\\'color:${color};font-size:14px;font-weight:900;\\'>${icon}</span>'">`;
                 }
 
                 tbody.innerHTML += `
@@ -1517,7 +1492,8 @@
 
             showToast("جاري تحضير الصورة عالية الدقة...", false);
 
-            const scaleFactor = window.devicePixelRatio >= 2 ? 4 : 3;
+            // التعليمات 3 و 4: رفع دقة وحفظ الصورة بـ scale عالي لضمان الوضوح التام عند الزوم وعدم تشوه الشعارات
+            const scaleFactor = 4;
 
             html2canvas(element, {
                 backgroundColor: activeTab === 'fixtures' ? null : "#ffffff",
@@ -1525,8 +1501,10 @@
                 useCORS: true,
                 allowTaint: true,
                 logging: false,
-                width: element.scrollWidth,
-                height: element.scrollHeight,
+                width: element.offsetWidth,
+                height: element.offsetHeight,
+                windowWidth: element.scrollWidth,
+                windowHeight: element.scrollHeight
             }).then(canvas => {
                 canvas.toBlob(function(blob) {
                     if (!blob) {
@@ -1534,26 +1512,30 @@
                         return;
                     }
 
-                    // محاولة حفظ الصورة في ألبوم الآيباد
-                    if (navigator.share) {
+                    // التعليماة رقم 5: استخدام navigator.share() لحفظ الصورة مباشرة في ألبوم الآيباد
+                    if (navigator.share && navigator.canShare) {
                         const file = new File([blob], activeTab === 'fixtures' ?
                             `Matchweek_${currentRound}.png` :
                             `League_Standings_GW${currentRound}.png`, { type: 'image/png' });
 
-                        navigator.share({
-                            title: activeTab === 'fixtures' ?
-                                `نتائج الجولة ${currentRound}` :
-                                `ترتيب الدوري - الجولة ${currentRound}`,
-                            files: [file]
-                        }).then(() => {
-                            showToast("تم حفظ الصورة في الألبوم ✓", true);
-                        }).catch((err) => {
-                            if (err.name !== 'AbortError') {
-                                fallbackDownload(blob);
-                            } else {
-                                showToast("تم الإلغاء", false);
-                            }
-                        });
+                        const shareData = {
+                            files: [file],
+                            title: activeTab === 'fixtures' ? `نتائج الجولة ${currentRound}` : `ترتيب الدوري - الجولة ${currentRound}`
+                        };
+
+                        if (navigator.canShare(shareData)) {
+                            navigator.share(shareData).then(() => {
+                                showToast("تم حفظ الصورة في الألبوم ✓", true);
+                            }).catch((err) => {
+                                if (err.name !== 'AbortError') {
+                                    fallbackDownload(blob);
+                                } else {
+                                    showToast("تم الإلغاء", false);
+                                }
+                            });
+                        } else {
+                            fallbackDownload(blob);
+                        }
                     } else {
                         fallbackDownload(blob);
                     }
@@ -1564,7 +1546,6 @@
             });
         }
 
-        // وظيفة احتياطية للحفظ عبر الرابط
         function fallbackDownload(blob) {
             const link = document.createElement('a');
             link.download = activeTab === 'fixtures' ?
@@ -1576,11 +1557,10 @@
             document.body.removeChild(link);
             setTimeout(() => {
                 URL.revokeObjectURL(link.href);
-                showToast("تم تحميل الصورة (احتياطي) ✓", true);
+                showToast("تم تحميل الصورة ✓", true);
             }, 100);
         }
 
-        // حفظ تلقائي
         setInterval(() => {
             if (Object.keys(scoresStorage).length > 0) {
                 localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
