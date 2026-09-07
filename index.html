@@ -407,15 +407,7 @@
             border: none;
         }
 
-        /* الخط الأخضر بين المركزين 1 و 2 */
-        tr.custom-green-border td {
-            border-bottom: 3px solid #00ff87 !important;
-        }
-
-        /* الخط الأحمر بين المركزين 17 و 18 */
-        tr.custom-red-border td {
-            border-bottom: 3px solid #ff005a !important;
-        }
+        /* تم إزالة الكلاسات الخاصة بالخطوط الخضراء والحمراء */
 
         .team-cell {
             font-family: var(--font-en);
@@ -918,12 +910,8 @@
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
                 let position = index + 1;
 
+                // تم إزالة أي كلاسات للخطوط الخضراء والحمراء
                 let rowClass = '';
-                if (position === 1) {
-                    rowClass = 'custom-green-border';
-                } else if (position === 17) {
-                    rowClass = 'custom-red-border';
-                }
 
                 let indicatorHtml = '';
                 if (currentRound >= 3 && prevRanks[team.key] !== undefined) {
