@@ -254,7 +254,7 @@
             display: flex;
             align-items: center;
             width: 36%;
-            font-size: 14px; /* مطابقة حجم اسم النادي */
+            font-size: 14px;
             font-weight: 800;
             color: #38003c;
             text-transform: uppercase;
@@ -296,7 +296,7 @@
 
         .score-display {
             font-family: var(--font-en);
-            font-size: 16px; /* مطابقة حجم رقم الترتيب */
+            font-size: 16px;
             font-weight: 900;
             color: #ffffff;
         }
@@ -313,7 +313,7 @@
             width: 36px;
             height: 26px;
             text-align: center;
-            font-size: 16px; /* مطابقة حجم الخط */
+            font-size: 16px;
             font-weight: 900;
             background: #ffffff;
             color: #38003c;
@@ -377,7 +377,7 @@
 
         table {
             width: 100%;
-            border-collapse: collapse; /* ضمان خطوط متصلة ونظيفة بدون تكسرات */
+            border-collapse: collapse;
             border-spacing: 0;
             text-align: center;
             color: #333;
@@ -397,7 +397,7 @@
         td {
             font-family: var(--font-en);
             padding: 10px 6px;
-            border-bottom: 1px solid #e2e8f0; /* خطوط أفقية مرتبة ومستقيمة */
+            /* تم إزالة border-bottom تماماً */
             font-weight: 800;
             background-clip: padding-box;
             vertical-align: middle;
@@ -407,10 +407,12 @@
             border: none;
         }
 
+        /* الخط الأخضر بين المركزين 1 و 2 */
         tr.custom-green-border td {
             border-bottom: 3px solid #00ff87 !important;
         }
 
+        /* الخط الأحمر بين المركزين 17 و 18 */
         tr.custom-red-border td {
             border-bottom: 3px solid #ff005a !important;
         }
@@ -423,7 +425,7 @@
             font-weight: 800;
             text-transform: uppercase;
             color: #1a1a1a;
-            font-size: 14px; /* حجم اسم النادي */
+            font-size: 14px;
             gap: 6px;
         }
 
@@ -445,13 +447,12 @@
 
         .pos-container .pos-number {
             font-weight: 900;
-            font-size: 16px; /* حجم رقم الترتيب */
+            font-size: 16px;
             color: #1a1a1a;
             min-width: 20px;
             text-align: center;
         }
 
-        /* تعديل حجم أيقونات الصعود والنزول لتكون واضحة ومتناسقة */
         .pos-indicator-img {
             width: 20px;
             height: 20px;
@@ -949,7 +950,6 @@
                             ${teamInfo.name}
                         </td>
                         <td>${team.gf}</td>
-                        <!-- جعل حجم النقاط مطابِقاً لحجم اسم النادي ورقم الترتيب (16px) -->
                         <td style="color:#7138f5; font-size:16px; font-weight:900;">${team.pts}</td>
                     </tr>
                 `;
