@@ -294,11 +294,33 @@
             flex-shrink: 0;
         }
 
-        .score-display {
+        /* توحيد خط الأرقام في المواجهات مع خط الأرقام في الترتيب */
+        .score-display,
+        .score-input,
+        .pos-number,
+        .stat-number {
             font-family: var(--font-en);
             font-size: 16px;
             font-weight: 900;
+            line-height: 1.4;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .score-display {
             color: #ffffff;
+        }
+
+        .score-input {
+            width: 36px;
+            height: 26px;
+            text-align: center;
+            background: #ffffff;
+            color: #38003c;
+            border: 1px solid #7138f5;
+            border-radius: 4px;
+            outline: none;
+            padding: 0;
         }
 
         .vs-text {
@@ -306,20 +328,6 @@
             color: #ffffff;
             font-family: var(--font-en);
             font-size: 14px;
-        }
-
-        .score-input {
-            font-family: var(--font-en);
-            width: 36px;
-            height: 26px;
-            text-align: center;
-            font-size: 16px;
-            font-weight: 900;
-            background: #ffffff;
-            color: #38003c;
-            border: 1px solid #7138f5;
-            border-radius: 4px;
-            outline: none;
         }
 
         #captureStandings {
@@ -409,7 +417,6 @@
             border: none;
         }
 
-        /* ضمان محاذاة جميع العناصر في الصف على خط واحد */
         .team-cell {
             display: flex;
             align-items: center;
@@ -418,7 +425,7 @@
             font-size: 14px;
             text-transform: uppercase;
             color: #1a1a1a;
-            padding: 0; /* padding محدد من td */
+            padding: 0;
         }
 
         .team-cell img {
@@ -437,30 +444,12 @@
             vertical-align: middle;
         }
 
-        .pos-container .pos-number {
-            font-weight: 900;
-            font-size: 16px;
-            color: #1a1a1a;
-            min-width: 20px;
-            text-align: center;
-            line-height: 1.4;
-        }
-
         .pos-indicator-img {
             width: 20px;
             height: 20px;
             object-fit: contain;
             display: inline-block;
             flex-shrink: 0;
-        }
-
-        /* جعل محتوى GF و Pts في منتصف الخلية */
-        .stat-number {
-            font-size: 16px;
-            font-weight: 900;
-            line-height: 1.4;
-            display: inline-block;
-            vertical-align: middle;
         }
 
         .tab-content {
@@ -526,16 +515,18 @@
                 min-width: 60px;
                 padding: 4px;
             }
-            .score-display {
+            .score-display,
+            .score-input,
+            .pos-number,
+            .stat-number {
                 font-size: 15px;
-            }
-            .vs-text {
-                font-size: 12px;
             }
             .score-input {
                 width: 30px;
                 height: 22px;
-                font-size: 14px;
+            }
+            .vs-text {
+                font-size: 12px;
             }
 
             #captureStandings {
@@ -589,15 +580,9 @@
                 width: 18px;
                 height: 18px;
             }
-            .pos-container .pos-number {
-                font-size: 15px;
-            }
             .pos-indicator-img {
                 width: 18px;
                 height: 18px;
-            }
-            .stat-number {
-                font-size: 15px;
             }
         }
     </style>
@@ -721,7 +706,7 @@
             "MCI": { name: "Man City", logo: "man_city.png.WEBP" },
             "MUN": { name: "Man Utd", logo: "man_utd.png.WEBP" },
             "NEW": { name: "Newcastle", logo: "newcastle.png.WEBP" },
-            "NOT": { name: "Nott'm Forest", logo: "forest.png.PNG" },
+            "NOT": { name: "Nott'm Forest", logo: "forest.png" },
             "SUN": { name: "Sunderland", logo: "sunderland.png.WEBP" },
             "TOT": { name: "Spurs", logo: "tottenham.png.WEBP" }
         };
@@ -967,7 +952,7 @@
 
                 let scoreContent = editMode ? `
                     <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
-                    <span style="font-weight:900; color:#fff;">:</span>
+                    <span style="font-weight:900; color:#fff; font-family:var(--font-en); font-size:16px; line-height:1.4;">:</span>
                     <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
                 ` : `
                     <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
