@@ -407,8 +407,8 @@
             width: 100%;
             border-collapse: collapse;
             text-align: center;
-            font-size: 14px;
-            /* تكبير الخط الأساسي */
+            font-size: 10px;
+            /* الحجم الأصلي */
             color: #333;
             display: table !important;
         }
@@ -420,18 +420,17 @@
             padding: 10px 4px;
             font-weight: 900;
             border-bottom: 2px solid #38003c;
-            font-size: 13px;
+            font-size: 10px;
+            /* الحجم الأصلي */
         }
 
         td {
             font-family: var(--font-en);
-            padding: 12px 6px;
-            /* زيادة الحشو للوضوح */
-            border-bottom: 2px solid #e2e8f0;
-            /* خط فاصل مستقيم بين الصفوف */
+            padding: 10px 6px;
+            border-bottom: 1px solid #e2e8f0;
             font-weight: 800;
-            font-size: 15px;
-            /* تكبير الأرقام بشكل رئيسي */
+            font-size: 10px;
+            /* الحجم الأصلي */
             background-clip: padding-box;
             vertical-align: middle;
         }
@@ -440,7 +439,7 @@
             border: none;
         }
 
-        /* 🔹 الخطوط الفاصلة المطلوبة بالألوان */
+        /* الخطوط الفاصلة بالألوان المطلوبة */
         tr.glow-green td {
             border-bottom: 3px solid #00ff87 !important;
             box-shadow: 0 2px 12px rgba(0, 255, 135, 0.3);
@@ -460,13 +459,13 @@
             text-transform: uppercase;
             color: #1a1a1a;
             font-size: 13px;
-            /* تكبير اسم الفريق قليلاً */
+            /* تكبير الأسماء فقط */
             gap: 6px;
         }
 
         .team-cell img {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             object-fit: contain;
             background: transparent;
             border-radius: 0;
@@ -479,20 +478,19 @@
             align-items: center;
             justify-content: center;
             gap: 4px;
-            /* المسافة بين الأيقونة والرقم */
             vertical-align: middle;
         }
 
         .pos-container .pos-number {
             font-weight: 900;
-            font-size: 17px;
-            /* تكبير الرقم بشكل واضح */
+            font-size: 16px;
+            /* تكبير الأرقام فقط */
             color: #1a1a1a;
         }
 
         .pos-indicator-img {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             object-fit: contain;
             vertical-align: middle;
             display: inline-block;
@@ -558,9 +556,6 @@
                 font-size: 10px !important;
                 width: 34%;
                 letter-spacing: -0.2px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
             }
             .team-box img {
                 width: 18px;
@@ -572,7 +567,6 @@
                 min-width: 50px;
                 padding: 3px 4px;
             }
-
             .score-display {
                 font-size: 14px;
             }
@@ -619,34 +613,34 @@
                 padding: 5px 0;
             }
             table {
-                font-size: 12px;
-                /* تكبير الخط في الشاشات الصغيرة */
+                font-size: 10px;
+                /* حجم أصلي في الشاشات الصغيرة */
                 display: table !important;
                 width: 100%;
             }
             th {
-                font-size: 11px;
-                padding: 8px 4px;
+                font-size: 10px;
+                padding: 6px 4px;
             }
             td {
-                font-size: 13px;
-                /* تكبير الأرقام في الهواتف */
-                padding: 10px 4px;
-                border-bottom-width: 2px;
+                font-size: 10px;
+                padding: 6px 4px;
             }
             .team-cell {
-                font-size: 11px;
+                font-size: 12px;
+                /* تكبير الأسماء في الهواتف */
             }
             .team-cell img {
-                width: 18px;
-                height: 18px;
+                width: 16px;
+                height: 16px;
             }
             .pos-container .pos-number {
-                font-size: 15px;
+                font-size: 14px;
+                /* تكبير الأرقام في الهواتف */
             }
             .pos-indicator-img {
-                width: 14px;
-                height: 14px;
+                width: 12px;
+                height: 12px;
             }
             tr.glow-green td,
             tr.glow-red td {
@@ -654,24 +648,22 @@
             }
         }
 
-        /* تحسين إضافي للآيباد */
+        /* تحسين للآيباد */
         @media screen and (min-width: 601px) and (max-width: 1024px) {
+            table {
+                font-size: 12px;
+            }
+            th {
+                font-size: 12px;
+            }
             td {
-                font-size: 16px;
-                padding: 14px 8px;
+                font-size: 12px;
             }
             .team-cell {
                 font-size: 14px;
             }
             .pos-container .pos-number {
-                font-size: 18px;
-            }
-            .pos-indicator-img {
-                width: 18px;
-                height: 18px;
-            }
-            table {
-                font-size: 15px;
+                font-size: 17px;
             }
         }
     </style>
@@ -763,7 +755,7 @@
 
             toastTimeout = setTimeout(() => {
                 toast.classList.remove('show');
-            }, 2500);
+            }, 3000);
         }
 
         let bannerAttempts = 0;
@@ -1443,12 +1435,12 @@
                     else if (position > oldPos) color = '#ff005a';
                     else color = '#ffcc00';
 
-                    // استخدام صورة إذا كانت موجودة، وإلا استخدام النص
+                    // عرض صورة السهم، وفي حال عدم وجودها نعرض النص البديل
                     const imgSrc = position < oldPos ? 'arrow_up_green.png' :
                         position > oldPos ? 'arrow_down_red.png' :
                         'equal_yellow.png';
 
-                    indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="indicator" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\\'color:${color};font-size:18px;\\'>${icon}</span>'">`;
+                    indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="indicator" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\\'color:${color};font-size:18px;font-weight:900;\\'>${icon}</span>'">`;
                 }
 
                 tbody.innerHTML += `
@@ -1464,7 +1456,7 @@
                                 ${teamInfo.name}
                             </td>
                             <td>${team.gf}</td>
-                            <td style="color:#7138f5; font-size:15px; font-weight:900;">${team.pts}</td>
+                            <td style="color:#7138f5; font-size:12px; font-weight:900;">${team.pts}</td>
                         </tr>
                     `;
             });
@@ -1523,10 +1515,8 @@
             const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
             const element = document.getElementById(targetId);
 
-            // عرض رسالة "جاري التحضير"
             showToast("جاري تحضير الصورة عالية الدقة...", false);
 
-            // استخدام scale عالي جداً للحصول على دقة ممتازة (مناسب للآيباد)
             const scaleFactor = window.devicePixelRatio >= 2 ? 4 : 3;
 
             html2canvas(element, {
@@ -1537,22 +1527,14 @@
                 logging: false,
                 width: element.scrollWidth,
                 height: element.scrollHeight,
-                onclone: function(clonedDoc) {
-                    // تحسين إضافي للخطوط في النسخة المنسوخة
-                    const clonedElement = clonedDoc.getElementById(targetId);
-                    if (clonedElement) {
-                        clonedElement.style.transform = 'none';
-                    }
-                }
             }).then(canvas => {
-                // تحويل إلى blob بدقة عالية
                 canvas.toBlob(function(blob) {
                     if (!blob) {
                         showToast("فشل في إنشاء الصورة!", false);
                         return;
                     }
 
-                    // محاولة حفظ الصورة في ألبوم الآيباد باستخدام navigator.share
+                    // محاولة حفظ الصورة في ألبوم الآيباد
                     if (navigator.share) {
                         const file = new File([blob], activeTab === 'fixtures' ?
                             `Matchweek_${currentRound}.png` :
@@ -1566,7 +1548,6 @@
                         }).then(() => {
                             showToast("تم حفظ الصورة في الألبوم ✓", true);
                         }).catch((err) => {
-                            // إذا ألغى المستخدم المشاركة، نستخدم الطريقة الاحتياطية
                             if (err.name !== 'AbortError') {
                                 fallbackDownload(blob);
                             } else {
@@ -1574,17 +1555,16 @@
                             }
                         });
                     } else {
-                        // الطريقة الاحتياطية (تحميل عبر الرابط)
                         fallbackDownload(blob);
                     }
-                }, 'image/png', 1.0); // جودة 100%
+                }, 'image/png', 1.0);
             }).catch(err => {
                 console.error('html2canvas error:', err);
                 showToast("حدث خطأ أثناء تحضير الصورة!", false);
             });
         }
 
-        // وظيفة احتياطية للحفظ عبر الرابط (في حال عدم دعم المشاركة)
+        // وظيفة احتياطية للحفظ عبر الرابط
         function fallbackDownload(blob) {
             const link = document.createElement('a');
             link.download = activeTab === 'fixtures' ?
@@ -1600,14 +1580,13 @@
             }, 100);
         }
 
-        // حفظ تلقائي كل 5 ثوانٍ
+        // حفظ تلقائي
         setInterval(() => {
             if (Object.keys(scoresStorage).length > 0) {
                 localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
             }
         }, 5000);
 
-        // تهيئة الصفحة
         initRoundDropdown();
         renderFixtures();
         renderStandings();
