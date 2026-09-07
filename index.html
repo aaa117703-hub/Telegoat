@@ -923,6 +923,65 @@
         initRoundDropdown();
         renderFixtures();
         renderStandings();
+        // جلب النتائج من جدول Aqeel في Supabase وحساب الترتيب تلقائياً
+async function loadMatchesAndStandings() {
+    const { data: matches, error } = await supabaseClient
+        .from('Aqeel')
+        .select('*');
+
+    if (error) {
+        console.error('خطأ في جلب البيانات:', error);
+        return;
+    }
+
+    // مصفوفة لحفظ إحصائيات الفرق
+    const standings = {};
+
+    matches.forEach(match => {
+        const home = match.home_team;
+        const away = match.away_team;
+        const homeScore = match.home_score;
+        const awayScore = match.away_score;
+
+        // تهيئة الفريق إذا لم يكن موجوداً في القائمة
+        if (!standings[home]) standings[home] = { played: 1, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 };
+        if (!standings[away]) standings[away] = { played: 1, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 };
+
+        // تحديث الأهداف
+        standings[home].gf += homeScore;
+        standings[home].ga += awayScore;
+        standings[away].gf += awayScore;
+        standings[away].ga += homeScore;
+
+        // حساب الفوز، التعادل، الخسارة، والنقاط
+        if (homeScore > awayScore) {
+            standings[home].won++;
+            standings[home].points += 3;
+            standings[away].lost++;
+        } else if (homeScore < awayScore) {
+            standings[away].won++;
+            standings[away].points += 3;
+            standings[home].lost++;
+        } else {
+            standings[home].drawn++;
+            standings[home].points += 1;
+            standings[away].drawn++;
+            standings[away].points += 1;
+        }
+    });
+
+    // تحويل الكائن إلى مصفوفة وترتيبها حسب النقاط ثم فارق الأهداف
+    const sortedStandings = Object.keys(standings).map(team => {
+        return {
+            team,
+            ...standings[team],
+            gd: standings[team].gf - standings[team].ga
+        };
+    }).sort((a, b) => b.points - a.points || b.gd - a.gd);
+
+    console.log("جدول الترتيب:", sortedStandings);
+    // هنا يمكنك ربط النتائج بعرضها في الـ HTML الخاص بالموقع 
+}
     </script>
 </body>
 </html>
