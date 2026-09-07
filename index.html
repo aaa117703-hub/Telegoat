@@ -310,20 +310,18 @@
             flex-shrink: 0;
         }
 
-        /* ===== تعديل حجم أرقام النتائج ===== */
         .score-display {
             font-family: var(--font-en);
-            font-size: 16px; /* تكبير الأرقام من 13px إلى 16px */
+            font-size: 16px;
             font-weight: 900;
             color: #ffffff;
         }
 
-        /* ===== تعديل حجم كلمة VS ===== */
         .vs-text {
             font-weight: 900;
             color: #ffffff;
             font-family: var(--font-en);
-            font-size: 14px; /* حجم معتدل */
+            font-size: 14px;
         }
 
         .score-input {
@@ -351,7 +349,6 @@
             width: 100%;
         }
 
-        /* ===== التعديل الرئيسي: الجزء الملون (الجانب الأيسر) ===== */
         .standings-sidebar {
             width: 140px;
             background: linear-gradient(180deg, #6C2BD9 0%, #3B82F6 50%, #10B981 100%);
@@ -454,10 +451,34 @@
             transition: 0.3s ease;
         }
 
+        /* تنسيق الأيقونات الدائرية لتقدم وتراجع وترتيب الفرق (مخصصة للبدء من الجولة 3 فصاعداً) */
+        .pos-indicator-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            color: #ffffff;
+            font-family: var(--font-en);
+            font-size: 11px;
+            font-weight: 900;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        .pos-up {
+            background-color: #28a745; /* أخضر للصعود */
+        }
+        .pos-down {
+            background-color: #dc3545; /* أحمر للنزول */
+        }
+        .pos-same {
+            background-color: #6c757d; /* رمادي للثبات */
+        }
+
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* ===== التعديل للشاشات الصغيرة ===== */
         @media screen and (max-width: 600px) {
             body { padding: 0 5px; }
             .banner-container { border-width: 3px; border-radius: 16px; }
@@ -473,13 +494,10 @@
             .team-box img { width: 18px; height: 18px; margin: 0 3px; }
             .match-score-center { width: 24%; min-width: 50px; padding: 3px 4px; }
             
-            /* تعديل حجم الأرقام في الشاشات الصغيرة */
-            .score-display { font-size: 14px; } /* تكبير مناسب للشاشات الصغيرة */
+            .score-display { font-size: 14px; } 
             .vs-text { font-size: 12px; }
-            
             .score-input { width: 26px; height: 18px; font-size: 10px; }
             
-            /* تعديل الجانب الملون في الشاشات الصغيرة */
             #captureStandings {
                 flex-direction: column;
                 border-radius: 16px;
@@ -518,6 +536,7 @@
             .team-cell img { width: 16px; height: 16px; margin-left: 4px; }
             .glow-green, .glow-red { border-bottom-width: 2px; box-shadow: 0 2px 12px rgba(0, 255, 135, 0.6); }
             .glow-red { box-shadow: 0 2px 12px rgba(255, 0, 90, 0.6); }
+            .pos-indicator-badge { width: 20px; height: 20px; font-size: 9px; }
         }
     </style>
 </head>
@@ -780,18 +799,22 @@
             scoresStorage[`r${round}_m${idx}_${type}`] = val;
         }
 
-        function calculateStandings() {
+        // دالة مساعدة لحساب جدول الترتيب حتى جولة معينة
+        function calculateStandingsUpToRound(targetRound) {
             let calculated = {};
             for (let teamKey in initialBasePoints) {
                 calculated[teamKey] = { key: teamKey, gf: 0, pts: 0 };
             }
 
-            for (let round in matchweeks) {
-                matchweeks[round].forEach((match, idx) => {
+            for (let r = 1; r <= targetRound; r++) {
+                let roundMatches = matchweeks[r];
+                if (!roundMatches) continue;
+                
+                roundMatches.forEach((match, idx) => {
                     let hKey = match[0];
                     let aKey = match[1];
-                    let hVal = scoresStorage[`r${round}_m${idx}_home`];
-                    let aVal = scoresStorage[`r${round}_m${idx}_away`];
+                    let hVal = scoresStorage[`r${r}_m${idx}_home`];
+                    let aVal = scoresStorage[`r${r}_m${idx}_away`];
 
                     if (hVal !== undefined && aVal !== undefined && hVal !== '' && aVal !== '') {
                         let hScore = parseFloat(hVal);
@@ -815,11 +838,24 @@
             return Object.values(calculated).sort((a, b) => b.pts - a.pts || b.gf - a.gf);
         }
 
+        function calculateStandings() {
+            return calculateStandingsUpToRound(currentRound);
+        }
+
         function renderStandings() {
             const tbody = document.getElementById('standingsBody');
             tbody.innerHTML = '';
             
             let sortedTeams = calculateStandings();
+
+            // حساب الترتيب السابق (ل والجولة الحالية >= 3) لمقارنة المراكز
+            let prevRanks = {};
+            if (currentRound >= 3) {
+                let prevSortedTeams = calculateStandingsUpToRound(currentRound - 1);
+                prevSortedTeams.forEach((team, idx) => {
+                    prevRanks[team.key] = idx + 1;
+                });
+            }
 
             sortedTeams.forEach((team, index) => {
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
@@ -831,10 +867,26 @@
                 } else if (position === 17) {
                     rowClass = 'glow-red';
                 }
+
+                // بناء أيقونة صعود/هبوط/ثبات بدءاً من الجولة الثالثة
+                let badgeHtml = '';
+                if (currentRound >= 3 && prevRanks[team.key] !== undefined) {
+                    let oldPos = prevRanks[team.key];
+                    if (position < oldPos) {
+                        // تقدم للأعلى (رمز < بشكل مائل أو مطابق للطلب)
+                        badgeHtml = `<span class="pos-indicator-badge pos-up">&lt;</span>`;
+                    } else if (position > oldPos) {
+                        // تراجع للأسفل (رمز >)
+                        badgeHtml = `<span class="pos-indicator-badge pos-down">&gt;</span>`;
+                    } else {
+                        // ثبات في نفس المركز (-)
+                        badgeHtml = `<span class="pos-indicator-badge pos-same">-</span>`;
+                    }
+                }
                 
                 tbody.innerHTML += `
                     <tr class="${rowClass}">
-                        <td style="font-weight:900;">${position}</td>
+                        <td style="font-weight:900;">${position} ${badgeHtml}</td>
                         <td class="team-cell">
                             <img src="${teamInfo.logo}" alt="${teamInfo.name}">
                             ${teamInfo.name}
@@ -923,65 +975,6 @@
         initRoundDropdown();
         renderFixtures();
         renderStandings();
-        // جلب النتائج من جدول Aqeel في Supabase وحساب الترتيب تلقائياً
-async function loadMatchesAndStandings() {
-    const { data: matches, error } = await supabaseClient
-        .from('Aqeel')
-        .select('*');
-
-    if (error) {
-        console.error('خطأ في جلب البيانات:', error);
-        return;
-    }
-
-    // مصفوفة لحفظ إحصائيات الفرق
-    const standings = {};
-
-    matches.forEach(match => {
-        const home = match.home_team;
-        const away = match.away_team;
-        const homeScore = match.home_score;
-        const awayScore = match.away_score;
-
-        // تهيئة الفريق إذا لم يكن موجوداً في القائمة
-        if (!standings[home]) standings[home] = { played: 1, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 };
-        if (!standings[away]) standings[away] = { played: 1, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 };
-
-        // تحديث الأهداف
-        standings[home].gf += homeScore;
-        standings[home].ga += awayScore;
-        standings[away].gf += awayScore;
-        standings[away].ga += homeScore;
-
-        // حساب الفوز، التعادل، الخسارة، والنقاط
-        if (homeScore > awayScore) {
-            standings[home].won++;
-            standings[home].points += 3;
-            standings[away].lost++;
-        } else if (homeScore < awayScore) {
-            standings[away].won++;
-            standings[away].points += 3;
-            standings[home].lost++;
-        } else {
-            standings[home].drawn++;
-            standings[home].points += 1;
-            standings[away].drawn++;
-            standings[away].points += 1;
-        }
-    });
-
-    // تحويل الكائن إلى مصفوفة وترتيبها حسب النقاط ثم فارق الأهداف
-    const sortedStandings = Object.keys(standings).map(team => {
-        return {
-            team,
-            ...standings[team],
-            gd: standings[team].gf - standings[team].ga
-        };
-    }).sort((a, b) => b.points - a.points || b.gd - a.gd);
-
-    console.log("جدول الترتيب:", sortedStandings);
-    // هنا يمكنك ربط النتائج بعرضها في الـ HTML الخاص بالموقع 
-}
     </script>
 </body>
 </html>
