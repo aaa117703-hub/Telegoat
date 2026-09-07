@@ -417,6 +417,18 @@
             border: none;
         }
 
+        /* الخط الأخضر المضيء للمركز الأول */
+        tr.green-line td {
+            border-bottom: 3px solid #00ff87 !important;
+            box-shadow: 0 4px 12px rgba(0, 255, 135, 0.7);
+        }
+
+        /* الخط الأحمر للمركز الثامن عشر */
+        tr.red-line td {
+            border-bottom: 3px solid #ff005a !important;
+            box-shadow: 0 4px 12px rgba(255, 0, 90, 0.7);
+        }
+
         .team-cell {
             display: flex;
             align-items: center;
@@ -584,6 +596,14 @@
                 width: 18px;
                 height: 18px;
             }
+            tr.green-line td,
+            tr.red-line td {
+                border-bottom-width: 2px !important;
+                box-shadow: 0 2px 8px rgba(0, 255, 135, 0.5);
+            }
+            tr.red-line td {
+                box-shadow: 0 2px 8px rgba(255, 0, 90, 0.5);
+            }
         }
     </style>
 </head>
@@ -607,7 +627,6 @@
 
     <div class="header">
         <div class="round-nav-container">
-            <!-- تم حذف أزرار التنقل السريع (« و ») بناءً على طلبك -->
             <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
         </div>
     </div>
@@ -907,6 +926,14 @@
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
                 let position = index + 1;
 
+                // تحديد الصنف بناءً على المركز
+                let rowClass = '';
+                if (position === 1) {
+                    rowClass = 'green-line';
+                } else if (position === 18) {
+                    rowClass = 'red-line';
+                }
+
                 let indicatorHtml = '';
                 if (currentRound >= 3 && prevRanks[team.key] !== undefined) {
                     let oldPos = prevRanks[team.key];
@@ -916,7 +943,7 @@
                 }
 
                 tbody.innerHTML += `
-                    <tr>
+                    <tr class="${rowClass}">
                         <td>
                             <div class="pos-container">
                                 ${indicatorHtml}
