@@ -451,26 +451,26 @@
             transition: 0.3s ease;
         }
 
-        /* تنسيق الأيقونات الدائرية لتقدم وتراجع وترتيب الفرق (مخصصة للبدء من الجولة 3 فصاعداً) */
+        /* تنسيق أيقونات صعود وهبوط وثبات الترتيب (بحجم أصغر وبجانب الأرقام من اليمين) */
         .pos-indicator-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 24px;
-            height: 24px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             color: #ffffff;
             font-family: var(--font-en);
-            font-size: 11px;
+            font-size: 9px;
             font-weight: 900;
-            margin-left: 6px;
+            margin-right: 4px; /* وضعها على الجانب الأيمن من الرقم */
             vertical-align: middle;
         }
         .pos-up {
-            background-color: #28a745; /* أخضر للصعود */
+            background-color: #28a745; /* أخضر للصعود لأعلى */
         }
         .pos-down {
-            background-color: #dc3545; /* أحمر للنزول */
+            background-color: #dc3545; /* أحمر للنزول لأسفل */
         }
         .pos-same {
             background-color: #6c757d; /* رمادي للثبات */
@@ -536,7 +536,7 @@
             .team-cell img { width: 16px; height: 16px; margin-left: 4px; }
             .glow-green, .glow-red { border-bottom-width: 2px; box-shadow: 0 2px 12px rgba(0, 255, 135, 0.6); }
             .glow-red { box-shadow: 0 2px 12px rgba(255, 0, 90, 0.6); }
-            .pos-indicator-badge { width: 20px; height: 20px; font-size: 9px; }
+            .pos-indicator-badge { width: 14px; height: 14px; font-size: 8px; margin-right: 3px; }
         }
     </style>
 </head>
@@ -799,7 +799,6 @@
             scoresStorage[`r${round}_m${idx}_${type}`] = val;
         }
 
-        // دالة مساعدة لحساب جدول الترتيب حتى جولة معينة
         function calculateStandingsUpToRound(targetRound) {
             let calculated = {};
             for (let teamKey in initialBasePoints) {
@@ -848,7 +847,6 @@
             
             let sortedTeams = calculateStandings();
 
-            // حساب الترتيب السابق (ل والجولة الحالية >= 3) لمقارنة المراكز
             let prevRanks = {};
             if (currentRound >= 3) {
                 let prevSortedTeams = calculateStandingsUpToRound(currentRound - 1);
@@ -868,25 +866,22 @@
                     rowClass = 'glow-red';
                 }
 
-                // بناء أيقونة صعود/هبوط/ثبات بدءاً من الجولة الثالثة
+                // الرموز أصبحت: سهم للأعلى (▲)، سهم للأسفل (▼)، أو شرطة للثبات (-)، بحجم أصغر وعلى الجانب الأيمن من الرقم
                 let badgeHtml = '';
                 if (currentRound >= 3 && prevRanks[team.key] !== undefined) {
                     let oldPos = prevRanks[team.key];
                     if (position < oldPos) {
-                        // تقدم للأعلى (رمز < بشكل مائل أو مطابق للطلب)
-                        badgeHtml = `<span class="pos-indicator-badge pos-up">&lt;</span>`;
+                        badgeHtml = `<span class="pos-indicator-badge pos-up">▲</span>`;
                     } else if (position > oldPos) {
-                        // تراجع للأسفل (رمز >)
-                        badgeHtml = `<span class="pos-indicator-badge pos-down">&gt;</span>`;
+                        badgeHtml = `<span class="pos-indicator-badge pos-down">▼</span>`;
                     } else {
-                        // ثبات في نفس المركز (-)
                         badgeHtml = `<span class="pos-indicator-badge pos-same">-</span>`;
                     }
                 }
                 
                 tbody.innerHTML += `
                     <tr class="${rowClass}">
-                        <td style="font-weight:900;">${position} ${badgeHtml}</td>
+                        <td style="font-weight:900;">${badgeHtml}${position}</td>
                         <td class="team-cell">
                             <img src="${teamInfo.logo}" alt="${teamInfo.name}">
                             ${teamInfo.name}
