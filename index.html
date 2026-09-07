@@ -969,6 +969,180 @@
         initRoundDropdown();
         renderFixtures();
         renderStandings();
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ترتيب الفرق</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f5f7;
+            padding: 20px;
+        }
+
+        .standings-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        /* تنسيق الصف وجعل الخط الفاصل مستقيماً تماماً */
+        .team-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .team-row:last-child {
+            border-bottom: none;
+        }
+
+        .team-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .team-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .team-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .team-stats {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .team-rank {
+            font-size: 22px;
+            font-weight: bold;
+            color: #222;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        /* حاوية الأسهم: عرض ثابت لضمان محاذاة جميع الأسهم على خط طولي واحد */
+        .trend-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            text-align: center;
+        }
+
+        /* تكبير حجم السهم وجعله واضحاً */
+        .trend-icon {
+            font-size: 28px;
+            line-height: 1;
+            font-weight: bold;
+        }
+
+        .trend-up {
+            color: #2e7d32; /* أخضر */
+        }
+
+        .trend-down {
+            color: #c62828; /* أحمر */
+        }
+    </style>
+</head>
+<body>
+
+<div class="standings-container">
+    <!-- مانشستر يونايتد -->
+    <div class="team-row">
+        <div class="team-info">
+            <img src="manchester_united_logo.png" alt="Logo" class="team-logo">
+            <span class="team-name">مانشستر يونايتد</span>
+        </div>
+        <div class="team-stats">
+            <span class="team-rank">8</span>
+            <div class="trend-container">
+                <span class="trend-icon trend-down">▼</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- سندرلاند -->
+    <div class="team-row">
+        <div class="team-info">
+            <img src="sunderland_logo.png" alt="Logo" class="team-logo">
+            <span class="team-name">سندرلاند</span>
+        </div>
+        <div class="team-stats">
+            <span class="team-rank">9</span>
+            <div class="trend-container">
+                <span class="trend-icon trend-up">▲</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- كريستال بالاس -->
+    <div class="team-row">
+        <div class="team-info">
+            <img src="crystal_palace_logo.png" alt="Logo" class="team-logo">
+            <span class="team-name">كريستال بالاس</span>
+        </div>
+        <div class="team-stats">
+            <span class="team-rank">10</span>
+            <div class="trend-container">
+                <span class="trend-icon trend-down">▼</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- مانشستر سيتي -->
+    <div class="team-row">
+        <div class="team-info">
+            <img src="manchester_city_logo.png" alt="Logo" class="team-logo">
+            <span class="team-name">مانشستر سيتي</span>
+        </div>
+        <div class="team-stats">
+            <span class="team-rank">11</span>
+            <div class="trend-container">
+                <span class="trend-icon trend-down">▼</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- برينتفورد -->
+    <div class="team-row">
+        <div class="team-info">
+            <img src="brentford_logo.png" alt="Logo" class="team-logo">
+            <span class="team-name">برينتفورد</span>
+        </div>
+        <div class="team-stats">
+            <span class="team-rank">12</span>
+            <div class="trend-container">
+                <span class="trend-icon trend-down">▼</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
     </script>
 </body>
 </html>
