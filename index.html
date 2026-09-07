@@ -743,7 +743,7 @@
 
             <div class="round-indicator"
                  id="currentRoundTitle"
-                 ondblclick="unlockEditWithPassword">
+                 onclick="threeClickUnlock()">
                 MATCHWEEK 1
             </div>
 
@@ -1596,6 +1596,38 @@
         }
 
 
+        /* الضغط 3 مرات على MATCHWEEK لفتح نافذة الرمز */
+
+        let matchweekClickCount = 0;
+
+        let matchweekClickTimer = null;
+
+
+        function threeClickUnlock() {
+
+            matchweekClickCount++;
+
+            clearTimeout(matchweekClickTimer);
+
+            matchweekClickTimer =
+                setTimeout(() => {
+
+                    matchweekClickCount = 0;
+
+                }, 700);
+
+
+            if (matchweekClickCount === 3) {
+
+                matchweekClickCount = 0;
+
+                clearTimeout(matchweekClickTimer);
+
+                unlockEditWithPassword();
+            }
+        }
+
+
         function unlockEditWithPassword() {
 
             const pass =
@@ -1898,14 +1930,11 @@
                     /*
                      * مؤشر تغيّر المركز
                      *
-                     * إذا المركز الحالي أقل من السابق:
-                     * الفريق صعد → ^
+                     * صعود = ↑ أخضر
                      *
-                     * إذا المركز الحالي أكبر من السابق:
-                     * الفريق نزل → ˇ
+                     * هبوط = ˇ أحمر
                      *
-                     * إذا المركز نفسه:
-                     * ثابت → -
+                     * ثبات = - رمادي
                      */
 
                     let badgeHtml = '';
@@ -1923,7 +1952,7 @@
                         if (position < oldPos) {
 
                             badgeHtml =
-                                `<span class="pos-indicator-badge pos-up">^</span>`;
+                                `<span class="pos-indicator-badge pos-up">↑</span>`;
 
 
                         // هبوط
