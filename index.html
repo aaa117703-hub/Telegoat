@@ -377,7 +377,7 @@
         .standings-content-area {
             flex: 1;
             background: #f4f5f7;
-            overflow-x: auto;
+            overflow-x: visible; /* تم التعديل لمنع أي تكسرات جانبية */
             min-width: 200px;
             padding: 10px;
             display: block !important;
@@ -412,10 +412,15 @@
 
         td { 
             font-family: var(--font-en); 
-            padding: 6px 4px; 
+            padding: 10px 6px; 
             border-bottom: 1px solid #e2e8f0; 
             font-weight: 800; 
             font-size: 12px;
+            background-clip: padding-box;
+        }
+
+        tr {
+            border: none;
         }
         
         .team-cell { 
@@ -451,7 +456,6 @@
             transition: 0.3s ease;
         }
 
-        /* تكبير حجم الأيقونة لتتوافق تماماً مع حجم رقم الترتيب وفونت الصفحة */
         .pos-container {
             display: inline-flex;
             align-items: center;
@@ -513,7 +517,7 @@
                 min-width: unset;
                 width: 100%;
                 padding: 5px;
-                overflow-x: auto;
+                overflow-x: visible;
                 display: block !important;
                 border-radius: 0 0 16px 16px;
             }
@@ -526,7 +530,6 @@
             .team-cell img { width: 16px; height: 16px; margin-left: 4px; }
             .glow-green, .glow-red { border-bottom-width: 2px; box-shadow: 0 2px 12px rgba(0, 255, 135, 0.6); }
             .glow-red { box-shadow: 0 2px 12px rgba(255, 0, 90, 0.6); }
-            /* حجم متناسق تماماً مع حجم رقم الترتيب في الشاشات الصغيرة */
             .pos-indicator-img { width: 13px; height: 13px; }
         }
     </style>
@@ -857,7 +860,6 @@
                     rowClass = 'glow-red';
                 }
 
-                // عرض الصور المرفقة بجانب رقم الترتيب على اليمين وبحجم متناسق تماماً مع النص
                 let indicatorImgHtml = '';
                 if (currentRound >= 3 && prevRanks[team.key] !== undefined) {
                     let oldPos = prevRanks[team.key];
