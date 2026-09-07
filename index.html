@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TELEGRAM GOAT - Premier League</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+    </script>
     <style>
         @font-face {
             font-family: 'SultanCustom';
@@ -25,17 +26,17 @@
             --font-en: 'EnglishCustom', sans-serif;
         }
 
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-            font-family: var(--font-ar); 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-ar);
         }
 
-        body { 
-            background-color: var(--pl-dark-bg); 
-            color: var(--text-white); 
-            padding-bottom: 40px; 
+        body {
+            background-color: var(--pl-dark-bg);
+            color: var(--text-white);
+            padding-bottom: 40px;
             width: 100%;
             max-width: 768px;
             margin: 0 auto;
@@ -55,7 +56,7 @@
             font-weight: 900;
             font-size: 15px;
             border: 2px solid #ff005a;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             z-index: 999;
             opacity: 0;
             transition: opacity 0.4s ease;
@@ -71,14 +72,18 @@
             display: inline-block;
             width: 18px;
             height: 18px;
-            border: 3px solid rgba(255,255,255,0.2);
+            border: 3px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             border-top-color: #ff005a;
             animation: spin 0.6s linear infinite;
         }
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .banner-container {
@@ -89,7 +94,7 @@
             border-radius: 20px;
             overflow: hidden;
             border: 4px solid #ffffff;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             background-color: #240024;
             line-height: 0;
             text-align: center;
@@ -108,10 +113,10 @@
             bottom: 4%;
             right: 2%;
             display: flex;
-            background: #5d8eb6; 
+            background: #5d8eb6;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             direction: rtl;
             flex-wrap: wrap;
             justify-content: center;
@@ -120,7 +125,8 @@
             max-width: 96%;
         }
 
-        .banner-tab-btn, .banner-tab-select {
+        .banner-tab-btn,
+        .banner-tab-select {
             background: transparent;
             color: #ffffff;
             border: none;
@@ -140,7 +146,7 @@
         }
 
         .banner-tab-btn:hover {
-            background: rgba(0,0,0,0.15);
+            background: rgba(0, 0, 0, 0.15);
         }
 
         .banner-tab-btn.active {
@@ -155,7 +161,7 @@
             background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="10" viewBox="0 0 24 24" width="10" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
             background-repeat: no-repeat;
             background-position: left 6px center;
-            border-left: 1px solid rgba(255,255,255,0.2);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
             min-width: 60px;
         }
 
@@ -168,11 +174,11 @@
             display: none !important;
         }
 
-        .header { 
-            background-color: var(--pl-dark-bg); 
-            color: #ffffff; 
-            padding: 5px 10px 15px 10px; 
-            text-align: center; 
+        .header {
+            background-color: var(--pl-dark-bg);
+            color: #ffffff;
+            padding: 5px 10px 15px 10px;
+            text-align: center;
         }
 
         .round-nav-container {
@@ -199,8 +205,8 @@
             transition: 0.2s;
         }
         .round-indicator:hover {
-            border-color: rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .nav-arrow-btn {
@@ -225,18 +231,18 @@
             border-color: var(--pl-pink);
         }
 
-        .main-container { 
-            width: 100%; 
-            max-width: 768px; 
-            margin: 0 auto; 
-            padding: 0 5px; 
+        .main-container {
+            width: 100%;
+            max-width: 768px;
+            margin: 0 auto;
+            padding: 0 5px;
         }
 
         #captureFixtures {
             padding: 20px 15px;
             background: linear-gradient(135deg, #3281ff 0%, #00d2ff 45%, #a835ff 100%), #4b92ff;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             border: 4px solid #ffffff;
         }
 
@@ -246,7 +252,7 @@
             padding: 10px;
             text-align: center;
             margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .fixtures-header-title {
@@ -257,15 +263,15 @@
             letter-spacing: 1px;
         }
 
-        .fixture-row { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
+        .fixture-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: 8px 10px;
             margin-bottom: 6px;
             background: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             flex-wrap: nowrap;
         }
 
@@ -282,9 +288,15 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .team-box.home { justify-content: flex-end; text-align: right; }
-        .team-box.away { justify-content: flex-start; text-align: left; }
-        
+        .team-box.home {
+            justify-content: flex-end;
+            text-align: right;
+        }
+        .team-box.away {
+            justify-content: flex-start;
+            text-align: left;
+        }
+
         .team-box img {
             width: 24px;
             height: 24px;
@@ -344,7 +356,7 @@
             background: #ffffff;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             border: 4px solid #ffffff;
             width: 100%;
         }
@@ -369,7 +381,7 @@
             max-width: 330px;
             height: auto;
             object-fit: contain;
-            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
             display: block;
             border-radius: 8px;
         }
@@ -377,128 +389,209 @@
         .standings-content-area {
             flex: 1;
             background: #f4f5f7;
-            overflow-x: visible; /* تم التعديل لمنع أي تكسرات جانبية */
+            overflow-x: visible;
             min-width: 200px;
             padding: 10px;
             display: block !important;
         }
 
-        .standings-card { 
-            background: transparent; 
-            border-radius: 0; 
-            overflow: visible; 
+        .standings-card {
+            background: transparent;
+            border-radius: 0;
+            overflow: visible;
             padding: 5px;
             width: 100%;
         }
 
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            text-align: center; 
-            font-size: 12px; 
-            color: #333; 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 14px;
+            /* تكبير الخط الأساسي */
+            color: #333;
             display: table !important;
         }
-        
-        th { 
-            font-family: var(--font-en); 
-            background-color: transparent; 
-            color: #38003c; 
-            padding: 10px 4px; 
-            font-weight: 900; 
-            border-bottom: 2px solid #38003c; 
-            font-size: 12px;
+
+        th {
+            font-family: var(--font-en);
+            background-color: transparent;
+            color: #38003c;
+            padding: 10px 4px;
+            font-weight: 900;
+            border-bottom: 2px solid #38003c;
+            font-size: 13px;
         }
 
-        td { 
-            font-family: var(--font-en); 
-            padding: 10px 6px; 
-            border-bottom: 1px solid #e2e8f0; 
-            font-weight: 800; 
-            font-size: 12px;
+        td {
+            font-family: var(--font-en);
+            padding: 12px 6px;
+            /* زيادة الحشو للوضوح */
+            border-bottom: 2px solid #e2e8f0;
+            /* خط فاصل مستقيم بين الصفوف */
+            font-weight: 800;
+            font-size: 15px;
+            /* تكبير الأرقام بشكل رئيسي */
             background-clip: padding-box;
+            vertical-align: middle;
         }
 
         tr {
             border: none;
         }
-        
-        .team-cell { 
-            font-family: var(--font-en); 
-            display: flex; 
-            align-items: center; 
-            justify-content: flex-start; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            color: #1a1a1a;
-            font-size: 12px;
+
+        /* 🔹 الخطوط الفاصلة المطلوبة بالألوان */
+        tr.glow-green td {
+            border-bottom: 3px solid #00ff87 !important;
+            box-shadow: 0 2px 12px rgba(0, 255, 135, 0.3);
         }
-        
-        .team-cell img { 
-            width: 20px; 
-            height: 20px; 
-            margin-left: 6px; 
+
+        tr.glow-red td {
+            border-bottom: 3px solid #ff005a !important;
+            box-shadow: 0 2px 12px rgba(255, 0, 90, 0.3);
+        }
+
+        .team-cell {
+            font-family: var(--font-en);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            font-size: 13px;
+            /* تكبير اسم الفريق قليلاً */
+            gap: 6px;
+        }
+
+        .team-cell img {
+            width: 22px;
+            height: 22px;
             object-fit: contain;
             background: transparent;
             border-radius: 0;
             padding: 0;
-        }
-
-        .glow-green {
-            border-bottom: 2px solid #00ff87;
-            box-shadow: 0 4px 20px rgba(0, 255, 135, 0.8);
-            transition: 0.3s ease;
-        }
-
-        .glow-red {
-            border-bottom: 2px solid #ff005a;
-            box-shadow: 0 4px 20px rgba(255, 0, 90, 0.8);
-            transition: 0.3s ease;
+            flex-shrink: 0;
         }
 
         .pos-container {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-        }
-
-        .pos-indicator-img {
-            width: 14px;
-            height: 14px;
-            object-fit: contain;
+            gap: 4px;
+            /* المسافة بين الأيقونة والرقم */
             vertical-align: middle;
         }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .pos-container .pos-number {
+            font-weight: 900;
+            font-size: 17px;
+            /* تكبير الرقم بشكل واضح */
+            color: #1a1a1a;
+        }
+
+        .pos-indicator-img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
 
         @media screen and (max-width: 600px) {
-            body { padding: 0 5px; }
-            .banner-container { border-width: 3px; border-radius: 16px; }
-            .banner-overlay-tabs { bottom: 4%; right: 1%; max-width: 98%; border-radius: 6px; padding: 3px 0; gap: 0; }
-            .banner-tab-btn, .banner-tab-select { font-size: 10px; padding: 5px 6px; min-width: 35px; flex: 1 1 20%; }
-            .banner-tab-select { min-width: 45px; padding-right: 6px; padding-left: 14px; background-size: 7px; }
-            .round-indicator { font-size: 15px; }
-            .nav-arrow-btn { width: 30px; height: 30px; font-size: 14px; }
-            #captureFixtures { padding: 15px 10px; border-radius: 16px; border-width: 3px; }
-            .fixtures-header-title { font-size: 16px; }
-            .fixture-row { padding: 6px 8px; flex-wrap: nowrap; }
-            .team-box { font-size: 10px !important; width: 34%; letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-            .team-box img { width: 18px; height: 18px; margin: 0 3px; }
-            .match-score-center { width: 24%; min-width: 50px; padding: 3px 4px; }
-            
-            .score-display { font-size: 14px; } 
-            .vs-text { font-size: 12px; }
-            .score-input { width: 26px; height: 18px; font-size: 10px; }
-            
+            body {
+                padding: 0 5px;
+            }
+            .banner-container {
+                border-width: 3px;
+                border-radius: 16px;
+            }
+            .banner-overlay-tabs {
+                bottom: 4%;
+                right: 1%;
+                max-width: 98%;
+                border-radius: 6px;
+                padding: 3px 0;
+                gap: 0;
+            }
+            .banner-tab-btn,
+            .banner-tab-select {
+                font-size: 10px;
+                padding: 5px 6px;
+                min-width: 35px;
+                flex: 1 1 20%;
+            }
+            .banner-tab-select {
+                min-width: 45px;
+                padding-right: 6px;
+                padding-left: 14px;
+                background-size: 7px;
+            }
+            .round-indicator {
+                font-size: 15px;
+            }
+            .nav-arrow-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+            }
+            #captureFixtures {
+                padding: 15px 10px;
+                border-radius: 16px;
+                border-width: 3px;
+            }
+            .fixtures-header-title {
+                font-size: 16px;
+            }
+            .fixture-row {
+                padding: 6px 8px;
+                flex-wrap: nowrap;
+            }
+            .team-box {
+                font-size: 10px !important;
+                width: 34%;
+                letter-spacing: -0.2px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .team-box img {
+                width: 18px;
+                height: 18px;
+                margin: 0 3px;
+            }
+            .match-score-center {
+                width: 24%;
+                min-width: 50px;
+                padding: 3px 4px;
+            }
+
+            .score-display {
+                font-size: 14px;
+            }
+            .vs-text {
+                font-size: 12px;
+            }
+            .score-input {
+                width: 26px;
+                height: 18px;
+                font-size: 10px;
+            }
+
             #captureStandings {
                 flex-direction: column;
                 border-radius: 16px;
                 border-width: 3px;
                 overflow: hidden;
             }
-            
+
             .standings-sidebar {
                 width: 100%;
                 flex-direction: row;
@@ -508,11 +601,11 @@
                 border-radius: 16px 16px 0 0;
                 min-height: 100px;
             }
-            
+
             .standings-sidebar img {
                 max-width: 170px;
             }
-            
+
             .standings-content-area {
                 min-width: unset;
                 width: 100%;
@@ -521,16 +614,65 @@
                 display: block !important;
                 border-radius: 0 0 16px 16px;
             }
-            
-            .standings-card { padding: 5px 0; }
-            table { font-size: 10px; display: table !important; width: 100%; }
-            th { font-size: 10px; padding: 6px 4px; }
-            td { font-size: 10px; padding: 6px 4px; }
-            .team-cell { font-size: 10px; }
-            .team-cell img { width: 16px; height: 16px; margin-left: 4px; }
-            .glow-green, .glow-red { border-bottom-width: 2px; box-shadow: 0 2px 12px rgba(0, 255, 135, 0.6); }
-            .glow-red { box-shadow: 0 2px 12px rgba(255, 0, 90, 0.6); }
-            .pos-indicator-img { width: 13px; height: 13px; }
+
+            .standings-card {
+                padding: 5px 0;
+            }
+            table {
+                font-size: 12px;
+                /* تكبير الخط في الشاشات الصغيرة */
+                display: table !important;
+                width: 100%;
+            }
+            th {
+                font-size: 11px;
+                padding: 8px 4px;
+            }
+            td {
+                font-size: 13px;
+                /* تكبير الأرقام في الهواتف */
+                padding: 10px 4px;
+                border-bottom-width: 2px;
+            }
+            .team-cell {
+                font-size: 11px;
+            }
+            .team-cell img {
+                width: 18px;
+                height: 18px;
+            }
+            .pos-container .pos-number {
+                font-size: 15px;
+            }
+            .pos-indicator-img {
+                width: 14px;
+                height: 14px;
+            }
+            tr.glow-green td,
+            tr.glow-red td {
+                border-bottom-width: 3px !important;
+            }
+        }
+
+        /* تحسين إضافي للآيباد */
+        @media screen and (min-width: 601px) and (max-width: 1024px) {
+            td {
+                font-size: 16px;
+                padding: 14px 8px;
+            }
+            .team-cell {
+                font-size: 14px;
+            }
+            .pos-container .pos-number {
+                font-size: 18px;
+            }
+            .pos-indicator-img {
+                width: 18px;
+                height: 18px;
+            }
+            table {
+                font-size: 15px;
+            }
         }
     </style>
 </head>
@@ -542,7 +684,7 @@
 
     <div class="banner-container">
         <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
-        
+
         <div class="banner-overlay-tabs">
             <select class="banner-tab-select" id="roundSelect" onchange="selectRound(this.value)"></select>
             <button class="banner-tab-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
@@ -604,20 +746,21 @@
         let isSaving = false;
 
         let toastTimeout = null;
+
         function showToast(msg, isSuccess = false) {
             const toast = document.getElementById('toast');
             const content = document.getElementById('toastContent');
-            
+
             if (toastTimeout) clearTimeout(toastTimeout);
-            
+
             if (isSuccess) {
                 content.innerHTML = `✅ ${msg}`;
             } else {
                 content.innerHTML = `<span class="toast-spinner"></span> ${msg}`;
             }
-            
+
             toast.classList.add('show');
-            
+
             toastTimeout = setTimeout(() => {
                 toast.classList.remove('show');
             }, 2500);
@@ -625,6 +768,7 @@
 
         let bannerAttempts = 0;
         const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png"];
+
         function handleBannerError(img) {
             bannerAttempts++;
             if (bannerAttempts < bannerSources.length) {
@@ -663,54 +807,472 @@
         });
 
         const matchweeks = {
-            1: [["ARS", "COV"], ["HUL", "MUN"], ["EVE", "CRY"], ["IPS", "SUN"], ["NOT", "LEE"], ["BRE", "TOT"], ["BHA", "AVL"], ["MCI", "BOU"], ["NEW", "LIV"], ["FUL", "CHE"]],
-            2: [["BOU", "EVE"], ["AVL", "ARS"], ["CHE", "BHA"], ["COV", "HUL"], ["CRY", "MCI"], ["LEE", "BRE"], ["LIV", "NOT"], ["MUN", "IPS"], ["SUN", "FUL"], ["TOT", "NEW"]],
-            3: [["ARS", "CHE"], ["BRE", "SUN"], ["BHA", "LEE"], ["EVE", "MUN"], ["FUL", "CRY"], ["HUL", "AVL"], ["IPS", "LIV"], ["MCI", "COV"], ["NEW", "BOU"], ["NOT", "TOT"]],
-            4: [["BOU", "BRE"], ["AVL", "NOT"], ["CHE", "HUL"], ["COV", "BHA"], ["CRY", "IPS"], ["LEE", "NEW"], ["LIV", "FUL"], ["MUN", "MCI"], ["SUN", "ARS"], ["TOT", "EVE"]],
-            5: [["BOU", "LIV"], ["BRE", "CHE"], ["BHA", "ARS"], ["EVE", "IPS"], ["FUL", "MUN"], ["LEE", "CRY"], ["MCI", "SUN"], ["NEW", "HUL"], ["NOT", "COV"], ["TOT", "AVL"]],
-            6: [["ARS", "LEE"], ["AVL", "BRE"], ["CHE", "BOU"], ["COV", "NEW"], ["CRY", "NOT"], ["HUL", "EVE"], ["IPS", "FUL"], ["LIV", "MCI"], ["MUN", "TOT"], ["SUN", "BHA"]],
-            7: [["BOU", "SUN"], ["BRE", "LIV"], ["BHA", "CRY"], ["EVE", "CHE"], ["FUL", "HUL"], ["LEE", "MUN"], ["MCI", "IPS"], ["NEW", "AVL"], ["NOT", "ARS"], ["TOT", "COV"]],
-            8: [["ARS", "EVE"], ["AVL", "MCI"], ["CHE", "TOT"], ["COV", "FUL"], ["CRY", "NEW"], ["HUL", "BRE"], ["IPS", "NOT"], ["LIV", "BHA"], ["MUN", "BOU"], ["SUN", "LEE"]],
-            9: [["BOU", "LEE"], ["BRE", "NOT"], ["CHE", "MUN"], ["COV", "SUN"], ["HUL", "IPS"], ["LIV", "ARS"], ["MCI", "BHA"], ["NEW", "EVE"], ["TOT", "CRY"], ["AVL", "FUL"]],
-            10: [["ARS", "HUL"], ["BHA", "BRE"], ["CRY", "LIV"], ["EVE", "COV"], ["FUL", "NEW"], ["IPS", "BOU"], ["LEE", "TOT"], ["MUN", "AVL"], ["NOT", "MCI"], ["SUN", "CHE"]],
-            11: [["BRE", "EVE"], ["CHE", "LEE"], ["COV", "CRY"], ["HUL", "BHA"], ["LIV", "MUN"], ["MCI", "FUL"], ["NEW", "ARS"], ["TOT", "IPS"], ["NOT", "SUN"], ["AVL", "CRY"]],
-            12: [["ARS", "MCI"], ["BHA", "NEW"], ["CRY", "HUL"], ["EVE", "LIV"], ["FUL", "BOU"], ["IPS", "AVL"], ["LEE", "COV"], ["MUN", "BRE"], ["NOT", "CHE"], ["SUN", "TOT"]],
-            13: [["BOU", "BHA"], ["AVL", "EVE"], ["BRE", "ARS"], ["CHE", "CRY"], ["COV", "IPS"], ["HUL", "NOT"], ["LIV", "SUN"], ["MCI", "LEE"], ["NEW", "MUN"], ["TOT", "FUL"]],
-            14: [["BOU", "HUL"], ["AVL", "CRY"], ["BRE", "MCI"], ["CHE", "LIV"], ["EVE", "FUL"], ["LEE", "IPS"], ["MUN", "COV"], ["NEW", "SUN"], ["NOT", "BHA"], ["TOT", "ARS"]],
-            15: [["ARS", "BOU"], ["BHA", "EVE"], ["COV", "AVL"], ["CRY", "MUN"], ["FUL", "BRE"], ["HUL", "TOT"], ["IPS", "NEW"], ["LIV", "LEE"], ["MCI", "CHE"], ["SUN", "NOT"]],
-            16: [["BOU", "COV"], ["ARS", "MUN"], ["BRE", "NEW"], ["BHA", "IPS"], ["CHE", "AVL"], ["LEE", "FUL"], ["LIV", "TOT"], ["MCI", "HUL"], ["NOT", "EVE"], ["SUN", "CRY"]],
-            17: [["AVL", "LEE"], ["COV", "CHE"], ["CRY", "ARS"], ["EVE", "SUN"], ["FUL", "BHA"], ["HUL", "LIV"], ["IPS", "BRE"], ["MUN", "NOT"], ["NEW", "MCI"], ["TOT", "BOU"]],
-            18: [["AVL", "LIV"], ["COV", "BRE"], ["CRY", "BOU"], ["EVE", "MCI"], ["FUL", "ARS"], ["HUL", "LEE"], ["IPS", "CHE"], ["MUN", "SUN"], ["NEW", "NOT"], ["TOT", "BHA"]],
-            19: [["BOU", "AVL"], ["ARS", "IPS"], ["BRE", "CRY"], ["BHA", "MUN"], ["CHE", "NEW"], ["LEE", "EVE"], ["LIV", "COV"], ["MCI", "TOT"], ["NOT", "FUL"], ["SUN", "HUL"]],
-            20: [["ARS", "BRE"], ["BHA", "BOU"], ["CRY", "CHE"], ["EVE", "AVL"], ["FUL", "TOT"], ["IPS", "COV"], ["LEE", "MCI"], ["MUN", "NEW"], ["NOT", "HUL"], ["SUN", "LIV"]],
-            21: [["AVL", "EVE"], ["BRE", "BHA"], ["CHE", "SUN"], ["COV", "LIV"], ["CRY", "BOU"], ["FUL", "MUN"], ["HUL", "NEW"], ["LEE", "ARS"], ["MCI", "IPS"], ["TOT", "LEE"]],
-            22: [["BOU", "NOT"], ["ARS", "LEE"], ["BHA", "MCI"], ["EVE", "HUL"], ["IPS", "AVL"], ["LIV", "NEW"], ["MUN", "FUL"], ["NOT", "BOU"], ["SUN", "COV"], ["TOT", "BRE"]],
-            23: [["AVL", "LIV"], ["BRE", "EVE"], ["CHE", "NEW"], ["COV", "MUN"], ["CRY", "SUN"], ["HUL", "ARS"], ["IPS", "LEE"], ["MCI", "BHA"], ["NOT", "FUL"], ["TOT", "BOU"]],
-            24: [["BOU", "COV"], ["ARS", "AVL"], ["BHA", "LIV"], ["EVE", "NOT"], ["FUL", "IPS"], ["LEE", "HUL"], ["MUN", "CRY"], ["NEW", "TOT"], ["SUN", "BRE"], ["MCI", "LEE"]],
-            25: [["AVL", "BOU"], ["BRE", "CRY"], ["COV", "ARS"], ["HUL", "MCI"], ["IPS", "EVE"], ["LEE", "SUN"], ["LIV", "FUL"], ["MUN", "NEW"], ["NOT", "BHA"], ["TOT", "CHE"]],
-            26: [["BOU", "LEE"], ["BHA", "AVL"], ["CHE", "HUL"], ["CRY", "COV"], ["EVE", "LIV"], ["FUL", "NOT"], ["MCI", "BRE"], ["NEW", "MUN"], ["SUN", "IPS"], ["TOT", "ARS"]],
-            27: [["AVL", "CHE"], ["BRE", "FUL"], ["COV", "CRY"], ["HUL", "BOU"], ["IPS", "BHA"], ["LEE", "EVE"], ["LIV", "MUN"], ["MUN", "MCI"], ["NOT", "SUN"], ["TOT", "NEW"]],
-            28: [["ARS", "NOT"], ["BOU", "BRE"], ["BHA", "HUL"], ["CRY", "AVL"], ["EVE", "LEE"], ["FUL", "LIV"], ["MCI", "TOT"], ["NEW", "IPS"], ["SUN", "MUN"], ["CHE", "COV"]],
-            29: [["ARS", "FUL"], ["AVL", "CHE"], ["BRE", "NEW"], ["COV", "LEE"], ["HUL", "CRY"], ["IPS", "MCI"], ["LIV", "BHA"], ["MUN", "EVE"], ["NOT", "BOU"], ["TOT", "SUN"]],
-            30: [["BOU", "IPS"], ["BHA", "COV"], ["CHE", "ARS"], ["CRY", "MCI"], ["EVE", "BRE"], ["FUL", "HUL"], ["LEE", "AVL"], ["LIV", "NOT"], ["NEW", "FUL"], ["SUN", "TOT"]],
-            31: [["ARS", "CRY"], ["AVL", "LEE"], ["BRE", "FUL"], ["COV", "EVE"], ["HUL", "LIV"], ["IPS", "CHE"], ["MCI", "BHA"], ["NOT", "MUN"], ["TOT", "BOU"], ["NEW", "MCI"]],
-            32: [["BOU", "ARS"], ["BHA", "NOT"], ["CHE", "FUL"], ["CRY", "AVL"], ["EVE", "IPS"], ["FUL", "COV"], ["LEE", "TOT"], ["LIV", "BRE"], ["MUN", "HUL"], ["NEW", "MCI"]],
-            33: [["ARS", "NEW"], ["AVL", "CRY"], ["BRE", "LEE"], ["COV", "BHA"], ["HUL", "CHE"], ["IPS", "BOU"], ["MCI", "LIV"], ["NOT", "EVE"], ["TOT", "MUN"], ["FUL", "NEW"]],
-            34: [["BOU", "AVL"], ["BHA", "IPS"], ["CHE", "BRE"], ["CRY", "FUL"], ["EVE", "ARS"], ["FUL", "LEE"], ["LIV", "TOT"], ["MUN", "COV"], ["NEW", "HUL"], ["NOT", "MCI"]],
-            35: [["ARS", "BHA"], ["AVL", "NOT"], ["BRE", "BOU"], ["COV", "CHE"], ["HUL", "CRY"], ["IPS", "MUN"], ["LEE", "LIV"], ["MCI", "EVE"], ["TOT", "FUL"], ["NEW", "FUL"]],
-            36: [["BOU", "MUN"], ["BHA", "FUL"], ["CHE", "IPS"], ["CRY", "BRE"], ["EVE", "AVL"], ["FUL", "MCI"], ["LIV", "COV"], ["NEW", "LEE"], ["NOT", "TOT"], ["SUN", "ARS"]],
-            37: [["ARS", "LIV"], ["AVL", "SUN"], ["BRE", "HUL"], ["COV", "BOU"], ["IPS", "CRY"], ["LEE", "CHE"], ["MCI", "NEW"], ["MUN", "NOT"], ["TOT", "EVE"], ["FUL", "BHA"]],
-            38: [["BOU", "NOT"], ["BHA", "MUN"], ["CHE", "AVL"], ["CRY", "ARS"], ["EVE", "FUL"], ["HUL", "COV"], ["LEE", "BRE"], ["LIV", "IPS"], ["MCI", "SUN"], ["TOT", "NEW"]]
+            1: [
+                ["ARS", "COV"],
+                ["HUL", "MUN"],
+                ["EVE", "CRY"],
+                ["IPS", "SUN"],
+                ["NOT", "LEE"],
+                ["BRE", "TOT"],
+                ["BHA", "AVL"],
+                ["MCI", "BOU"],
+                ["NEW", "LIV"],
+                ["FUL", "CHE"]
+            ],
+            2: [
+                ["BOU", "EVE"],
+                ["AVL", "ARS"],
+                ["CHE", "BHA"],
+                ["COV", "HUL"],
+                ["CRY", "MCI"],
+                ["LEE", "BRE"],
+                ["LIV", "NOT"],
+                ["MUN", "IPS"],
+                ["SUN", "FUL"],
+                ["TOT", "NEW"]
+            ],
+            3: [
+                ["ARS", "CHE"],
+                ["BRE", "SUN"],
+                ["BHA", "LEE"],
+                ["EVE", "MUN"],
+                ["FUL", "CRY"],
+                ["HUL", "AVL"],
+                ["IPS", "LIV"],
+                ["MCI", "COV"],
+                ["NEW", "BOU"],
+                ["NOT", "TOT"]
+            ],
+            4: [
+                ["BOU", "BRE"],
+                ["AVL", "NOT"],
+                ["CHE", "HUL"],
+                ["COV", "BHA"],
+                ["CRY", "IPS"],
+                ["LEE", "NEW"],
+                ["LIV", "FUL"],
+                ["MUN", "MCI"],
+                ["SUN", "ARS"],
+                ["TOT", "EVE"]
+            ],
+            5: [
+                ["BOU", "LIV"],
+                ["BRE", "CHE"],
+                ["BHA", "ARS"],
+                ["EVE", "IPS"],
+                ["FUL", "MUN"],
+                ["LEE", "CRY"],
+                ["MCI", "SUN"],
+                ["NEW", "HUL"],
+                ["NOT", "COV"],
+                ["TOT", "AVL"]
+            ],
+            6: [
+                ["ARS", "LEE"],
+                ["AVL", "BRE"],
+                ["CHE", "BOU"],
+                ["COV", "NEW"],
+                ["CRY", "NOT"],
+                ["HUL", "EVE"],
+                ["IPS", "FUL"],
+                ["LIV", "MCI"],
+                ["MUN", "TOT"],
+                ["SUN", "BHA"]
+            ],
+            7: [
+                ["BOU", "SUN"],
+                ["BRE", "LIV"],
+                ["BHA", "CRY"],
+                ["EVE", "CHE"],
+                ["FUL", "HUL"],
+                ["LEE", "MUN"],
+                ["MCI", "IPS"],
+                ["NEW", "AVL"],
+                ["NOT", "ARS"],
+                ["TOT", "COV"]
+            ],
+            8: [
+                ["ARS", "EVE"],
+                ["AVL", "MCI"],
+                ["CHE", "TOT"],
+                ["COV", "FUL"],
+                ["CRY", "NEW"],
+                ["HUL", "BRE"],
+                ["IPS", "NOT"],
+                ["LIV", "BHA"],
+                ["MUN", "BOU"],
+                ["SUN", "LEE"]
+            ],
+            9: [
+                ["BOU", "LEE"],
+                ["BRE", "NOT"],
+                ["CHE", "MUN"],
+                ["COV", "SUN"],
+                ["HUL", "IPS"],
+                ["LIV", "ARS"],
+                ["MCI", "BHA"],
+                ["NEW", "EVE"],
+                ["TOT", "CRY"],
+                ["AVL", "FUL"]
+            ],
+            10: [
+                ["ARS", "HUL"],
+                ["BHA", "BRE"],
+                ["CRY", "LIV"],
+                ["EVE", "COV"],
+                ["FUL", "NEW"],
+                ["IPS", "BOU"],
+                ["LEE", "TOT"],
+                ["MUN", "AVL"],
+                ["NOT", "MCI"],
+                ["SUN", "CHE"]
+            ],
+            11: [
+                ["BRE", "EVE"],
+                ["CHE", "LEE"],
+                ["COV", "CRY"],
+                ["HUL", "BHA"],
+                ["LIV", "MUN"],
+                ["MCI", "FUL"],
+                ["NEW", "ARS"],
+                ["TOT", "IPS"],
+                ["NOT", "SUN"],
+                ["AVL", "CRY"]
+            ],
+            12: [
+                ["ARS", "MCI"],
+                ["BHA", "NEW"],
+                ["CRY", "HUL"],
+                ["EVE", "LIV"],
+                ["FUL", "BOU"],
+                ["IPS", "AVL"],
+                ["LEE", "COV"],
+                ["MUN", "BRE"],
+                ["NOT", "CHE"],
+                ["SUN", "TOT"]
+            ],
+            13: [
+                ["BOU", "BHA"],
+                ["AVL", "EVE"],
+                ["BRE", "ARS"],
+                ["CHE", "CRY"],
+                ["COV", "IPS"],
+                ["HUL", "NOT"],
+                ["LIV", "SUN"],
+                ["MCI", "LEE"],
+                ["NEW", "MUN"],
+                ["TOT", "FUL"]
+            ],
+            14: [
+                ["BOU", "HUL"],
+                ["AVL", "CRY"],
+                ["BRE", "MCI"],
+                ["CHE", "LIV"],
+                ["EVE", "FUL"],
+                ["LEE", "IPS"],
+                ["MUN", "COV"],
+                ["NEW", "SUN"],
+                ["NOT", "BHA"],
+                ["TOT", "ARS"]
+            ],
+            15: [
+                ["ARS", "BOU"],
+                ["BHA", "EVE"],
+                ["COV", "AVL"],
+                ["CRY", "MUN"],
+                ["FUL", "BRE"],
+                ["HUL", "TOT"],
+                ["IPS", "NEW"],
+                ["LIV", "LEE"],
+                ["MCI", "CHE"],
+                ["SUN", "NOT"]
+            ],
+            16: [
+                ["BOU", "COV"],
+                ["ARS", "MUN"],
+                ["BRE", "NEW"],
+                ["BHA", "IPS"],
+                ["CHE", "AVL"],
+                ["LEE", "FUL"],
+                ["LIV", "TOT"],
+                ["MCI", "HUL"],
+                ["NOT", "EVE"],
+                ["SUN", "CRY"]
+            ],
+            17: [
+                ["AVL", "LEE"],
+                ["COV", "CHE"],
+                ["CRY", "ARS"],
+                ["EVE", "SUN"],
+                ["FUL", "BHA"],
+                ["HUL", "LIV"],
+                ["IPS", "BRE"],
+                ["MUN", "NOT"],
+                ["NEW", "MCI"],
+                ["TOT", "BOU"]
+            ],
+            18: [
+                ["AVL", "LIV"],
+                ["COV", "BRE"],
+                ["CRY", "BOU"],
+                ["EVE", "MCI"],
+                ["FUL", "ARS"],
+                ["HUL", "LEE"],
+                ["IPS", "CHE"],
+                ["MUN", "SUN"],
+                ["NEW", "NOT"],
+                ["TOT", "BHA"]
+            ],
+            19: [
+                ["BOU", "AVL"],
+                ["ARS", "IPS"],
+                ["BRE", "CRY"],
+                ["BHA", "MUN"],
+                ["CHE", "NEW"],
+                ["LEE", "EVE"],
+                ["LIV", "COV"],
+                ["MCI", "TOT"],
+                ["NOT", "FUL"],
+                ["SUN", "HUL"]
+            ],
+            20: [
+                ["ARS", "BRE"],
+                ["BHA", "BOU"],
+                ["CRY", "CHE"],
+                ["EVE", "AVL"],
+                ["FUL", "TOT"],
+                ["IPS", "COV"],
+                ["LEE", "MCI"],
+                ["MUN", "NEW"],
+                ["NOT", "HUL"],
+                ["SUN", "LIV"]
+            ],
+            21: [
+                ["AVL", "EVE"],
+                ["BRE", "BHA"],
+                ["CHE", "SUN"],
+                ["COV", "LIV"],
+                ["CRY", "BOU"],
+                ["FUL", "MUN"],
+                ["HUL", "NEW"],
+                ["LEE", "ARS"],
+                ["MCI", "IPS"],
+                ["TOT", "LEE"]
+            ],
+            22: [
+                ["BOU", "NOT"],
+                ["ARS", "LEE"],
+                ["BHA", "MCI"],
+                ["EVE", "HUL"],
+                ["IPS", "AVL"],
+                ["LIV", "NEW"],
+                ["MUN", "FUL"],
+                ["NOT", "BOU"],
+                ["SUN", "COV"],
+                ["TOT", "BRE"]
+            ],
+            23: [
+                ["AVL", "LIV"],
+                ["BRE", "EVE"],
+                ["CHE", "NEW"],
+                ["COV", "MUN"],
+                ["CRY", "SUN"],
+                ["HUL", "ARS"],
+                ["IPS", "LEE"],
+                ["MCI", "BHA"],
+                ["NOT", "FUL"],
+                ["TOT", "BOU"]
+            ],
+            24: [
+                ["BOU", "COV"],
+                ["ARS", "AVL"],
+                ["BHA", "LIV"],
+                ["EVE", "NOT"],
+                ["FUL", "IPS"],
+                ["LEE", "HUL"],
+                ["MUN", "CRY"],
+                ["NEW", "TOT"],
+                ["SUN", "BRE"],
+                ["MCI", "LEE"]
+            ],
+            25: [
+                ["AVL", "BOU"],
+                ["BRE", "CRY"],
+                ["COV", "ARS"],
+                ["HUL", "MCI"],
+                ["IPS", "EVE"],
+                ["LEE", "SUN"],
+                ["LIV", "FUL"],
+                ["MUN", "NEW"],
+                ["NOT", "BHA"],
+                ["TOT", "CHE"]
+            ],
+            26: [
+                ["BOU", "LEE"],
+                ["BHA", "AVL"],
+                ["CHE", "HUL"],
+                ["CRY", "COV"],
+                ["EVE", "LIV"],
+                ["FUL", "NOT"],
+                ["MCI", "BRE"],
+                ["NEW", "MUN"],
+                ["SUN", "IPS"],
+                ["TOT", "ARS"]
+            ],
+            27: [
+                ["AVL", "CHE"],
+                ["BRE", "FUL"],
+                ["COV", "CRY"],
+                ["HUL", "BOU"],
+                ["IPS", "BHA"],
+                ["LEE", "EVE"],
+                ["LIV", "MUN"],
+                ["MUN", "MCI"],
+                ["NOT", "SUN"],
+                ["TOT", "NEW"]
+            ],
+            28: [
+                ["ARS", "NOT"],
+                ["BOU", "BRE"],
+                ["BHA", "HUL"],
+                ["CRY", "AVL"],
+                ["EVE", "LEE"],
+                ["FUL", "LIV"],
+                ["MCI", "TOT"],
+                ["NEW", "IPS"],
+                ["SUN", "MUN"],
+                ["CHE", "COV"]
+            ],
+            29: [
+                ["ARS", "FUL"],
+                ["AVL", "CHE"],
+                ["BRE", "NEW"],
+                ["COV", "LEE"],
+                ["HUL", "CRY"],
+                ["IPS", "MCI"],
+                ["LIV", "BHA"],
+                ["MUN", "EVE"],
+                ["NOT", "BOU"],
+                ["TOT", "SUN"]
+            ],
+            30: [
+                ["BOU", "IPS"],
+                ["BHA", "COV"],
+                ["CHE", "ARS"],
+                ["CRY", "MCI"],
+                ["EVE", "BRE"],
+                ["FUL", "HUL"],
+                ["LEE", "AVL"],
+                ["LIV", "NOT"],
+                ["NEW", "FUL"],
+                ["SUN", "TOT"]
+            ],
+            31: [
+                ["ARS", "CRY"],
+                ["AVL", "LEE"],
+                ["BRE", "FUL"],
+                ["COV", "EVE"],
+                ["HUL", "LIV"],
+                ["IPS", "CHE"],
+                ["MCI", "BHA"],
+                ["NOT", "MUN"],
+                ["TOT", "BOU"],
+                ["NEW", "MCI"]
+            ],
+            32: [
+                ["BOU", "ARS"],
+                ["BHA", "NOT"],
+                ["CHE", "FUL"],
+                ["CRY", "AVL"],
+                ["EVE", "IPS"],
+                ["FUL", "COV"],
+                ["LEE", "TOT"],
+                ["LIV", "BRE"],
+                ["MUN", "HUL"],
+                ["NEW", "MCI"]
+            ],
+            33: [
+                ["ARS", "NEW"],
+                ["AVL", "CRY"],
+                ["BRE", "LEE"],
+                ["COV", "BHA"],
+                ["HUL", "CHE"],
+                ["IPS", "BOU"],
+                ["MCI", "LIV"],
+                ["NOT", "EVE"],
+                ["TOT", "MUN"],
+                ["FUL", "NEW"]
+            ],
+            34: [
+                ["BOU", "AVL"],
+                ["BHA", "IPS"],
+                ["CHE", "BRE"],
+                ["CRY", "FUL"],
+                ["EVE", "ARS"],
+                ["FUL", "LEE"],
+                ["LIV", "TOT"],
+                ["MUN", "COV"],
+                ["NEW", "HUL"],
+                ["NOT", "MCI"]
+            ],
+            35: [
+                ["ARS", "BHA"],
+                ["AVL", "NOT"],
+                ["BRE", "BOU"],
+                ["COV", "CHE"],
+                ["HUL", "CRY"],
+                ["IPS", "MUN"],
+                ["LEE", "LIV"],
+                ["MCI", "EVE"],
+                ["TOT", "FUL"],
+                ["NEW", "FUL"]
+            ],
+            36: [
+                ["BOU", "MUN"],
+                ["BHA", "FUL"],
+                ["CHE", "IPS"],
+                ["CRY", "BRE"],
+                ["EVE", "AVL"],
+                ["FUL", "MCI"],
+                ["LIV", "COV"],
+                ["NEW", "LEE"],
+                ["NOT", "TOT"],
+                ["SUN", "ARS"]
+            ],
+            37: [
+                ["ARS", "LIV"],
+                ["AVL", "SUN"],
+                ["BRE", "HUL"],
+                ["COV", "BOU"],
+                ["IPS", "CRY"],
+                ["LEE", "CHE"],
+                ["MCI", "NEW"],
+                ["MUN", "NOT"],
+                ["TOT", "EVE"],
+                ["FUL", "BHA"]
+            ],
+            38: [
+                ["BOU", "NOT"],
+                ["BHA", "MUN"],
+                ["CHE", "AVL"],
+                ["CRY", "ARS"],
+                ["EVE", "FUL"],
+                ["HUL", "COV"],
+                ["LEE", "BRE"],
+                ["LIV", "IPS"],
+                ["MCI", "SUN"],
+                ["TOT", "NEW"]
+            ]
         };
 
         function initRoundDropdown() {
             const select = document.getElementById('roundSelect');
             select.innerHTML = '';
-            for(let i=1; i<=38; i++) {
+            for (let i = 1; i <= 38; i++) {
                 let opt = document.createElement('option');
                 opt.value = i;
                 opt.innerText = `الجولة ${i}`;
-                if(i === currentRound) opt.selected = true;
+                if (i === currentRound) opt.selected = true;
                 select.appendChild(opt);
             }
         }
@@ -724,9 +1286,9 @@
             activeTab = tabName;
             document.getElementById('fixturesToggleBtn').classList.toggle('active', tabName === 'fixtures');
             document.getElementById('standingsToggleBtn').classList.toggle('active', tabName === 'standings');
-            
+
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            if(tabName === 'standings') {
+            if (tabName === 'standings') {
                 renderStandings();
                 document.getElementById('standingsTab').classList.add('active');
             } else {
@@ -750,18 +1312,18 @@
 
         function toggleEditMode() {
             const btn = document.getElementById('editToggleBtn');
-            
+
             if (!editMode) {
                 editMode = true;
                 btn.innerText = "حفظ";
                 renderFixtures();
                 return;
             }
-            
+
             if (isSaving) return;
-            
+
             showToast("جاري الحفظ...", false);
-            
+
             const matches = matchweeks[currentRound] || [];
             matches.forEach((match, idx) => {
                 const homeInput = document.getElementById(`home_r${currentRound}_m${idx}`);
@@ -802,7 +1364,7 @@
             for (let r = 1; r <= targetRound; r++) {
                 let roundMatches = matchweeks[r];
                 if (!roundMatches) continue;
-                
+
                 roundMatches.forEach((match, idx) => {
                     let hKey = match[0];
                     let aKey = match[1];
@@ -835,10 +1397,21 @@
             return calculateStandingsUpToRound(currentRound);
         }
 
+        // دالة مساعدة للحصول على أيقونة السهم (نص بديل في حال عدم وجود الصور)
+        function getIndicatorIcon(position, oldPos) {
+            if (position < oldPos) {
+                return '▲'; // سهم أخضر (صعود)
+            } else if (position > oldPos) {
+                return '▼'; // سهم أحمر (نزول)
+            } else {
+                return '▬'; // خط أصفر (بقاء)
+            }
+        }
+
         function renderStandings() {
             const tbody = document.getElementById('standingsBody');
             tbody.innerHTML = '';
-            
+
             let sortedTeams = calculateStandings();
 
             let prevRanks = {};
@@ -852,42 +1425,48 @@
             sortedTeams.forEach((team, index) => {
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
                 let position = index + 1;
-                
+
+                // تحديد لون الخط الفاصل بين الصفوف
                 let rowClass = '';
                 if (position === 1) {
-                    rowClass = 'glow-green';
+                    rowClass = 'glow-green'; // أخضر بين المركز 1 و 2
                 } else if (position === 17) {
-                    rowClass = 'glow-red';
+                    rowClass = 'glow-red'; // أحمر بين المركز 17 و 18
                 }
 
-                let indicatorImgHtml = '';
+                let indicatorHtml = '';
                 if (currentRound >= 3 && prevRanks[team.key] !== undefined) {
                     let oldPos = prevRanks[team.key];
-                    if (position < oldPos) {
-                        indicatorImgHtml = `<img src="arrow_up_green.png" class="pos-indicator-img" alt="Up">`;
-                    } else if (position > oldPos) {
-                        indicatorImgHtml = `<img src="arrow_down_red.png" class="pos-indicator-img" alt="Down">`;
-                    } else {
-                        indicatorImgHtml = `<img src="equal_yellow.png" class="pos-indicator-img" alt="Same">`;
-                    }
+                    let icon = getIndicatorIcon(position, oldPos);
+                    let color = '';
+                    if (position < oldPos) color = '#00ff87';
+                    else if (position > oldPos) color = '#ff005a';
+                    else color = '#ffcc00';
+
+                    // استخدام صورة إذا كانت موجودة، وإلا استخدام النص
+                    const imgSrc = position < oldPos ? 'arrow_up_green.png' :
+                        position > oldPos ? 'arrow_down_red.png' :
+                        'equal_yellow.png';
+
+                    indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="indicator" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\\'color:${color};font-size:18px;\\'>${icon}</span>'">`;
                 }
-                
+
                 tbody.innerHTML += `
-                    <tr class="${rowClass}">
-                        <td>
-                            <div class="pos-container">
-                                ${indicatorImgHtml}
-                                <span style="font-weight:900;">${position}</span>
-                            </div>
-                        </td>
-                        <td class="team-cell">
-                            <img src="${teamInfo.logo}" alt="${teamInfo.name}">
-                            ${teamInfo.name}
-                        </td>
-                        <td>${team.gf}</td>
-                        <td style="color:#7138f5; font-size:12px;">${team.pts}</td>
-                    </tr>
-                `;
+                        <tr class="${rowClass}">
+                            <td>
+                                <div class="pos-container">
+                                    ${indicatorHtml}
+                                    <span class="pos-number">${position}</span>
+                                </div>
+                            </td>
+                            <td class="team-cell">
+                                <img src="${teamInfo.logo}" alt="${teamInfo.name}" onerror="this.style.display='none'">
+                                ${teamInfo.name}
+                            </td>
+                            <td>${team.gf}</td>
+                            <td style="color:#7138f5; font-size:15px; font-weight:900;">${team.pts}</td>
+                        </tr>
+                    `;
             });
         }
 
@@ -906,37 +1485,37 @@
                 let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
 
                 let scoreContent = editMode ? `
-                    <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
-                    <span style="font-weight:900; color:#fff;">:</span>
-                    <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
-                ` : `
-                    <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
-                    <span class="vs-text">VS</span>
-                    <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
-                `;
+                        <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
+                        <span style="font-weight:900; color:#fff;">:</span>
+                        <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
+                    ` : `
+                        <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
+                        <span class="vs-text">VS</span>
+                        <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
+                    `;
 
                 list.innerHTML += `
-                    <div class="fixture-row">
-                        <div class="team-box home">
-                            <span>${home.name}</span>
-                            <img src="${home.logo}">
+                        <div class="fixture-row">
+                            <div class="team-box home">
+                                <span>${home.name}</span>
+                                <img src="${home.logo}" onerror="this.style.display='none'">
+                            </div>
+                            <div class="match-score-center">
+                                ${scoreContent}
+                            </div>
+                            <div class="team-box away">
+                                <img src="${away.logo}" onerror="this.style.display='none'">
+                                <span>${away.name}</span>
+                            </div>
                         </div>
-                        <div class="match-score-center">
-                            ${scoreContent}
-                        </div>
-                        <div class="team-box away">
-                            <img src="${away.logo}">
-                            <span>${away.name}</span>
-                        </div>
-                    </div>
-                `;
+                    `;
             });
         }
 
         function changeRound(step) {
             currentRound += step;
-            if(currentRound < 1) currentRound = 1;
-            if(currentRound > 38) currentRound = 38;
+            if (currentRound < 1) currentRound = 1;
+            if (currentRound > 38) currentRound = 38;
             renderFixtures();
         }
 
@@ -944,27 +1523,91 @@
             const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
             const element = document.getElementById(targetId);
 
+            // عرض رسالة "جاري التحضير"
+            showToast("جاري تحضير الصورة عالية الدقة...", false);
+
+            // استخدام scale عالي جداً للحصول على دقة ممتازة (مناسب للآيباد)
+            const scaleFactor = window.devicePixelRatio >= 2 ? 4 : 3;
+
             html2canvas(element, {
                 backgroundColor: activeTab === 'fixtures' ? null : "#ffffff",
-                scale: 2,
-                useCORS: true
+                scale: scaleFactor,
+                useCORS: true,
+                allowTaint: true,
+                logging: false,
+                width: element.scrollWidth,
+                height: element.scrollHeight,
+                onclone: function(clonedDoc) {
+                    // تحسين إضافي للخطوط في النسخة المنسوخة
+                    const clonedElement = clonedDoc.getElementById(targetId);
+                    if (clonedElement) {
+                        clonedElement.style.transform = 'none';
+                    }
+                }
             }).then(canvas => {
+                // تحويل إلى blob بدقة عالية
                 canvas.toBlob(function(blob) {
-                    let link = document.createElement('a');
-                    link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings_GW${currentRound}.png`;
-                    link.href = URL.createObjectURL(blob);
-                    link.click();
-                    URL.revokeObjectURL(link.href);
-                }, 'image/png');
+                    if (!blob) {
+                        showToast("فشل في إنشاء الصورة!", false);
+                        return;
+                    }
+
+                    // محاولة حفظ الصورة في ألبوم الآيباد باستخدام navigator.share
+                    if (navigator.share) {
+                        const file = new File([blob], activeTab === 'fixtures' ?
+                            `Matchweek_${currentRound}.png` :
+                            `League_Standings_GW${currentRound}.png`, { type: 'image/png' });
+
+                        navigator.share({
+                            title: activeTab === 'fixtures' ?
+                                `نتائج الجولة ${currentRound}` :
+                                `ترتيب الدوري - الجولة ${currentRound}`,
+                            files: [file]
+                        }).then(() => {
+                            showToast("تم حفظ الصورة في الألبوم ✓", true);
+                        }).catch((err) => {
+                            // إذا ألغى المستخدم المشاركة، نستخدم الطريقة الاحتياطية
+                            if (err.name !== 'AbortError') {
+                                fallbackDownload(blob);
+                            } else {
+                                showToast("تم الإلغاء", false);
+                            }
+                        });
+                    } else {
+                        // الطريقة الاحتياطية (تحميل عبر الرابط)
+                        fallbackDownload(blob);
+                    }
+                }, 'image/png', 1.0); // جودة 100%
+            }).catch(err => {
+                console.error('html2canvas error:', err);
+                showToast("حدث خطأ أثناء تحضير الصورة!", false);
             });
         }
 
+        // وظيفة احتياطية للحفظ عبر الرابط (في حال عدم دعم المشاركة)
+        function fallbackDownload(blob) {
+            const link = document.createElement('a');
+            link.download = activeTab === 'fixtures' ?
+                `Matchweek_${currentRound}.png` :
+                `League_Standings_GW${currentRound}.png`;
+            link.href = URL.createObjectURL(blob);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => {
+                URL.revokeObjectURL(link.href);
+                showToast("تم تحميل الصورة (احتياطي) ✓", true);
+            }, 100);
+        }
+
+        // حفظ تلقائي كل 5 ثوانٍ
         setInterval(() => {
             if (Object.keys(scoresStorage).length > 0) {
                 localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
             }
         }, 5000);
 
+        // تهيئة الصفحة
         initRoundDropdown();
         renderFixtures();
         renderStandings();
