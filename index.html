@@ -395,7 +395,7 @@
             width: 100%; 
             border-collapse: collapse; 
             text-align: center; 
-            font-size: 12px; 
+            font-size: 13px; 
             color: #333; 
             display: table !important;
             min-width: 320px;
@@ -403,25 +403,31 @@
         
         th { 
             font-family: var(--font-en); 
-            background-color: transparent; 
+            background-color: #e8eaed;
             color: #38003c; 
             padding: 10px 6px; 
             font-weight: 900; 
             border-bottom: 2px solid #38003c; 
             font-size: 13px;
+            border-top: none;
         }
 
         td { 
             font-family: var(--font-en); 
-            padding: 8px 6px; 
-            border-bottom: 1px solid #e2e8f0; 
+            padding: 10px 6px; 
+            border-bottom: 1px solid #d1d5db;
             font-weight: 800; 
             font-size: 13px;
             transition: all 0.2s ease;
+            background-color: #ffffff;
         }
         
-        tr:hover {
-            background-color: rgba(113, 56, 245, 0.05);
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:hover td {
+            background-color: #f3f4f6;
         }
         
         .team-cell { 
@@ -434,51 +440,44 @@
             color: #1a1a1a;
             font-size: 13px;
             padding: 8px 5px;
+            gap: 8px;
         }
         
         .team-cell img { 
-            width: 22px; 
-            height: 22px; 
-            margin-left: 8px; 
+            width: 24px; 
+            height: 24px; 
             object-fit: contain;
             background: transparent;
             border-radius: 0;
             padding: 0;
+            flex-shrink: 0;
         }
 
         .pos-container {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
         }
 
         .pos-container span {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 900;
+            min-width: 20px;
         }
 
         .pos-indicator-img {
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             object-fit: contain;
             vertical-align: middle;
-            margin-left: 3px;
-        }
-
-        .glow-green {
-            border-bottom: 2px solid #00ff87;
-            box-shadow: 0 4px 20px rgba(0, 255, 135, 0.8);
-            transition: 0.3s ease;
-        }
-
-        .glow-red {
-            border-bottom: 2px solid #ff005a;
-            box-shadow: 0 4px 20px rgba(255, 0, 90, 0.8);
-            transition: 0.3s ease;
         }
 
         .glow-green td:first-child {
+            color: #00b894;
+        }
+
+        .glow-green td:first-child .pos-container span {
             color: #00b894;
         }
 
@@ -486,9 +485,14 @@
             color: #ff005a;
         }
 
+        .glow-red td:first-child .pos-container span {
+            color: #ff005a;
+        }
+
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
+        /* تحسينات الجوال */
         @media screen and (max-width: 600px) {
             body { padding: 0 5px; }
             .banner-container { border-width: 3px; border-radius: 16px; }
@@ -541,13 +545,11 @@
             .standings-card { padding: 5px 0; }
             table { font-size: 11px; display: table !important; width: 100%; min-width: 280px; }
             th { font-size: 11px; padding: 8px 4px; }
-            td { font-size: 11px; padding: 6px 4px; }
-            .team-cell { font-size: 11px; padding: 6px 4px; }
-            .team-cell img { width: 18px; height: 18px; margin-left: 6px; }
-            .pos-container span { font-size: 13px; }
-            .pos-indicator-img { width: 16px; height: 16px; margin-left: 2px; }
-            .glow-green, .glow-red { border-bottom-width: 2px; box-shadow: 0 2px 12px rgba(0, 255, 135, 0.6); }
-            .glow-red { box-shadow: 0 2px 12px rgba(255, 0, 90, 0.6); }
+            td { font-size: 11px; padding: 8px 4px; }
+            .team-cell { font-size: 11px; padding: 6px 4px; gap: 4px; }
+            .team-cell img { width: 18px; height: 18px; }
+            .pos-container span { font-size: 14px; min-width: 16px; }
+            .pos-indicator-img { width: 20px; height: 20px; }
         }
     </style>
 </head>
@@ -571,11 +573,9 @@
 
     <div class="header">
         <div class="round-nav-container">
-            <button class="nav-arrow-btn" onclick="changeRound(-5)">«</button>
             <button class="nav-arrow-btn" onclick="changeRound(-1)">‹</button>
             <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
-            <button class="nav-arrow-btn" onclick="changeRound(5)">»</button>
         </div>
     </div>
 
@@ -657,26 +657,26 @@
         }
 
         const teamsMap = {
-            "ARS": { name: "Arsenal", logo: "arsenal.png.WEBP" },
-            "AVL": { name: "Aston Villa", logo: "aston_villa.png.WEBP" },
-            "BOU": { name: "Bournemouth", logo: "bournemouth.png.WEBP" },
-            "BRE": { name: "Brentford", logo: "brentford.png.PNG" },
-            "BHA": { name: "Brighton", logo: "brighton.png.WEBP" },
-            "CHE": { name: "Chelsea", logo: "chelsea.png.WEBP" },
-            "COV": { name: "Coventry", logo: "coventry.png.WEBP" },
-            "CRY": { name: "Crystal Palace", logo: "crystal_palace.png.WEBP" },
-            "EVE": { name: "Everton", logo: "everton.png.WEBP" },
-            "FUL": { name: "Fulham", logo: "fulham.png.WEBP" },
-            "HUL": { name: "Hull", logo: "hull.png.WEBP" },
-            "IPS": { name: "Ipswich", logo: "ipswich.png.WEBP" },
-            "LEE": { name: "Leeds", logo: "leeds.png.WEBP" },
-            "LIV": { name: "Liverpool", logo: "liverpool.png.WEBP" },
-            "MCI": { name: "Man City", logo: "man_city.png.WEBP" },
-            "MUN": { name: "Man Utd", logo: "man_utd.png.WEBP" },
-            "NEW": { name: "Newcastle", logo: "newcastle.png.WEBP" },
-            "NOT": { name: "Nott'm Forest", logo: "forest.png.PNG" },
-            "SUN": { name: "Sunderland", logo: "sunderland.png.WEBP" },
-            "TOT": { name: "Spurs", logo: "tottenham.png.WEBP" }
+            "ARS": { name: "Arsenal", logo: "arsenal.png" },
+            "AVL": { name: "Aston Villa", logo: "aston_villa.png" },
+            "BOU": { name: "Bournemouth", logo: "bournemouth.png" },
+            "BRE": { name: "Brentford", logo: "brentford.png" },
+            "BHA": { name: "Brighton", logo: "brighton.png" },
+            "CHE": { name: "Chelsea", logo: "chelsea.png" },
+            "COV": { name: "Coventry", logo: "coventry.png" },
+            "CRY": { name: "Crystal Palace", logo: "crystal_palace.png" },
+            "EVE": { name: "Everton", logo: "everton.png" },
+            "FUL": { name: "Fulham", logo: "fulham.png" },
+            "HUL": { name: "Hull", logo: "hull.png" },
+            "IPS": { name: "Ipswich", logo: "ipswich.png" },
+            "LEE": { name: "Leeds", logo: "leeds.png" },
+            "LIV": { name: "Liverpool", logo: "liverpool.png" },
+            "MCI": { name: "Man City", logo: "man_city.png" },
+            "MUN": { name: "Man Utd", logo: "man_utd.png" },
+            "NEW": { name: "Newcastle", logo: "newcastle.png" },
+            "NOT": { name: "Nott'm Forest", logo: "forest.png" },
+            "SUN": { name: "Sunderland", logo: "sunderland.png" },
+            "TOT": { name: "Spurs", logo: "tottenham.png" }
         };
 
         const initialBasePoints = {};
@@ -822,6 +822,7 @@
                 val = sanitized;
             }
             scoresStorage[`r${round}_m${idx}_${type}`] = val;
+            localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
         }
 
         function calculateStandingsUpToRound(targetRound) {
@@ -988,35 +989,6 @@
                     URL.revokeObjectURL(link.href);
                 }, 'image/png');
             });
-        }
-
-        function exportResults() {
-            let csv = "Round,Home,Away,HomeScore,AwayScore\n";
-            for (let r = 1; r <= 38; r++) {
-                const matches = matchweeks[r] || [];
-                matches.forEach((match, idx) => {
-                    const homeScore = scoresStorage[`r${r}_m${idx}_home`] || '';
-                    const awayScore = scoresStorage[`r${r}_m${idx}_away`] || '';
-                    csv += `${r},${match[0]},${match[1]},${homeScore},${awayScore}\n`;
-                });
-            }
-            
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const link = document.createElement('a');
-            link.download = 'premier_league_results.csv';
-            link.href = URL.createObjectURL(blob);
-            link.click();
-            showToast('تم تصدير البيانات', true);
-        }
-
-        function resetAllData() {
-            if (confirm('⚠️ هل أنت متأكد من مسح جميع النتائج؟')) {
-                scoresStorage = {};
-                localStorage.removeItem('fpl_scores');
-                renderFixtures();
-                renderStandings();
-                showToast('تم مسح جميع البيانات', true);
-            }
         }
 
         setInterval(() => {
