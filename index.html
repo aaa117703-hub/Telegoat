@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TELEGRAM GOAT - Premier League</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- استدعاء مكتبة Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @font-face {
             font-family: 'SultanCustom';
@@ -453,6 +451,22 @@
             transition: 0.3s ease;
         }
 
+        /* حاوية أيقونات مؤشر الترتيب بضبط محاذاة عمودية وحجم ثابت متناسق */
+        .pos-container {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .pos-indicator-img {
+            width: 14px;
+            height: 14px;
+            object-fit: contain;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
@@ -470,15 +484,18 @@
             .team-box { font-size: 10px !important; width: 34%; letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
             .team-box img { width: 18px; height: 18px; margin: 0 3px; }
             .match-score-center { width: 24%; min-width: 50px; padding: 3px 4px; }
-            .score-display { font-size: 14px; }
+            
+            .score-display { font-size: 14px; } 
             .vs-text { font-size: 12px; }
             .score-input { width: 26px; height: 18px; font-size: 10px; }
+            
             #captureStandings {
                 flex-direction: column;
                 border-radius: 16px;
                 border-width: 3px;
                 overflow: hidden;
             }
+            
             .standings-sidebar {
                 width: 100%;
                 flex-direction: row;
@@ -488,9 +505,11 @@
                 border-radius: 16px 16px 0 0;
                 min-height: 100px;
             }
+            
             .standings-sidebar img {
                 max-width: 170px;
             }
+            
             .standings-content-area {
                 min-width: unset;
                 width: 100%;
@@ -499,6 +518,7 @@
                 display: block !important;
                 border-radius: 0 0 16px 16px;
             }
+            
             .standings-card { padding: 5px 0; }
             table { font-size: 10px; display: table !important; width: 100%; }
             th { font-size: 10px; padding: 6px 4px; }
@@ -507,6 +527,7 @@
             .team-cell img { width: 16px; height: 16px; margin-left: 4px; }
             .glow-green, .glow-red { border-bottom-width: 2px; box-shadow: 0 2px 12px rgba(0, 255, 135, 0.6); }
             .glow-red { box-shadow: 0 2px 12px rgba(255, 0, 90, 0.6); }
+            .pos-indicator-img { width: 12px; height: 12px; }
         }
     </style>
 </head>
@@ -573,11 +594,6 @@
     </div>
 
     <script>
-        // إعدادات اتصال Supabase
-        const SUPABASE_URL = 'https://qzsteswrannqsrnlytzl.supabase.co';
-        const SUPABASE_ANON_KEY = 'Sb_publishable_Qa5O7t1wbhPhnTLBtHEfQg_hYYNdxYJ';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         let editMode = false;
         let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
         let currentRound = 1;
@@ -717,7 +733,7 @@
 
         function unlockEditWithPassword() {
             const pass = prompt("أدخل رمز الحماية لتفعيل زر التعديل:");
-            if (pass === "1000") {
+            if (pass === "1999") {
                 editMode = true;
                 const editBtn = document.getElementById('editToggleBtn');
                 editBtn.style.setProperty('display', 'inline-flex', 'important');
@@ -774,18 +790,21 @@
             scoresStorage[`r${round}_m${idx}_${type}`] = val;
         }
 
-        function calculateStandings() {
+        function calculateStandingsUpToRound(targetRound) {
             let calculated = {};
             for (let teamKey in initialBasePoints) {
                 calculated[teamKey] = { key: teamKey, gf: 0, pts: 0 };
             }
 
-            for (let round in matchweeks) {
-                matchweeks[round].forEach((match, idx) => {
+            for (let r = 1; r <= targetRound; r++) {
+                let roundMatches = matchweeks[r];
+                if (!roundMatches) continue;
+                
+                roundMatches.forEach((match, idx) => {
                     let hKey = match[0];
                     let aKey = match[1];
-                    let hVal = scoresStorage[`r${round}_m${idx}_home`];
-                    let aVal = scoresStorage[`r${round}_m${idx}_away`];
+                    let hVal = scoresStorage[`r${r}_m${idx}_home`];
+                    let aVal = scoresStorage[`r${r}_m${idx}_away`];
 
                     if (hVal !== undefined && aVal !== undefined && hVal !== '' && aVal !== '') {
                         let hScore = parseFloat(hVal);
@@ -809,11 +828,23 @@
             return Object.values(calculated).sort((a, b) => b.pts - a.pts || b.gf - a.gf);
         }
 
+        function calculateStandings() {
+            return calculateStandingsUpToRound(currentRound);
+        }
+
         function renderStandings() {
             const tbody = document.getElementById('standingsBody');
             tbody.innerHTML = '';
             
             let sortedTeams = calculateStandings();
+
+            let prevRanks = {};
+            if (currentRound >= 3) {
+                let prevSortedTeams = calculateStandingsUpToRound(currentRound - 1);
+                prevSortedTeams.forEach((team, idx) => {
+                    prevRanks[team.key] = idx + 1;
+                });
+            }
 
             sortedTeams.forEach((team, index) => {
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
@@ -825,10 +856,31 @@
                 } else if (position === 17) {
                     rowClass = 'glow-red';
                 }
+
+                // مقارنة المركز الحالي بالترتيب السابق وعرض الأيقونة الملائمة بحجم ومحاذاة متناسقة
+                let indicatorImgHtml = '';
+                if (currentRound >= 3 && prevRanks[team.key] !== undefined) {
+                    let oldPos = prevRanks[team.key];
+                    if (position < oldPos) {
+                        // صعود في الترتيب (رقم المركز قل) -> سهم أخضر
+                        indicatorImgHtml = `<img src="arrow_up_green.png" class="pos-indicator-img" alt="Up">`;
+                    } else if (position > oldPos) {
+                        // هبوط في الترتيب (رقم المركز زاد) -> سهم أحمر
+                        indicatorImgHtml = `<img src="arrow_down_red.png" class="pos-indicator-img" alt="Down">`;
+                    } else {
+                        // ثبات في المركز -> أيقونة رصاصية/صفراء
+                        indicatorImgHtml = `<img src="equal_yellow.png" class="pos-indicator-img" alt="Same">`;
+                    }
+                }
                 
                 tbody.innerHTML += `
                     <tr class="${rowClass}">
-                        <td style="font-weight:900;">${position}</td>
+                        <td>
+                            <div class="pos-container">
+                                ${indicatorImgHtml}
+                                <span style="font-weight:900;">${position}</span>
+                            </div>
+                        </td>
                         <td class="team-cell">
                             <img src="${teamInfo.logo}" alt="${teamInfo.name}">
                             ${teamInfo.name}
