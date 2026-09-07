@@ -451,7 +451,7 @@
             transition: 0.3s ease;
         }
 
-        /* تنسيق أيقونات صعود وهبوط وثبات الترتيب (بحجم أصغر وبجانب الأرقام من اليمين) */
+        /* تنسيق الرموز بناءً على الصورة والمطلوب بدقة: دائرة تحتوي على سهم للأعلى أو الأسفل أو شرطة، مع مسافة واضحة ومناسبة عن الرقم */
         .pos-indicator-badge {
             display: inline-flex;
             align-items: center;
@@ -463,17 +463,17 @@
             font-family: var(--font-en);
             font-size: 9px;
             font-weight: 900;
-            margin-right: 4px; /* وضعها على الجانب الأيمن من الرقم */
+            margin-left: 10px; /* مسافة واضحة بين الرقم والدائرة على اليسار */
             vertical-align: middle;
         }
         .pos-up {
-            background-color: #28a745; /* أخضر للصعود لأعلى */
+            background-color: #28a745; /* أخضر */
         }
         .pos-down {
-            background-color: #dc3545; /* أحمر للنزول لأسفل */
+            background-color: #dc3545; /* أحمر */
         }
         .pos-same {
-            background-color: #6c757d; /* رمادي للثبات */
+            background-color: #b0b5bc; /* رمادي مطابق للصورة المرفقة */
         }
 
         .tab-content { display: none; }
@@ -536,7 +536,7 @@
             .team-cell img { width: 16px; height: 16px; margin-left: 4px; }
             .glow-green, .glow-red { border-bottom-width: 2px; box-shadow: 0 2px 12px rgba(0, 255, 135, 0.6); }
             .glow-red { box-shadow: 0 2px 12px rgba(255, 0, 90, 0.6); }
-            .pos-indicator-badge { width: 14px; height: 14px; font-size: 8px; margin-right: 3px; }
+            .pos-indicator-badge { width: 14px; height: 14px; font-size: 8px; margin-left: 8px; }
         }
     </style>
 </head>
@@ -862,11 +862,11 @@
                 let rowClass = '';
                 if (position === 1) {
                     rowClass = 'glow-green';
-                } else if (position === 17) {
+                } else     if (position === 17) {
                     rowClass = 'glow-red';
                 }
 
-                // الرموز أصبحت: سهم للأعلى (▲)، سهم للأسفل (▼)، أو شرطة للثبات (-)، بحجم أصغر وعلى الجانب الأيمن من الرقم
+                // استخدام رموز الأسهم الصحيحة (▲ للصعود، ▼ للنزول، - للثبات) داخل الدائرة، مع المسافة المناسبة على اليسار
                 let badgeHtml = '';
                 if (currentRound >= 3 && prevRanks[team.key] !== undefined) {
                     let oldPos = prevRanks[team.key];
@@ -881,7 +881,7 @@
                 
                 tbody.innerHTML += `
                     <tr class="${rowClass}">
-                        <td style="font-weight:900;">${badgeHtml}${position}</td>
+                        <td style="font-weight:900;">${position}${badgeHtml}</td>
                         <td class="team-cell">
                             <img src="${teamInfo.logo}" alt="${teamInfo.name}">
                             ${teamInfo.name}
