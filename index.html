@@ -300,6 +300,7 @@
             margin: 0 4px;
             background: transparent;
             flex-shrink: 0;
+            image-rendering: auto;
         }
 
         .match-score-center {
@@ -431,11 +432,11 @@
             vertical-align: middle;
             line-height: 1.4;
             background-color: #ffffff;
-            border: none;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        tr {
-            border: none;
+        tr:last-child td {
+            border-bottom: none;
         }
 
         tr.green-line td {
@@ -451,7 +452,7 @@
             align-items: center;
             justify-content: flex-start;
             gap: 6px;
-            font-size: 17px;
+            font-size: 16px;
             text-transform: uppercase;
             color: #1a1a1a;
             padding: 0;
@@ -463,6 +464,7 @@
             object-fit: contain;
             flex-shrink: 0;
             display: block;
+            image-rendering: auto;
         }
 
         .pos-container {
@@ -480,6 +482,7 @@
             display: inline-block;
             flex-shrink: 0;
             vertical-align: middle;
+            image-rendering: auto;
         }
 
         .pos-number {
@@ -945,7 +948,6 @@
             let sortedTeams = calculateStandings();
 
             let prevRanks = {};
-            // الأسهم تظهر من الجولة الثانية (currentRound >= 2)
             if (currentRound >= 2) {
                 let prevSortedTeams = calculateStandingsUpToRound(currentRound - 1);
                 prevSortedTeams.forEach((team, idx) => {
@@ -973,7 +975,7 @@
                     } else if (position > oldPos) {
                         imgSrc = 'arrow_down_red.png';
                     } else {
-                        imgSrc = 'equal_yellow.png';  // أيقونة الرصاصي للثبات
+                        imgSrc = 'equal_yellow.png';
                     }
                     indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="indicator" onerror="this.style.display='none'">`;
                 }
@@ -1046,9 +1048,20 @@
             if (currentRound < 1) currentRound = 1;
             if (currentRound > 38) currentRound = 38;
             renderFixtures();
+            // عند تغيير الجولة، نقوم بتحديث الترتيب أيضاً إذا كان التبويب نشطاً
+            if (activeTab === 'standings') {
+                renderStandings();
+            }
         }
 
         function downloadAsImage() {
+            // التأكد من أن المحتوى محدث قبل التقاط الصورة
+            if (activeTab === 'fixtures') {
+                renderFixtures();
+            } else {
+                renderStandings();
+            }
+
             const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
             const element = document.getElementById(targetId);
 
@@ -1056,6 +1069,7 @@
 
             const scaleFactor = 4;
 
+            // استخدام html2canvas مع إعدادات محسنة للصور
             html2canvas(element, {
                 backgroundColor: activeTab === 'fixtures' ? null : "#ffffff",
                 scale: scaleFactor,
@@ -1065,7 +1079,16 @@
                 width: element.offsetWidth,
                 height: element.offsetHeight,
                 windowWidth: element.scrollWidth,
-                windowHeight: element.scrollHeight
+                windowHeight: element.scrollHeight,
+                imageTimeout: 0,
+                onclone: function(clonedDoc, clonedElement) {
+                    // إصلاح الصور المشوهة في النسخة المستنسخة
+                    const images = clonedElement.querySelectorAll('img');
+                    images.forEach(img => {
+                        img.style.imageRendering = 'auto';
+                        img.style.objectFit = 'contain';
+                    });
+                }
             }).then(canvas => {
                 canvas.toBlob(function(blob) {
                     if (!blob) {
