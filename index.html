@@ -378,8 +378,8 @@
         }
 
         .standings-sidebar img {
-            width: 100%;
-            max-width: 450px;
+            width: 200%;
+            max-width: 500px;
             height: auto;
             object-fit: contain;
             filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
@@ -451,15 +451,15 @@
             align-items: center;
             justify-content: flex-start;
             gap: 6px;
-            font-size: 16px;
+            font-size: 17px;
             text-transform: uppercase;
             color: #1a1a1a;
             padding: 0;
         }
 
         .team-cell img {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             object-fit: contain;
             flex-shrink: 0;
             display: block;
@@ -594,7 +594,8 @@
             }
 
             .standings-sidebar img {
-                max-width: 250px;
+                max-width: 300px;
+                width: 180%;
             }
 
             .standings-content-area {
@@ -621,11 +622,11 @@
                 padding: 8px 4px;
             }
             .team-cell {
-                font-size: 14px;
+                font-size: 15px;
             }
             .team-cell img {
-                width: 18px;
-                height: 18px;
+                width: 20px;
+                height: 20px;
             }
             tr.green-line td,
             tr.red-line td {
@@ -966,8 +967,14 @@
                 let indicatorHtml = '';
                 if (currentRound >= 2 && prevRanks[team.key] !== undefined) {
                     let oldPos = prevRanks[team.key];
-                    const imgSrc = position < oldPos ? 'arrow_up_green.png' :
-                        (position > oldPos ? 'arrow_down_red.png' : 'equal_yellow.png');
+                    let imgSrc = '';
+                    if (position < oldPos) {
+                        imgSrc = 'arrow_up_green.png';
+                    } else if (position > oldPos) {
+                        imgSrc = 'arrow_down_red.png';
+                    } else {
+                        imgSrc = 'equal_yellow.png';  // أيقونة الرصاصي للثبات
+                    }
                     indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="indicator" onerror="this.style.display='none'">`;
                 }
 
