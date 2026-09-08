@@ -205,6 +205,28 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
+        .nav-arrow-btn {
+            background: var(--pl-purple-btn);
+            color: var(--text-white);
+            border: 1px solid var(--border-dark);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+
+        .nav-arrow-btn:hover {
+            background: var(--pl-pink);
+            border-color: var(--pl-pink);
+        }
+
         .main-container {
             width: 100%;
             max-width: 768px;
@@ -447,13 +469,13 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
             vertical-align: middle;
         }
 
         .pos-indicator-img {
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             object-fit: contain;
             display: inline-block;
             flex-shrink: 0;
@@ -505,6 +527,11 @@
             .round-indicator {
                 font-size: 16px;
             }
+            .nav-arrow-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 18px;
+            }
             #captureFixtures {
                 padding: 15px 10px;
                 border-radius: 16px;
@@ -545,8 +572,8 @@
                 font-size: 12px;
             }
             .pos-indicator-img {
-                width: 22px;
-                height: 22px;
+                width: 28px;
+                height: 28px;
             }
 
             #captureStandings {
@@ -627,7 +654,9 @@
 
     <div class="header">
         <div class="round-nav-container">
+            <button class="nav-arrow-btn" onclick="changeRound(-1)">‹</button>
             <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
+            <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
         </div>
     </div>
 
@@ -725,7 +754,7 @@
             "MCI": { name: "Man City", logo: "man_city.png.WEBP" },
             "MUN": { name: "Man Utd", logo: "man_utd.png.WEBP" },
             "NEW": { name: "Newcastle", logo: "newcastle.png.WEBP" },
-            "NOT": { name: "Nott'm Forest", logo: "forest.png" },  // تم تصحيح المسار
+            "NOT": { name: "Nott'm Forest", logo: "forest.png.PNG" },
             "SUN": { name: "Sunderland", logo: "sunderland.png.WEBP" },
             "TOT": { name: "Spurs", logo: "tottenham.png.WEBP" }
         };
@@ -1002,6 +1031,13 @@
                     </div>
                 `;
             });
+        }
+
+        function changeRound(step) {
+            currentRound += step;
+            if (currentRound < 1) currentRound = 1;
+            if (currentRound > 38) currentRound = 38;
+            renderFixtures();
         }
 
         function downloadAsImage() {
