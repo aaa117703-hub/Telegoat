@@ -894,4 +894,201 @@
 
                         if (hScore > aScore) {
                             calculated[hKey].pts += 3;
-                        } else if (aScore > hScore)
+                        } else if (aScore > hScore) {
+                            calculated[aKey].pts += 3;
+                        } else if (hScore === aScore) {
+                            calculated[hKey].pts += 1;
+                            calculated[aKey].pts += 1;
+                        }
+                    }
+                });
+            }
+
+            return Object.values(calculated).sort((a, b) => b.pts - a.pts || b.gf - a.gf);
+        }
+
+        function calculateStandings() {
+            return calculateStandingsUpToRound(currentRound);
+        }
+
+        function renderStandings() {
+            const tbody = document.getElementById('standingsBody');
+            tbody.innerHTML = '';
+
+            let sortedTeams = calculateStandings();
+
+            let prevRanks = {};
+            if (currentRound >= 3) {
+                let prevSortedTeams = calculateStandingsUpToRound(currentRound - 1);
+                prevSortedTeams.forEach((team, idx) => {
+                    prevRanks[team.key] = idx + 1;
+                });
+            }
+
+            sortedTeams.forEach((team, index) => {
+                let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
+                let position = index + 1;
+
+                let rowClass = '';
+                if (position === 1) {
+                    rowClass = 'green-line';
+                } else if (position === 18) {
+                    rowClass = 'red-line';
+                }
+
+                let indicatorHtml = '';
+                if (currentRound >= 3 && prevRanks[team.key] !== undefined) {
+                    let oldPos = prevRanks[team.key];
+                    const imgSrc = position < oldPos ? 'arrow_up_green.png' :
+                        (position > oldPos ? 'arrow_down_red.png' : 'equal_yellow.png');
+                    indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="indicator" onerror="this.style.display='none'">`;
+                }
+
+                tbody.innerHTML += `
+                    <tr class="${rowClass}">
+                        <td>
+                            <div class="pos-container">
+                                ${indicatorHtml}
+                                <span class="pos-number">${position}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="team-cell">
+                                <img src="${teamInfo.logo}" alt="${teamInfo.name}" onerror="this.style.display='none'">
+                                ${teamInfo.name}
+                            </div>
+                        </td>
+                        <td><span class="stat-number">${team.gf}</span></td>
+                        <td><span class="stat-number" style="color:#7138f5;">${team.pts}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderFixtures() {
+            const list = document.getElementById('fixturesList');
+            document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
+            document.getElementById('roundSelect').value = currentRound;
+            list.innerHTML = '';
+
+            let matches = matchweeks[currentRound] || [];
+            matches.forEach((match, idx) => {
+                let home = teamsMap[match[0]] || { name: match[0], logo: "" };
+                let away = teamsMap[match[1]] || { name: match[1], logo: "" };
+
+                let homeScore = scoresStorage[`r${currentRound}_m${idx}_home`] ?? '';
+                let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
+
+                let scoreContent = editMode ? `
+                    <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
+                    <span style="font-weight:900; color:#fff; font-family:var(--font-en); font-size:16px; line-height:1.4;">:</span>
+                    <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
+                ` : `
+                    <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
+                    <span class="vs-text">VS</span>
+                    <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
+                `;
+
+                list.innerHTML += `
+                    <div class="fixture-row">
+                        <div class="team-box home">
+                            <span>${home.name}</span>
+                            <img src="${home.logo}" onerror="this.style.display='none'">
+                        </div>
+                        <div class="match-score-center">
+                            ${scoreContent}
+                        </div>
+                        <div class="team-box away">
+                            <img src="${away.logo}" onerror="this.style.display='none'">
+                            <span>${away.name}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function downloadAsImage() {
+            const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
+            const element = document.getElementById(targetId);
+
+            showToast("جاري تحضير الصورة عالية الدقة...", false);
+
+            const scaleFactor = 4;
+
+            html2canvas(element, {
+                backgroundColor: activeTab === 'fixtures' ? null : "#ffffff",
+                scale: scaleFactor,
+                useCORS: true,
+                allowTaint: true,
+                logging: false,
+                width: element.offsetWidth,
+                height: element.offsetHeight,
+                windowWidth: element.scrollWidth,
+                windowHeight: element.scrollHeight
+            }).then(canvas => {
+                canvas.toBlob(function(blob) {
+                    if (!blob) {
+                        showToast("فشل في إنشاء الصورة!", false);
+                        return;
+                    }
+
+                    if (navigator.share && navigator.canShare) {
+                        const file = new File([blob], activeTab === 'fixtures' ?
+                            `Matchweek_${currentRound}.png` :
+                            `League_Standings_GW${currentRound}.png`, { type: 'image/png' });
+
+                        const shareData = {
+                            files: [file],
+                            title: activeTab === 'fixtures' ? `نتائج الجولة ${currentRound}` : `ترتيب الدوري - الجولة ${currentRound}`
+                        };
+
+                        if (navigator.canShare(shareData)) {
+                            navigator.share(shareData).then(() => {
+                                showToast("تم حفظ الصورة في الألبوم ✓", true);
+                            }).catch((err) => {
+                                if (err.name !== 'AbortError') {
+                                    fallbackDownload(blob);
+                                } else {
+                                    showToast("تم الإلغاء", false);
+                                }
+                            });
+                        } else {
+                            fallbackDownload(blob);
+                        }
+                    } else {
+                        fallbackDownload(blob);
+                    }
+                }, 'image/png', 1.0);
+            }).catch(err => {
+                console.error('html2canvas error:', err);
+                showToast("حدث خطأ أثناء تحضير الصورة!", false);
+            });
+        }
+
+        function fallbackDownload(blob) {
+            const link = document.createElement('a');
+            link.download = activeTab === 'fixtures' ?
+                `Matchweek_${currentRound}.png` :
+                `League_Standings_GW${currentRound}.png`;
+            link.href = URL.createObjectURL(blob);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => {
+                URL.revokeObjectURL(link.href);
+                showToast("تم تحميل الصورة ✓", true);
+            }, 100);
+        }
+
+        setInterval(() => {
+            if (Object.keys(scoresStorage).length > 0) {
+                localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+            }
+        }, 5000);
+
+        initRoundDropdown();
+        renderFixtures();
+        renderStandings();
+    </script>
+</body>
+</html>
