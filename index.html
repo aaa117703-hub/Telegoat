@@ -418,7 +418,7 @@
             font-family: var(--font-en);
             background-color: transparent;
             color: #38003c;
-            padding: 10px 4px;
+            padding: 8px 4px;
             font-weight: 900;
             border-bottom: 2px solid #38003c;
             font-size: 13px;
@@ -427,22 +427,24 @@
 
         td {
             font-family: var(--font-en);
-            padding: 10px 6px;
+            padding: 8px 4px;
             font-weight: 800;
             vertical-align: middle;
             line-height: 1.4;
             background-color: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #d1d5db;
         }
 
         tr:last-child td {
             border-bottom: none;
         }
 
+        /* خط أخضر بين المركز 1 و 2 */
         tr.green-line td {
             border-bottom: 3px solid #00ff87 !important;
         }
 
+        /* خط أحمر بين المركز 17 و 18 */
         tr.red-line td {
             border-bottom: 3px solid #ff005a !important;
         }
@@ -622,7 +624,7 @@
             }
             td {
                 font-size: 12px;
-                padding: 8px 4px;
+                padding: 6px 4px;
             }
             .team-cell {
                 font-size: 15px;
@@ -960,9 +962,12 @@
                 let position = index + 1;
 
                 let rowClass = '';
+                // خط أخضر بين المركز 1 و 2
                 if (position === 1) {
                     rowClass = 'green-line';
-                } else if (position === 18) {
+                }
+                // خط أحمر بين المركز 17 و 18
+                else if (position === 17) {
                     rowClass = 'red-line';
                 }
 
@@ -1048,14 +1053,12 @@
             if (currentRound < 1) currentRound = 1;
             if (currentRound > 38) currentRound = 38;
             renderFixtures();
-            // عند تغيير الجولة، نقوم بتحديث الترتيب أيضاً إذا كان التبويب نشطاً
             if (activeTab === 'standings') {
                 renderStandings();
             }
         }
 
         function downloadAsImage() {
-            // التأكد من أن المحتوى محدث قبل التقاط الصورة
             if (activeTab === 'fixtures') {
                 renderFixtures();
             } else {
@@ -1069,7 +1072,6 @@
 
             const scaleFactor = 4;
 
-            // استخدام html2canvas مع إعدادات محسنة للصور
             html2canvas(element, {
                 backgroundColor: activeTab === 'fixtures' ? null : "#ffffff",
                 scale: scaleFactor,
@@ -1082,7 +1084,6 @@
                 windowHeight: element.scrollHeight,
                 imageTimeout: 0,
                 onclone: function(clonedDoc, clonedElement) {
-                    // إصلاح الصور المشوهة في النسخة المستنسخة
                     const images = clonedElement.querySelectorAll('img');
                     images.forEach(img => {
                         img.style.imageRendering = 'auto';
