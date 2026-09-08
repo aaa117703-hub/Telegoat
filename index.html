@@ -412,14 +412,14 @@
             text-align: center;
             color: #333;
             display: table !important;
-            table-layout: auto;
+            table-layout: fixed;
         }
 
         th {
             font-family: var(--font-en);
             background-color: transparent;
             color: #38003c;
-            padding: 6px 4px;
+            padding: 4px 4px;
             font-weight: 900;
             border-bottom: 2px solid #38003c;
             font-size: 13px;
@@ -429,12 +429,14 @@
 
         td {
             font-family: var(--font-en);
-            padding: 4px 4px;
+            padding: 3px 4px;
             font-weight: 800;
             vertical-align: middle;
             line-height: 1.2;
             background-color: #ffffff;
             border-bottom: 1px solid #d1d5db;
+            height: 28px;
+            max-height: 28px;
         }
 
         tr:last-child td {
@@ -629,11 +631,13 @@
             }
             th {
                 font-size: 12px;
-                padding: 4px 4px;
+                padding: 3px 4px;
             }
             td {
                 font-size: 12px;
-                padding: 4px 4px;
+                padding: 2px 4px;
+                height: 24px;
+                max-height: 24px;
             }
             .team-cell {
                 font-size: 14px;
@@ -981,12 +985,9 @@
                 let position = index + 1;
 
                 let rowClass = '';
-                // خط أخضر بين المركز 1 و 2
                 if (position === 1) {
                     rowClass = 'green-line';
-                }
-                // خط أحمر بين المركز 17 و 18
-                else if (position === 17) {
+                } else if (position === 17) {
                     rowClass = 'red-line';
                 }
 
