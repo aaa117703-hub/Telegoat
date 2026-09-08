@@ -378,8 +378,8 @@
         }
 
         .standings-sidebar img {
-            width: 200%;
-            max-width: 330px;
+            width: 100%;
+            max-width: 450px;
             height: auto;
             object-fit: contain;
             filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
@@ -451,7 +451,7 @@
             align-items: center;
             justify-content: flex-start;
             gap: 6px;
-            font-size: 14px;
+            font-size: 16px;
             text-transform: uppercase;
             color: #1a1a1a;
             padding: 0;
@@ -594,7 +594,7 @@
             }
 
             .standings-sidebar img {
-                max-width: 170px;
+                max-width: 250px;
             }
 
             .standings-content-area {
@@ -621,7 +621,7 @@
                 padding: 8px 4px;
             }
             .team-cell {
-                font-size: 13px;
+                font-size: 14px;
             }
             .team-cell img {
                 width: 18px;
@@ -944,7 +944,8 @@
             let sortedTeams = calculateStandings();
 
             let prevRanks = {};
-            if (currentRound >= 3) {
+            // الأسهم تظهر من الجولة الثانية (currentRound >= 2)
+            if (currentRound >= 2) {
                 let prevSortedTeams = calculateStandingsUpToRound(currentRound - 1);
                 prevSortedTeams.forEach((team, idx) => {
                     prevRanks[team.key] = idx + 1;
@@ -963,7 +964,7 @@
                 }
 
                 let indicatorHtml = '';
-                if (currentRound >= 3 && prevRanks[team.key] !== undefined) {
+                if (currentRound >= 2 && prevRanks[team.key] !== undefined) {
                     let oldPos = prevRanks[team.key];
                     const imgSrc = position < oldPos ? 'arrow_up_green.png' :
                         (position > oldPos ? 'arrow_down_red.png' : 'equal_yellow.png');
