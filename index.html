@@ -1074,6 +1074,7 @@
             }
         }
 
+        // 【التعديل الرئيسي هنا: دالة حفظ الصورة بدقة 2K وحل مشكلة الشعارات】
         function downloadAsImage() {
             if (activeTab === 'fixtures') {
                 renderFixtures();
@@ -1086,24 +1087,32 @@
 
             showToast("جاري تحضير الصورة عالية الدقة...", false);
 
-            const scaleFactor = 4;
+            // حساب معامل التكبير ديناميكياً للوصول لدقة 2K (2560 بكسل)
+            const targetWidth = 2560; 
+            const currentWidth = element.offsetWidth;
+            let scaleFactor = targetWidth / currentWidth;
+            
+            // حماية الجهاز من التجمد إذا كان العنصر صغيراً جداً (الحد الأقصى للدقة 5x)
+            if (scaleFactor < 1) scaleFactor = 1;
+            if (scaleFactor > 5) scaleFactor = 5;
 
             html2canvas(element, {
                 backgroundColor: activeTab === 'fixtures' ? null : "#ffffff",
-                scale: scaleFactor,
-                useCORS: true,
-                allowTaint: true,
+                scale: scaleFactor, // دقة عالية 2K
+                useCORS: true,      // يسمح بتحميل الشعارات من الروابط الخارجية
+                allowTaint: true,   // السماح برسم الصور حتى لو كانت تحتوي على ألوان غير قياسية
                 logging: false,
                 width: element.offsetWidth,
                 height: element.offsetHeight,
                 windowWidth: element.scrollWidth,
                 windowHeight: element.scrollHeight,
-                imageTimeout: 0,
+                imageTimeout: 0,    // انتظار تحميل جميع الشعارات بلا مهلة
                 onclone: function(clonedDoc, clonedElement) {
                     const images = clonedElement.querySelectorAll('img');
                     images.forEach(img => {
                         img.style.imageRendering = 'auto';
                         img.style.objectFit = 'contain';
+                        img.style.transform = 'translateZ(0)'; // تحسين جودة العرض على بعض الأنظمة
                     });
                 }
             }).then(canvas => {
@@ -1113,6 +1122,7 @@
                         return;
                     }
 
+                    // هنا الحفظ في الألبوم أو الملفات
                     if (navigator.share && navigator.canShare) {
                         const file = new File([blob], activeTab === 'fixtures' ?
                             `Matchweek_${currentRound}.png` :
