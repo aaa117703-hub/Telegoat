@@ -324,7 +324,7 @@
             font-family: var(--font-en);
             font-size: 16px;
             font-weight: 900;
-            line-height: 1.4;
+            line-height: 1.2;
             display: inline-block;
             vertical-align: middle;
         }
@@ -412,6 +412,7 @@
             text-align: center;
             color: #333;
             display: table !important;
+            table-layout: fixed;
         }
 
         th {
@@ -423,6 +424,7 @@
             border-bottom: 2px solid #38003c;
             font-size: 13px;
             vertical-align: middle;
+            line-height: 1.2;
         }
 
         td {
@@ -430,7 +432,7 @@
             padding: 8px 4px;
             font-weight: 800;
             vertical-align: middle;
-            line-height: 1.4;
+            line-height: 1.2;
             background-color: #ffffff;
             border-bottom: 1px solid #d1d5db;
         }
@@ -454,15 +456,16 @@
             align-items: center;
             justify-content: flex-start;
             gap: 6px;
-            font-size: 16px;
+            font-size: 15px;
             text-transform: uppercase;
             color: #1a1a1a;
             padding: 0;
+            white-space: nowrap;
         }
 
         .team-cell img {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             object-fit: contain;
             flex-shrink: 0;
             display: block;
@@ -473,13 +476,13 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 4px;
             vertical-align: middle;
         }
 
         .pos-indicator-img {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             object-fit: contain;
             display: inline-block;
             flex-shrink: 0;
@@ -488,11 +491,17 @@
         }
 
         .pos-number {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 900;
-            line-height: 1.4;
-            min-width: 20px;
+            line-height: 1.2;
+            min-width: 18px;
             text-align: center;
+        }
+
+        .stat-number {
+            font-size: 15px;
+            font-weight: 900;
+            line-height: 1.2;
         }
 
         .tab-content {
@@ -567,18 +576,18 @@
             .score-input,
             .pos-number,
             .stat-number {
-                font-size: 15px;
+                font-size: 14px;
             }
             .score-input {
-                width: 30px;
-                height: 22px;
+                width: 28px;
+                height: 20px;
             }
             .vs-text {
                 font-size: 12px;
             }
             .pos-indicator-img {
-                width: 28px;
-                height: 28px;
+                width: 24px;
+                height: 24px;
             }
 
             #captureStandings {
@@ -627,11 +636,21 @@
                 padding: 6px 4px;
             }
             .team-cell {
-                font-size: 15px;
+                font-size: 14px;
             }
             .team-cell img {
-                width: 20px;
-                height: 20px;
+                width: 18px;
+                height: 18px;
+            }
+            .pos-number {
+                font-size: 14px;
+            }
+            .stat-number {
+                font-size: 14px;
+            }
+            .pos-indicator-img {
+                width: 24px;
+                height: 24px;
             }
             tr.green-line td,
             tr.red-line td {
@@ -962,12 +981,9 @@
                 let position = index + 1;
 
                 let rowClass = '';
-                // خط أخضر بين المركز 1 و 2
                 if (position === 1) {
                     rowClass = 'green-line';
-                }
-                // خط أحمر بين المركز 17 و 18
-                else if (position === 17) {
+                } else if (position === 17) {
                     rowClass = 'red-line';
                 }
 
@@ -1022,7 +1038,7 @@
 
                 let scoreContent = editMode ? `
                     <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
-                    <span style="font-weight:900; color:#fff; font-family:var(--font-en); font-size:16px; line-height:1.4;">:</span>
+                    <span style="font-weight:900; color:#fff; font-family:var(--font-en); font-size:16px; line-height:1.2;">:</span>
                     <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
                 ` : `
                     <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
