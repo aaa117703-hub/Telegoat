@@ -84,7 +84,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ============ إصلاح البنر ============ */
         .banner-container {
             position: relative;
             width: 100%;
@@ -110,9 +109,10 @@
             z-index: 1;
         }
 
+        /* ✅ التعديل الأول: رفع التبويبات قليلاً */
         .banner-overlay-tabs {
             position: absolute;
-            bottom: 4%;
+            bottom: 14%;
             right: 2%;
             display: flex;
             background: #5d8eb6;
@@ -303,9 +303,6 @@
             text-align: left;
         }
 
-        /* ============ الحاويات المضمونة للشعارات ============ */
-
-        /* حجم 20px لجدول الترتيب */
         .logo-20 {
             display: inline-block;
             width: 20px;
@@ -335,7 +332,6 @@
             image-rendering: auto;
         }
 
-        /* حجم 24px للشعارات في المواجهات */
         .logo-24 {
             display: inline-block;
             width: 24px;
@@ -551,6 +547,24 @@
             image-rendering: auto;
         }
 
+        /* ✅ التعديل الثالث: بديل الرصاصي لعدم تغير المركز */
+        .pos-indicator-text {
+            display: inline-block;
+            font-family: var(--font-en);
+            font-size: 18px;
+            font-weight: 900;
+            line-height: 1;
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            min-height: 28px;
+            max-width: 28px;
+            max-height: 28px;
+            text-align: center;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+
         .pos-number {
             font-size: 15px;
             font-weight: 900;
@@ -587,8 +601,9 @@
                 min-height: 150px;
             }
 
+            /* ✅ رفع التبويبات أكثر على الجوال */
             .banner-overlay-tabs {
-                bottom: 4%;
+                bottom: 16%;
                 right: 1%;
                 max-width: 98%;
                 border-radius: 6px;
@@ -672,6 +687,16 @@
                 min-height: 24px;
                 max-width: 24px;
                 max-height: 24px;
+            }
+
+            .pos-indicator-text {
+                width: 24px;
+                height: 24px;
+                min-width: 24px;
+                min-height: 24px;
+                max-width: 24px;
+                max-height: 24px;
+                font-size: 15px;
             }
 
             #captureStandings {
@@ -773,9 +798,10 @@
 
     <div class="header">
         <div class="round-nav-container">
-            <button class="nav-arrow-btn" onclick="changeRound(-1)">‹</button>
-            <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
+            <!-- ✅ التعديل الثاني: عكس الأزرار - اليمين يتقدم واليسار يرجع -->
             <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
+            <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
+            <button class="nav-arrow-btn" onclick="changeRound(-1)">‹</button>
         </div>
     </div>
 
@@ -866,7 +892,6 @@
             if (bannerAttempts < bannerSources.length) {
                 img.src = bannerSources[bannerAttempts];
             } else {
-                // إخفاء الصورة بدل عرض صورة معطوبة
                 img.style.display = 'none';
             }
         }
@@ -1095,21 +1120,35 @@
                 else if (position === 17) rowClass = 'red-line';
 
                 let indicatorHtml = '';
+
                 if (currentRound >= 2 && prevRanks[team.key] !== undefined) {
                     let oldPos = prevRanks[team.key];
                     let imgSrc = '';
-                    if (position < oldPos) imgSrc = 'arrow_up_green.png';
-                    else if (position > oldPos) imgSrc = 'arrow_down_red.png';
-                    else imgSrc = 'equal_yellow.png';
+                    let fallbackChar = '';
+                    let fallbackColor = '';
 
-                    indicatorHtml = `
-                        <img
-                            src="${imgSrc}"
-                            class="pos-indicator-img"
-                            alt="indicator"
-                            onerror="this.style.display='none'"
-                        >
-                    `;
+                    if (position < oldPos) {
+                        imgSrc = 'arrow_up_green.png';
+                        fallbackChar = '▲';
+                        fallbackColor = '#00b894';
+                    } else if (position > oldPos) {
+                        imgSrc = 'arrow_down_red.png';
+                        fallbackChar = '▼';
+                        fallbackColor = '#ff005a';
+                    } else {
+                        imgSrc = 'equal_yellow.png';
+                        fallbackChar = '▬';
+                        fallbackColor = '#9ca3af';
+                    }
+
+                    indicatorHtml = `<img
+                        src="${imgSrc}"
+                        class="pos-indicator-img"
+                        data-char="${fallbackChar}"
+                        data-color="${fallbackColor}"
+                        alt="indicator"
+                        onerror="handleIndicatorError(this)"
+                    >`;
                 }
 
                 tbody.innerHTML += `
@@ -1133,6 +1172,19 @@
                     </tr>
                 `;
             });
+        }
+
+        /* ✅ التعديل الثالث: عند فشل تحميل صورة المؤشر، يظهر النص البديل بلون رصاصي/ملون */
+        function handleIndicatorError(img) {
+            const char = img.getAttribute('data-char') || '▬';
+            const color = img.getAttribute('data-color') || '#9ca3af';
+
+            const span = document.createElement('span');
+            span.textContent = char;
+            span.className = 'pos-indicator-text pos-indicator-img';
+            span.style.color = color;
+
+            img.parentNode.replaceChild(span, img);
         }
 
         function renderFixtures() {
@@ -1282,7 +1334,6 @@
                         windowHeight: element.scrollHeight,
                         imageTimeout: 0,
                         onclone: function(clonedDoc, clonedElement) {
-                            // تثبيت أبعاد الحاويات وصورها
                             const wrappers = clonedElement.querySelectorAll('.logo-20, .logo-24');
                             wrappers.forEach(wrapper => {
                                 const isSmall = wrapper.classList.contains('logo-20');
@@ -1298,7 +1349,6 @@
                                 wrapper.style.display = 'inline-block';
                             });
 
-                            // تثبيت صور الشعارات
                             const logos = clonedElement.querySelectorAll('.logo-20 img, .logo-24 img');
                             logos.forEach(img => {
                                 img.style.position = 'absolute';
@@ -1313,7 +1363,6 @@
                                 img.style.display = 'block';
                             });
 
-                            // أيقونات الصعود/النزول
                             const indicators = clonedElement.querySelectorAll('.pos-indicator-img');
                             indicators.forEach(img => {
                                 const size = window.innerWidth <= 600 ? '24px' : '28px';
