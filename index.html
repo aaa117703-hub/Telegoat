@@ -65,9 +65,11 @@
             align-items: center;
             gap: 10px;
         }
+
         #toast.show {
             opacity: 1;
         }
+
         #toast .toast-spinner {
             display: inline-block;
             width: 18px;
@@ -77,6 +79,7 @@
             border-top-color: #ff005a;
             animation: spin 0.6s linear infinite;
         }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -200,6 +203,7 @@
             border: 2px dashed transparent;
             transition: 0.2s;
         }
+
         .round-indicator:hover {
             border-color: rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.05);
@@ -284,22 +288,33 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
         .team-box.home {
             justify-content: flex-end;
             text-align: right;
         }
+
         .team-box.away {
             justify-content: flex-start;
             text-align: left;
         }
 
+        /* تثبيت شعار الفريق داخل مربع بدون أي تشويه */
         .team-box img {
             width: 24px;
             height: 24px;
+            min-width: 24px;
+            min-height: 24px;
+            max-width: 24px;
+            max-height: 24px;
+            aspect-ratio: 1 / 1;
             object-fit: contain;
+            object-position: center;
             margin: 0 4px;
+            padding: 0;
             background: transparent;
             flex-shrink: 0;
+            display: block;
             image-rendering: auto;
         }
 
@@ -427,7 +442,6 @@
             line-height: 1.2;
         }
 
-        /* توحيد ارتفاع الصفوف لجميع الجولات */
         td {
             font-family: var(--font-en);
             padding: 0 4px;
@@ -445,12 +459,10 @@
             border-bottom: none;
         }
 
-        /* خط أخضر بين المركز 1 و 2 */
         tr.green-line td {
             border-bottom: 3px solid #00ff87 !important;
         }
 
-        /* خط أحمر بين المركز 17 و 18 */
         tr.red-line td {
             border-bottom: 3px solid #ff005a !important;
         }
@@ -467,12 +479,20 @@
             white-space: nowrap;
         }
 
+        /* تثبيت شعار الفريق في جدول الترتيب */
         .team-cell img {
             width: 20px;
             height: 20px;
+            min-width: 20px;
+            min-height: 20px;
+            max-width: 20px;
+            max-height: 20px;
+            aspect-ratio: 1 / 1;
             object-fit: contain;
+            object-position: center;
             flex-shrink: 0;
             display: block;
+            padding: 0;
             image-rendering: auto;
         }
 
@@ -510,7 +530,6 @@
             line-height: 1;
         }
 
-        /* عمود GF أوسع لنقل الرقم نحو Pts */
         .col-pos { width: 14%; }
         .col-club { width: 42%; }
         .col-gf { width: 20%; }
@@ -519,16 +538,21 @@
         .tab-content {
             display: none;
         }
+
         .tab-content.active {
             display: block;
         }
 
         @media screen and (max-width: 600px) {
-            body { padding: 0 5px; }
+            body {
+                padding: 0 5px;
+            }
+
             .banner-container {
                 border-width: 3px;
                 border-radius: 16px;
             }
+
             .banner-overlay-tabs {
                 bottom: 4%;
                 right: 1%;
@@ -537,6 +561,7 @@
                 padding: 3px 0;
                 gap: 0;
             }
+
             .banner-tab-btn,
             .banner-tab-select {
                 font-size: 10px;
@@ -544,59 +569,78 @@
                 min-width: 35px;
                 flex: 1 1 20%;
             }
+
             .banner-tab-select {
                 min-width: 45px;
                 padding-right: 6px;
                 padding-left: 14px;
                 background-size: 7px;
             }
+
             .round-indicator {
                 font-size: 16px;
             }
+
             .nav-arrow-btn {
                 width: 34px;
                 height: 34px;
                 font-size: 18px;
             }
+
             #captureFixtures {
                 padding: 15px 10px;
                 border-radius: 16px;
                 border-width: 3px;
             }
+
             .fixtures-header-title {
                 font-size: 16px;
             }
+
             .fixture-row {
                 padding: 6px 8px;
                 flex-wrap: nowrap;
             }
+
             .team-box {
                 font-size: 13px;
                 width: 34%;
             }
+
+            /* تثبيت حجم الشعارات على الهاتف */
             .team-box img {
                 width: 18px;
                 height: 18px;
+                min-width: 18px;
+                min-height: 18px;
+                max-width: 18px;
+                max-height: 18px;
+                aspect-ratio: 1 / 1;
                 margin: 0 3px;
             }
+
             .match-score-center {
                 width: 24%;
                 min-width: 60px;
                 padding: 4px;
             }
+
             .score-display,
             .score-input,
             .pos-number,
             .stat-number {
                 font-size: 14px;
             }
+
             .score-input {
                 width: 28px;
                 height: 20px;
             }
+
             .vs-text {
                 font-size: 12px;
             }
+
             .pos-indicator-img {
                 width: 24px;
                 height: 24px;
@@ -637,41 +681,57 @@
             .standings-card {
                 padding: 5px 0;
             }
+
             table {
                 width: 100%;
             }
+
             th {
                 font-size: 12px;
                 padding: 6px 4px;
             }
+
             td {
                 font-size: 12px;
                 padding: 0 3px;
                 height: 32px;
                 max-height: 32px;
             }
+
             .team-cell {
                 font-size: 13px;
                 padding-right: 8px;
             }
+
+            /* تثبيت حجم شعارات جدول الترتيب على الهاتف */
             .team-cell img {
                 width: 18px;
                 height: 18px;
+                min-width: 18px;
+                min-height: 18px;
+                max-width: 18px;
+                max-height: 18px;
+                aspect-ratio: 1 / 1;
             }
+
             .pos-number {
                 font-size: 14px;
             }
+
             .stat-number {
                 font-size: 14px;
             }
+
             .pos-indicator-img {
                 width: 24px;
                 height: 24px;
                 max-height: 24px;
             }
+
             .pos-container {
                 height: 24px;
             }
+
             tr.green-line td,
             tr.red-line td {
                 border-bottom-width: 2px !important;
@@ -721,6 +781,7 @@
                 <div class="standings-sidebar">
                     <img src="premire_League2.png-.webp" alt="Premier League" onerror="this.style.display='none'">
                 </div>
+
                 <div class="standings-content-area">
                     <div class="standings-card">
                         <table>
@@ -730,6 +791,7 @@
                                 <col class="col-gf">
                                 <col class="col-pts">
                             </colgroup>
+
                             <thead>
                                 <tr>
                                     <th>Pos</th>
@@ -738,6 +800,7 @@
                                     <th style="text-align: center;">Pts</th>
                                 </tr>
                             </thead>
+
                             <tbody id="standingsBody"></tbody>
                         </table>
                     </div>
@@ -776,10 +839,17 @@
         }
 
         let bannerAttempts = 0;
-        const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png"];
+        const bannerSources = [
+            "image_5.png",
+            "image_5.PNG",
+            "image_5.jpg",
+            "image_5.JPG",
+            "banner.png"
+        ];
 
         function handleBannerError(img) {
             bannerAttempts++;
+
             if (bannerAttempts < bannerSources.length) {
                 img.src = bannerSources[bannerAttempts];
             } else {
@@ -811,8 +881,12 @@
         };
 
         const initialBasePoints = {};
+
         Object.keys(teamsMap).forEach(key => {
-            initialBasePoints[key] = { gf: 0, pts: 0 };
+            initialBasePoints[key] = {
+                gf: 0,
+                pts: 0
+            };
         });
 
         const matchweeks = {
@@ -859,11 +933,16 @@
         function initRoundDropdown() {
             const select = document.getElementById('roundSelect');
             select.innerHTML = '';
+
             for (let i = 1; i <= 38; i++) {
                 let opt = document.createElement('option');
                 opt.value = i;
                 opt.innerText = `الجولة ${i}`;
-                if (i === currentRound) opt.selected = true;
+
+                if (i === currentRound) {
+                    opt.selected = true;
+                }
+
                 select.appendChild(opt);
             }
         }
@@ -875,10 +954,21 @@
 
         function switchTab(tabName) {
             activeTab = tabName;
-            document.getElementById('fixturesToggleBtn').classList.toggle('active', tabName === 'fixtures');
-            document.getElementById('standingsToggleBtn').classList.toggle('active', tabName === 'standings');
 
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('fixturesToggleBtn').classList.toggle(
+                'active',
+                tabName === 'fixtures'
+            );
+
+            document.getElementById('standingsToggleBtn').classList.toggle(
+                'active',
+                tabName === 'standings'
+            );
+
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+
             if (tabName === 'standings') {
                 renderStandings();
                 document.getElementById('standingsTab').classList.add('active');
@@ -889,12 +979,17 @@
 
         function unlockEditWithPassword() {
             const pass = prompt("أدخل رمز الحماية لتفعيل زر التعديل:");
+
             if (pass === "1999") {
                 editMode = true;
+
                 const editBtn = document.getElementById('editToggleBtn');
+
                 editBtn.style.setProperty('display', 'inline-flex', 'important');
                 editBtn.innerText = "حفظ";
+
                 renderFixtures();
+
                 alert("تم تفعيل صلاحيات المدير بنجاح!");
             } else if (pass !== null) {
                 alert("الرمز غير صحيح!");
@@ -916,9 +1011,11 @@
             showToast("جاري الحفظ...", false);
 
             const matches = matchweeks[currentRound] || [];
+
             matches.forEach((match, idx) => {
                 const homeInput = document.getElementById(`home_r${currentRound}_m${idx}`);
                 const awayInput = document.getElementById(`away_r${currentRound}_m${idx}`);
+
                 if (homeInput && awayInput) {
                     scoresStorage[`r${currentRound}_m${idx}_home`] = homeInput.value;
                     scoresStorage[`r${currentRound}_m${idx}_away`] = awayInput.value;
@@ -928,15 +1025,22 @@
             isSaving = true;
             btn.disabled = true;
 
-            localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+            localStorage.setItem(
+                'fpl_scores',
+                JSON.stringify(scoresStorage)
+            );
 
             setTimeout(() => {
                 isSaving = false;
                 btn.disabled = false;
+
                 showToast("تم الحفظ ✓", true);
+
                 editMode = false;
+
                 btn.style.setProperty('display', 'none', 'important');
                 btn.innerText = "تعديل";
+
                 renderFixtures();
                 renderStandings();
             }, 300);
@@ -948,21 +1052,33 @@
 
         function calculateStandingsUpToRound(targetRound) {
             let calculated = {};
+
             for (let teamKey in initialBasePoints) {
-                calculated[teamKey] = { key: teamKey, gf: 0, pts: 0 };
+                calculated[teamKey] = {
+                    key: teamKey,
+                    gf: 0,
+                    pts: 0
+                };
             }
 
             for (let r = 1; r <= targetRound; r++) {
                 let roundMatches = matchweeks[r];
+
                 if (!roundMatches) continue;
 
                 roundMatches.forEach((match, idx) => {
                     let hKey = match[0];
                     let aKey = match[1];
+
                     let hVal = scoresStorage[`r${r}_m${idx}_home`];
                     let aVal = scoresStorage[`r${r}_m${idx}_away`];
 
-                    if (hVal !== undefined && aVal !== undefined && hVal !== '' && aVal !== '') {
+                    if (
+                        hVal !== undefined &&
+                        aVal !== undefined &&
+                        hVal !== '' &&
+                        aVal !== ''
+                    ) {
                         let hScore = parseFloat(hVal);
                         let aScore = parseFloat(aVal);
 
@@ -981,7 +1097,9 @@
                 });
             }
 
-            return Object.values(calculated).sort((a, b) => b.pts - a.pts || b.gf - a.gf);
+            return Object.values(calculated).sort(
+                (a, b) => b.pts - a.pts || b.gf - a.gf
+            );
         }
 
         function calculateStandings() {
@@ -990,23 +1108,32 @@
 
         function renderStandings() {
             const tbody = document.getElementById('standingsBody');
+
             tbody.innerHTML = '';
 
             let sortedTeams = calculateStandings();
 
             let prevRanks = {};
+
             if (currentRound >= 2) {
-                let prevSortedTeams = calculateStandingsUpToRound(currentRound - 1);
+                let prevSortedTeams =
+                    calculateStandingsUpToRound(currentRound - 1);
+
                 prevSortedTeams.forEach((team, idx) => {
                     prevRanks[team.key] = idx + 1;
                 });
             }
 
             sortedTeams.forEach((team, index) => {
-                let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
+                let teamInfo = teamsMap[team.key] || {
+                    name: team.key,
+                    logo: ""
+                };
+
                 let position = index + 1;
 
                 let rowClass = '';
+
                 if (position === 1) {
                     rowClass = 'green-line';
                 } else if (position === 17) {
@@ -1014,9 +1141,14 @@
                 }
 
                 let indicatorHtml = '';
-                if (currentRound >= 2 && prevRanks[team.key] !== undefined) {
+
+                if (
+                    currentRound >= 2 &&
+                    prevRanks[team.key] !== undefined
+                ) {
                     let oldPos = prevRanks[team.key];
                     let imgSrc = '';
+
                     if (position < oldPos) {
                         imgSrc = 'arrow_up_green.png';
                     } else if (position > oldPos) {
@@ -1024,7 +1156,17 @@
                     } else {
                         imgSrc = 'equal_yellow.png';
                     }
-                    indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="indicator" onerror="this.style.display='none'">`;
+
+                    indicatorHtml = `
+                        <img
+                            src="${imgSrc}"
+                            width="28"
+                            height="28"
+                            class="pos-indicator-img"
+                            alt="indicator"
+                            onerror="this.style.display='none'"
+                        >
+                    `;
                 }
 
                 tbody.innerHTML += `
@@ -1035,14 +1177,30 @@
                                 <span class="pos-number">${position}</span>
                             </div>
                         </td>
+
                         <td>
                             <div class="team-cell">
-                                <img src="${teamInfo.logo}" alt="${teamInfo.name}" onerror="this.style.display='none'">
+                                <img
+                                    src="${teamInfo.logo}"
+                                    width="20"
+                                    height="20"
+                                    alt="${teamInfo.name}"
+                                    onerror="this.style.display='none'"
+                                >
                                 ${teamInfo.name}
                             </div>
                         </td>
-                        <td><span class="stat-number">${team.gf}</span></td>
-                        <td><span class="stat-number" style="color:#7138f5;">${team.pts}</span></td>
+
+                        <td>
+                            <span class="stat-number">${team.gf}</span>
+                        </td>
+
+                        <td>
+                            <span
+                                class="stat-number"
+                                style="color:#7138f5;"
+                            >${team.pts}</span>
+                        </td>
                     </tr>
                 `;
             });
@@ -1050,41 +1208,105 @@
 
         function renderFixtures() {
             const list = document.getElementById('fixturesList');
-            document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
+
+            document.getElementById('currentRoundTitle').innerText =
+                `MATCHWEEK ${currentRound}`;
+
             document.getElementById('roundSelect').value = currentRound;
+
             list.innerHTML = '';
 
             let matches = matchweeks[currentRound] || [];
-            matches.forEach((match, idx) => {
-                let home = teamsMap[match[0]] || { name: match[0], logo: "" };
-                let away = teamsMap[match[1]] || { name: match[1], logo: "" };
 
-                let homeScore = scoresStorage[`r${currentRound}_m${idx}_home`] ?? '';
-                let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
+            matches.forEach((match, idx) => {
+                let home = teamsMap[match[0]] || {
+                    name: match[0],
+                    logo: ""
+                };
+
+                let away = teamsMap[match[1]] || {
+                    name: match[1],
+                    logo: ""
+                };
+
+                let homeScore =
+                    scoresStorage[`r${currentRound}_m${idx}_home`] ?? '';
+
+                let awayScore =
+                    scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
 
                 let scoreContent = editMode ? `
-                    <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
-                    <span style="font-weight:900; color:#fff; font-family:var(--font-en); font-size:16px; line-height:1.2;">:</span>
-                    <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
+                    <input
+                        type="number"
+                        class="score-input"
+                        id="home_r${currentRound}_m${idx}"
+                        value="${homeScore}"
+                        placeholder="0"
+                        oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)"
+                    >
+
+                    <span
+                        style="
+                            font-weight:900;
+                            color:#fff;
+                            font-family:var(--font-en);
+                            font-size:16px;
+                            line-height:1.2;
+                        "
+                    >:</span>
+
+                    <input
+                        type="number"
+                        class="score-input"
+                        id="away_r${currentRound}_m${idx}"
+                        value="${awayScore}"
+                        placeholder="0"
+                        oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)"
+                    >
                 ` : `
-                    <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
+                    <span class="score-display">
+                        ${homeScore !== '' ? homeScore : '-'}
+                    </span>
+
                     <span class="vs-text">VS</span>
-                    <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
+
+                    <span class="score-display">
+                        ${awayScore !== '' ? awayScore : '-'}
+                    </span>
                 `;
 
                 list.innerHTML += `
                     <div class="fixture-row">
+
                         <div class="team-box home">
                             <span>${home.name}</span>
-                            <img src="${home.logo}" onerror="this.style.display='none'">
+
+                            <img
+                                src="${home.logo}"
+                                width="24"
+                                height="24"
+                                alt="${home.name}"
+                                onerror="this.style.display='none'"
+                            >
                         </div>
+
                         <div class="match-score-center">
                             ${scoreContent}
                         </div>
+
                         <div class="team-box away">
-                            <img src="${away.logo}" onerror="this.style.display='none'">
+
+                            <img
+                                src="${away.logo}"
+                                width="24"
+                                height="24"
+                                alt="${away.name}"
+                                onerror="this.style.display='none'"
+                            >
+
                             <span>${away.name}</span>
                         </div>
+
                     </div>
                 `;
             });
@@ -1092,37 +1314,157 @@
 
         function changeRound(step) {
             currentRound += step;
-            if (currentRound < 1) currentRound = 1;
-            if (currentRound > 38) currentRound = 38;
+
+            if (currentRound < 1) {
+                currentRound = 1;
+            }
+
+            if (currentRound > 38) {
+                currentRound = 38;
+            }
+
             renderFixtures();
+
             if (activeTab === 'standings') {
                 renderStandings();
             }
+        }
+
+        /*
+         * انتظار تحميل وفك جميع الصور قبل html2canvas
+         * حتى لا تظهر الشعارات مشوهة أو ناقصة في الصورة المحفوظة.
+         */
+        function waitForImagesToLoad(element) {
+            const images = Array.from(
+                element.querySelectorAll('img')
+            );
+
+            return Promise.all(
+                images.map(img => {
+
+                    if (
+                        img.complete &&
+                        img.naturalWidth > 0
+                    ) {
+                        if (img.decode) {
+                            return img.decode().catch(() => {});
+                        }
+
+                        return Promise.resolve();
+                    }
+
+                    return new Promise(resolve => {
+                        let finished = false;
+
+                        const finish = () => {
+                            if (finished) return;
+
+                            finished = true;
+
+                            img.removeEventListener(
+                                'load',
+                                finish
+                            );
+
+                            img.removeEventListener(
+                                'error',
+                                finish
+                            );
+
+                            resolve();
+                        };
+
+                        img.addEventListener(
+                            'load',
+                            finish,
+                            { once: true }
+                        );
+
+                        img.addEventListener(
+                            'error',
+                            finish,
+                            { once: true }
+                        );
+
+                        /*
+                         * حماية في حال بقيت الصورة معلقة
+                         * ولا أرسلت load أو error.
+                         */
+                        setTimeout(finish, 5000);
+                    });
+                })
+            );
         }
 
         // دالة إضافة الحواف الهلالية للصورة المحفوظة
         function applyRoundedCorners(sourceCanvas, radius) {
             const w = sourceCanvas.width;
             const h = sourceCanvas.height;
-            const outputCanvas = document.createElement('canvas');
+
+            const outputCanvas =
+                document.createElement('canvas');
+
             outputCanvas.width = w;
             outputCanvas.height = h;
+
             const ctx = outputCanvas.getContext('2d');
 
             ctx.beginPath();
+
             ctx.moveTo(radius, 0);
             ctx.lineTo(w - radius, 0);
-            ctx.quadraticCurveTo(w, 0, w, radius);
-            ctx.lineTo(w, h - radius);
-            ctx.quadraticCurveTo(w, h, w - radius, h);
-            ctx.lineTo(radius, h);
-            ctx.quadraticCurveTo(0, h, 0, h - radius);
-            ctx.lineTo(0, radius);
-            ctx.quadraticCurveTo(0, 0, radius, 0);
+
+            ctx.quadraticCurveTo(
+                w,
+                0,
+                w,
+                radius
+            );
+
+            ctx.lineTo(
+                w,
+                h - radius
+            );
+
+            ctx.quadraticCurveTo(
+                w,
+                h,
+                w - radius,
+                h
+            );
+
+            ctx.lineTo(
+                radius,
+                h
+            );
+
+            ctx.quadraticCurveTo(
+                0,
+                h,
+                0,
+                h - radius
+            );
+
+            ctx.lineTo(
+                0,
+                radius
+            );
+
+            ctx.quadraticCurveTo(
+                0,
+                0,
+                radius,
+                0
+            );
+
             ctx.closePath();
             ctx.clip();
 
-            ctx.drawImage(sourceCanvas, 0, 0);
+            ctx.drawImage(
+                sourceCanvas,
+                0,
+                0
+            );
 
             return outputCanvas;
         }
@@ -1134,100 +1476,262 @@
                 renderStandings();
             }
 
-            const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
-            const element = document.getElementById(targetId);
+            const targetId =
+                activeTab === 'fixtures'
+                    ? 'captureFixtures'
+                    : 'captureStandings';
 
-            showToast("جاري تحضير الصورة عالية الدقة...", false);
+            const element =
+                document.getElementById(targetId);
+
+            showToast(
+                "جاري تحضير الصورة عالية الدقة...",
+                false
+            );
 
             const scaleFactor = 4;
-            // نصف قطر الحواف الهلالية = 20px مضروبة بعامل الحجم
-            const cornerRadius = 20 * scaleFactor;
 
-            html2canvas(element, {
-                backgroundColor: null,
-                scale: scaleFactor,
-                useCORS: true,
-                allowTaint: true,
-                logging: false,
-                width: element.offsetWidth,
-                height: element.offsetHeight,
-                windowWidth: element.scrollWidth,
-                windowHeight: element.scrollHeight,
-                imageTimeout: 0,
-                onclone: function(clonedDoc, clonedElement) {
-                    const images = clonedElement.querySelectorAll('img');
-                    images.forEach(img => {
-                        img.style.imageRendering = 'auto';
-                        img.style.objectFit = 'contain';
-                    });
-                }
-            }).then(canvas => {
-                // إضافة الحواف الهلالية للصورة
-                const roundedCanvas = applyRoundedCorners(canvas, cornerRadius);
+            // نصف قطر الحواف الهلالية
+            const cornerRadius =
+                20 * scaleFactor;
 
-                roundedCanvas.toBlob(function(blob) {
-                    if (!blob) {
-                        showToast("فشل في إنشاء الصورة!", false);
-                        return;
-                    }
+            /*
+             * أولاً ننتظر تحميل جميع الشعارات.
+             * بعدها فقط نبدأ html2canvas.
+             */
+            waitForImagesToLoad(element)
+                .then(() => {
 
-                    if (navigator.share && navigator.canShare) {
-                        const file = new File([blob], activeTab === 'fixtures' ?
-                            `Matchweek_${currentRound}.png` :
-                            `League_Standings_GW${currentRound}.png`, { type: 'image/png' });
+                    return html2canvas(
+                        element,
+                        {
+                            backgroundColor: null,
+                            scale: scaleFactor,
+                            useCORS: true,
+                            allowTaint: true,
+                            logging: false,
 
-                        const shareData = {
-                            files: [file],
-                            title: activeTab === 'fixtures' ? `نتائج الجولة ${currentRound}` : `ترتيب الدوري - الجولة ${currentRound}`
-                        };
+                            width: element.offsetWidth,
+                            height: element.offsetHeight,
 
-                        if (navigator.canShare(shareData)) {
-                            navigator.share(shareData).then(() => {
-                                showToast("تم حفظ الصورة في الألبوم ✓", true);
-                            }).catch((err) => {
-                                if (err.name !== 'AbortError') {
-                                    fallbackDownload(blob);
-                                } else {
-                                    showToast("تم الإلغاء", false);
-                                }
-                            });
-                        } else {
-                            fallbackDownload(blob);
+                            windowWidth: element.scrollWidth,
+                            windowHeight: element.scrollHeight,
+
+                            imageTimeout: 0,
+
+                            onclone: function(
+                                clonedDoc,
+                                clonedElement
+                            ) {
+                                /*
+                                 * التأكد مرة أخرى داخل نسخة
+                                 * html2canvas أن الشعارات
+                                 * لا يتم تمديدها.
+                                 */
+                                const images =
+                                    clonedElement.querySelectorAll(
+                                        '.team-box img, .team-cell img'
+                                    );
+
+                                images.forEach(img => {
+                                    img.style.objectFit =
+                                        'contain';
+
+                                    img.style.objectPosition =
+                                        'center';
+
+                                    img.style.aspectRatio =
+                                        '1 / 1';
+
+                                    img.style.maxWidth =
+                                        img.style.width;
+
+                                    img.style.maxHeight =
+                                        img.style.height;
+
+                                    img.style.minWidth =
+                                        img.style.width;
+
+                                    img.style.minHeight =
+                                        img.style.height;
+
+                                    img.style.display =
+                                        'block';
+                                });
+
+                                /*
+                                 * شعارات الأسهم تبقى كما هي.
+                                 */
+                                const indicators =
+                                    clonedElement.querySelectorAll(
+                                        '.pos-indicator-img'
+                                    );
+
+                                indicators.forEach(img => {
+                                    img.style.objectFit =
+                                        'contain';
+                                });
+                            }
                         }
-                    } else {
-                        fallbackDownload(blob);
-                    }
-                }, 'image/png', 1.0);
-            }).catch(err => {
-                console.error('html2canvas error:', err);
-                showToast("حدث خطأ أثناء تحضير الصورة!", false);
-            });
+                    );
+                })
+
+                .then(canvas => {
+
+                    // إضافة الحواف الهلالية للصورة
+                    const roundedCanvas =
+                        applyRoundedCorners(
+                            canvas,
+                            cornerRadius
+                        );
+
+                    roundedCanvas.toBlob(
+                        function(blob) {
+
+                            if (!blob) {
+                                showToast(
+                                    "فشل في إنشاء الصورة!",
+                                    false
+                                );
+
+                                return;
+                            }
+
+                            if (
+                                navigator.share &&
+                                navigator.canShare
+                            ) {
+
+                                const file =
+                                    new File(
+                                        [blob],
+                                        activeTab === 'fixtures'
+                                            ? `Matchweek_${currentRound}.png`
+                                            : `League_Standings_GW${currentRound}.png`,
+                                        {
+                                            type: 'image/png'
+                                        }
+                                    );
+
+                                const shareData = {
+                                    files: [file],
+
+                                    title:
+                                        activeTab === 'fixtures'
+                                            ? `نتائج الجولة ${currentRound}`
+                                            : `ترتيب الدوري - الجولة ${currentRound}`
+                                };
+
+                                if (
+                                    navigator.canShare(
+                                        shareData
+                                    )
+                                ) {
+
+                                    navigator.share(
+                                        shareData
+                                    )
+                                    .then(() => {
+
+                                        showToast(
+                                            "تم حفظ الصورة في الألبوم ✓",
+                                            true
+                                        );
+
+                                    })
+                                    .catch((err) => {
+
+                                        if (
+                                            err.name !==
+                                            'AbortError'
+                                        ) {
+                                            fallbackDownload(
+                                                blob
+                                            );
+                                        } else {
+                                            showToast(
+                                                "تم الإلغاء",
+                                                false
+                                            );
+                                        }
+                                    });
+
+                                } else {
+                                    fallbackDownload(blob);
+                                }
+
+                            } else {
+                                fallbackDownload(blob);
+                            }
+                        },
+                        'image/png',
+                        1.0
+                    );
+                })
+
+                .catch(err => {
+
+                    console.error(
+                        'html2canvas error:',
+                        err
+                    );
+
+                    showToast(
+                        "حدث خطأ أثناء تحضير الصورة!",
+                        false
+                    );
+                });
         }
 
         function fallbackDownload(blob) {
-            const link = document.createElement('a');
-            link.download = activeTab === 'fixtures' ?
-                `Matchweek_${currentRound}.png` :
-                `League_Standings_GW${currentRound}.png`;
-            link.href = URL.createObjectURL(blob);
+            const link =
+                document.createElement('a');
+
+            link.download =
+                activeTab === 'fixtures'
+                    ? `Matchweek_${currentRound}.png`
+                    : `League_Standings_GW${currentRound}.png`;
+
+            link.href =
+                URL.createObjectURL(blob);
+
             document.body.appendChild(link);
+
             link.click();
+
             document.body.removeChild(link);
+
             setTimeout(() => {
-                URL.revokeObjectURL(link.href);
-                showToast("تم تحميل الصورة ✓", true);
+
+                URL.revokeObjectURL(
+                    link.href
+                );
+
+                showToast(
+                    "تم تحميل الصورة ✓",
+                    true
+                );
+
             }, 100);
         }
 
         setInterval(() => {
-            if (Object.keys(scoresStorage).length > 0) {
-                localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+
+            if (
+                Object.keys(scoresStorage).length > 0
+            ) {
+                localStorage.setItem(
+                    'fpl_scores',
+                    JSON.stringify(scoresStorage)
+                );
             }
+
         }, 5000);
 
         initRoundDropdown();
         renderFixtures();
         renderStandings();
+
     </script>
 </body>
 </html>
