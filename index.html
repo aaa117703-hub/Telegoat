@@ -65,6 +65,8 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            max-width: 92%;
+            text-align: center;
         }
 
         #toast.show {
@@ -86,7 +88,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ===== البانر ===== */
         .banner-container {
             width: 100%;
             max-width: 768px;
@@ -108,7 +109,6 @@
             display: block;
         }
 
-        /* ===== شريط الأزرار الجديد (تحت البانر مباشرة) ===== */
         .tabs-bar {
             display: flex;
             background: #5d8eb6;
@@ -169,7 +169,6 @@
             color: #fff;
         }
 
-        /* ===== الهيدر (MATCHWEEK) ===== */
         .header {
             background-color: var(--pl-dark-bg);
             color: #ffffff;
@@ -235,7 +234,6 @@
             padding: 0 5px;
         }
 
-        /* ===== لوحة التعديل (حفظ / تصفير) داخل المواجهات ===== */
         .edit-panel {
             display: flex;
             gap: 10px;
@@ -508,7 +506,7 @@
             width: 100%;
             border-collapse: collapse;
             border-spacing: 0;
-            text-align: center;
+            text03-align: center;
             color: #333;
             display: table !important;
             table-layout: fixed;
@@ -520,7 +518,7 @@
             color: #38003c;
             padding: 8px 4px;
             font-weight: 900;
-            border-bottom: 2px solid #38003c;
+            border-bottom: 2px solid #380c;
             font-size: 13px;
             vertical-align: middle;
             line-height: 1.2;
@@ -824,12 +822,10 @@
         <span id="toastContent">جاري الحفظ...</span>
     </div>
 
-    <!-- البانر (بدون أزرار فوقه) -->
     <div class="banner-container">
         <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
     </div>
 
-    <!-- شريط الأزرار الجديد تحت البانر -->
     <div class="tabs-bar">
         <select class="banner-tab-select" id="roundSelect" onchange="selectRound(this.value)"></select>
         <button class="banner-tab-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
@@ -837,7 +833,6 @@
         <button class="banner-tab-btn" onclick="downloadAsImage()">حفظ الصورة</button>
     </div>
 
-    <!-- شريط MATCHWEEK -->
     <div class="header">
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
@@ -850,7 +845,6 @@
 
         <div id="fixturesTab" class="tab-content active">
 
-            <!-- لوحة التعديل (تظهر فقط في وضع التعديل) -->
             <div id="editPanel" class="edit-panel" style="display: none;">
                 <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">💾 حفظ مواجهات الجولة</button>
                 <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">🗑️ تصفير الجولة</button>
@@ -1533,12 +1527,12 @@
         renderFixtures();
         renderStandings();
 
-        // ✅ تحميل البيانات من Supabase عند فتح الصفحة (مع اختبار الاتصال)
+        // ✅ تحميل البيانات من Supabase عند فتح الصفحة
         (async function initFromSupabase() {
             console.log('⏳ جاري تحميل البيانات من Supabase...');
 
             try {
-                const { error: testError } = await supabase
+                const { error: testError } = await window.sbClient
                     .from('match_results')
                     .select('id')
                     .limit(1);
