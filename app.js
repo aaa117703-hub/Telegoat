@@ -68,7 +68,7 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
 
             if (hasHome || hasAway) {
                 rows.push({
-                    round: String(round الص),
+                    round: String(round),
                     home_team: match[0],
                     away_team: match[1],
                     home_score: hasHome ? parseInt(hVal, 10) : null,
@@ -78,7 +78,6 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
             }
         });
 
-        // 1) حذف صفوف الجولة الحالية من Supabase
         const { error: delError } = await supabase
             .from('match_results')
             .delete()
@@ -89,7 +88,6 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
             return { ok: false, error: delError };
         }
 
-        // 2) إدخالفوف الجديدة
         if (rows.length > 0) {
             const { error: insError } = await supabase
                 .from('match_results')
@@ -105,6 +103,29 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
         return { ok: true, count: rows.length };
     } catch (e) {
         console.error('خطأ غير متوقع في saveRoundToSupabase:', e);
+        return { ok: false, error: e };
+    }
+}
+
+/**
+ * حذف جميع نتائج جولة معينة من Supabase (تصفير الجولة)
+ */
+async function clearRoundFromSupabase(round) {
+    try {
+        const { error } = await supabase
+            .from('match_results')
+            .delete()
+            .eq('round', String(round));
+
+        if (error) {
+            console.error('خطأ في حذف الجولة:', error);
+            return { ok: false, error: error };
+        }
+
+        console.log(`✅ تم حذف صفوف الجولة ${round} من Supabase`);
+        return { ok: true };
+    } catch (e) {
+        console.error('خطأ غير متوقع في clearRoundFromSupabase:', e);
         return { ok: false, error: e };
     }
 }
