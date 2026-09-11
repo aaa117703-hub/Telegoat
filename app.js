@@ -68,7 +68,7 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
 
             if (hasHome || hasAway) {
                 rows.push({
-                    round: String(round),
+                    round: String(round الص),
                     home_team: match[0],
                     away_team: match[1],
                     home_score: hasHome ? parseInt(hVal, 10) : null,
@@ -89,7 +89,7 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
             return { ok: false, error: delError };
         }
 
-        // 2) إدخال الصفوف الجديدة
+        // 2) إدخالفوف الجديدة
         if (rows.length > 0) {
             const { error: insError } = await supabase
                 .from('match_results')
