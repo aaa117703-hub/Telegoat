@@ -854,7 +854,7 @@
 
         let toastTimeout = null;
 
-        function showToast(msg, isSuccess = false) {
+        function showToast(msg, isSuccess = false, duration = 3000) {
             const toast = document.getElementById('toast');
             const content = document.getElementById('toastContent');
 
@@ -870,7 +870,7 @@
 
             toastTimeout = setTimeout(() => {
                 toast.classList.remove('show');
-            }, 3000);
+            }, duration);
         }
 
         let bannerAttempts = 0;
@@ -1009,7 +1009,6 @@
             }
         }
 
-        /* ✅ التعديل: زر الحفظ يرفع البيانات إلى Supabase أيضًا */
         async function toggleEditMode() {
             const btn = document.getElementById('editToggleBtn');
 
@@ -1036,10 +1035,8 @@
             isSaving = true;
             btn.disabled = true;
 
-            // 1) حفظ محليًا (كما كان)
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
 
-            // 2) رفع إلى Supabase
             const result = await saveRoundToSupabase(currentRound, matchweeks, scoresStorage);
 
             isSaving = false;
@@ -1048,7 +1045,11 @@
             if (result.ok) {
                 showToast("تم الحفظ ✓", true);
             } else {
-                showToast("تم الحفظ محليًا، لكن فشل الرفع للسحابة!", false);
+                const errMsg = (result.error && result.error.message)
+                    ? result.error.message
+                    : (result.error ? String(result.error) : 'خطأ غير معروف');
+                showToast("فشل الرفع: " + errMsg, false, 20000);
+                console.error('تفاصيل خطأ الحفظ:', result.error);
             }
 
             editMode = false;
@@ -1453,9 +1454,27 @@
         renderFixtures();
         renderStandings();
 
-        // ✅ تحميل البيانات من Supabase عند فتح الصفحة
+        // ✅ تحميل البيانات من Supabase عند فتح الصفحة (مع اختبار الاتصال)
         (async function initFromSupabase() {
             console.log('⏳ جاري تحميل البيانات من Supabase...');
+
+            try {
+                const { error: testError } = await supabase
+                    .from('match_results')
+                    .select('id')
+                    .limit(1);
+
+                if (testError) {
+                    showToast('⚠️ فشل الاتصال بـ Supabase: ' + testError.message, false, 20000);
+                    console.error('خطأ الاتصال:', testError);
+                    return;
+                }
+            } catch (connErr) {
+                showToast('⚠️ خطأ شبكة: ' + connErr.message, false, 20000);
+                console.error('خطأ الشبكة:', connErr);
+                return;
+            }
+
             const remoteScores = await loadScoresFromSupabase(matchweeks);
             if (remoteScores && Object.keys(remoteScores).length > 0) {
                 scoresStorage = remoteScores;
@@ -1463,7 +1482,7 @@
                 renderFixtures();
                 renderStandings();
             } else {
-                console.log('⚠️ لم يتم تحميل بيانات من Supabase، سيتم استخدام localStorage كبديل');
+                console.log('⚠️ لا توجد بيانات في Supabase بعد');
             }
         })();
     </script>
