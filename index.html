@@ -86,7 +86,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ===== البانر ===== */
         .banner-container {
             position: relative;
             width: 100%;
@@ -109,82 +108,67 @@
             display: block;
         }
 
-        /* ===== شريط الأزرار فوق البانر — يغطي أزرار الصورة ===== */
+        /* ===== شريط الأزرار - بنفس نمط أزرار الصورة ===== */
         .tabs-bar {
             position: absolute;
-            /* تغطية منطقة FPL Draft | FPL Challenge | Fantasy في الصورة */
-            bottom: 8%;
-            right: 1.5%;
-            width: 37%;
-            height: 11%;
-            z-index: 5;
+            bottom: 8.5%;
+            right: 1.8%;
             display: flex;
             flex-direction: row;
             direction: rtl;
+            border-radius: 6px;
             overflow: hidden;
+            z-index: 5;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
             line-height: 1;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
         }
 
-        .banner-tab-btn,
-        .banner-tab-select {
-            background: rgba(170, 178, 192, 0.55);
+        .banner-tab {
+            background: rgba(102, 157, 199, 0.82);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             color: #ffffff;
             border: none;
-            padding: 0;
+            padding: 11px 20px;
             font-family: var(--font-ar);
             font-weight: 900;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             outline: none;
             transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             white-space: nowrap;
             line-height: 1;
-            flex: 1 1 0;
-            min-width: 0;
-            border-left: 1px solid rgba(255, 255, 255, 0.2);
-            overflow: hidden;
-            text-overflow: ellipsis;
+            text-align: center;
+            min-width: 90px;
         }
 
-        .banner-tab-btn:last-child,
-        .banner-tab-select:last-child {
-            border-left: none;
+        .banner-tab:hover {
+            background: rgba(102, 157, 199, 0.95);
         }
 
-        .banner-tab-btn:hover {
-            background: rgba(170, 178, 192, 0.75);
-        }
-
-        .banner-tab-btn.active {
-            background: rgba(20, 20, 30, 0.88);
+        .banner-tab.active,
+        .banner-tab.dark {
+            background: #38003c;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
 
-        .banner-tab-btn.active:hover {
-            background: rgba(20, 20, 30, 0.95);
+        .banner-tab.active:hover,
+        .banner-tab.dark:hover {
+            background: #4a0050;
         }
 
-        .banner-tab-select {
+        /* select (الجولات) */
+        select.banner-tab {
             appearance: none;
             -webkit-appearance: none;
-            padding-right: 4px;
-            padding-left: 14px;
-            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="8" viewBox="0 0 24 24" width="8" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: left 4px center;
-            background-color: rgba(170, 178, 192, 0.55);
+            padding-right: 10px;
+            padding-left: 10px;
             text-align: center;
+            background-image: none;
         }
 
-        .banner-tab-select option {
+        select.banner-tab option {
             background: #38003c;
             color: #fff;
         }
@@ -636,24 +620,20 @@
             }
 
             .tabs-bar {
-                bottom: 8%;
-                right: 1.5%;
-                width: 44%;
-                height: 12%;
-                border-radius: 6px;
+                bottom: 8.5%;
+                right: 1.8%;
+                border-radius: 4px;
             }
 
-            .banner-tab-btn,
-            .banner-tab-select {
-                font-size: 9px;
-                border-left: 1px solid rgba(255, 255, 255, 0.2);
+            .banner-tab {
+                padding: 7px 9px;
+                font-size: 10px;
+                min-width: 60px;
+                border-left: 1px solid rgba(255, 255, 255, 0.15);
             }
 
-            .banner-tab-select {
-                padding-right: 2px;
-                padding-left: 11px;
-                background-size: 6px;
-                background-position: left 3px center;
+            .banner-tab:first-child {
+                border-left: none;
             }
 
             .round-indicator { font-size: 18px; }
@@ -809,12 +789,12 @@
     <div class="banner-container">
         <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
 
-        <!-- الأزرار: من اليمين لليسار (RTL) - الجولة نشط، ثم الترتيب، ثم المواجهات، ثم حفظ الصورة -->
+        <!-- 3 أزرار بنفس نمط FPL Draft | FPL Challenge | Fantasy -->
+        <!-- RTL: الجولات (يمين، داكن) | المواجهات (وسط) | الترتيب (يسار) -->
         <div class="tabs-bar">
-            <select class="banner-tab-select" id="roundSelect" onchange="selectRound(this.value)"></select>
-            <button class="banner-tab-btn" id="standingsToggleBtn" onclick="switchTab('standings')">الترتيب</button>
-            <button class="banner-tab-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
-            <button class="banner-tab-btn" onclick="downloadAsImage()">حفظ الصورة</button>
+            <select class="banner-tab dark" id="roundSelect" onchange="selectRound(this.value)"></select>
+            <button class="banner-tab" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
+            <button class="banner-tab" id="standingsToggleBtn" onclick="switchTab('standings')">الترتيب</button>
         </div>
     </div>
 
@@ -823,6 +803,9 @@
             <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
             <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(-1)">‹</button>
+        </div>
+        <div style="margin-top: 10px;">
+            <button onclick="downloadAsImage()" style="background: #5d8eb6; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-family: var(--font-ar); font-weight: 900; font-size: 13px; cursor: pointer;">📷 حفظ الصورة</button>
         </div>
     </div>
 
@@ -1007,6 +990,9 @@
         function selectRound(val) {
             currentRound = parseInt(val);
             renderFixtures();
+            if (activeTab === 'standings') {
+                renderStandings();
+            }
         }
 
         function switchTab(tabName) {
@@ -1253,51 +1239,55 @@
         }
 
         function renderFixtures() {
-            const list = document.getElementById('fixturesList');
-            document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
-            const selectEl = document.getElementById('roundSelect');
-            if (selectEl) selectEl.value = currentRound;
-            list.innerHTML = '';
+            try {
+                const list = document.getElementById('fixturesList');
+                document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
+                const selectEl = document.getElementById('roundSelect');
+                if (selectEl) selectEl.value = currentRound;
+                list.innerHTML = '';
 
-            let matches = matchweeks[currentRound] || [];
+                let matches = matchweeks[currentRound] || [];
 
-            matches.forEach((match, idx) => {
-                let home = teamsMap[match[0]] || { name: match[0], logo: "" };
-                let away = teamsMap[match[1]] || { name: match[1], logo: "" };
+                matches.forEach((match, idx) => {
+                    let home = teamsMap[match[0]] || { name: match[0], logo: "" };
+                    let away = teamsMap[match[1]] || { name: match[1], logo: "" };
 
-                let homeScore = scoresStorage[`r${currentRound}_m${idx}_home`] ?? '';
-                let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
+                    let homeScore = scoresStorage[`r${currentRound}_m${idx}_home`] ?? '';
+                    let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
 
-                let scoreContent = editMode ? `
-                    <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
-                    <span style="font-weight:900; color:#fff; font-family:var(--font-en); font-size:16px; line-height:1.2;">:</span>
-                    <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
-                ` : `
-                    <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
-                    <span class="vs-text">VS</span>
-                    <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
-                `;
+                    let scoreContent = editMode ? `
+                        <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
+                        <span style="font-weight:900; color:#fff; font-family:var(--font-en); font-size:16px; line-height:1.2;">:</span>
+                        <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
+                    ` : `
+                        <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
+                        <span class="vs-text">VS</span>
+                        <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
+                    `;
 
-                list.innerHTML += `
-                    <div class="fixture-row">
-                        <div class="team-box home">
-                            <span>${home.name}</span>
-                            <span class="logo-24">
-                                <img src="${home.logo}" alt="${home.name}" onerror="this.style.display='none'">
-                            </span>
+                    list.innerHTML += `
+                        <div class="fixture-row">
+                            <div class="team-box home">
+                                <span>${home.name}</span>
+                                <span class="logo-24">
+                                    <img src="${home.logo}" alt="${home.name}" onerror="this.style.display='none'">
+                                </span>
+                            </div>
+                            <div class="match-score-center">
+                                ${scoreContent}
+                            </div>
+                            <div class="team-box away">
+                                <span class="logo-24">
+                                    <img src="${away.logo}" alt="${away.name}" onerror="this.style.display='none'">
+                                </span>
+                                <span>${away.name}</span>
+                            </div>
                         </div>
-                        <div class="match-score-center">
-                            ${scoreContent}
-                        </div>
-                        <div class="team-box away">
-                            <span class="logo-24">
-                                <img src="${away.logo}" alt="${away.name}" onerror="this.style.display='none'">
-                            </span>
-                            <span>${away.name}</span>
-                        </div>
-                    </div>
-                `;
-            });
+                    `;
+                });
+            } catch (e) {
+                console.error('خطأ في renderFixtures:', e);
+            }
         }
 
         function changeRound(step) {
