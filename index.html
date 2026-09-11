@@ -107,63 +107,65 @@
             display: block;
         }
 
-        /* ===== أزرار البنر الداخلية (تم تنزيلها للأسفل وتعديلها لتكون حد وحد) ===== */
+        /* ===== أزرار البنر الداخلية (أزرار متناسقة وغير ممتدة على كامل العرض) ===== */
         .tabs-bar {
             position: absolute;
-            bottom: 0;
-            right: 0;
-            left: 0;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             flex-direction: row;
             direction: ltr;
-            border-radius: 0;
-            overflow: hidden;
+            gap: 8px;
             z-index: 5;
-            box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.35);
             line-height: 1;
         }
 
         .banner-tab {
-            background: rgba(102, 157, 199, 0.9);
+            background: rgba(102, 157, 199, 0.85);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             color: #ffffff;
             border: none;
-            padding: 12px 10px;
+            padding: 10px 16px;
             font-weight: 900;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             outline: none;
             transition: background 0.2s;
             white-space: nowrap;
             line-height: 1;
             text-align: center;
-            flex: 1;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .banner-tab:hover {
             background: rgba(102, 157, 199, 1);
         }
 
-        .banner-tab.active,
-        .banner-tab.dark {
+        .banner-tab.active {
             background: #38003c;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
 
-        .banner-tab.active:hover,
-        .banner-tab.dark:hover {
+        .banner-tab.active:hover {
             background: #4a0050;
         }
 
         select.banner-tab {
             appearance: none;
             -webkit-appearance: none;
-            padding-right: 10px;
-            padding-left: 10px;
+            padding-right: 14px;
+            padding-left: 14px;
             text-align: center;
             background-image: none;
+            background: rgba(102, 157, 199, 0.85);
+        }
+
+        select.banner-tab:hover {
+            background: rgba(102, 157, 199, 1);
         }
 
         select.banner-tab option {
@@ -599,7 +601,7 @@
         <div class="tabs-bar">
             <button class="banner-tab" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
             <button class="banner-tab" id="fixturesToggleBtn" onclick="switchTab('fixtures')">Matches</button>
-            <select class="banner-tab dark" id="roundSelect" onchange="selectRound(this.value)"></select>
+            <select class="banner-tab" id="roundSelect" onchange="selectRound(this.value)"></select>
         </div>
     </div>
 
@@ -958,7 +960,7 @@
                     } else if (position > oldPos) {
                         imgSrc = 'arrow_down_red.png';
                     } else {
-                        imgSrc = 'equal_yellow.png';
+                        imgSrc = 'equal_gray.png';
                     }
 
                     indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="trend" onerror="this.style.display='none'">`;
