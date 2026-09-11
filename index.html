@@ -800,7 +800,6 @@
 
     <div class="header">
         <div class="round-nav-container">
-            <!-- ✅ التعديل الثاني: عكس الأزرار - اليمين يتقدم واليسار يرجع -->
             <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
             <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
             <button class="nav-arrow-btn" onclick="changeRound(-1)">‹</button>
@@ -1448,6 +1447,20 @@
         initRoundDropdown();
         renderFixtures();
         renderStandings();
+
+        // ✅ تحميل البيانات من Supabase
+        (async function initFromSupabase() {
+            console.log('⏳ جاري تحميل البيانات من Supabase...');
+            const remoteScores = await loadScoresFromSupabase(matchweeks);
+            if (remoteScores && Object.keys(remoteScores).length > 0) {
+                scoresStorage = remoteScores;
+                console.log('✅ تم تحميل ' + Object.keys(remoteScores).length + ' نتيجة من Supabase');
+                renderFixtures();
+                renderStandings();
+            } else {
+                console.log('⚠️ لم يتم تحميل بيانات من Supabase، سيتم استخدام localStorage كبديل');
+            }
+        })();
     </script>
 </body>
 </html>
