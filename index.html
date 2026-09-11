@@ -86,17 +86,16 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* ===== البانر ===== */
         .banner-container {
-            position: relative;
             width: 100%;
             max-width: 768px;
-            margin: 15px auto;
+            margin: 15px auto 0;
             border-radius: 20px;
             overflow: hidden;
             border: 4px solid #ffffff;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             background: linear-gradient(135deg, #38003c 0%, #240024 100%);
-            min-height: 180px;
             line-height: 0;
             text-align: center;
         }
@@ -107,26 +106,22 @@
             object-fit: cover;
             object-position: center;
             display: block;
-            position: relative;
-            z-index: 1;
         }
 
-        .banner-overlay-tabs {
-            position: absolute;
-            bottom: 14%;
-            right: 2%;
+        /* ===== شريط الأزرار الجديد (تحت البانر مباشرة) ===== */
+        .tabs-bar {
             display: flex;
             background: #5d8eb6;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             direction: rtl;
             flex-wrap: wrap;
             justify-content: center;
             gap: 0;
-            padding: 2px;
-            max-width: 96%;
-            z-index: 2;
+            padding: 3px;
+            max-width: 100%;
+            margin: 10px auto 0;
         }
 
         .banner-tab-btn,
@@ -174,14 +169,11 @@
             color: #fff;
         }
 
-        .admin-edit-btn {
-            display: none !important;
-        }
-
+        /* ===== الهيدر (MATCHWEEK) ===== */
         .header {
             background-color: var(--pl-dark-bg);
             color: #ffffff;
-            padding: 5px 10px 15px 10px;
+            padding: 4px 10px 8px 10px;
             text-align: center;
         }
 
@@ -190,7 +182,7 @@
             align-items: center;
             justify-content: center;
             gap: 20px;
-            margin: 15px 0 5px 0;
+            margin: 8px 0 0 0;
             flex-wrap: wrap;
         }
 
@@ -241,6 +233,55 @@
             max-width: 768px;
             margin: 0 auto;
             padding: 0 5px;
+        }
+
+        /* ===== لوحة التعديل (حفظ / تصفير) داخل المواجهات ===== */
+        .edit-panel {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .edit-action-btn {
+            font-family: var(--font-ar);
+            font-weight: 900;
+            font-size: 14px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            flex: 1 1 auto;
+            min-width: 130px;
+            transition: 0.2s;
+            color: #ffffff;
+        }
+
+        .save-round-btn {
+            background: #00c853;
+            box-shadow: 0 3px 0 #009b40;
+        }
+
+        .save-round-btn:hover {
+            background: #00b34a;
+        }
+
+        .clear-round-btn {
+            background: #ff005a;
+            box-shadow: 0 3px 0 #b8003f;
+        }
+
+        .clear-round-btn:hover {
+            background: #e6004f;
+        }
+
+        .edit-action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         #captureFixtures {
@@ -330,7 +371,6 @@
             display: block;
             padding: 0;
             margin: 0;
-            image-rendering: auto;
         }
 
         .logo-24 {
@@ -360,7 +400,6 @@
             display: block;
             padding: 0;
             margin: 0;
-            image-rendering: auto;
         }
 
         .match-score-center {
@@ -545,7 +584,6 @@
             display: inline-block;
             flex-shrink: 0;
             vertical-align: middle;
-            image-rendering: auto;
         }
 
         .pos-indicator-text {
@@ -598,16 +636,13 @@
             .banner-container {
                 border-width: 3px;
                 border-radius: 16px;
-                min-height: 150px;
+                margin-top: 10px;
             }
 
-            .banner-overlay-tabs {
-                bottom: 16%;
-                right: 1%;
-                max-width: 98%;
-                border-radius: 6px;
-                padding: 3px 0;
-                gap: 0;
+            .tabs-bar {
+                padding: 2px;
+                border-radius: 8px;
+                margin: 6px auto 0;
             }
 
             .banner-tab-btn,
@@ -631,6 +666,12 @@
                 width: 34px;
                 height: 34px;
                 font-size: 18px;
+            }
+
+            .edit-action-btn {
+                font-size: 12px;
+                padding: 8px 12px;
+                min-width: 110px;
             }
 
             #captureFixtures {
@@ -783,18 +824,20 @@
         <span id="toastContent">جاري الحفظ...</span>
     </div>
 
+    <!-- البانر (بدون أزرار فوقه) -->
     <div class="banner-container">
         <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
-
-        <div class="banner-overlay-tabs">
-            <select class="banner-tab-select" id="roundSelect" onchange="selectRound(this.value)"></select>
-            <button class="banner-tab-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
-            <button class="banner-tab-btn" id="standingsToggleBtn" onclick="switchTab('standings')">الترتيب</button>
-            <button class="banner-tab-btn" onclick="downloadAsImage()">حفظ الصورة</button>
-            <button class="banner-tab-btn admin-edit-btn" id="editToggleBtn" onclick="toggleEditMode()" style="display: none !important;">تعديل</button>
-        </div>
     </div>
 
+    <!-- شريط الأزرار الجديد تحت البانر -->
+    <div class="tabs-bar">
+        <select class="banner-tab-select" id="roundSelect" onchange="selectRound(this.value)"></select>
+        <button class="banner-tab-btn active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
+        <button class="banner-tab-btn" id="standingsToggleBtn" onclick="switchTab('standings')">الترتيب</button>
+        <button class="banner-tab-btn" onclick="downloadAsImage()">حفظ الصورة</button>
+    </div>
+
+    <!-- شريط MATCHWEEK -->
     <div class="header">
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
@@ -806,6 +849,13 @@
     <div class="main-container">
 
         <div id="fixturesTab" class="tab-content active">
+
+            <!-- لوحة التعديل (تظهر فقط في وضع التعديل) -->
+            <div id="editPanel" class="edit-panel" style="display: none;">
+                <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">💾 حفظ مواجهات الجولة</button>
+                <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">🗑️ تصفير الجولة</button>
+            </div>
+
             <div id="captureFixtures" class="export-area">
                 <div class="fixtures-header-box">
                     <div class="fixtures-header-title" id="fixturesBannerTitle">MATCHWEEK RESULTS</div>
@@ -996,31 +1046,30 @@
         }
 
         function unlockEditWithPassword() {
-            const pass = prompt("أدخل رمز الحماية لتفعيل زر التعديل:");
+            const pass = prompt("أدخل رمز الحماية لتفعيل وضع التعديل:");
             if (pass === "1999") {
                 editMode = true;
-                const editBtn = document.getElementById('editToggleBtn');
-                editBtn.style.setProperty('display', 'inline-flex', 'important');
-                editBtn.innerText = "حفظ";
+                document.getElementById('editPanel').style.display = 'flex';
                 renderFixtures();
-                alert("تم تفعيل صلاحيات المدير بنجاح!");
+                showToast("تم تفعيل وضع التعديل ✓", true);
             } else if (pass !== null) {
                 alert("الرمز غير صحيح!");
             }
         }
 
-        async function toggleEditMode() {
-            const btn = document.getElementById('editToggleBtn');
+        function exitEditMode() {
+            editMode = false;
+            document.getElementById('editPanel').style.display = 'none';
+            renderFixtures();
+            renderStandings();
+        }
 
-            if (!editMode) {
-                editMode = true;
-                btn.innerText = "حفظ";
-                renderFixtures();
-                return;
-            }
-
+        async function saveCurrentRound() {
             if (isSaving) return;
+            isSaving = true;
             showToast("جاري الحفظ...", false);
+            document.getElementById('saveRoundBtn').disabled = true;
+            document.getElementById('clearRoundBtn').disabled = true;
 
             const matches = matchweeks[currentRound] || [];
             matches.forEach((match, idx) => {
@@ -1032,18 +1081,17 @@
                 }
             });
 
-            isSaving = true;
-            btn.disabled = true;
-
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
 
             const result = await saveRoundToSupabase(currentRound, matchweeks, scoresStorage);
 
             isSaving = false;
-            btn.disabled = false;
+            document.getElementById('saveRoundBtn').disabled = false;
+            document.getElementById('clearRoundBtn').disabled = false;
 
             if (result.ok) {
                 showToast("تم الحفظ ✓", true);
+                exitEditMode();
             } else {
                 const errMsg = (result.error && result.error.message)
                     ? result.error.message
@@ -1051,12 +1099,43 @@
                 showToast("فشل الرفع: " + errMsg, false, 20000);
                 console.error('تفاصيل خطأ الحفظ:', result.error);
             }
+        }
 
-            editMode = false;
-            btn.style.setProperty('display', 'none', 'important');
-            btn.innerText = "تعديل";
-            renderFixtures();
-            renderStandings();
+        async function clearCurrentRound() {
+            if (isSaving) return;
+
+            const confirmed = confirm(`هل أنت متأكد من تصفير الجولة ${currentRound}؟\n\nسيتم حذف جميع نتائج هذه الجولة من السحابة ومن هذا الجهاز.`);
+            if (!confirmed) return;
+
+            isSaving = true;
+            showToast("جاري التصفير...", false);
+            document.getElementById('saveRoundBtn').disabled = true;
+            document.getElementById('clearRoundBtn').disabled = true;
+
+            const matches = matchweeks[currentRound] || [];
+            matches.forEach((match, idx) => {
+                delete scoresStorage[`r${currentRound}_m${idx}_home`];
+                delete scoresStorage[`r${currentRound}_m${idx}_away`];
+            });
+
+            localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+
+            const result = await clearRoundFromSupabase(currentRound);
+
+            isSaving = false;
+            document.getElementById('saveRoundBtn').disabled = false;
+            document.getElementById('clearRoundBtn').disabled = false;
+
+            if (result.ok) {
+                showToast("تم تصفير الجولة ✓", true);
+                exitEditMode();
+            } else {
+                const errMsg = (result.error && result.error.message)
+                    ? result.error.message
+                    : (result.error ? String(result.error) : 'خطأ غير معروف');
+                showToast("فشل التصفير: " + errMsg, false, 20000);
+                console.error('تفاصيل خطأ التصفير:', result.error);
+            }
         }
 
         function updateScore(round, idx, type, val, inputElement) {
