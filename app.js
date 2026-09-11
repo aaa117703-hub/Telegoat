@@ -5,7 +5,6 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /**
  * جلب جميع نتائج المباريات من Supabase وتحويلها إلى شكل scoresStorage
- * الشكل: { "r1_m0_home": "2", "r1_m0_away": "1", ... }
  */
 async function loadScoresFromSupabase(matchweeks) {
     try {
@@ -48,5 +47,64 @@ async function loadScoresFromSupabase(matchweeks) {
     } catch (e) {
         console.error('خطأ غير متوقع في Supabase:', e);
         return null;
+    }
+}
+
+/**
+ * حفظ نتائج جولة كاملة في Supabase
+ * الاستراتيجية: حذف صفوف الجولة الحالية ثم إدخال البيانات الجديدة
+ */
+async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
+    try {
+        const matches = matchweeks[round] || [];
+        const rows = [];
+
+        matches.forEach((match, idx) => {
+            const hVal = scoresStorage[`r${round}_m${idx}_home`];
+            const aVal = scoresStorage[`r${round}_m${idx}_away`];
+
+            const hasHome = hVal !== undefined && hVal !== '';
+            const hasAway = aVal !== undefined && aVal !== '';
+
+            if (hasHome || hasAway) {
+                rows.push({
+                    round: String(round),
+                    home_team: match[0],
+                    away_team: match[1],
+                    home_score: hasHome ? parseInt(hVal, 10) : null,
+                    away_score: hasAway ? parseInt(aVal, 10) : null,
+                    created_at: Date.now()
+                });
+            }
+        });
+
+        // 1) حذف صفوف الجولة الحالية من Supabase
+        const { error: delError } = await supabase
+            .from('match_results')
+            .delete()
+            .eq('round', String(round));
+
+        if (delError) {
+            console.error('خطأ في حذف الجولة من Supabase:', delError);
+            return { ok: false, error: delError };
+        }
+
+        // 2) إدخال الصفوف الجديدة
+        if (rows.length > 0) {
+            const { error: insError } = await supabase
+                .from('match_results')
+                .insert(rows);
+
+            if (insError) {
+                console.error('خطأ في إدخال البيانات إلى Supabase:', insError);
+                return { ok: false, error: insError };
+            }
+        }
+
+        console.log(`✅ تم رفع ${rows.length} صف للجولة ${round} إلى Supabase`);
+        return { ok: true, count: rows.length };
+    } catch (e) {
+        console.error('خطأ غير متوقع في saveRoundToSupabase:', e);
+        return { ok: false, error: e };
     }
 }
