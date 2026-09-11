@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
@@ -23,7 +23,6 @@
             --pl-purple-btn: #38003c;
             --text-white: #ffffff;
             --border-dark: #5a055a;
-            --font-ar: 'SultanCustom', sans-serif;
             --font-en: 'EnglishCustom', sans-serif;
         }
 
@@ -31,7 +30,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: var(--font-ar);
+            font-family: var(--font-en);
         }
 
         body {
@@ -53,7 +52,6 @@
             color: #fff;
             padding: 12px 28px;
             border-radius: 30px;
-            font-family: var(--font-ar);
             font-weight: 900;
             font-size: 15px;
             border: 2px solid #ff005a;
@@ -86,12 +84,13 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* ===== بنر الواجهة في الأعلى بحواف هلالية (Rounded Corners) ===== */
         .banner-container {
             position: relative;
             width: 100%;
             max-width: 768px;
             margin: 15px auto 0;
-            border-radius: 20px;
+            border-radius: 25px;
             overflow: hidden;
             border: 4px solid #ffffff;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -108,14 +107,14 @@
             display: block;
         }
 
-        /* ===== شريط الأزرار داخل البنر (مطابق للآيباد تماماً) ===== */
+        /* ===== أزرار البنر الداخلية ===== */
         .tabs-bar {
             position: absolute;
             bottom: 8.5%;
             right: 1.8%;
             display: flex;
             flex-direction: row;
-            direction: rtl;
+            direction: ltr;
             border-radius: 6px;
             overflow: hidden;
             z-index: 5;
@@ -130,7 +129,6 @@
             color: #ffffff;
             border: none;
             padding: 11px 20px;
-            font-family: var(--font-ar);
             font-weight: 900;
             font-size: 14px;
             cursor: pointer;
@@ -158,7 +156,6 @@
             background: #4a0050;
         }
 
-        /* select (الجولات) */
         select.banner-tab {
             appearance: none;
             -webkit-appearance: none;
@@ -190,7 +187,6 @@
         }
 
         .round-indicator {
-            font-family: var(--font-en);
             font-size: 20px;
             font-weight: 900;
             letter-spacing: 1px;
@@ -250,7 +246,6 @@
         }
 
         .edit-action-btn {
-            font-family: var(--font-ar);
             font-weight: 900;
             font-size: 14px;
             padding: 10px 18px;
@@ -300,7 +295,6 @@
         }
 
         .fixtures-header-title {
-            font-family: var(--font-en);
             font-size: 18px;
             font-weight: 900;
             color: #38003c;
@@ -320,7 +314,6 @@
         }
 
         .team-box {
-            font-family: var(--font-en);
             display: flex;
             align-items: center;
             width: 36%;
@@ -414,7 +407,6 @@
         .score-input,
         .pos-number,
         .stat-number {
-            font-family: var(--font-en);
             font-size: 16px;
             font-weight: 900;
             line-height: 1.2;
@@ -439,13 +431,12 @@
         .vs-text {
             font-weight: 900;
             color: #ffffff;
-            font-family: var(--font-en);
             font-size: 14px;
         }
 
         #captureStandings {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             background: #ffffff;
             border-radius: 20px;
             overflow: hidden;
@@ -454,36 +445,11 @@
             width: 100%;
         }
 
-        .standings-sidebar {
-            width: 140px;
-            background: linear-gradient(180deg, #6C2BD9 0%, #3B82F6 50%, #10B981 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 30px 15px;
-            color: #ffffff;
-            text-align: center;
-            flex-shrink: 0;
-            min-height: 280px;
-            border-radius: 16px 0 0 16px;
-        }
-
-        .standings-sidebar img {
-            width: 200%;
-            max-width: 500px;
-            height: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
-            display: block;
-            border-radius: 8px;
-        }
-
         .standings-content-area {
             flex: 1;
             background: #f4f5f7;
             overflow-x: visible;
-            min-width: 200px;
+            width: 100%;
             padding: 10px;
             display: block !important;
         }
@@ -507,7 +473,6 @@
         }
 
         th {
-            font-family: var(--font-en);
             background-color: transparent;
             color: #38003c;
             padding: 8px 4px;
@@ -519,7 +484,6 @@
         }
 
         td {
-            font-family: var(--font-en);
             padding: 0 4px;
             font-weight: 800;
             vertical-align: middle;
@@ -532,9 +496,7 @@
         }
 
         tr:last-child td { border-bottom: none; }
-
         tr.green-line td { border-bottom: 3px solid #00ff87 !important; }
-
         tr.red-line td { border-bottom: 3px solid #ff005a !important; }
 
         .team-cell {
@@ -559,33 +521,16 @@
         }
 
         .pos-indicator-img {
-            width: 28px;
-            height: 28px;
-            min-width: 28px;
-            min-height: 28px;
-            max-width: 28px;
-            max-height: 28px;
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            min-height: 20px;
+            max-width: 20px;
+            max-height: 20px;
             object-fit: contain;
             display: inline-block;
             flex-shrink: 0;
             vertical-align: middle;
-        }
-
-        .pos-indicator-text {
-            display: inline-block;
-            font-family: var(--font-en);
-            font-size: 18px;
-            font-weight: 900;
-            line-height: 1;
-            width: 28px;
-            height: 28px;
-            min-width: 28px;
-            min-height: 28px;
-            max-width: 28px;
-            max-height: 28px;
-            text-align: center;
-            vertical-align: middle;
-            flex-shrink: 0;
         }
 
         .pos-number {
@@ -614,23 +559,23 @@
 <body>
 
     <div id="toast">
-        <span id="toastContent">جاري الحفظ...</span>
+        <span id="toastContent">Saving...</span>
     </div>
 
+    <!-- بنر الواجهة في الأعلى بحواف هلالية -->
     <div class="banner-container">
         <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
 
-        <!-- أزرار الواجهة في البنر مطابقة تماماً لتصميم الآيباد -->
         <div class="tabs-bar">
+            <button class="banner-tab" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
+            <button class="banner-tab" id="fixturesToggleBtn" onclick="switchTab('fixtures')">Matches</button>
             <select class="banner-tab dark" id="roundSelect" onchange="selectRound(this.value)"></select>
-            <button class="banner-tab" id="fixturesToggleBtn" onclick="switchTab('fixtures')">المواجهات</button>
-            <button class="banner-tab" id="standingsToggleBtn" onclick="switchTab('standings')">الترتيب</button>
         </div>
     </div>
 
     <div class="header">
         <div style="margin-bottom: 10px;">
-            <button onclick="downloadAsImage()" style="background: #5d8eb6; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-family: var(--font-ar); font-weight: 900; font-size: 13px; cursor: pointer;">📷 حفظ الصورة</button>
+            <button onclick="downloadAsImage()" style="background: #5d8eb6; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 900; font-size: 13px; cursor: pointer;">📷 Save Image</button>
         </div>
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
@@ -644,8 +589,8 @@
         <div id="fixturesTab" class="tab-content active">
 
             <div id="editPanel" class="edit-panel" style="display: none;">
-                <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">💾 حفظ مواجهات الجولة</button>
-                <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">🗑️ تصفير الجولة</button>
+                <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">💾 Save Matchweek</button>
+                <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">🗑️ Clear Round</button>
             </div>
 
             <div id="captureFixtures" class="export-area">
@@ -658,9 +603,6 @@
 
         <div id="standingsTab" class="tab-content">
             <div id="captureStandings" class="export-area">
-                <div class="standings-sidebar">
-                    <img src="premire_League2.png-.webp" alt="Premier League" onerror="this.style.display='none'">
-                </div>
                 <div class="standings-content-area">
                     <div class="standings-card">
                         <table>
@@ -693,42 +635,27 @@
         let currentRound = 1;
         let activeTab = 'fixtures';
         let isSaving = false;
-
         let toastTimeout = null;
 
         function showToast(msg, isSuccess = false, duration = 3000) {
             const toast = document.getElementById('toast');
             const content = document.getElementById('toastContent');
-
             if (toastTimeout) clearTimeout(toastTimeout);
-
             if (isSuccess) {
                 content.innerHTML = `✅ ${msg}`;
             } else {
                 content.innerHTML = `<span class="toast-spinner"></span> ${msg}`;
             }
-
             toast.classList.add('show');
-
             toastTimeout = setTimeout(() => {
                 toast.classList.remove('show');
             }, duration);
         }
 
         let bannerAttempts = 0;
-        const bannerSources = [
-            "image_5.png",
-            "image_5.PNG",
-            "image_5.jpg",
-            "image_5.JPG",
-            "banner.png",
-            "./image_5.png",
-            "./banner.png"
-        ];
-
+        const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png", "./image_5.png", "./banner.png"];
         function handleBannerError(img) {
             bannerAttempts++;
-
             if (bannerAttempts < bannerSources.length) {
                 img.src = bannerSources[bannerAttempts];
             } else {
@@ -760,9 +687,7 @@
         };
 
         const initialBasePoints = {};
-        Object.keys(teamsMap).forEach(key => {
-            initialBasePoints[key] = { gf: 0, pts: 0 };
-        });
+        Object.keys(teamsMap).forEach(key => { initialBasePoints[key] = { gf: 0, pts: 0 }; });
 
         const matchweeks = {
             1: [["ARS", "COV"],["HUL", "MUN"],["EVE", "CRY"],["IPS", "SUN"],["NOT", "LEE"],["BRE", "TOT"],["BHA", "AVL"],["MCI", "BOU"],["NEW", "LIV"],["FUL", "CHE"]],
@@ -811,7 +736,7 @@
             for (let i = 1; i <= 38; i++) {
                 let opt = document.createElement('option');
                 opt.value = i;
-                opt.innerText = `الجولة ${i}`;
+                opt.innerText = `Round ${i}`;
                 if (i === currentRound) opt.selected = true;
                 select.appendChild(opt);
             }
@@ -841,14 +766,14 @@
         }
 
         function unlockEditWithPassword() {
-            const pass = prompt("أدخل رمز الحماية لتفعيل وضع التعديل:");
+            const pass = prompt("Enter password to edit:");
             if (pass === "1999") {
                 editMode = true;
                 document.getElementById('editPanel').style.display = 'flex';
                 renderFixtures();
-                showToast("تم تفعيل وضع التعديل ✓", true);
+                showToast("Edit mode enabled ✓", true);
             } else if (pass !== null) {
-                alert("الرمز غير صحيح!");
+                alert("Incorrect password!");
             }
         }
 
@@ -862,7 +787,7 @@
         async function saveCurrentRound() {
             if (isSaving) return;
             isSaving = true;
-            showToast("جاري الحفظ...", false);
+            showToast("Saving...", false);
             document.getElementById('saveRoundBtn').disabled = true;
             document.getElementById('clearRoundBtn').disabled = true;
 
@@ -877,7 +802,6 @@
             });
 
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
-
             const result = await saveRoundToSupabase(currentRound, matchweeks, scoresStorage);
 
             isSaving = false;
@@ -885,24 +809,21 @@
             document.getElementById('clearRoundBtn').disabled = false;
 
             if (result.ok) {
-                showToast("تم الحفظ بنجاح ✓", true);
+                showToast("Saved successfully ✓", true);
                 exitEditMode();
             } else {
-                const errMsg = (result.error && result.error.message)
-                    ? result.error.message
-                    : (result.error ? String(result.error) : 'خطأ غير معروف');
-                showToast("فشل الحفظ: " + errMsg, false, 20000);
+                const errMsg = (result.error && result.error.message) ? result.error.message : (result.error ? String(result.error) : 'Unknown error');
+                showToast("Save failed: " + errMsg, false, 20000);
             }
         }
 
         async function clearCurrentRound() {
             if (isSaving) return;
-
-            const confirmed = confirm(`هل أنت متأكد من تصفير الجولة ${currentRound}؟\n\nسيتم حذف جميع النتائج لهذه الجولة.`);
+            const confirmed = confirm(`Are you sure you want to clear round ${currentRound}?`);
             if (!confirmed) return;
 
             isSaving = true;
-            showToast("جاري التصفير...", false);
+            showToast("Clearing...", false);
             document.getElementById('saveRoundBtn').disabled = true;
             document.getElementById('clearRoundBtn').disabled = true;
 
@@ -913,7 +834,6 @@
             });
 
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
-
             const result = await clearRoundFromSupabase(currentRound);
 
             isSaving = false;
@@ -921,13 +841,11 @@
             document.getElementById('clearRoundBtn').disabled = false;
 
             if (result.ok) {
-                showToast("تم تصفير الجولة ✓", true);
+                showToast("Round cleared ✓", true);
                 exitEditMode();
             } else {
-                const errMsg = (result.error && result.error.message)
-                    ? result.error.message
-                    : (result.error ? String(result.error) : 'خطأ غير معروف');
-                showToast("فشل التصفير: " + errMsg, false, 20000);
+                const errMsg = (result.error && result.error.message) ? result.error.message : (result.error ? String(result.error) : 'Unknown error');
+                showToast("Clear failed: " + errMsg, false, 20000);
             }
         }
 
@@ -1004,31 +922,16 @@
                 if (currentRound >= 2 && prevRanks[team.key] !== undefined) {
                     let oldPos = prevRanks[team.key];
                     let imgSrc = '';
-                    let fallbackChar = '';
-                    let fallbackColor = '';
 
                     if (position < oldPos) {
                         imgSrc = 'arrow_up_green.png';
-                        fallbackChar = '▲';
-                        fallbackColor = '#00b894';
                     } else if (position > oldPos) {
                         imgSrc = 'arrow_down_red.png';
-                        fallbackChar = '▼';
-                        fallbackColor = '#ff005a';
                     } else {
                         imgSrc = 'equal_yellow.png';
-                        fallbackChar = '▬';
-                        fallbackColor = '#9ca3af';
                     }
 
-                    indicatorHtml = `<img
-                        src="${imgSrc}"
-                        class="pos-indicator-img"
-                        data-char="${fallbackChar}"
-                        data-color="${fallbackColor}"
-                        alt="indicator"
-                        onerror="handleIndicatorError(this)"
-                    >`;
+                    indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="trend" onerror="this.style.display='none'">`;
                 }
 
                 tbody.innerHTML += `
@@ -1054,18 +957,6 @@
             });
         }
 
-        function handleIndicatorError(img) {
-            const char = img.getAttribute('data-char') || '▬';
-            const color = img.getAttribute('data-color') || '#9ca3af';
-
-            const span = document.createElement('span');
-            span.textContent = char;
-            span.className = 'pos-indicator-text pos-indicator-img';
-            span.style.color = color;
-
-            img.parentNode.replaceChild(span, img);
-        }
-
         function renderFixtures() {
             try {
                 const list = document.getElementById('fixturesList');
@@ -1085,7 +976,7 @@
 
                     let scoreContent = editMode ? `
                         <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
-                        <span style="font-weight:900; color:#fff; font-family:var(--font-en); font-size:16px; line-height:1.2;">:</span>
+                        <span style="font-weight:900; color:#fff; font-size:16px; line-height:1.2;">:</span>
                         <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
                     ` : `
                         <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
@@ -1124,7 +1015,6 @@
             if (currentRound > 38) currentRound = 38;
 
             renderFixtures();
-
             if (activeTab === 'standings') {
                 renderStandings();
             }
@@ -1132,17 +1022,14 @@
 
         function waitForImagesToLoad(element) {
             const images = Array.from(element.querySelectorAll('img'));
-
             return Promise.all(
                 images.map(img => {
                     if (img.complete && img.naturalWidth > 0) {
                         if (img.decode) return img.decode().catch(() => {});
                         return Promise.resolve();
                     }
-
                     return new Promise(resolve => {
                         let finished = false;
-
                         const finish = () => {
                             if (finished) return;
                             finished = true;
@@ -1150,7 +1037,6 @@
                             img.removeEventListener('error', finish);
                             resolve();
                         };
-
                         img.addEventListener('load', finish, { once: true });
                         img.addEventListener('error', finish, { once: true });
                         setTimeout(finish, 5000);
@@ -1162,11 +1048,9 @@
         function applyRoundedCorners(sourceCanvas, radius) {
             const w = sourceCanvas.width;
             const h = sourceCanvas.height;
-
             const outputCanvas = document.createElement('canvas');
             outputCanvas.width = w;
             outputCanvas.height = h;
-
             const ctx = outputCanvas.getContext('2d');
 
             ctx.beginPath();
@@ -1183,7 +1067,6 @@
             ctx.clip();
 
             ctx.drawImage(sourceCanvas, 0, 0);
-
             return outputCanvas;
         }
 
@@ -1197,7 +1080,7 @@
             const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
             const element = document.getElementById(targetId);
 
-            showToast("جاري تحضير الصورة...", false);
+            showToast("Preparing image...", false);
 
             const scaleFactor = 4;
             const cornerRadius = 20 * scaleFactor;
@@ -1247,7 +1130,7 @@
 
                             const indicators = clonedElement.querySelectorAll('.pos-indicator-img');
                             indicators.forEach(img => {
-                                const size = '28px';
+                                const size = '20px';
                                 img.style.width = size;
                                 img.style.height = size;
                                 img.style.minWidth = size;
@@ -1261,33 +1144,27 @@
                 })
                 .then(canvas => {
                     const roundedCanvas = applyRoundedCorners(canvas, cornerRadius);
-
                     roundedCanvas.toBlob(function(blob) {
                         if (!blob) {
-                            showToast("فشل إنشاء الصورة!", false);
+                            showToast("Failed to create image!", false);
                             return;
                         }
 
                         if (navigator.share && navigator.canShare) {
-                            const file = new File([blob], activeTab === 'fixtures' ?
-                                `Matchweek_${currentRound}.png` :
-                                `League_Standings_GW${currentRound}.png`, { type: 'image/png' });
-
+                            const file = new File([blob], activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings_GW${currentRound}.png`, { type: 'image/png' });
                             const shareData = {
                                 files: [file],
-                                title: activeTab === 'fixtures' ?
-                                    `نتائج الجولة ${currentRound}` :
-                                    `ترتيب الدوري - الجولة ${currentRound}`
+                                title: activeTab === 'fixtures' ? `Matchweek ${currentRound}` : `League Standings GW ${currentRound}`
                             };
 
                             if (navigator.canShare(shareData)) {
                                 navigator.share(shareData).then(() => {
-                                    showToast("تم حفظ الصورة بنجاح ✓", true);
+                                    showToast("Image saved successfully ✓", true);
                                 }).catch((err) => {
                                     if (err.name !== 'AbortError') {
                                         fallbackDownload(blob);
                                     } else {
-                                        showToast("تم الإلغاء", false);
+                                        showToast("Cancelled", false);
                                     }
                                 });
                             } else {
@@ -1300,22 +1177,20 @@
                 })
                 .catch(err => {
                     console.error('html2canvas error:', err);
-                    showToast("حدث خطأ أثناء إنشاء الصورة!", false);
+                    showToast("Error generating image!", false);
                 });
         }
 
         function fallbackDownload(blob) {
             const link = document.createElement('a');
-            link.download = activeTab === 'fixtures' ?
-                `Matchweek_${currentRound}.png` :
-                `League_Standings_GW${currentRound}.png`;
+            link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings_GW${currentRound}.png`;
             link.href = URL.createObjectURL(blob);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             setTimeout(() => {
                 URL.revokeObjectURL(link.href);
-                showToast("تم تحميل الصورة ✓", true);
+                showToast("Image downloaded ✓", true);
             }, 100);
         }
 
@@ -1331,17 +1206,13 @@
 
         (async function initFromSupabase() {
             try {
-                const { error: testError } = await window.sbClient
-                    .from('match_results')
-                    .select('id')
-                    .limit(1);
-
+                const { error: testError } = await window.sbClient.from('match_results').select('id').limit(1);
                 if (testError) {
-                    showToast('⚠️ فشل الاتصال بقاعدة البيانات: ' + testError.message, false, 20000);
+                    showToast('⚠️ DB Connection Error: ' + testError.message, false, 20000);
                     return;
                 }
             } catch (connErr) {
-                showToast('⚠️ خطأ في الشبكة: ' + connErr.message, false, 20000);
+                showToast('⚠️ Network Error: ' + connErr.message, false, 20000);
                 return;
             }
 
