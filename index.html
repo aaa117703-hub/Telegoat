@@ -69,9 +69,7 @@
             text-align: center;
         }
 
-        #toast.show {
-            opacity: 1;
-        }
+        #toast.show { opacity: 1; }
 
         #toast .toast-spinner {
             display: inline-block;
@@ -111,34 +109,35 @@
             display: block;
         }
 
-        /* ===== شريط الأزرار فوق البانر — بنفس نمط أزرار الصورة ===== */
+        /* ===== شريط الأزرار فوق البانر — يغطي أزرار الصورة ===== */
         .tabs-bar {
             position: absolute;
-            /* نفس مكان أزرار Fantasy الموجودة في الصورة */
-            bottom: 10.5%;
-            right: 1.6%;
+            /* تغطية منطقة FPL Draft | FPL Challenge | Fantasy في الصورة */
+            bottom: 8%;
+            right: 1.5%;
+            width: 37%;
+            height: 11%;
             z-index: 5;
             display: flex;
             flex-direction: row;
             direction: rtl;
             overflow: hidden;
-            max-width: 96%;
-            flex-wrap: nowrap;
-            border-radius: 3px;
             line-height: 1;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
         }
 
         .banner-tab-btn,
         .banner-tab-select {
-            background: rgba(150, 158, 172, 0.72);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
+            background: rgba(170, 178, 192, 0.55);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             color: #ffffff;
             border: none;
-            padding: 9px 14px;
+            padding: 0;
             font-family: var(--font-ar);
             font-weight: 900;
-            font-size: 12px;
+            font-size: 13px;
             cursor: pointer;
             outline: none;
             transition: background 0.2s;
@@ -147,7 +146,11 @@
             justify-content: center;
             white-space: nowrap;
             line-height: 1;
-            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            flex: 1 1 0;
+            min-width: 0;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .banner-tab-btn:last-child,
@@ -156,28 +159,29 @@
         }
 
         .banner-tab-btn:hover {
-            background: rgba(150, 158, 172, 0.9);
+            background: rgba(170, 178, 192, 0.75);
         }
 
         .banner-tab-btn.active {
-            background: rgba(56, 0, 60, 0.96);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
+            background: rgba(20, 20, 30, 0.88);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .banner-tab-btn.active:hover {
-            background: rgba(56, 0, 60, 1);
+            background: rgba(20, 20, 30, 0.95);
         }
 
         .banner-tab-select {
             appearance: none;
             -webkit-appearance: none;
-            padding-right: 8px;
-            padding-left: 20px;
+            padding-right: 4px;
+            padding-left: 14px;
             background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="8" viewBox="0 0 24 24" width="8" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
             background-repeat: no-repeat;
-            background-position: left 6px center;
-            background-color: rgba(150, 158, 172, 0.72);
+            background-position: left 4px center;
+            background-color: rgba(170, 178, 192, 0.55);
+            text-align: center;
         }
 
         .banner-tab-select option {
@@ -280,18 +284,14 @@
             box-shadow: 0 3px 0 #009b40;
         }
 
-        .save-round-btn:hover {
-            background: #00b34a;
-        }
+        .save-round-btn:hover { background: #00b34a; }
 
         .clear-round-btn {
             background: #ff005a;
             box-shadow: 0 3px 0 #b8003f;
         }
 
-        .clear-round-btn:hover {
-            background: #e6004f;
-        }
+        .clear-round-btn:hover { background: #e6004f; }
 
         .edit-action-btn:disabled {
             opacity: 0.5;
@@ -383,8 +383,6 @@
             width: auto;
             height: auto;
             display: block;
-            padding: 0;
-            margin: 0;
         }
 
         .logo-24 {
@@ -412,8 +410,6 @@
             width: auto;
             height: auto;
             display: block;
-            padding: 0;
-            margin: 0;
         }
 
         .match-score-center {
@@ -442,9 +438,7 @@
             vertical-align: middle;
         }
 
-        .score-display {
-            color: #ffffff;
-        }
+        .score-display { color: #ffffff; }
 
         .score-input {
             width: 36px;
@@ -553,17 +547,11 @@
             overflow: hidden;
         }
 
-        tr:last-child td {
-            border-bottom: none;
-        }
+        tr:last-child td { border-bottom: none; }
 
-        tr.green-line td {
-            border-bottom: 3px solid #00ff87 !important;
-        }
+        tr.green-line td { border-bottom: 3px solid #00ff87 !important; }
 
-        tr.red-line td {
-            border-bottom: 3px solid #ff005a !important;
-        }
+        tr.red-line td { border-bottom: 3px solid #ff005a !important; }
 
         .team-cell {
             display: flex;
@@ -594,7 +582,6 @@
             max-width: 28px;
             max-height: 28px;
             object-fit: contain;
-            object-position: center;
             display: inline-block;
             flex-shrink: 0;
             vertical-align: middle;
@@ -636,15 +623,9 @@
         .col-gf { width: 20%; }
         .col-pts { width: 24%; }
 
-        .tab-content {
-            display: none;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        /* ===== موبايل ===== */
         @media screen and (max-width: 600px) {
             body { padding: 0 5px; }
 
@@ -655,23 +636,24 @@
             }
 
             .tabs-bar {
-                bottom: 10.5%;
-                right: 1.6%;
-                max-width: 96%;
+                bottom: 8%;
+                right: 1.5%;
+                width: 44%;
+                height: 12%;
+                border-radius: 6px;
             }
 
             .banner-tab-btn,
             .banner-tab-select {
                 font-size: 9px;
-                padding: 7px 7px;
-                border-left: 1px solid rgba(255, 255, 255, 0.15);
+                border-left: 1px solid rgba(255, 255, 255, 0.2);
             }
 
             .banner-tab-select {
-                padding-right: 5px;
-                padding-left: 14px;
+                padding-right: 2px;
+                padding-left: 11px;
                 background-size: 6px;
-                background-position: left 4px center;
+                background-position: left 3px center;
             }
 
             .round-indicator { font-size: 18px; }
@@ -815,9 +797,6 @@
             }
 
             .pos-container { height: 26px; }
-
-            tr.green-line td,
-            tr.red-line td { border-bottom-width: 2px !important; }
         }
     </style>
 </head>
@@ -830,7 +809,7 @@
     <div class="banner-container">
         <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
 
-        <!-- أزرارنا بنفس مكان/نمط أزرار Fantasy داخل الصورة -->
+        <!-- الأزرار: من اليمين لليسار (RTL) - الجولة نشط، ثم الترتيب، ثم المواجهات، ثم حفظ الصورة -->
         <div class="tabs-bar">
             <select class="banner-tab-select" id="roundSelect" onchange="selectRound(this.value)"></select>
             <button class="banner-tab-btn" id="standingsToggleBtn" onclick="switchTab('standings')">الترتيب</button>
@@ -1010,14 +989,13 @@
             35: [["ARS", "BHA"],["AVL", "NOT"],["BRE", "BOU"],["COV", "CHE"],["HUL", "CRY"],["IPS", "MUN"],["LEE", "LIV"],["MCI", "EVE"],["TOT", "FUL"],["NEW", "FUL"]],
             36: [["BOU", "MUN"],["BHA", "FUL"],["CHE", "IPS"],["CRY", "BRE"],["EVE", "AVL"],["FUL", "MCI"],["LIV", "COV"],["NEW", "LEE"],["NOT", "TOT"],["SUN", "ARS"]],
             37: [["ARS", "LIV"],["AVL", "SUN"],["BRE", "HUL"],["COV", "BOU"],["IPS", "CRY"],["LEE", "CHE"],["MCI", "NEW"],["MUN", "NOT"],["TOT", "EVE"],["FUL", "BHA"]],
-            38: [["BOU", "NOT"],["BHA", "MUN"],["CHE", "AVL"],["CRY", "ARS"],["EVE", "FUL"],["HUL", "COV"],["LEE", "BRE"],["LIV,", "IPS"],["MCI", "SUN"],[" hTOT", "NEW);
-"]]
+            38: [["BOU", "NOT"],["BHA", "MUN"],["CHE", "AVL"],["CRY", "ARS"],["EVE", "FUL"],["HUL", "COV"],["LEE", "BRE"],["LIV", "IPS"],["MCI", "SUN"],["TOT", "NEW"]]
         };
 
-        function initRoundDropdown()            {
-            const select = document.getElementById('roundSelect ctx');
+        function initRoundDropdown() {
+            const select = document.getElementById('roundSelect');
             select.innerHTML = '';
-            for (let i = 1; i. <= 38; i++) {
+            for (let i = 1; i <= 38; i++) {
                 let opt = document.createElement('option');
                 opt.value = i;
                 opt.innerText = `الجولة ${i}`;
@@ -1277,7 +1255,8 @@
         function renderFixtures() {
             const list = document.getElementById('fixturesList');
             document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
-            document.getElementById('roundSelect').value = currentRound;
+            const selectEl = document.getElementById('roundSelect');
+            if (selectEl) selectEl.value = currentRound;
             list.innerHTML = '';
 
             let matches = matchweeks[currentRound] || [];
@@ -1339,9 +1318,7 @@
             return Promise.all(
                 images.map(img => {
                     if (img.complete && img.naturalWidth > 0) {
-                        if (img.decode) {
-                            return img.decode().catch(() => {});
-                        }
+                        if (img.decode) return img.decode().catch(() => {});
                         return Promise.resolve();
                     }
 
@@ -1380,7 +1357,8 @@
             ctx.quadraticCurveTo(w, 0, w, radius);
             ctx.lineTo(w, h - radius);
             ctx.quadraticCurveTo(w, h, w - radius, h);
-            ctx.lineTo(radiusquadraticCurveTo(0, h, 0, h - radius);
+            ctx.lineTo(radius, h);
+            ctx.quadraticCurveTo(0, h, 0, h - radius);
             ctx.lineTo(0, radius);
             ctx.quadraticCurveTo(0, 0, radius, 0);
             ctx.closePath();
@@ -1533,7 +1511,6 @@
         renderFixtures();
         renderStandings();
 
-        // ✅ تحميل البيانات من Supabase عند فتح الصفحة
         (async function initFromSupabase() {
             console.log('⏳ جاري تحميل البيانات من Supabase...');
 
