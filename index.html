@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=768, user-scalable=yes, maximum-scale=5.0">
     <title>TELEGRAM GOAT - Premier League</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -33,12 +33,16 @@
             font-family: var(--font-en);
         }
 
+        html {
+            background-color: var(--pl-dark-bg);
+        }
+
         body {
             background-color: var(--pl-dark-bg);
             color: var(--text-white);
             padding-bottom: 40px;
             width: 100%;
-            max-width: 900px;
+            max-width: 768px;
             margin: 0 auto;
             padding-left: 10px;
             padding-right: 10px;
@@ -87,24 +91,43 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ===== صف الأزرار + زر التحميل فوق البنر ===== */
-        .top-controls-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 15px 0 10px 0;
-            flex-wrap: wrap;
+        /* ===== بنر الواجهة في الأعلى ===== */
+        .banner-container {
+            position: relative;
             width: 100%;
+            max-width: 768px;
+            margin: 15px auto 0;
+            border-radius: 25px;
+            overflow: hidden;
+            border: 4px solid #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #38003c 0%, #240024 100%);
+            line-height: 0;
+            text-align: center;
         }
 
+        .banner-container img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        /* ===== شريط الأزرار داخل البنر (في الأسفل) ===== */
         .tabs-bar {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             flex-direction: row;
             direction: ltr;
             gap: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
+            z-index: 5;
+            line-height: 1;
+            flex-wrap: nowrap;
+            max-width: 96%;
         }
 
         .banner-tab {
@@ -159,46 +182,14 @@
             color: #fff;
         }
 
-        /* ===== زر التحميل الأخضر ===== */
-        .download-icon-btn {
+        /* ===== زر التحميل الجديد (نص Download بنفس ستايل الأزرار) ===== */
+        .download-tab {
             background: #00c853;
-            color: #fff;
-            border: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-            font-weight: 900;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 3px 0 #009b40;
-            transition: 0.2s;
-            flex-shrink: 0;
-        }
-        .download-icon-btn:hover { background: #00b34a; }
-
-        /* ===== البنر ===== */
-        .banner-container {
-            position: relative;
-            width: 100%;
-            margin: 0 auto;
-            border-radius: 25px;
-            overflow: hidden;
-            border: 4px solid #ffffff;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(135deg, #38003c 0%, #240024 100%);
-            line-height: 0;
-            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        .banner-container img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-            object-position: center;
-            display: block;
+        .download-tab:hover {
+            background: #00b34a;
         }
 
         .header {
@@ -260,7 +251,7 @@
 
         .main-container {
             width: 100%;
-            max-width: 900px;
+            max-width: 768px;
             margin: 0 auto;
             padding: 0 5px;
         }
@@ -593,19 +584,16 @@
         <span id="toastContent">Saving...</span>
     </div>
 
-    <!-- ===== الأزرار + زر التحميل فوق البنر ===== -->
-    <div class="top-controls-row">
+    <!-- ===== البنر مع الأزرار داخله ===== -->
+    <div class="banner-container">
+        <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
+
         <div class="tabs-bar">
             <button class="banner-tab" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
             <button class="banner-tab" id="fixturesToggleBtn" onclick="switchTab('fixtures')">Matches</button>
             <select class="banner-tab" id="roundSelect" onchange="selectRound(this.value)"></select>
+            <button class="banner-tab download-tab" onclick="downloadAsImage()">Download</button>
         </div>
-        <button class="download-icon-btn" onclick="downloadAsImage()" title="Save Image">⬇</button>
-    </div>
-
-    <!-- ===== البنر ===== -->
-    <div class="banner-container">
-        <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
     </div>
 
     <!-- ===== التنقل بين الجولات ===== -->
