@@ -1,14 +1,15 @@
 const SUPABASE_URL = 'https://qzsteswrannqsrnlytzl.supabase.co';
 const SUPABASE_ANON_KEY = 'Sb_publishable_Qa5O7t1wbhPhnTLBtHEfQg_hYYNdxYJ';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// مهم: نخزّن العميل باسم مختلف عن كلمة supabase المحجوزة
+window.sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /**
  * جلب جميع نتائج المباريات من Supabase وتحويلها إلى شكل scoresStorage
  */
 async function loadScoresFromSupabase(matchweeks) {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.sbClient
             .from('match_results')
             .select('round, home_team, away_team, home_score, away_score');
 
@@ -52,7 +53,6 @@ async function loadScoresFromSupabase(matchweeks) {
 
 /**
  * حفظ نتائج جولة كاملة في Supabase
- * الاستراتيجية: حذف صفوف الجولة الحالية ثم إدخال البيانات الجديدة
  */
 async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
     try {
@@ -78,7 +78,7 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
             }
         });
 
-        const { error: delError } = await supabase
+        const { error: delError } = await window.sbClient
             .from('match_results')
             .delete()
             .eq('round', String(round));
@@ -89,7 +89,7 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
         }
 
         if (rows.length > 0) {
-            const { error: insError } = await supabase
+            const { error: insError } = await window.sbClient
                 .from('match_results')
                 .insert(rows);
 
@@ -112,7 +112,7 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
  */
 async function clearRoundFromSupabase(round) {
     try {
-        const { error } = await supabase
+        const { error } = await window.sbClient
             .from('match_results')
             .delete()
             .eq('round', String(round));
