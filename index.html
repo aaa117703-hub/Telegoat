@@ -111,7 +111,6 @@
             z-index: 1;
         }
 
-        /* ✅ التعديل الأول: رفع التبويبات قليلاً */
         .banner-overlay-tabs {
             position: absolute;
             bottom: 14%;
@@ -549,7 +548,6 @@
             image-rendering: auto;
         }
 
-        /* ✅ التعديل الثالث: بديل الرصاصي لعدم تغير المركز */
         .pos-indicator-text {
             display: inline-block;
             font-family: var(--font-en);
@@ -603,7 +601,6 @@
                 min-height: 150px;
             }
 
-            /* ✅ رفع التبويبات أكثر على الجوال */
             .banner-overlay-tabs {
                 bottom: 16%;
                 right: 1%;
@@ -1012,7 +1009,8 @@
             }
         }
 
-        function toggleEditMode() {
+        /* ✅ التعديل: زر الحفظ يرفع البيانات إلى Supabase أيضًا */
+        async function toggleEditMode() {
             const btn = document.getElementById('editToggleBtn');
 
             if (!editMode) {
@@ -1038,18 +1036,26 @@
             isSaving = true;
             btn.disabled = true;
 
+            // 1) حفظ محليًا (كما كان)
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
 
-            setTimeout(() => {
-                isSaving = false;
-                btn.disabled = false;
+            // 2) رفع إلى Supabase
+            const result = await saveRoundToSupabase(currentRound, matchweeks, scoresStorage);
+
+            isSaving = false;
+            btn.disabled = false;
+
+            if (result.ok) {
                 showToast("تم الحفظ ✓", true);
-                editMode = false;
-                btn.style.setProperty('display', 'none', 'important');
-                btn.innerText = "تعديل";
-                renderFixtures();
-                renderStandings();
-            }, 300);
+            } else {
+                showToast("تم الحفظ محليًا، لكن فشل الرفع للسحابة!", false);
+            }
+
+            editMode = false;
+            btn.style.setProperty('display', 'none', 'important');
+            btn.innerText = "تعديل";
+            renderFixtures();
+            renderStandings();
         }
 
         function updateScore(round, idx, type, val, inputElement) {
@@ -1175,7 +1181,6 @@
             });
         }
 
-        /* ✅ التعديل الثالث: عند فشل تحميل صورة المؤشر، يظهر النص البديل بلون رصاصي/ملون */
         function handleIndicatorError(img) {
             const char = img.getAttribute('data-char') || '▬';
             const color = img.getAttribute('data-color') || '#9ca3af';
@@ -1448,7 +1453,7 @@
         renderFixtures();
         renderStandings();
 
-        // ✅ تحميل البيانات من Supabase
+        // ✅ تحميل البيانات من Supabase عند فتح الصفحة
         (async function initFromSupabase() {
             console.log('⏳ جاري تحميل البيانات من Supabase...');
             const remoteScores = await loadScoresFromSupabase(matchweeks);
