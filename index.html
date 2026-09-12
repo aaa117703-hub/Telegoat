@@ -48,10 +48,13 @@
             overflow-x: hidden;
         }
 
+        /* ===== صندوق عرض الأخطاء ===== */
         #errorBox {
             display: none;
             position: fixed;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             background: #ff0040;
             color: #fff;
             padding: 12px 16px;
@@ -73,12 +76,14 @@
         #errorBox .err-line:last-child { border-bottom: none; }
         #errorBox .err-close {
             position: absolute;
-            top: 6px; right: 10px;
+            top: 6px;
+            right: 10px;
             background: #fff;
             color: #ff0040;
             border: none;
             border-radius: 50%;
-            width: 26px; height: 26px;
+            width: 26px;
+            height: 26px;
             font-weight: 900;
             font-size: 16px;
             cursor: pointer;
@@ -112,7 +117,8 @@
 
         #toast .toast-spinner {
             display: inline-block;
-            width: 18px; height: 18px;
+            width: 18px;
+            height: 18px;
             border: 3px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             border-top-color: #ff005a;
@@ -148,35 +154,34 @@
 
         .tabs-bar {
             position: absolute;
-            top: 70.5%;
-            left: 57.5%;
-            right: 2.5%;
-            height: 27%;
+            top: 67%;
+            left: 56%;
+            right: 2%;
+            height: 30%;
             display: flex;
-            gap: 0;
+            gap: 3px;
             z-index: 5;
-            line-height: 1;
-            border-radius: 12px 12px 14px 14px;
-            overflow: hidden;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
+            background: rgba(30, 10, 45, 0.6);
+            padding: 3px;
+            border-radius: 14px;
+            box-sizing: border-box;
         }
 
         .banner-tab {
-            flex: 1 1 0;
+            flex: 1;
             min-width: 0;
-            background: var(--fantasy-dark);
+            background: #2d103d;
             color: #ffffff;
             border: none;
-            padding: 0 8px;
+            padding: 0 4px;
             font-weight: 700;
-            font-size: clamp(12px, 1.6vw, 15px);
+            font-size: clamp(10px, 1.3vw, 13px);
             cursor: pointer;
             outline: none;
             transition: background 0.2s;
             white-space: nowrap;
-            line-height: 1;
             text-align: center;
-            border-radius: 0;
+            border-radius: 10px;
             overflow: hidden;
             text-overflow: ellipsis;
             display: flex;
@@ -187,26 +192,21 @@
         .banner-tab:hover { background: var(--fantasy-hover); }
 
         .banner-tab.active {
-            background: var(--fantasy-darker);
+            background: #150522;
             font-weight: 900;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
         }
-
-        .banner-tab.active:hover { background: #2a1035; }
 
         select.banner-tab {
             appearance: none;
             -webkit-appearance: none;
             text-align: center;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='white' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 10 6'%3E%3Cpath fill='white' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 8px center;
-            background-color: var(--fantasy-dark);
-            padding-right: 22px;
-            padding-left: 8px;
-            color: #ffffff;
+            background-position: right 6px center;
+            padding-right: 16px;
+            padding-left: 2px;
         }
-
-        select.banner-tab:hover { background-color: var(--fantasy-hover); }
 
         select.banner-tab option {
             background: var(--fantasy-dark);
@@ -251,7 +251,8 @@
             background: var(--pl-purple-btn);
             color: var(--text-white);
             border: 1px solid var(--border-dark);
-            width: 40px; height: 40px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
             font-size: 20px;
@@ -309,9 +310,8 @@
 
         .edit-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* ===== المواجهات المضغوطة ===== */
         #captureFixtures {
-            padding: 10px 10px;
+            padding: 18px 14px;
             background: linear-gradient(135deg, #3281ff 0%, #00d2ff 45%, #a835ff 100%), #4b92ff;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -320,15 +320,15 @@
 
         .fixtures-header-box {
             background: #ffffff;
-            border-radius: 10px;
-            padding: 6px;
+            border-radius: 12px;
+            padding: 10px;
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .fixtures-header-title {
-            font-size: 15px;
+            font-size: 18px;
             font-weight: 900;
             color: #38003c;
             letter-spacing: 1px;
@@ -338,11 +338,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 5px 10px;
-            margin-bottom: 4px;
+            padding: 8px 10px;
+            margin-bottom: 6px;
             background: #ffffff;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             flex-wrap: nowrap;
         }
         .fixture-row:last-child { margin-bottom: 0; }
@@ -350,8 +350,8 @@
         .team-box {
             display: flex;
             align-items: center;
-            width: 38%;
-            font-size: 13px;
+            width: 36%;
+            font-size: 14px;
             font-weight: 800;
             color: #38003c;
             text-transform: uppercase;
@@ -384,9 +384,9 @@
 
         .logo-24 {
             display: inline-block;
-            width: 22px; height: 22px;
-            min-width: 22px; min-height: 22px;
-            max-width: 22px; max-height: 22px;
+            width: 24px; height: 24px;
+            min-width: 24px; min-height: 24px;
+            max-width: 24px; max-height: 24px;
             flex-shrink: 0;
             position: relative;
             overflow: hidden;
@@ -406,13 +406,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-            width: 20%;
+            gap: 6px;
+            width: 22%;
             background: #7138f5;
-            padding: 4px 6px;
-            border-radius: 5px;
+            padding: 6px 8px;
+            border-radius: 6px;
             position: relative;
-            min-width: 60px;
+            min-width: 70px;
             flex-shrink: 0;
         }
 
@@ -420,7 +420,7 @@
         .score-input,
         .pos-number,
         .stat-number {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 900;
             line-height: 1.2;
             display: inline-block;
@@ -430,7 +430,8 @@
         .score-display { color: #ffffff; }
 
         .score-input {
-            width: 32px; height: 22px;
+            width: 36px;
+            height: 26px;
             text-align: center;
             background: #ffffff;
             color: #38003c;
@@ -438,13 +439,12 @@
             border-radius: 4px;
             outline: none;
             padding: 0;
-            font-size: 14px;
         }
 
         .vs-text {
             font-weight: 900;
             color: #ffffff;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         #captureStandings {
@@ -495,8 +495,8 @@
             line-height: 1.2;
             background-color: #ffffff;
             border-bottom: 1px solid #d1d5db;
-            height: 36px;
-            max-height: 36px;
+            height: 38px;
+            max-height: 38px;
             overflow: hidden;
         }
 
@@ -509,7 +509,7 @@
             align-items: center;
             justify-content: flex-start;
             gap: 6px;
-            font-size: 14px;
+            font-size: 15px;
             text-transform: uppercase;
             color: #1a1a1a;
             padding: 0 12px 0 0;
@@ -526,9 +526,9 @@
         }
 
         .pos-indicator-img {
-            width: 22px; height: 22px;
-            min-width: 22px; min-height: 22px;
-            max-width: 22px; max-height: 22px;
+            width: 25px; height: 25px;
+            min-width: 25px; min-height: 25px;
+            max-width: 25px; max-height: 25px;
             object-fit: contain;
             display: inline-block;
             flex-shrink: 0;
@@ -536,7 +536,7 @@
         }
 
         .pos-number {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 900;
             line-height: 1;
             min-width: 18px;
@@ -544,7 +544,7 @@
         }
 
         .stat-number {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 900;
             line-height: 1;
         }
@@ -560,6 +560,7 @@
 </head>
 <body>
 
+    <!-- صندوق عرض الأخطاء -->
     <div id="errorBox">
         <button class="err-close" onclick="document.getElementById('errorBox').classList.remove('show')">✕</button>
         <div id="errorContent"></div>
@@ -573,9 +574,10 @@
         <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
 
         <div class="tabs-bar">
-            <button class="banner-tab" id="fixturesToggleBtn" onclick="switchTab('fixtures')">Matches</button>
+            <button class="banner-tab active" id="fixturesToggleBtn" onclick="switchTab('fixtures')">Matches</button>
             <button class="banner-tab" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
             <select class="banner-tab" id="roundSelect" onchange="selectRound(this.value)"></select>
+            <button class="banner-tab" style="background: #1f5dbf;" onclick="downloadAsImage()">📷 Save</button>
         </div>
     </div>
 
@@ -633,6 +635,7 @@
 
     </div>
 
+    <!-- ===== عرض الأخطاء على الشاشة ===== -->
     <script>
         (function() {
             const box = document.getElementById('errorBox');
@@ -654,8 +657,10 @@
         })();
     </script>
 
+    <!-- app.js ينحمّل بعد كل عناصر الصفحة -->
     <script src="app.js"></script>
 
+    <!-- السكربت الرئيسي -->
     <script>
         let editMode = false;
         let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
@@ -1010,7 +1015,7 @@
 
                     let scoreContent = editMode ? `
                         <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
-                        <span style="font-weight:900; color:#fff; font-size:14px; line-height:1.2;">:</span>
+                        <span style="font-weight:900; color:#fff; font-size:16px; line-height:1.2;">:</span>
                         <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
                     ` : `
                         <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
@@ -1132,7 +1137,7 @@
                             const wrappers = clonedElement.querySelectorAll('.logo-20, .logo-24');
                             wrappers.forEach(wrapper => {
                                 const isSmall = wrapper.classList.contains('logo-20');
-                                const size = isSmall ? '20px' : '22px';
+                                const size = isSmall ? '20px' : '24px';
                                 wrapper.style.width = size;
                                 wrapper.style.height = size;
                                 wrapper.style.minWidth = size;
@@ -1160,7 +1165,7 @@
 
                             const indicators = clonedElement.querySelectorAll('.pos-indicator-img');
                             indicators.forEach(img => {
-                                const size = '22px';
+                                const size = '25px';
                                 img.style.width = size;
                                 img.style.height = size;
                                 img.style.minWidth = size;
@@ -1231,6 +1236,7 @@
         renderFixtures();
         renderStandings();
 
+        // ===== اضغط على "MATCHWEEK" 5 مرات لفتح Eruda =====
         (function() {
             let clickCount = 0;
             let clickTimer = null;
