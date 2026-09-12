@@ -7,8 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>
-    <script src="app.js"></script>
     <style>
         @font-face {
             font-family: 'SultanCustom';
@@ -48,6 +46,47 @@
             margin: 0 auto;
             padding: 0 10px 20px 10px;
             overflow-x: hidden;
+        }
+
+        /* ===== صندوق عرض الأخطاء ===== */
+        #errorBox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ff0040;
+            color: #fff;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            z-index: 99999;
+            max-height: 40vh;
+            overflow-y: auto;
+            border-bottom: 3px solid #fff;
+            direction: ltr;
+            text-align: left;
+            font-family: monospace;
+        }
+        #errorBox.show { display: block; }
+        #errorBox .err-line {
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+        #errorBox .err-line:last-child { border-bottom: none; }
+        #errorBox .err-close {
+            position: absolute;
+            top: 6px;
+            right: 10px;
+            background: #fff;
+            color: #ff0040;
+            border: none;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            font-weight: 900;
+            font-size: 16px;
+            cursor: pointer;
         }
 
         #toast {
@@ -527,6 +566,12 @@
 </head>
 <body>
 
+    <!-- صندوق عرض الأخطاء -->
+    <div id="errorBox">
+        <button class="err-close" onclick="document.getElementById('errorBox').classList.remove('show')">✕</button>
+        <div id="errorContent"></div>
+    </div>
+
     <div id="toast">
         <span id="toastContent">Saving...</span>
     </div>
@@ -595,6 +640,32 @@
 
     </div>
 
+    <!-- ===== عرض الأخطاء على الشاشة ===== -->
+    <script>
+        (function() {
+            const box = document.getElementById('errorBox');
+            const content = document.getElementById('errorContent');
+            function showError(msg) {
+                const line = document.createElement('div');
+                line.className = 'err-line';
+                line.textContent = msg;
+                content.appendChild(line);
+                box.classList.add('show');
+            }
+            window.onerror = function(message, source, lineno, colno, error) {
+                showError('❌ ' + message + ' | ' + (source || '') + ':' + lineno);
+                return false;
+            };
+            window.addEventListener('unhandledrejection', function(e) {
+                showError('⚠️ Promise: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason)));
+            });
+        })();
+    </script>
+
+    <!-- app.js ينحمّل بعد كل عناصر الصفحة -->
+    <script src="app.js"></script>
+
+    <!-- السكربت الرئيسي -->
     <script>
         let editMode = false;
         let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
@@ -979,6 +1050,7 @@
                 });
             } catch (e) {
                 console.error('renderFixtures error:', e);
+                if (window.onerror) window.onerror('renderFixtures: ' + e.message, '', 0, 0, e);
             }
         }
 
@@ -1168,6 +1240,29 @@
         initRoundDropdown();
         renderFixtures();
         renderStandings();
+
+        // ===== اضغط على "MATCHWEEK" 5 مرات لفتح Eruda =====
+        (function() {
+            let clickCount = 0;
+            let clickTimer = null;
+            const titleEl = document.getElementById('currentRoundTitle');
+            if (titleEl) {
+                titleEl.addEventListener('click', function() {
+                    clickCount++;
+                    clearTimeout(clickTimer);
+                    if (clickCount >= 5) {
+                        clickCount = 0;
+                        if (typeof eruda !== 'undefined' && eruda.init) {
+                            try {
+                                eruda.init();
+                                eruda.show();
+                            } catch(e) {}
+                        }
+                    }
+                    clickTimer = setTimeout(() => { clickCount = 0; }, 2000);
+                });
+            }
+        })();
 
         (async function initFromSupabase() {
             if (!window.sbClient || typeof loadScoresFromSupabase !== 'function') return;
