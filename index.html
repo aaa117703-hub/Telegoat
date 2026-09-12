@@ -29,147 +29,100 @@
             --fantasy-hover: #3d1550;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: var(--font-en);
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-en); }
         html { background-color: var(--pl-dark-bg); }
 
         body {
             background-color: var(--pl-dark-bg);
             color: var(--text-white);
-            width: 100%;
-            max-width: 768px;
+            width: 100%; max-width: 768px;
             margin: 0 auto;
             padding: 0 10px 20px 10px;
             overflow-x: hidden;
         }
 
         #errorBox {
-            display: none;
-            position: fixed;
+            display: none; position: fixed;
             top: 0; left: 0; right: 0;
-            background: #ff0040;
-            color: #fff;
-            padding: 12px 16px;
-            font-size: 13px;
-            font-weight: 700;
-            z-index: 99999;
-            max-height: 40vh;
-            overflow-y: auto;
-            border-bottom: 3px solid #fff;
-            direction: ltr;
-            text-align: left;
-            font-family: monospace;
+            background: #ff0040; color: #fff;
+            padding: 12px 16px; font-size: 13px; font-weight: 700;
+            z-index: 99999; max-height: 40vh; overflow-y: auto;
+            border-bottom: 3px solid #fff; direction: ltr;
+            text-align: left; font-family: monospace;
         }
         #errorBox.show { display: block; }
-        #errorBox .err-line {
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.3);
-        }
+        #errorBox .err-line { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.3); }
         #errorBox .err-line:last-child { border-bottom: none; }
         #errorBox .err-close {
-            position: absolute;
-            top: 6px; right: 10px;
-            background: #fff;
-            color: #ff0040;
-            border: none;
-            border-radius: 50%;
-            width: 26px; height: 26px;
-            font-weight: 900;
-            font-size: 16px;
-            cursor: pointer;
+            position: absolute; top: 6px; right: 10px;
+            background: #fff; color: #ff0040; border: none;
+            border-radius: 50%; width: 26px; height: 26px;
+            font-weight: 900; font-size: 16px; cursor: pointer;
         }
 
         #toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
+            position: fixed; bottom: 30px; left: 50%;
             transform: translateX(-50%);
-            background: #1e0d33;
-            color: #fff;
-            padding: 12px 28px;
-            border-radius: 30px;
-            font-weight: 900;
-            font-size: 15px;
+            background: #1e0d33; color: #fff;
+            padding: 12px 28px; border-radius: 30px;
+            font-weight: 900; font-size: 15px;
             border: 2px solid #ff005a;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            opacity: 0;
+            z-index: 999; opacity: 0;
             transition: opacity 0.4s ease;
             pointer-events: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            max-width: 92%;
-            text-align: center;
+            display: flex; align-items: center; gap: 10px;
+            max-width: 92%; text-align: center;
         }
-
         #toast.show { opacity: 1; }
-
         #toast .toast-spinner {
-            display: inline-block;
-            width: 18px; height: 18px;
+            display: inline-block; width: 18px; height: 18px;
             border: 3px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            border-top-color: #ff005a;
+            border-radius: 50%; border-top-color: #ff005a;
             animation: spin 0.6s linear infinite;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
 
         .banner-container {
             position: relative;
-            width: 100%;
-            max-width: 768px;
+            width: 100%; max-width: 768px;
             margin: 12px auto 0;
-            border-radius: 25px;
-            overflow: hidden;
+            border-radius: 25px; overflow: hidden;
             border: 4px solid #ffffff;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             background: linear-gradient(135deg, #38003c 0%, #240024 100%);
-            line-height: 0;
-            text-align: center;
+            line-height: 0; text-align: center;
         }
 
         .banner-container img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-            object-position: center;
+            width: 100%; height: auto;
+            object-fit: cover; object-position: center;
             display: block;
         }
 
         .tabs-bar {
             position: absolute;
-            top: 70.5%;
-            left: 57.5%;
-            right: 2.5%;
-            height: 27%;
+            top: 73%;
+            left: 55%;
+            right: 2%;
+            height: 22%;
             display: flex;
             gap: 0;
             z-index: 5;
             line-height: 1;
-            border-radius: 12px 12px 14px 14px;
+            border-radius: 10px 10px 0 0;
             overflow: hidden;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
         }
 
         .banner-tab {
             flex: 1 1 0;
             min-width: 0;
-            background: var(--fantasy-dark);
+            background: #2d0a3d;
             color: #ffffff;
             border: none;
-            padding: 0 8px;
+            padding: 0 6px;
             font-weight: 700;
-            font-size: clamp(12px, 1.6vw, 15px);
+            font-size: clamp(11px, 1.5vw, 14px);
             cursor: pointer;
             outline: none;
             transition: background 0.2s;
@@ -183,35 +136,22 @@
             align-items: center;
             justify-content: center;
         }
-
-        .banner-tab:hover { background: var(--fantasy-hover); }
-
-        .banner-tab.active {
-            background: var(--fantasy-darker);
-            font-weight: 900;
-        }
-
-        .banner-tab.active:hover { background: #2a1035; }
+        .banner-tab:hover { background: #3d1550; }
+        .banner-tab.active { background: #1a0825; font-weight: 900; }
 
         select.banner-tab {
-            appearance: none;
-            -webkit-appearance: none;
+            appearance: none; -webkit-appearance: none;
             text-align: center;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='white' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 8px center;
-            background-color: var(--fantasy-dark);
-            padding-right: 22px;
-            padding-left: 8px;
+            background-position: right 6px center;
+            background-color: #2d0a3d;
+            padding-right: 18px;
+            padding-left: 6px;
             color: #ffffff;
         }
-
-        select.banner-tab:hover { background-color: var(--fantasy-hover); }
-
-        select.banner-tab option {
-            background: var(--fantasy-dark);
-            color: #fff;
-        }
+        select.banner-tab:hover { background-color: #3d1550; }
+        select.banner-tab option { background: #2d0a3d; color: #fff; }
 
         .header {
             background-color: transparent;
@@ -221,27 +161,20 @@
         }
 
         .round-nav-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
+            display: flex; align-items: center;
+            justify-content: center; gap: 20px;
             flex-wrap: wrap;
         }
 
         .round-indicator {
-            font-size: 20px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            color: #ffffff;
-            cursor: pointer;
-            user-select: none;
-            text-align: center;
-            padding: 6px 20px;
+            font-size: 20px; font-weight: 900;
+            letter-spacing: 1px; color: #ffffff;
+            cursor: pointer; user-select: none;
+            text-align: center; padding: 6px 20px;
             border-radius: 8px;
             border: 2px dashed transparent;
             transition: 0.2s;
         }
-
         .round-indicator:hover {
             border-color: rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.05);
@@ -252,61 +185,39 @@
             color: var(--text-white);
             border: 1px solid var(--border-dark);
             width: 40px; height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 20px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-            flex-shrink: 0;
+            border-radius: 50%; cursor: pointer;
+            font-size: 20px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.2s; flex-shrink: 0;
         }
-
         .nav-arrow-btn:hover {
             background: var(--pl-pink);
             border-color: var(--pl-pink);
         }
 
-        .main-container {
-            width: 100%;
-            max-width: 768px;
-            margin: 0 auto;
-        }
+        .main-container { width: 100%; max-width: 768px; margin: 0 auto; }
 
         .edit-panel {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
-            padding: 8px;
+            display: flex; gap: 8px;
+            margin-bottom: 10px; padding: 8px;
             background: rgba(255, 255, 255, 0.12);
             border-radius: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
+            justify-content: center; flex-wrap: wrap;
         }
 
         .edit-action-btn {
-            font-weight: 900;
-            font-size: 14px;
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            flex: 1 1 auto;
-            min-width: 100px;
-            transition: 0.2s;
-            color: #ffffff;
+            font-weight: 900; font-size: 14px;
+            padding: 10px 16px; border-radius: 8px;
+            border: none; cursor: pointer;
+            flex: 1 1 auto; min-width: 100px;
+            transition: 0.2s; color: #ffffff;
         }
-
         .save-round-btn { background: #00c853; box-shadow: 0 3px 0 #009b40; }
         .save-round-btn:hover { background: #00b34a; }
-
         .clear-round-btn { background: #ff005a; box-shadow: 0 3px 0 #b8003f; }
         .clear-round-btn:hover { background: #e6004f; }
-
         .download-action-btn { background: #3281ff; box-shadow: 0 3px 0 #1f5dbf; }
         .download-action-btn:hover { background: #2871e6; }
-
         .edit-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         #captureFixtures {
@@ -318,58 +229,47 @@
         }
 
         .fixtures-header-box {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 10px;
-            text-align: center;
+            background: #ffffff; border-radius: 12px;
+            padding: 10px; text-align: center;
             margin-bottom: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .fixtures-header-title {
-            font-size: 18px;
-            font-weight: 900;
-            color: #38003c;
-            letter-spacing: 1px;
+            font-size: 18px; font-weight: 900;
+            color: #38003c; letter-spacing: 1px;
         }
 
         .fixture-row {
-            display: flex;
-            align-items: center;
+            display: flex; align-items: center;
             justify-content: space-between;
-            padding: 8px 10px;
-            margin-bottom: 6px;
-            background: #ffffff;
-            border-radius: 8px;
+            padding: 8px 10px; margin-bottom: 6px;
+            background: #ffffff; border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            flex-wrap: nowrap;
-            gap: 6px;
+            flex-wrap: nowrap; gap: 4px;
         }
         .fixture-row:last-child { margin-bottom: 0; }
 
-        /* ===== أسماء الفرق (كود مختصر) ===== */
         .team-box {
             display: flex;
             align-items: center;
             flex: 1 1 0;
             min-width: 0;
-            font-size: 15px;
-            font-weight: 900;
+            font-size: 12px;
+            font-weight: 800;
             color: #38003c;
             text-transform: uppercase;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            letter-spacing: 0.5px;
         }
+        .team-box.home { justify-content: flex-end; text-align: right; }
+        .team-box.away { justify-content: flex-start; text-align: left; }
 
-        .team-box.home {
-            justify-content: flex-end;
-            text-align: right;
-        }
-        .team-box.away {
-            justify-content: flex-start;
-            text-align: left;
+        .team-box > span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .logo-20 {
@@ -377,18 +277,14 @@
             width: 20px; height: 20px;
             min-width: 20px; min-height: 20px;
             max-width: 20px; max-height: 20px;
-            flex-shrink: 0;
-            position: relative;
-            overflow: hidden;
-            vertical-align: middle;
+            flex-shrink: 0; position: relative;
+            overflow: hidden; vertical-align: middle;
         }
         .logo-20 img {
-            position: absolute;
-            top: 50%; left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             max-width: 100%; max-height: 100%;
-            width: auto; height: auto;
-            display: block;
+            width: auto; height: auto; display: block;
         }
 
         .logo-24 {
@@ -396,170 +292,118 @@
             width: 22px; height: 22px;
             min-width: 22px; min-height: 22px;
             max-width: 22px; max-height: 22px;
-            flex-shrink: 0;
-            position: relative;
-            overflow: hidden;
-            vertical-align: middle;
+            flex-shrink: 0; position: relative;
+            overflow: hidden; vertical-align: middle;
             margin: 0 3px;
         }
         .logo-24 img {
-            position: absolute;
-            top: 50%; left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             max-width: 100%; max-height: 100%;
-            width: auto; height: auto;
-            display: block;
+            width: auto; height: auto; display: block;
         }
 
-        /* ===== مركز النتيجة (وسط) ===== */
         .match-score-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            display: flex; align-items: center;
+            justify-content: center; gap: 5px;
             flex: 0 0 auto;
-            width: 95px;
-            min-width: 95px;
+            width: 88px; min-width: 88px;
             background: #7138f5;
-            padding: 6px 8px;
-            border-radius: 6px;
-            position: relative;
-            flex-shrink: 0;
+            padding: 6px 6px; border-radius: 6px;
+            position: relative; flex-shrink: 0;
         }
 
-        .score-display,
-        .score-input,
-        .pos-number,
-        .stat-number {
-            font-size: 15px;
-            font-weight: 900;
+        .score-display, .score-input, .pos-number, .stat-number {
+            font-size: 15px; font-weight: 900;
             line-height: 1.2;
-            display: inline-block;
-            vertical-align: middle;
+            display: inline-block; vertical-align: middle;
         }
-
         .score-display { color: #ffffff; }
 
         .score-input {
-            width: 34px;
-            height: 24px;
+            width: 32px; height: 24px;
             text-align: center;
-            background: #ffffff;
-            color: #38003c;
+            background: #ffffff; color: #38003c;
             border: 1px solid #7138f5;
-            border-radius: 4px;
-            outline: none;
-            padding: 0;
-            font-size: 14px;
+            border-radius: 4px; outline: none;
+            padding: 0; font-size: 14px;
         }
 
         .vs-text {
-            font-weight: 900;
-            color: #ffffff;
+            font-weight: 900; color: #ffffff;
             font-size: 13px;
         }
 
         #captureStandings {
-            background: #ffffff;
-            border-radius: 20px;
+            background: #ffffff; border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 4px solid #ffffff;
-            width: 100%;
+            border: 4px solid #ffffff; width: 100%;
         }
 
         .standings-content-area {
             background: #f4f5f7;
-            width: 100%;
-            padding: 10px;
+            width: 100%; padding: 10px;
         }
 
-        .standings-card {
-            background: transparent;
-            padding: 5px;
-            width: 100%;
-        }
+        .standings-card { background: transparent; padding: 5px; width: 100%; }
 
         table {
-            width: 100%;
-            border-collapse: collapse;
-            border-spacing: 0;
-            text-align: center;
-            color: #333;
-            table-layout: fixed;
+            width: 100%; border-collapse: collapse;
+            border-spacing: 0; text-align: center;
+            color: #333; table-layout: fixed;
         }
 
         th {
             background-color: transparent;
             color: #38003c;
-            padding: 8px 4px;
-            font-weight: 900;
+            padding: 8px 4px; font-weight: 900;
             border-bottom: 2px solid #38003c;
-            font-size: 13px;
-            vertical-align: middle;
+            font-size: 13px; vertical-align: middle;
             line-height: 1.2;
         }
 
         td {
-            padding: 0 4px;
-            font-weight: 800;
-            vertical-align: middle;
-            line-height: 1.2;
+            padding: 0 4px; font-weight: 800;
+            vertical-align: middle; line-height: 1.2;
             background-color: #ffffff;
             border-bottom: 1px solid #d1d5db;
-            height: 38px;
-            max-height: 38px;
+            height: 38px; max-height: 38px;
             overflow: hidden;
         }
-
         tr:last-child td { border-bottom: none; }
         tr.green-line td { border-bottom: 3px solid #00ff87 !important; }
         tr.red-line td { border-bottom: 3px solid #ff005a !important; }
 
         .team-cell {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 6px;
-            font-size: 15px;
-            text-transform: uppercase;
-            color: #1a1a1a;
-            padding: 0 12px 0 0;
+            display: flex; align-items: center;
+            justify-content: flex-start; gap: 6px;
+            font-size: 15px; text-transform: uppercase;
+            color: #1a1a1a; padding: 0 12px 0 0;
             white-space: nowrap;
         }
 
         .pos-container {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            height: 28px;
-            vertical-align: middle;
+            display: inline-flex; align-items: center;
+            justify-content: center; gap: 5px;
+            height: 28px; vertical-align: middle;
         }
 
         .pos-indicator-img {
             width: 25px; height: 25px;
             min-width: 25px; min-height: 25px;
             max-width: 25px; max-height: 25px;
-            object-fit: contain;
-            display: inline-block;
-            flex-shrink: 0;
-            vertical-align: middle;
+            object-fit: contain; display: inline-block;
+            flex-shrink: 0; vertical-align: middle;
         }
 
         .pos-number {
-            font-size: 15px;
-            font-weight: 900;
-            line-height: 1;
-            min-width: 18px;
+            font-size: 15px; font-weight: 900;
+            line-height: 1; min-width: 18px;
             text-align: center;
         }
 
-        .stat-number {
-            font-size: 15px;
-            font-weight: 900;
-            line-height: 1;
-        }
+        .stat-number { font-size: 15px; font-weight: 900; line-height: 1; }
 
         .col-pos { width: 14%; }
         .col-club { width: 42%; }
@@ -568,6 +412,24 @@
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        /* ===== تصغير الأسماء على الموبايل فقط ===== */
+        @media (max-width: 480px) {
+            .team-box { font-size: 11px; }
+            .logo-24 {
+                width: 20px; height: 20px;
+                min-width: 20px; min-height: 20px;
+                max-width: 20px; max-height: 20px;
+                margin: 0 2px;
+            }
+            .match-score-center {
+                width: 78px; min-width: 78px;
+                padding: 5px 5px;
+            }
+            .score-display { font-size: 14px; }
+            .vs-text { font-size: 12px; }
+            .fixture-row { padding: 7px 8px; }
+        }
     </style>
 </head>
 <body>
@@ -583,7 +445,6 @@
 
     <div class="banner-container">
         <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
-
         <div class="tabs-bar">
             <button class="banner-tab" id="fixturesToggleBtn" onclick="switchTab('fixtures')">Matches</button>
             <button class="banner-tab" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
@@ -600,15 +461,12 @@
     </div>
 
     <div class="main-container">
-
         <div id="fixturesTab" class="tab-content active">
-
             <div id="editPanel" class="edit-panel" style="display: none;">
                 <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">💾 Save</button>
                 <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">🗑️ Clear</button>
                 <button class="edit-action-btn download-action-btn" onclick="downloadAsImage()">⬇️ Download</button>
             </div>
-
             <div id="captureFixtures" class="export-area">
                 <div class="fixtures-header-box">
                     <div class="fixtures-header-title" id="fixturesBannerTitle">MATCHWEEK RESULTS</div>
@@ -642,7 +500,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -680,26 +537,18 @@
             const toast = document.getElementById('toast');
             const content = document.getElementById('toastContent');
             if (toastTimeout) clearTimeout(toastTimeout);
-            if (isSuccess) {
-                content.innerHTML = `✅ ${msg}`;
-            } else {
-                content.innerHTML = `<span class="toast-spinner"></span> ${msg}`;
-            }
+            if (isSuccess) content.innerHTML = `✅ ${msg}`;
+            else content.innerHTML = `<span class="toast-spinner"></span> ${msg}`;
             toast.classList.add('show');
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
+            toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, duration);
         }
 
         let bannerAttempts = 0;
-        const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png", "./image_5.png", "./banner.png"];
+        const bannerSources = ["image_5.png","image_5.PNG","image_5.jpg","image_5.JPG","banner.png","./image_5.png","./banner.png"];
         function handleBannerError(img) {
             bannerAttempts++;
-            if (bannerAttempts < bannerSources.length) {
-                img.src = bannerSources[bannerAttempts];
-            } else {
-                img.style.display = 'none';
-            }
+            if (bannerAttempts < bannerSources.length) img.src = bannerSources[bannerAttempts];
+            else img.style.display = 'none';
         }
 
         const teamsMap = {
@@ -791,9 +640,7 @@
             activeTab = tabName;
             document.getElementById('fixturesToggleBtn').classList.toggle('active', tabName === 'fixtures');
             document.getElementById('standingsToggleBtn').classList.toggle('active', tabName === 'standings');
-
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-
             if (tabName === 'standings') {
                 renderStandings();
                 document.getElementById('standingsTab').classList.add('active');
@@ -827,7 +674,6 @@
             showToast("Saving...", false);
             document.getElementById('saveRoundBtn').disabled = true;
             document.getElementById('clearRoundBtn').disabled = true;
-
             const matches = matchweeks[currentRound] || [];
             matches.forEach((match, idx) => {
                 const homeInput = document.getElementById(`home_r${currentRound}_m${idx}`);
@@ -837,26 +683,17 @@
                     scoresStorage[`r${currentRound}_m${idx}_away`] = awayInput.value;
                 }
             });
-
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
-
             let result = { ok: true };
             if (typeof saveRoundToSupabase === 'function') {
-                try {
-                    result = await saveRoundToSupabase(currentRound, matchweeks, scoresStorage);
-                } catch (e) {
-                    result = { ok: false, error: e };
-                }
+                try { result = await saveRoundToSupabase(currentRound, matchweeks, scoresStorage); }
+                catch (e) { result = { ok: false, error: e }; }
             }
-
             isSaving = false;
             document.getElementById('saveRoundBtn').disabled = false;
             document.getElementById('clearRoundBtn').disabled = false;
-
-            if (result.ok) {
-                showToast("Saved successfully ✓", true);
-                exitEditMode();
-            } else {
+            if (result.ok) { showToast("Saved successfully ✓", true); exitEditMode(); }
+            else {
                 const errMsg = (result.error && result.error.message) ? result.error.message : (result.error ? String(result.error) : 'Unknown error');
                 showToast("Save failed: " + errMsg, false, 20000);
             }
@@ -866,37 +703,26 @@
             if (isSaving) return;
             const confirmed = confirm(`Are you sure you want to clear round ${currentRound}?`);
             if (!confirmed) return;
-
             isSaving = true;
             showToast("Clearing...", false);
             document.getElementById('saveRoundBtn').disabled = true;
             document.getElementById('clearRoundBtn').disabled = true;
-
             const matches = matchweeks[currentRound] || [];
             matches.forEach((match, idx) => {
                 delete scoresStorage[`r${currentRound}_m${idx}_home`];
                 delete scoresStorage[`r${currentRound}_m${idx}_away`];
             });
-
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
-
             let result = { ok: true };
             if (typeof clearRoundFromSupabase === 'function') {
-                try {
-                    result = await clearRoundFromSupabase(currentRound);
-                } catch (e) {
-                    result = { ok: false, error: e };
-                }
+                try { result = await clearRoundFromSupabase(currentRound); }
+                catch (e) { result = { ok: false, error: e }; }
             }
-
             isSaving = false;
             document.getElementById('saveRoundBtn').disabled = false;
             document.getElementById('clearRoundBtn').disabled = false;
-
-            if (result.ok) {
-                showToast("Round cleared ✓", true);
-                exitEditMode();
-            } else {
+            if (result.ok) { showToast("Round cleared ✓", true); exitEditMode(); }
+            else {
                 const errMsg = (result.error && result.error.message) ? result.error.message : (result.error ? String(result.error) : 'Unknown error');
                 showToast("Clear failed: " + errMsg, false, 20000);
             }
@@ -911,91 +737,59 @@
             for (let teamKey in initialBasePoints) {
                 calculated[teamKey] = { key: teamKey, gf: 0, pts: 0 };
             }
-
             for (let r = 1; r <= targetRound; r++) {
                 let roundMatches = matchweeks[r];
                 if (!roundMatches) continue;
-
                 roundMatches.forEach((match, idx) => {
-                    let hKey = match[0];
-                    let aKey = match[1];
+                    let hKey = match[0], aKey = match[1];
                     let hVal = scoresStorage[`r${r}_m${idx}_home`];
                     let aVal = scoresStorage[`r${r}_m${idx}_away`];
-
                     if (hVal !== undefined && aVal !== undefined && hVal !== '' && aVal !== '') {
-                        let hScore = parseFloat(hVal);
-                        let aScore = parseFloat(aVal);
-
+                        let hScore = parseFloat(hVal), aScore = parseFloat(aVal);
                         calculated[hKey].gf += hScore;
                         calculated[aKey].gf += aScore;
-
-                        if (hScore > aScore) {
-                            calculated[hKey].pts += 3;
-                        } else if (aScore > hScore) {
-                            calculated[aKey].pts += 3;
-                        } else if (hScore === aScore) {
+                        if (hScore > aScore) calculated[hKey].pts += 3;
+                        else if (aScore > hScore) calculated[aKey].pts += 3;
+                        else if (hScore === aScore) {
                             calculated[hKey].pts += 1;
                             calculated[aKey].pts += 1;
                         }
                     }
                 });
             }
-
             return Object.values(calculated).sort((a, b) => b.pts - a.pts || b.gf - a.gf);
         }
 
-        function calculateStandings() {
-            return calculateStandingsUpToRound(currentRound);
-        }
+        function calculateStandings() { return calculateStandingsUpToRound(currentRound); }
 
         function renderStandings() {
             const tbody = document.getElementById('standingsBody');
             tbody.innerHTML = '';
-
             let sortedTeams = calculateStandings();
             let prevRanks = {};
-
             if (currentRound >= 2) {
                 let prevSortedTeams = calculateStandingsUpToRound(currentRound - 1);
                 prevSortedTeams.forEach((team, idx) => { prevRanks[team.key] = idx + 1; });
             }
-
             sortedTeams.forEach((team, index) => {
                 let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
                 let position = index + 1;
-
                 let rowClass = '';
                 if (position === 1) rowClass = 'green-line';
                 else if (position === 17) rowClass = 'red-line';
-
                 let indicatorHtml = '';
-
                 if (currentRound >= 2 && prevRanks[team.key] !== undefined) {
                     let oldPos = prevRanks[team.key];
                     let imgSrc = '';
                     if (position < oldPos) imgSrc = 'arrow_up_green.png';
                     else if (position > oldPos) imgSrc = 'arrow_down_red.png';
                     else imgSrc = 'equal_gray.png';
-
                     indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="trend" onerror="this.style.display='none'">`;
                 }
-
                 tbody.innerHTML += `
                     <tr class="${rowClass}">
-                        <td>
-                            <div class="pos-container">
-                                ${indicatorHtml}
-                                <span class="pos-number">${position}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="team-cell">
-                                <span class="logo-20">
-                                    <img src="${teamInfo.logo}" alt="${teamInfo.name}" onerror="this.style.display='none'">
-                                </span>
-                                ${teamInfo.name}
-                            </div>
-                        </td>
+                        <td><div class="pos-container">${indicatorHtml}<span class="pos-number">${position}</span></div></td>
+                        <td><div class="team-cell"><span class="logo-20"><img src="${teamInfo.logo}" alt="${teamInfo.name}" onerror="this.style.display='none'"></span>${teamInfo.name}</div></td>
                         <td><span class="stat-number">${team.gf}</span></td>
                         <td><span class="stat-number" style="color:#7138f5;">${team.pts}</span></td>
                     </tr>
@@ -1010,42 +804,31 @@
                 const selectEl = document.getElementById('roundSelect');
                 if (selectEl) selectEl.value = currentRound;
                 list.innerHTML = '';
-
                 let matches = matchweeks[currentRound] || [];
-
                 matches.forEach((match, idx) => {
                     let home = teamsMap[match[0]] || { name: match[0], logo: "" };
                     let away = teamsMap[match[1]] || { name: match[1], logo: "" };
-
                     let homeScore = scoresStorage[`r${currentRound}_m${idx}_home`] ?? '';
                     let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
-
                     let scoreContent = editMode ? `
                         <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
-                        <span style="font-weight:900; color:#fff; font-size:14px; line-height:1.2;">:</span>
+                        <span style="font-weight:900; color:#fff; font-size:14px;">:</span>
                         <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
                     ` : `
                         <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
                         <span class="vs-text">VS</span>
                         <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
                     `;
-
                     list.innerHTML += `
                         <div class="fixture-row">
                             <div class="team-box home">
-                                <span>${match[0]}</span>
-                                <span class="logo-24">
-                                    <img src="${home.logo}" alt="${match[0]}" onerror="this.style.display='none'">
-                                </span>
+                                <span>${home.name}</span>
+                                <span class="logo-24"><img src="${home.logo}" alt="${home.name}" onerror="this.style.display='none'"></span>
                             </div>
-                            <div class="match-score-center">
-                                ${scoreContent}
-                            </div>
+                            <div class="match-score-center">${scoreContent}</div>
                             <div class="team-box away">
-                                <span class="logo-24">
-                                    <img src="${away.logo}" alt="${match[1]}" onerror="this.style.display='none'">
-                                </span>
-                                <span>${match[1]}</span>
+                                <span class="logo-24"><img src="${away.logo}" alt="${away.name}" onerror="this.style.display='none'"></span>
+                                <span>${away.name}</span>
                             </div>
                         </div>
                     `;
@@ -1060,44 +843,38 @@
             currentRound += step;
             if (currentRound < 1) currentRound = 1;
             if (currentRound > 38) currentRound = 38;
-
             renderFixtures();
             if (activeTab === 'standings') renderStandings();
         }
 
         function waitForImagesToLoad(element) {
             const images = Array.from(element.querySelectorAll('img'));
-            return Promise.all(
-                images.map(img => {
-                    if (img.complete && img.naturalWidth > 0) {
-                        if (img.decode) return img.decode().catch(() => {});
-                        return Promise.resolve();
-                    }
-                    return new Promise(resolve => {
-                        let finished = false;
-                        const finish = () => {
-                            if (finished) return;
-                            finished = true;
-                            img.removeEventListener('load', finish);
-                            img.removeEventListener('error', finish);
-                            resolve();
-                        };
-                        img.addEventListener('load', finish, { once: true });
-                        img.addEventListener('error', finish, { once: true });
-                        setTimeout(finish, 5000);
-                    });
-                })
-            );
+            return Promise.all(images.map(img => {
+                if (img.complete && img.naturalWidth > 0) {
+                    if (img.decode) return img.decode().catch(() => {});
+                    return Promise.resolve();
+                }
+                return new Promise(resolve => {
+                    let finished = false;
+                    const finish = () => {
+                        if (finished) return;
+                        finished = true;
+                        img.removeEventListener('load', finish);
+                        img.removeEventListener('error', finish);
+                        resolve();
+                    };
+                    img.addEventListener('load', finish, { once: true });
+                    img.addEventListener('error', finish, { once: true });
+                    setTimeout(finish, 5000);
+                });
+            }));
         }
 
         function applyRoundedCorners(sourceCanvas, radius) {
-            const w = sourceCanvas.width;
-            const h = sourceCanvas.height;
+            const w = sourceCanvas.width, h = sourceCanvas.height;
             const outputCanvas = document.createElement('canvas');
-            outputCanvas.width = w;
-            outputCanvas.height = h;
+            outputCanvas.width = w; outputCanvas.height = h;
             const ctx = outputCanvas.getContext('2d');
-
             ctx.beginPath();
             ctx.moveTo(radius, 0);
             ctx.lineTo(w - radius, 0);
@@ -1110,7 +887,6 @@
             ctx.quadraticCurveTo(0, 0, radius, 0);
             ctx.closePath();
             ctx.clip();
-
             ctx.drawImage(sourceCanvas, 0, 0);
             return outputCanvas;
         }
@@ -1118,106 +894,65 @@
         function downloadAsImage() {
             if (activeTab === 'fixtures') renderFixtures();
             else renderStandings();
-
             const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
             const element = document.getElementById(targetId);
-
             showToast("Preparing image...", false);
-
             const scaleFactor = 4;
             const cornerRadius = 20 * scaleFactor;
-
             waitForImagesToLoad(element)
-                .then(() => {
-                    return html2canvas(element, {
-                        backgroundColor: null,
-                        scale: scaleFactor,
-                        useCORS: true,
-                        allowTaint: true,
-                        logging: false,
-                        width: element.offsetWidth,
-                        height: element.offsetHeight,
-                        windowWidth: element.scrollWidth,
-                        windowHeight: element.scrollHeight,
-                        imageTimeout: 0,
-                        onclone: function(clonedDoc, clonedElement) {
-                            const wrappers = clonedElement.querySelectorAll('.logo-20, .logo-24');
-                            wrappers.forEach(wrapper => {
-                                const isSmall = wrapper.classList.contains('logo-20');
-                                const size = isSmall ? '20px' : '22px';
-                                wrapper.style.width = size;
-                                wrapper.style.height = size;
-                                wrapper.style.minWidth = size;
-                                wrapper.style.minHeight = size;
-                                wrapper.style.maxWidth = size;
-                                wrapper.style.maxHeight = size;
-                                wrapper.style.overflow = 'hidden';
-                                wrapper.style.position = 'relative';
-                                wrapper.style.display = 'inline-block';
-                            });
-
-                            const logos = clonedElement.querySelectorAll('.logo-20 img, .logo-24 img');
-                            logos.forEach(img => {
-                                img.style.position = 'absolute';
-                                img.style.top = '50%';
-                                img.style.left = '50%';
-                                img.style.transform = 'translate(-50%, -50%)';
-                                img.style.width = 'auto';
-                                img.style.height = 'auto';
-                                img.style.maxWidth = '100%';
-                                img.style.maxHeight = '100%';
-                                img.style.objectFit = 'contain';
-                                img.style.display = 'block';
-                            });
-
-                            const indicators = clonedElement.querySelectorAll('.pos-indicator-img');
-                            indicators.forEach(img => {
-                                const size = '25px';
-                                img.style.width = size;
-                                img.style.height = size;
-                                img.style.minWidth = size;
-                                img.style.minHeight = size;
-                                img.style.maxWidth = size;
-                                img.style.maxHeight = size;
-                                img.style.objectFit = 'contain';
-                            });
-                        }
-                    });
-                })
+                .then(() => html2canvas(element, {
+                    backgroundColor: null, scale: scaleFactor,
+                    useCORS: true, allowTaint: true, logging: false,
+                    width: element.offsetWidth, height: element.offsetHeight,
+                    windowWidth: element.scrollWidth, windowHeight: element.scrollHeight,
+                    imageTimeout: 0,
+                    onclone: function(clonedDoc, clonedElement) {
+                        const wrappers = clonedElement.querySelectorAll('.logo-20, .logo-24');
+                        wrappers.forEach(wrapper => {
+                            const isSmall = wrapper.classList.contains('logo-20');
+                            const size = isSmall ? '20px' : '22px';
+                            wrapper.style.width = size; wrapper.style.height = size;
+                            wrapper.style.minWidth = size; wrapper.style.minHeight = size;
+                            wrapper.style.maxWidth = size; wrapper.style.maxHeight = size;
+                            wrapper.style.overflow = 'hidden';
+                            wrapper.style.position = 'relative';
+                            wrapper.style.display = 'inline-block';
+                        });
+                        const logos = clonedElement.querySelectorAll('.logo-20 img, .logo-24 img');
+                        logos.forEach(img => {
+                            img.style.position = 'absolute';
+                            img.style.top = '50%'; img.style.left = '50%';
+                            img.style.transform = 'translate(-50%, -50%)';
+                            img.style.width = 'auto'; img.style.height = 'auto';
+                            img.style.maxWidth = '100%'; img.style.maxHeight = '100%';
+                            img.style.objectFit = 'contain';
+                            img.style.display = 'block';
+                        });
+                        const indicators = clonedElement.querySelectorAll('.pos-indicator-img');
+                        indicators.forEach(img => {
+                            const size = '25px';
+                            img.style.width = size; img.style.height = size;
+                            img.style.minWidth = size; img.style.minHeight = size;
+                            img.style.maxWidth = size; img.style.maxHeight = size;
+                            img.style.objectFit = 'contain';
+                        });
+                    }
+                }))
                 .then(canvas => {
                     const roundedCanvas = applyRoundedCorners(canvas, cornerRadius);
                     roundedCanvas.toBlob(function(blob) {
-                        if (!blob) {
-                            showToast("Failed to create image!", false);
-                            return;
-                        }
-
+                        if (!blob) { showToast("Failed to create image!", false); return; }
                         if (navigator.share && navigator.canShare) {
                             const file = new File([blob], activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings_GW${currentRound}.png`, { type: 'image/png' });
-                            const shareData = {
-                                files: [file],
-                                title: activeTab === 'fixtures' ? `Matchweek ${currentRound}` : `League Standings GW ${currentRound}`
-                            };
-
+                            const shareData = { files: [file], title: activeTab === 'fixtures' ? `Matchweek ${currentRound}` : `League Standings GW ${currentRound}` };
                             if (navigator.canShare(shareData)) {
-                                navigator.share(shareData).then(() => {
-                                    showToast("Image saved successfully ✓", true);
-                                }).catch((err) => {
-                                    if (err.name !== 'AbortError') fallbackDownload(blob);
-                                    else showToast("Cancelled", false);
-                                });
-                            } else {
-                                fallbackDownload(blob);
-                            }
-                        } else {
-                            fallbackDownload(blob);
-                        }
+                                navigator.share(shareData).then(() => { showToast("Image saved successfully ✓", true); })
+                                .catch((err) => { if (err.name !== 'AbortError') fallbackDownload(blob); else showToast("Cancelled", false); });
+                            } else { fallbackDownload(blob); }
+                        } else { fallbackDownload(blob); }
                     }, 'image/png', 1.0);
                 })
-                .catch(err => {
-                    console.error('html2canvas error:', err);
-                    showToast("Error generating image!", false);
-                });
+                .catch(err => { console.error('html2canvas error:', err); showToast("Error generating image!", false); });
         }
 
         function fallbackDownload(blob) {
@@ -1227,10 +962,7 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            setTimeout(() => {
-                URL.revokeObjectURL(link.href);
-                showToast("Image downloaded ✓", true);
-            }, 100);
+            setTimeout(() => { URL.revokeObjectURL(link.href); showToast("Image downloaded ✓", true); }, 100);
         }
 
         setInterval(() => {
@@ -1254,10 +986,7 @@
                     if (clickCount >= 5) {
                         clickCount = 0;
                         if (typeof eruda !== 'undefined' && eruda.init) {
-                            try {
-                                eruda.init();
-                                eruda.show();
-                            } catch(e) {}
+                            try { eruda.init(); eruda.show(); } catch(e) {}
                         }
                     }
                     clickTimer = setTimeout(() => { clickCount = 0; }, 2000);
@@ -1267,18 +996,10 @@
 
         (async function initFromSupabase() {
             if (!window.sbClient || typeof loadScoresFromSupabase !== 'function') return;
-
             try {
                 const { error: testError } = await window.sbClient.from('match_results').select('id').limit(1);
-                if (testError) {
-                    console.warn('DB Connection Error:', testError.message);
-                    return;
-                }
-            } catch (connErr) {
-                console.warn('Network Error:', connErr.message);
-                return;
-            }
-
+                if (testError) { console.warn('DB Connection Error:', testError.message); return; }
+            } catch (connErr) { console.warn('Network Error:', connErr.message); return; }
             try {
                 const remoteScores = await loadScoresFromSupabase(matchweeks);
                 if (remoteScores && Object.keys(remoteScores).length > 0) {
@@ -1286,9 +1007,7 @@
                     renderFixtures();
                     renderStandings();
                 }
-            } catch (e) {
-                console.warn('Load from Supabase failed:', e.message);
-            }
+            } catch (e) { console.warn('Load from Supabase failed:', e.message); }
         })();
     </script>
 </body>
