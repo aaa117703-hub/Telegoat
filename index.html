@@ -33,9 +33,7 @@
             font-family: var(--font-en);
         }
 
-        html {
-            background-color: var(--pl-dark-bg);
-        }
+        html { background-color: var(--pl-dark-bg); }
 
         body {
             background-color: var(--pl-dark-bg);
@@ -91,7 +89,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ===== بنر الواجهة في الأعلى ===== */
+        /* ===== البنر ===== */
         .banner-container {
             position: relative;
             width: 100%;
@@ -114,84 +112,80 @@
             display: block;
         }
 
-        /* ===== شريط الأزرار داخل البنر (في الأسفل) ===== */
+        /* ===== شريط الأزرار داخل البنر (يغطي أزرار الصورة) ===== */
         .tabs-bar {
             position: absolute;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 72%;
+            left: 58%;
+            right: 2.5%;
+            height: 23%;
             display: flex;
-            flex-direction: row;
-            direction: ltr;
-            gap: 8px;
+            gap: 0;
             z-index: 5;
             line-height: 1;
-            flex-wrap: nowrap;
-            max-width: 96%;
+            border-radius: 14px 14px 0 0;
+            overflow: hidden;
         }
 
         .banner-tab {
-            background: rgba(102, 157, 199, 0.85);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            flex: 1 1 0;
+            min-width: 0;
+            background: rgba(85, 140, 205, 0.55);
             color: #ffffff;
             border: none;
-            padding: 10px 16px;
-            font-weight: 900;
-            font-size: 13px;
+            padding: 0 6px;
+            font-weight: 500;
+            font-size: clamp(11px, 1.55vw, 15px);
             cursor: pointer;
             outline: none;
             transition: background 0.2s;
             white-space: nowrap;
             line-height: 1;
             text-align: center;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border-radius: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .banner-tab:hover {
-            background: rgba(102, 157, 199, 1);
+            background: rgba(85, 140, 205, 0.75);
         }
 
         .banner-tab.active {
-            background: #38003c;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: #1a0a20;
+            font-weight: 900;
+            font-size: clamp(11px, 1.6vw, 16px);
         }
 
         .banner-tab.active:hover {
-            background: #4a0050;
+            background: #2a1030;
         }
 
         select.banner-tab {
             appearance: none;
             -webkit-appearance: none;
-            padding-right: 14px;
-            padding-left: 14px;
             text-align: center;
-            background-image: none;
-            background: rgba(102, 157, 199, 0.85);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='white' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-color: rgba(85, 140, 205, 0.55);
+            padding-right: 20px;
+            padding-left: 8px;
         }
 
         select.banner-tab:hover {
-            background: rgba(102, 157, 199, 1);
+            background-color: rgba(85, 140, 205, 0.75);
         }
 
         select.banner-tab option {
-            background: #38003c;
+            background: #1a0a20;
             color: #fff;
         }
 
-        /* ===== زر التحميل الجديد (نص Download بنفس ستايل الأزرار) ===== */
-        .download-tab {
-            background: #00c853;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-
-        .download-tab:hover {
-            background: #00b34a;
-        }
-
+        /* ===== الهيدر / التنقل ===== */
         .header {
             background-color: transparent;
             color: #ffffff;
@@ -256,6 +250,7 @@
             padding: 0 5px;
         }
 
+        /* ===== لوحة التعديل (Save + Clear + Download) ===== */
         .edit-panel {
             display: flex;
             gap: 10px;
@@ -284,15 +279,19 @@
             background: #00c853;
             box-shadow: 0 3px 0 #009b40;
         }
-
         .save-round-btn:hover { background: #00b34a; }
 
         .clear-round-btn {
             background: #ff005a;
             box-shadow: 0 3px 0 #b8003f;
         }
-
         .clear-round-btn:hover { background: #e6004f; }
+
+        .download-action-btn {
+            background: #3281ff;
+            box-shadow: 0 3px 0 #1f5dbf;
+        }
+        .download-action-btn:hover { background: #2871e6; }
 
         .edit-action-btn:disabled {
             opacity: 0.5;
@@ -348,66 +347,45 @@
             text-overflow: ellipsis;
         }
 
-        .team-box.home {
-            justify-content: flex-end;
-            text-align: right;
-        }
-
-        .team-box.away {
-            justify-content: flex-start;
-            text-align: left;
-        }
+        .team-box.home { justify-content: flex-end; text-align: right; }
+        .team-box.away { justify-content: flex-start; text-align: left; }
 
         .logo-20 {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            min-width: 20px;
-            min-height: 20px;
-            max-width: 20px;
-            max-height: 20px;
+            width: 20px; height: 20px;
+            min-width: 20px; min-height: 20px;
+            max-width: 20px; max-height: 20px;
             flex-shrink: 0;
             position: relative;
             overflow: hidden;
             vertical-align: middle;
         }
-
         .logo-20 img {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
+            max-width: 100%; max-height: 100%;
+            width: auto; height: auto;
             display: block;
         }
 
         .logo-24 {
             display: inline-block;
-            width: 24px;
-            height: 24px;
-            min-width: 24px;
-            min-height: 24px;
-            max-width: 24px;
-            max-height: 24px;
+            width: 24px; height: 24px;
+            min-width: 24px; min-height: 24px;
+            max-width: 24px; max-height: 24px;
             flex-shrink: 0;
             position: relative;
             overflow: hidden;
             vertical-align: middle;
             margin: 0 4px;
         }
-
         .logo-24 img {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
+            max-width: 100%; max-height: 100%;
+            width: auto; height: auto;
             display: block;
         }
 
@@ -543,12 +521,9 @@
         }
 
         .pos-indicator-img {
-            width: 25px;
-            height: 25px;
-            min-width: 25px;
-            min-height: 25px;
-            max-width: 25px;
-            max-height: 25px;
+            width: 25px; height: 25px;
+            min-width: 25px; min-height: 25px;
+            max-width: 25px; max-height: 25px;
             object-fit: contain;
             display: inline-block;
             flex-shrink: 0;
@@ -584,15 +559,14 @@
         <span id="toastContent">Saving...</span>
     </div>
 
-    <!-- ===== البنر مع الأزرار داخله ===== -->
+    <!-- ===== البنر + الأزرار الـ 3 اللي تغطي الأزرار القديمة ===== -->
     <div class="banner-container">
         <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
 
         <div class="tabs-bar">
-            <button class="banner-tab" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
             <button class="banner-tab" id="fixturesToggleBtn" onclick="switchTab('fixtures')">Matches</button>
+            <button class="banner-tab" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
             <select class="banner-tab" id="roundSelect" onchange="selectRound(this.value)"></select>
-            <button class="banner-tab download-tab" onclick="downloadAsImage()">Download</button>
         </div>
     </div>
 
@@ -609,9 +583,11 @@
 
         <div id="fixturesTab" class="tab-content active">
 
+            <!-- لوحة التعديل: تظهر فقط بعد إدخال الرمز -->
             <div id="editPanel" class="edit-panel" style="display: none;">
-                <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">💾 Save Matchweek</button>
-                <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">🗑️ Clear Round</button>
+                <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">💾 Save</button>
+                <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">🗑️ Clear</button>
+                <button class="edit-action-btn download-action-btn" onclick="downloadAsImage()">⬇️ Download</button>
             </div>
 
             <div id="captureFixtures" class="export-area">
@@ -766,9 +742,7 @@
         function selectRound(val) {
             currentRound = parseInt(val);
             renderFixtures();
-            if (activeTab === 'standings') {
-                renderStandings();
-            }
+            if (activeTab === 'standings') renderStandings();
         }
 
         function switchTab(tabName) {
@@ -925,9 +899,7 @@
 
             if (currentRound >= 2) {
                 let prevSortedTeams = calculateStandingsUpToRound(currentRound - 1);
-                prevSortedTeams.forEach((team, idx) => {
-                    prevRanks[team.key] = idx + 1;
-                });
+                prevSortedTeams.forEach((team, idx) => { prevRanks[team.key] = idx + 1; });
             }
 
             sortedTeams.forEach((team, index) => {
@@ -943,14 +915,9 @@
                 if (currentRound >= 2 && prevRanks[team.key] !== undefined) {
                     let oldPos = prevRanks[team.key];
                     let imgSrc = '';
-
-                    if (position < oldPos) {
-                        imgSrc = 'arrow_up_green.png';
-                    } else if (position > oldPos) {
-                        imgSrc = 'arrow_down_red.png';
-                    } else {
-                        imgSrc = 'equal_gray.png';
-                    }
+                    if (position < oldPos) imgSrc = 'arrow_up_green.png';
+                    else if (position > oldPos) imgSrc = 'arrow_down_red.png';
+                    else imgSrc = 'equal_gray.png';
 
                     indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="trend" onerror="this.style.display='none'">`;
                 }
@@ -1036,9 +1003,7 @@
             if (currentRound > 38) currentRound = 38;
 
             renderFixtures();
-            if (activeTab === 'standings') {
-                renderStandings();
-            }
+            if (activeTab === 'standings') renderStandings();
         }
 
         function waitForImagesToLoad(element) {
@@ -1092,11 +1057,8 @@
         }
 
         function downloadAsImage() {
-            if (activeTab === 'fixtures') {
-                renderFixtures();
-            } else {
-                renderStandings();
-            }
+            if (activeTab === 'fixtures') renderFixtures();
+            else renderStandings();
 
             const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
             const element = document.getElementById(targetId);
@@ -1182,11 +1144,8 @@
                                 navigator.share(shareData).then(() => {
                                     showToast("Image saved successfully ✓", true);
                                 }).catch((err) => {
-                                    if (err.name !== 'AbortError') {
-                                        fallbackDownload(blob);
-                                    } else {
-                                        showToast("Cancelled", false);
-                                    }
+                                    if (err.name !== 'AbortError') fallbackDownload(blob);
+                                    else showToast("Cancelled", false);
                                 });
                             } else {
                                 fallbackDownload(blob);
