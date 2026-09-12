@@ -7,13 +7,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-
     <style>
         @font-face {
             font-family: 'SultanCustom';
             src: url('./Sultan.ttf') format('truetype');
         }
-
         @font-face {
             font-family: 'EnglishCustom';
             src: url('./english-font.ttf') format('truetype');
@@ -38,9 +36,7 @@
             font-family: var(--font-en);
         }
 
-        html {
-            background-color: var(--pl-dark-bg);
-        }
+        html { background-color: var(--pl-dark-bg); }
 
         body {
             background-color: var(--pl-dark-bg);
@@ -52,14 +48,10 @@
             overflow-x: hidden;
         }
 
-        /* ===== صندوق عرض الأخطاء ===== */
-
         #errorBox {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             background: #ff0040;
             color: #fff;
             padding: 12px 16px;
@@ -73,30 +65,20 @@
             text-align: left;
             font-family: monospace;
         }
-
-        #errorBox.show {
-            display: block;
-        }
-
+        #errorBox.show { display: block; }
         #errorBox .err-line {
             padding: 6px 0;
             border-bottom: 1px solid rgba(255,255,255,0.3);
         }
-
-        #errorBox .err-line:last-child {
-            border-bottom: none;
-        }
-
+        #errorBox .err-line:last-child { border-bottom: none; }
         #errorBox .err-close {
             position: absolute;
-            top: 6px;
-            right: 10px;
+            top: 6px; right: 10px;
             background: #fff;
             color: #ff0040;
             border: none;
             border-radius: 50%;
-            width: 26px;
-            height: 26px;
+            width: 26px; height: 26px;
             font-weight: 900;
             font-size: 16px;
             cursor: pointer;
@@ -126,14 +108,11 @@
             text-align: center;
         }
 
-        #toast.show {
-            opacity: 1;
-        }
+        #toast.show { opacity: 1; }
 
         #toast .toast-spinner {
             display: inline-block;
-            width: 18px;
-            height: 18px;
+            width: 18px; height: 18px;
             border: 3px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             border-top-color: #ff005a;
@@ -141,13 +120,8 @@
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .banner-container {
@@ -172,41 +146,35 @@
             display: block;
         }
 
-        /* =========================================================
-           أزرار التبويبات داخل البنر
-           ========================================================= */
-
         .tabs-bar {
             position: absolute;
-            top: 67%;
-            left: 56%;
-            right: 2%;
-            height: 30%;
+            top: 70.5%;
+            left: 57.5%;
+            right: 2.5%;
+            height: 27%;
             display: flex;
             gap: 0;
             z-index: 5;
-            background: transparent;
-            padding: 0;
-            border-radius: 18px;
+            line-height: 1;
+            border-radius: 12px 12px 14px 14px;
             overflow: hidden;
-            box-sizing: border-box;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
         }
 
         .banner-tab {
-            flex: 1;
+            flex: 1 1 0;
             min-width: 0;
-            height: 100%;
-            background: #3281ff;
+            background: var(--fantasy-dark);
             color: #ffffff;
             border: none;
-            border-right: 1px solid rgba(255,255,255,0.15);
             padding: 0 8px;
             font-weight: 700;
-            font-size: clamp(10px, 1.3vw, 13px);
+            font-size: clamp(12px, 1.6vw, 15px);
             cursor: pointer;
             outline: none;
-            transition: background 0.2s ease, transform 0.15s ease;
+            transition: background 0.2s;
             white-space: nowrap;
+            line-height: 1;
             text-align: center;
             border-radius: 0;
             overflow: hidden;
@@ -216,63 +184,29 @@
             justify-content: center;
         }
 
-        .banner-tab:last-child {
-            border-right: none;
-        }
-
-        .banner-tab:first-child {
-            border-radius: 18px 0 0 18px;
-        }
-
-        .banner-tab:last-child {
-            border-radius: 0 18px 18px 0;
-        }
-
-        .banner-tab:hover {
-            background: #2871e6;
-        }
+        .banner-tab:hover { background: var(--fantasy-hover); }
 
         .banner-tab.active {
-            background: #240024;
-            color: #ffffff;
+            background: var(--fantasy-darker);
             font-weight: 900;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.35);
         }
 
-        .banner-tab:first-child.active {
-            border-radius: 18px 0 0 18px;
-        }
+        .banner-tab.active:hover { background: #2a1035; }
 
-        .banner-tab:last-child.active {
-            border-radius: 0 18px 18px 0;
-        }
-
-        /* زر الحفظ */
-        .tabs-bar .banner-tab[onclick*="downloadAsImage"] {
-            background: #3281ff !important;
-            font-weight: 800;
-        }
-
-        .tabs-bar .banner-tab[onclick*="downloadAsImage"]:hover {
-            background: #2871e6 !important;
-        }
-
-        /* القائمة Round */
         select.banner-tab {
             appearance: none;
             -webkit-appearance: none;
             text-align: center;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 10 6'%3E%3Cpath fill='white' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='white' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 8px center;
-            padding-right: 18px;
-            padding-left: 4px;
-            border-radius: 0;
+            background-color: var(--fantasy-dark);
+            padding-right: 22px;
+            padding-left: 8px;
+            color: #ffffff;
         }
 
-        select.banner-tab:hover {
-            background-color: #2871e6;
-        }
+        select.banner-tab:hover { background-color: var(--fantasy-hover); }
 
         select.banner-tab option {
             background: var(--fantasy-dark);
@@ -317,8 +251,7 @@
             background: var(--pl-purple-btn);
             color: var(--text-white);
             border: 1px solid var(--border-dark);
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             border-radius: 50%;
             cursor: pointer;
             font-size: 20px;
@@ -365,37 +298,16 @@
             color: #ffffff;
         }
 
-        .save-round-btn {
-            background: #00c853;
-            box-shadow: 0 3px 0 #009b40;
-        }
+        .save-round-btn { background: #00c853; box-shadow: 0 3px 0 #009b40; }
+        .save-round-btn:hover { background: #00b34a; }
 
-        .save-round-btn:hover {
-            background: #00b34a;
-        }
+        .clear-round-btn { background: #ff005a; box-shadow: 0 3px 0 #b8003f; }
+        .clear-round-btn:hover { background: #e6004f; }
 
-        .clear-round-btn {
-            background: #ff005a;
-            box-shadow: 0 3px 0 #b8003f;
-        }
+        .download-action-btn { background: #3281ff; box-shadow: 0 3px 0 #1f5dbf; }
+        .download-action-btn:hover { background: #2871e6; }
 
-        .clear-round-btn:hover {
-            background: #e6004f;
-        }
-
-        .download-action-btn {
-            background: #3281ff;
-            box-shadow: 0 3px 0 #1f5dbf;
-        }
-
-        .download-action-btn:hover {
-            background: #2871e6;
-        }
-
-        .edit-action-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .edit-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         #captureFixtures {
             padding: 18px 14px;
@@ -432,98 +344,77 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             flex-wrap: nowrap;
         }
+        .fixture-row:last-child { margin-bottom: 0; }
 
-        .fixture-row:last-child {
-            margin-bottom: 0;
-        }
-
+        /* ===== أسماء الفرق مختصرة (3 أحرف) ===== */
         .team-box {
             display: flex;
             align-items: center;
-            width: 36%;
-            font-size: 14px;
-            font-weight: 800;
+            width: 26%;
+            font-size: 16px;
+            font-weight: 900;
             color: #38003c;
             text-transform: uppercase;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            letter-spacing: 0.5px;
         }
 
-        .team-box.home {
-            justify-content: flex-end;
-            text-align: right;
-        }
-
-        .team-box.away {
-            justify-content: flex-start;
-            text-align: left;
-        }
+        .team-box.home { justify-content: flex-end; text-align: right; }
+        .team-box.away { justify-content: flex-start; text-align: left; }
 
         .logo-20 {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            min-width: 20px;
-            min-height: 20px;
-            max-width: 20px;
-            max-height: 20px;
+            width: 20px; height: 20px;
+            min-width: 20px; min-height: 20px;
+            max-width: 20px; max-height: 20px;
             flex-shrink: 0;
             position: relative;
             overflow: hidden;
             vertical-align: middle;
         }
-
         .logo-20 img {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
+            max-width: 100%; max-height: 100%;
+            width: auto; height: auto;
             display: block;
         }
 
         .logo-24 {
             display: inline-block;
-            width: 24px;
-            height: 24px;
-            min-width: 24px;
-            min-height: 24px;
-            max-width: 24px;
-            max-height: 24px;
+            width: 24px; height: 24px;
+            min-width: 24px; min-height: 24px;
+            max-width: 24px; max-height: 24px;
             flex-shrink: 0;
             position: relative;
             overflow: hidden;
             vertical-align: middle;
             margin: 0 4px;
         }
-
         .logo-24 img {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
+            max-width: 100%; max-height: 100%;
+            width: auto; height: auto;
             display: block;
         }
 
+        /* ===== مركز النتيجة أعرض وأوضح ===== */
         .match-score-center {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            width: 22%;
+            gap: 8px;
+            width: 34%;
             background: #7138f5;
-            padding: 6px 8px;
+            padding: 8px 10px;
             border-radius: 6px;
             position: relative;
-            min-width: 70px;
+            min-width: 100px;
             flex-shrink: 0;
         }
 
@@ -531,20 +422,18 @@
         .score-input,
         .pos-number,
         .stat-number {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 900;
             line-height: 1.2;
             display: inline-block;
             vertical-align: middle;
         }
 
-        .score-display {
-            color: #ffffff;
-        }
+        .score-display { color: #ffffff; }
 
         .score-input {
-            width: 36px;
-            height: 26px;
+            width: 38px;
+            height: 28px;
             text-align: center;
             background: #ffffff;
             color: #38003c;
@@ -552,6 +441,7 @@
             border-radius: 4px;
             outline: none;
             padding: 0;
+            font-size: 15px;
         }
 
         .vs-text {
@@ -613,17 +503,9 @@
             overflow: hidden;
         }
 
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr.green-line td {
-            border-bottom: 3px solid #00ff87 !important;
-        }
-
-        tr.red-line td {
-            border-bottom: 3px solid #ff005a !important;
-        }
+        tr:last-child td { border-bottom: none; }
+        tr.green-line td { border-bottom: 3px solid #00ff87 !important; }
+        tr.red-line td { border-bottom: 3px solid #ff005a !important; }
 
         .team-cell {
             display: flex;
@@ -647,12 +529,9 @@
         }
 
         .pos-indicator-img {
-            width: 25px;
-            height: 25px;
-            min-width: 25px;
-            min-height: 25px;
-            max-width: 25px;
-            max-height: 25px;
+            width: 25px; height: 25px;
+            min-width: 25px; min-height: 25px;
+            max-width: 25px; max-height: 25px;
             object-fit: contain;
             display: inline-block;
             flex-shrink: 0;
@@ -673,35 +552,16 @@
             line-height: 1;
         }
 
-        .col-pos {
-            width: 14%;
-        }
+        .col-pos { width: 14%; }
+        .col-club { width: 42%; }
+        .col-gf { width: 20%; }
+        .col-pts { width: 24%; }
 
-        .col-club {
-            width: 42%;
-        }
-
-        .col-gf {
-            width: 20%;
-        }
-
-        .col-pts {
-            width: 24%;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
     </style>
 </head>
-
 <body>
-
-    <!-- صندوق عرض الأخطاء -->
 
     <div id="errorBox">
         <button class="err-close" onclick="document.getElementById('errorBox').classList.remove('show')">✕</button>
@@ -713,2592 +573,714 @@
     </div>
 
     <div class="banner-container">
-
-        <img id="bannerImg"
-             src="image_5.png"
-             alt="Premier League Banner"
-             onerror="handleBannerError(this)">
+        <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
 
         <div class="tabs-bar">
-
-            <button
-                class="banner-tab active"
-                id="fixturesToggleBtn"
-                onclick="switchTab('fixtures')">
-                Matches
-            </button>
-
-            <button
-                class="banner-tab"
-                id="standingsToggleBtn"
-                onclick="switchTab('standings')">
-                Standings
-            </button>
-
-            <select
-                class="banner-tab"
-                id="roundSelect"
-                onchange="selectRound(this.value)">
-            </select>
-
-            <button
-                class="banner-tab"
-                onclick="downloadAsImage()">
-                📷 Save
-            </button>
-
+            <button class="banner-tab" id="fixturesToggleBtn" onclick="switchTab('fixtures')">Matches</button>
+            <button class="banner-tab" id="standingsToggleBtn" onclick="switchTab('standings')">Standings</button>
+            <select class="banner-tab" id="roundSelect" onchange="selectRound(this.value)"></select>
         </div>
     </div>
 
     <div class="header">
-
         <div class="round-nav-container">
-
-            <button
-                class="nav-arrow-btn"
-                onclick="changeRound(1)">
-                ›
-            </button>
-
-            <div
-                class="round-indicator"
-                id="currentRoundTitle"
-                ondblclick="unlockEditWithPassword()">
-                MATCHWEEK 1
-            </div>
-
-            <button
-                class="nav-arrow-btn"
-                onclick="changeRound(-1)">
-                ‹
-            </button>
-
+            <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
+            <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
+            <button class="nav-arrow-btn" onclick="changeRound(-1)">‹</button>
         </div>
-
     </div>
 
     <div class="main-container">
 
         <div id="fixturesTab" class="tab-content active">
 
-            <div
-                id="editPanel"
-                class="edit-panel"
-                style="display: none;">
-
-                <button
-                    class="edit-action-btn save-round-btn"
-                    id="saveRoundBtn"
-                    onclick="saveCurrentRound()">
-                    💾 Save
-                </button>
-
-                <button
-                    class="edit-action-btn clear-round-btn"
-                    id="clearRoundBtn"
-                    onclick="clearCurrentRound()">
-                    🗑️ Clear
-                </button>
-
-                <button
-                    class="edit-action-btn download-action-btn"
-                    onclick="downloadAsImage()">
-                    ⬇️ Download
-                </button>
-
+            <div id="editPanel" class="edit-panel" style="display: none;">
+                <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">💾 Save</button>
+                <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">🗑️ Clear</button>
+                <button class="edit-action-btn download-action-btn" onclick="downloadAsImage()">⬇️ Download</button>
             </div>
 
-            <div
-                id="captureFixtures"
-                class="export-area">
-
+            <div id="captureFixtures" class="export-area">
                 <div class="fixtures-header-box">
-
-                    <div
-                        class="fixtures-header-title"
-                        id="fixturesBannerTitle">
-                        MATCHWEEK RESULTS
-                    </div>
-
+                    <div class="fixtures-header-title" id="fixturesBannerTitle">MATCHWEEK RESULTS</div>
                 </div>
-
                 <div id="fixturesList"></div>
-
             </div>
-
         </div>
 
         <div id="standingsTab" class="tab-content">
-
-            <div
-                id="captureStandings"
-                class="export-area">
-
+            <div id="captureStandings" class="export-area">
                 <div class="standings-content-area">
-
                     <div class="standings-card">
-
                         <table>
-
                             <colgroup>
                                 <col class="col-pos">
                                 <col class="col-club">
                                 <col class="col-gf">
                                 <col class="col-pts">
                             </colgroup>
-
                             <thead>
                                 <tr>
                                     <th>Pos</th>
-
-                                    <th style="text-align: right; padding-right: 12px;">
-                                        Club
-                                    </th>
-
-                                    <th style="text-align: center;">
-                                        GF
-                                    </th>
-
-                                    <th style="text-align: center;">
-                                        Pts
-                                    </th>
+                                    <th style="text-align: right; padding-right: 12px;">Club</th>
+                                    <th style="text-align: center;">GF</th>
+                                    <th style="text-align: center;">Pts</th>
                                 </tr>
                             </thead>
-
                             <tbody id="standingsBody"></tbody>
-
                         </table>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
     </div>
 
-    <!-- ===== عرض الأخطاء على الشاشة ===== -->
-
     <script>
-
         (function() {
-
             const box = document.getElementById('errorBox');
             const content = document.getElementById('errorContent');
-
             function showError(msg) {
-
                 const line = document.createElement('div');
-
                 line.className = 'err-line';
-
                 line.textContent = msg;
-
                 content.appendChild(line);
-
                 box.classList.add('show');
             }
-
             window.onerror = function(message, source, lineno, colno, error) {
-
-                showError(
-                    '❌ ' +
-                    message +
-                    ' | ' +
-                    (source || '') +
-                    ':' +
-                    lineno
-                );
-
+                showError('❌ ' + message + ' | ' + (source || '') + ':' + lineno);
                 return false;
             };
-
             window.addEventListener('unhandledrejection', function(e) {
-
-                showError(
-                    '⚠️ Promise: ' +
-                    (
-                        e.reason &&
-                        e.reason.message
-                            ? e.reason.message
-                            : String(e.reason)
-                    )
-                );
-
+                showError('⚠️ Promise: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason)));
             });
-
         })();
-
     </script>
-
-    <!-- app.js ينحمّل بعد كل عناصر الصفحة -->
 
     <script src="app.js"></script>
 
-    <!-- السكربت الرئيسي -->
-
     <script>
-
         let editMode = false;
-
-        let scoresStorage =
-            JSON.parse(localStorage.getItem('fpl_scores')) || {};
-
+        let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
         let currentRound = 1;
-
         let activeTab = 'fixtures';
-
         let isSaving = false;
-
         let toastTimeout = null;
 
-
-        function showToast(
-            msg,
-            isSuccess = false,
-            duration = 3000
-        ) {
-
-            const toast =
-                document.getElementById('toast');
-
-            const content =
-                document.getElementById('toastContent');
-
-            if (toastTimeout)
-                clearTimeout(toastTimeout);
-
+        function showToast(msg, isSuccess = false, duration = 3000) {
+            const toast = document.getElementById('toast');
+            const content = document.getElementById('toastContent');
+            if (toastTimeout) clearTimeout(toastTimeout);
             if (isSuccess) {
-
-                content.innerHTML =
-                    `✅ ${msg}`;
-
+                content.innerHTML = `✅ ${msg}`;
             } else {
-
-                content.innerHTML =
-                    `<span class="toast-spinner"></span> ${msg}`;
-
+                content.innerHTML = `<span class="toast-spinner"></span> ${msg}`;
             }
-
             toast.classList.add('show');
-
-            toastTimeout =
-                setTimeout(() => {
-
-                    toast.classList.remove('show');
-
-                }, duration);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
         }
-
 
         let bannerAttempts = 0;
-
-        const bannerSources = [
-            "image_5.png",
-            "image_5.PNG",
-            "image_5.jpg",
-            "image_5.JPG",
-            "banner.png",
-            "./image_5.png",
-            "./banner.png"
-        ];
-
-
+        const bannerSources = ["image_5.png", "image_5.PNG", "image_5.jpg", "image_5.JPG", "banner.png", "./image_5.png", "./banner.png"];
         function handleBannerError(img) {
-
             bannerAttempts++;
-
-            if (
-                bannerAttempts <
-                bannerSources.length
-            ) {
-
-                img.src =
-                    bannerSources[bannerAttempts];
-
+            if (bannerAttempts < bannerSources.length) {
+                img.src = bannerSources[bannerAttempts];
             } else {
-
                 img.style.display = 'none';
-
             }
         }
 
-
         const teamsMap = {
-
-            "ARS": {
-                name: "Arsenal",
-                logo: "arsenal.png.WEBP"
-            },
-
-            "AVL": {
-                name: "Aston Villa",
-                logo: "aston_villa.png.WEBP"
-            },
-
-            "BOU": {
-                name: "Bournemouth",
-                logo: "bournemouth.png.WEBP"
-            },
-
-            "BRE": {
-                name: "Brentford",
-                logo: "brentford.png.PNG"
-            },
-
-            "BHA": {
-                name: "Brighton",
-                logo: "brighton.png.WEBP"
-            },
-
-            "CHE": {
-                name: "Chelsea",
-                logo: "chelsea.png.WEBP"
-            },
-
-            "COV": {
-                name: "Coventry",
-                logo: "coventry.png.WEBP"
-            },
-
-            "CRY": {
-                name: "Crystal Palace",
-                logo: "crystal_palace.png.WEBP"
-            },
-
-            "EVE": {
-                name: "Everton",
-                logo: "everton.png.WEBP"
-            },
-
-            "FUL": {
-                name: "Fulham",
-                logo: "fulham.png.WEBP"
-            },
-
-            "HUL": {
-                name: "Hull",
-                logo: "hull.png.WEBP"
-            },
-
-            "IPS": {
-                name: "Ipswich",
-                logo: "ipswich.png.WEBP"
-            },
-
-            "LEE": {
-                name: "Leeds",
-                logo: "leeds.png.WEBP"
-            },
-
-            "LIV": {
-                name: "Liverpool",
-                logo: "liverpool.png.WEBP"
-            },
-
-            "MCI": {
-                name: "Man City",
-                logo: "man_city.png.WEBP"
-            },
-
-            "MUN": {
-                name: "Man Utd",
-                logo: "man_utd.png.WEBP"
-            },
-
-            "NEW": {
-                name: "Newcastle",
-                logo: "newcastle.png.WEBP"
-            },
-
-            "NOT": {
-                name: "Nott'm Forest",
-                logo: "forest.png.PNG"
-            },
-
-            "SUN": {
-                name: "Sunderland",
-                logo: "sunderland.png.WEBP"
-            },
-
-            "TOT": {
-                name: "Spurs",
-                logo: "tottenham.png.WEBP"
-            }
-
+            "ARS": { name: "Arsenal", logo: "arsenal.png.WEBP" },
+            "AVL": { name: "Aston Villa", logo: "aston_villa.png.WEBP" },
+            "BOU": { name: "Bournemouth", logo: "bournemouth.png.WEBP" },
+            "BRE": { name: "Brentford", logo: "brentford.png.PNG" },
+            "BHA": { name: "Brighton", logo: "brighton.png.WEBP" },
+            "CHE": { name: "Chelsea", logo: "chelsea.png.WEBP" },
+            "COV": { name: "Coventry", logo: "coventry.png.WEBP" },
+            "CRY": { name: "Crystal Palace", logo: "crystal_palace.png.WEBP" },
+            "EVE": { name: "Everton", logo: "everton.png.WEBP" },
+            "FUL": { name: "Fulham", logo: "fulham.png.WEBP" },
+            "HUL": { name: "Hull", logo: "hull.png.WEBP" },
+            "IPS": { name: "Ipswich", logo: "ipswich.png.WEBP" },
+            "LEE": { name: "Leeds", logo: "leeds.png.WEBP" },
+            "LIV": { name: "Liverpool", logo: "liverpool.png.WEBP" },
+            "MCI": { name: "Man City", logo: "man_city.png.WEBP" },
+            "MUN": { name: "Man Utd", logo: "man_utd.png.WEBP" },
+            "NEW": { name: "Newcastle", logo: "newcastle.png.WEBP" },
+            "NOT": { name: "Nott'm Forest", logo: "forest.png.PNG" },
+            "SUN": { name: "Sunderland", logo: "sunderland.png.WEBP" },
+            "TOT": { name: "Spurs", logo: "tottenham.png.WEBP" }
         };
-
 
         const initialBasePoints = {};
-
-        Object.keys(teamsMap).forEach(key => {
-
-            initialBasePoints[key] = {
-                gf: 0,
-                pts: 0
-            };
-
-        });
-
+        Object.keys(teamsMap).forEach(key => { initialBasePoints[key] = { gf: 0, pts: 0 }; });
 
         const matchweeks = {
-
-            1: [
-                ["ARS","COV"],
-                ["HUL","MUN"],
-                ["EVE","CRY"],
-                ["IPS","SUN"],
-                ["NOT","LEE"],
-                ["BRE","TOT"],
-                ["BHA","AVL"],
-                ["MCI","BOU"],
-                ["NEW","LIV"],
-                ["FUL","CHE"]
-            ],
-
-            2: [
-                ["BOU","EVE"],
-                ["AVL","ARS"],
-                ["CHE","BHA"],
-                ["COV","HUL"],
-                ["CRY","MCI"],
-                ["LEE","BRE"],
-                ["LIV","NOT"],
-                ["MUN","IPS"],
-                ["SUN","FUL"],
-                ["TOT","NEW"]
-            ],
-
-            3: [
-                ["ARS","CHE"],
-                ["BRE","SUN"],
-                ["BHA","LEE"],
-                ["EVE","MUN"],
-                ["FUL","CRY"],
-                ["HUL","AVL"],
-                ["IPS","LIV"],
-                ["MCI","COV"],
-                ["NEW","BOU"],
-                ["NOT","TOT"]
-            ],
-
-            4: [
-                ["BOU","BRE"],
-                ["AVL","NOT"],
-                ["CHE","HUL"],
-                ["COV","BHA"],
-                ["CRY","IPS"],
-                ["LEE","NEW"],
-                ["LIV","FUL"],
-                ["MUN","MCI"],
-                ["SUN","ARS"],
-                ["TOT","EVE"]
-            ],
-
-            5: [
-                ["BOU","LIV"],
-                ["BRE","CHE"],
-                ["BHA","ARS"],
-                ["EVE","IPS"],
-                ["FUL","MUN"],
-                ["LEE","CRY"],
-                ["MCI","SUN"],
-                ["NEW","HUL"],
-                ["NOT","COV"],
-                ["TOT","AVL"]
-            ],
-
-            6: [
-                ["ARS","LEE"],
-                ["AVL","BRE"],
-                ["CHE","BOU"],
-                ["COV","NEW"],
-                ["CRY","NOT"],
-                ["HUL","EVE"],
-                ["IPS","FUL"],
-                ["LIV","MCI"],
-                ["MUN","TOT"],
-                ["SUN","BHA"]
-            ],
-
-            7: [
-                ["BOU","SUN"],
-                ["BRE","LIV"],
-                ["BHA","CRY"],
-                ["EVE","CHE"],
-                ["FUL","HUL"],
-                ["LEE","MUN"],
-                ["MCI","IPS"],
-                ["NEW","AVL"],
-                ["NOT","ARS"],
-                ["TOT","COV"]
-            ],
-
-            8: [
-                ["ARS","EVE"],
-                ["AVL","MCI"],
-                ["CHE","TOT"],
-                ["COV","FUL"],
-                ["CRY","NEW"],
-                ["HUL","BRE"],
-                ["IPS","NOT"],
-                ["LIV","BHA"],
-                ["MUN","BOU"],
-                ["SUN","LEE"]
-            ],
-
-            9: [
-                ["BOU","LEE"],
-                ["BRE","NOT"],
-                ["CHE","MUN"],
-                ["COV","SUN"],
-                ["HUL","IPS"],
-                ["LIV","ARS"],
-                ["MCI","BHA"],
-                ["NEW","EVE"],
-                ["TOT","CRY"],
-                ["AVL","FUL"]
-            ],
-
-            10: [
-                ["ARS","HUL"],
-                ["BHA","BRE"],
-                ["CRY","LIV"],
-                ["EVE","COV"],
-                ["FUL","NEW"],
-                ["IPS","BOU"],
-                ["LEE","TOT"],
-                ["MUN","AVL"],
-                ["NOT","MCI"],
-                ["SUN","CHE"]
-            ],
-
-            11: [
-                ["BRE","EVE"],
-                ["CHE","LEE"],
-                ["COV","CRY"],
-                ["HUL","BHA"],
-                ["LIV","MUN"],
-                ["MCI","FUL"],
-                ["NEW","ARS"],
-                ["TOT","IPS"],
-                ["NOT","SUN"],
-                ["AVL","BOU"]
-            ],
-
-            12: [
-                ["ARS","MCI"],
-                ["BHA","NEW"],
-                ["CRY","HUL"],
-                ["EVE","LIV"],
-                ["FUL","BOU"],
-                ["IPS","AVL"],
-                ["LEE","COV"],
-                ["MUN","BRE"],
-                ["NOT","CHE"],
-                ["SUN","TOT"]
-            ],
-
-            13: [
-                ["BOU","BHA"],
-                ["AVL","EVE"],
-                ["BRE","ARS"],
-                ["CHE","CRY"],
-                ["COV","IPS"],
-                ["HUL","NOT"],
-                ["LIV","SUN"],
-                ["MCI","LEE"],
-                ["NEW","MUN"],
-                ["TOT","FUL"]
-            ],
-
-            14: [
-                ["BOU","HUL"],
-                ["AVL","CRY"],
-                ["BRE","MCI"],
-                ["CHE","LIV"],
-                ["EVE","FUL"],
-                ["LEE","IPS"],
-                ["MUN","COV"],
-                ["NEW","SUN"],
-                ["NOT","BHA"],
-                ["TOT","ARS"]
-            ],
-
-            15: [
-                ["ARS","BOU"],
-                ["BHA","EVE"],
-                ["COV","AVL"],
-                ["CRY","MUN"],
-                ["FUL","BRE"],
-                ["HUL","TOT"],
-                ["IPS","NEW"],
-                ["LIV","LEE"],
-                ["MCI","CHE"],
-                ["SUN","NOT"]
-            ],
-
-            16: [
-                ["BOU","COV"],
-                ["ARS","MUN"],
-                ["BRE","NEW"],
-                ["BHA","IPS"],
-                ["CHE","AVL"],
-                ["LEE","FUL"],
-                ["LIV","TOT"],
-                ["MCI","HUL"],
-                ["NOT","EVE"],
-                ["SUN","CRY"]
-            ],
-
-            17: [
-                ["AVL","LEE"],
-                ["COV","CHE"],
-                ["CRY","ARS"],
-                ["EVE","SUN"],
-                ["FUL","BHA"],
-                ["HUL","LIV"],
-                ["IPS","BRE"],
-                ["MUN","NOT"],
-                ["NEW","MCI"],
-                ["TOT","BOU"]
-            ],
-
-            18: [
-                ["AVL","LIV"],
-                ["COV","BRE"],
-                ["CRY","BOU"],
-                ["EVE","MCI"],
-                ["FUL","ARS"],
-                ["HUL","LEE"],
-                ["IPS","CHE"],
-                ["MUN","SUN"],
-                ["NEW","NOT"],
-                ["TOT","BHA"]
-            ],
-
-            19: [
-                ["BOU","AVL"],
-                ["ARS","IPS"],
-                ["BRE","CRY"],
-                ["BHA","MUN"],
-                ["CHE","NEW"],
-                ["LEE","EVE"],
-                ["LIV","COV"],
-                ["MCI","TOT"],
-                ["NOT","FUL"],
-                ["SUN","HUL"]
-            ],
-
-            20: [
-                ["ARS","BRE"],
-                ["BHA","BOU"],
-                ["CRY","CHE"],
-                ["EVE","AVL"],
-                ["FUL","TOT"],
-                ["IPS","COV"],
-                ["LEE","MCI"],
-                ["MUN","NEW"],
-                ["NOT","HUL"],
-                ["SUN","LIV"]
-            ],
-
-            21: [
-                ["AVL","EVE"],
-                ["BRE","BHA"],
-                ["CHE","SUN"],
-                ["COV","LIV"],
-                ["CRY","BOU"],
-                ["FUL","MUN"],
-                ["HUL","NEW"],
-                ["LEE","ARS"],
-                ["MCI","IPS"],
-                ["TOT","NOT"]
-            ],
-
-            22: [
-                ["BOU","CRY"],
-                ["ARS","LEE"],
-                ["BHA","MCI"],
-                ["EVE","HUL"],
-                ["IPS","AVL"],
-                ["LIV","NEW"],
-                ["MUN","FUL"],
-                ["NOT","CHE"],
-                ["SUN","COV"],
-                ["TOT","BRE"]
-            ],
-
-            23: [
-                ["AVL","LIV"],
-                ["BRE","EVE"],
-                ["CHE","NEW"],
-                ["COV","MUN"],
-                ["CRY","SUN"],
-                ["HUL","ARS"],
-                ["IPS","LEE"],
-                ["MCI","BHA"],
-                ["NOT","FUL"],
-                ["TOT","BOU"]
-            ],
-
-            24: [
-                ["BOU","COV"],
-                ["ARS","AVL"],
-                ["BHA","LIV"],
-                ["EVE","NOT"],
-                ["FUL","IPS"],
-                ["LEE","HUL"],
-                ["MUN","CRY"],
-                ["NEW","TOT"],
-                ["SUN","BRE"],
-                ["MCI","CHE"]
-            ],
-
-            25: [
-                ["AVL","BOU"],
-                ["BRE","CRY"],
-                ["COV","ARS"],
-                ["HUL","MCI"],
-                ["IPS","EVE"],
-                ["LEE","SUN"],
-                ["LIV","FUL"],
-                ["MUN","NEW"],
-                ["NOT","BHA"],
-                ["TOT","CHE"]
-            ],
-
-            26: [
-                ["BOU","LEE"],
-                ["BHA","AVL"],
-                ["CHE","HUL"],
-                ["CRY","COV"],
-                ["EVE","LIV"],
-                ["FUL","NOT"],
-                ["MCI","BRE"],
-                ["NEW","MUN"],
-                ["SUN","IPS"],
-                ["TOT","ARS"]
-            ],
-
-            27: [
-                ["AVL","CHE"],
-                ["BRE","FUL"],
-                ["COV","CRY"],
-                ["HUL","BOU"],
-                ["IPS","BHA"],
-                ["LEE","EVE"],
-                ["LIV","MUN"],
-                ["ARS","MCI"],
-                ["NOT","SUN"],
-                ["TOT","NEW"]
-            ],
-
-            28: [
-                ["ARS","NOT"],
-                ["BOU","BRE"],
-                ["BHA","HUL"],
-                ["CRY","AVL"],
-                ["EVE","LEE"],
-                ["FUL","LIV"],
-                ["MCI","TOT"],
-                ["NEW","IPS"],
-                ["SUN","MUN"],
-                ["CHE","COV"]
-            ],
-
-            29: [
-                ["ARS","FUL"],
-                ["AVL","CHE"],
-                ["BRE","NEW"],
-                ["COV","LEE"],
-                ["HUL","CRY"],
-                ["IPS","MCI"],
-                ["LIV","BHA"],
-                ["MUN","EVE"],
-                ["NOT","BOU"],
-                ["TOT","SUN"]
-            ],
-
-            30: [
-                ["BOU","IPS"],
-                ["BHA","COV"],
-                ["CHE","ARS"],
-                ["CRY","MCI"],
-                ["EVE","BRE"],
-                ["FUL","HUL"],
-                ["LEE","AVL"],
-                ["LIV","NOT"],
-                ["NEW","MUN"],
-                ["SUN","TOT"]
-            ],
-
-            31: [
-                ["ARS","CRY"],
-                ["AVL","LEE"],
-                ["BRE","FUL"],
-                ["COV","EVE"],
-                ["HUL","LIV"],
-                ["IPS","CHE"],
-                ["MCI","BHA"],
-                ["NOT","MUN"],
-                ["TOT","BOU"],
-                ["NEW","SUN"]
-            ],
-
-            32: [
-                ["BOU","ARS"],
-                ["BHA","NOT"],
-                ["CHE","FUL"],
-                ["CRY","AVL"],
-                ["EVE","IPS"],
-                ["SUN","COV"],
-                ["LEE","TOT"],
-                ["LIV","BRE"],
-                ["MUN","HUL"],
-                ["NEW","MCI"]
-            ],
-
-            33: [
-                ["ARS","NEW"],
-                ["AVL","CRY"],
-                ["BRE","LEE"],
-                ["COV","BHA"],
-                ["HUL","CHE"],
-                ["IPS","BOU"],
-                ["MCI","LIV"],
-                ["NOT","EVE"],
-                ["TOT","MUN"],
-                ["FUL","SUN"]
-            ],
-
-            34: [
-                ["BOU","AVL"],
-                ["BHA","IPS"],
-                ["CHE","BRE"],
-                ["CRY","FUL"],
-                ["EVE","ARS"],
-                ["SUN","LEE"],
-                ["LIV","TOT"],
-                ["MUN","COV"],
-                ["NEW","HUL"],
-                ["NOT","MCI"]
-            ],
-
-            35: [
-                ["ARS","BHA"],
-                ["AVL","NOT"],
-                ["BRE","BOU"],
-                ["COV","CHE"],
-                ["HUL","CRY"],
-                ["IPS","MUN"],
-                ["LEE","LIV"],
-                ["MCI","EVE"],
-                ["TOT","FUL"],
-                ["NEW","SUN"]
-            ],
-
-            36: [
-                ["BOU","MUN"],
-                ["BHA","FUL"],
-                ["CHE","IPS"],
-                ["CRY","BRE"],
-                ["EVE","AVL"],
-                ["HUL","MCI"],
-                ["LIV","COV"],
-                ["NEW","LEE"],
-                ["NOT","TOT"],
-                ["SUN","ARS"]
-            ],
-
-            37: [
-                ["ARS","LIV"],
-                ["AVL","SUN"],
-                ["BRE","HUL"],
-                ["COV","BOU"],
-                ["IPS","CRY"],
-                ["LEE","CHE"],
-                ["MCI","NEW"],
-                ["MUN","NOT"],
-                ["TOT","EVE"],
-                ["FUL","BHA"]
-            ],
-
-            38: [
-                ["BOU","NOT"],
-                ["BHA","MUN"],
-                ["CHE","AVL"],
-                ["CRY","ARS"],
-                ["EVE","FUL"],
-                ["HUL","COV"],
-                ["LEE","BRE"],
-                ["LIV","IPS"],
-                ["MCI","SUN"],
-                ["TOT","NEW"]
-            ]
-
+            1: [["ARS","COV"],["HUL","MUN"],["EVE","CRY"],["IPS","SUN"],["NOT","LEE"],["BRE","TOT"],["BHA","AVL"],["MCI","BOU"],["NEW","LIV"],["FUL","CHE"]],
+            2: [["BOU","EVE"],["AVL","ARS"],["CHE","BHA"],["COV","HUL"],["CRY","MCI"],["LEE","BRE"],["LIV","NOT"],["MUN","IPS"],["SUN","FUL"],["TOT","NEW"]],
+            3: [["ARS","CHE"],["BRE","SUN"],["BHA","LEE"],["EVE","MUN"],["FUL","CRY"],["HUL","AVL"],["IPS","LIV"],["MCI","COV"],["NEW","BOU"],["NOT","TOT"]],
+            4: [["BOU","BRE"],["AVL","NOT"],["CHE","HUL"],["COV","BHA"],["CRY","IPS"],["LEE","NEW"],["LIV","FUL"],["MUN","MCI"],["SUN","ARS"],["TOT","EVE"]],
+            5: [["BOU","LIV"],["BRE","CHE"],["BHA","ARS"],["EVE","IPS"],["FUL","MUN"],["LEE","CRY"],["MCI","SUN"],["NEW","HUL"],["NOT","COV"],["TOT","AVL"]],
+            6: [["ARS","LEE"],["AVL","BRE"],["CHE","BOU"],["COV","NEW"],["CRY","NOT"],["HUL","EVE"],["IPS","FUL"],["LIV","MCI"],["MUN","TOT"],["SUN","BHA"]],
+            7: [["BOU","SUN"],["BRE","LIV"],["BHA","CRY"],["EVE","CHE"],["FUL","HUL"],["LEE","MUN"],["MCI","IPS"],["NEW","AVL"],["NOT","ARS"],["TOT","COV"]],
+            8: [["ARS","EVE"],["AVL","MCI"],["CHE","TOT"],["COV","FUL"],["CRY","NEW"],["HUL","BRE"],["IPS","NOT"],["LIV","BHA"],["MUN","BOU"],["SUN","LEE"]],
+            9: [["BOU","LEE"],["BRE","NOT"],["CHE","MUN"],["COV","SUN"],["HUL","IPS"],["LIV","ARS"],["MCI","BHA"],["NEW","EVE"],["TOT","CRY"],["AVL","FUL"]],
+            10: [["ARS","HUL"],["BHA","BRE"],["CRY","LIV"],["EVE","COV"],["FUL","NEW"],["IPS","BOU"],["LEE","TOT"],["MUN","AVL"],["NOT","MCI"],["SUN","CHE"]],
+            11: [["BRE","EVE"],["CHE","LEE"],["COV","CRY"],["HUL","BHA"],["LIV","MUN"],["MCI","FUL"],["NEW","ARS"],["TOT","IPS"],["NOT","SUN"],["AVL","BOU"]],
+            12: [["ARS","MCI"],["BHA","NEW"],["CRY","HUL"],["EVE","LIV"],["FUL","BOU"],["IPS","AVL"],["LEE","COV"],["MUN","BRE"],["NOT","CHE"],["SUN","TOT"]],
+            13: [["BOU","BHA"],["AVL","EVE"],["BRE","ARS"],["CHE","CRY"],["COV","IPS"],["HUL","NOT"],["LIV","SUN"],["MCI","LEE"],["NEW","MUN"],["TOT","FUL"]],
+            14: [["BOU","HUL"],["AVL","CRY"],["BRE","MCI"],["CHE","LIV"],["EVE","FUL"],["LEE","IPS"],["MUN","COV"],["NEW","SUN"],["NOT","BHA"],["TOT","ARS"]],
+            15: [["ARS","BOU"],["BHA","EVE"],["COV","AVL"],["CRY","MUN"],["FUL","BRE"],["HUL","TOT"],["IPS","NEW"],["LIV","LEE"],["MCI","CHE"],["SUN","NOT"]],
+            16: [["BOU","COV"],["ARS","MUN"],["BRE","NEW"],["BHA","IPS"],["CHE","AVL"],["LEE","FUL"],["LIV","TOT"],["MCI","HUL"],["NOT","EVE"],["SUN","CRY"]],
+            17: [["AVL","LEE"],["COV","CHE"],["CRY","ARS"],["EVE","SUN"],["FUL","BHA"],["HUL","LIV"],["IPS","BRE"],["MUN","NOT"],["NEW","MCI"],["TOT","BOU"]],
+            18: [["AVL","LIV"],["COV","BRE"],["CRY","BOU"],["EVE","MCI"],["FUL","ARS"],["HUL","LEE"],["IPS","CHE"],["MUN","SUN"],["NEW","NOT"],["TOT","BHA"]],
+            19: [["BOU","AVL"],["ARS","IPS"],["BRE","CRY"],["BHA","MUN"],["CHE","NEW"],["LEE","EVE"],["LIV","COV"],["MCI","TOT"],["NOT","FUL"],["SUN","HUL"]],
+            20: [["ARS","BRE"],["BHA","BOU"],["CRY","CHE"],["EVE","AVL"],["FUL","TOT"],["IPS","COV"],["LEE","MCI"],["MUN","NEW"],["NOT","HUL"],["SUN","LIV"]],
+            21: [["AVL","EVE"],["BRE","BHA"],["CHE","SUN"],["COV","LIV"],["CRY","BOU"],["FUL","MUN"],["HUL","NEW"],["LEE","ARS"],["MCI","IPS"],["TOT","NOT"]],
+            22: [["BOU","CRY"],["ARS","LEE"],["BHA","MCI"],["EVE","HUL"],["IPS","AVL"],["LIV","NEW"],["MUN","FUL"],["NOT","CHE"],["SUN","COV"],["TOT","BRE"]],
+            23: [["AVL","LIV"],["BRE","EVE"],["CHE","NEW"],["COV","MUN"],["CRY","SUN"],["HUL","ARS"],["IPS","LEE"],["MCI","BHA"],["NOT","FUL"],["TOT","BOU"]],
+            24: [["BOU","COV"],["ARS","AVL"],["BHA","LIV"],["EVE","NOT"],["FUL","IPS"],["LEE","HUL"],["MUN","CRY"],["NEW","TOT"],["SUN","BRE"],["MCI","CHE"]],
+            25: [["AVL","BOU"],["BRE","CRY"],["COV","ARS"],["HUL","MCI"],["IPS","EVE"],["LEE","SUN"],["LIV","FUL"],["MUN","NEW"],["NOT","BHA"],["TOT","CHE"]],
+            26: [["BOU","LEE"],["BHA","AVL"],["CHE","HUL"],["CRY","COV"],["EVE","LIV"],["FUL","NOT"],["MCI","BRE"],["NEW","MUN"],["SUN","IPS"],["TOT","ARS"]],
+            27: [["AVL","CHE"],["BRE","FUL"],["COV","CRY"],["HUL","BOU"],["IPS","BHA"],["LEE","EVE"],["LIV","MUN"],["ARS","MCI"],["NOT","SUN"],["TOT","NEW"]],
+            28: [["ARS","NOT"],["BOU","BRE"],["BHA","HUL"],["CRY","AVL"],["EVE","LEE"],["FUL","LIV"],["MCI","TOT"],["NEW","IPS"],["SUN","MUN"],["CHE","COV"]],
+            29: [["ARS","FUL"],["AVL","CHE"],["BRE","NEW"],["COV","LEE"],["HUL","CRY"],["IPS","MCI"],["LIV","BHA"],["MUN","EVE"],["NOT","BOU"],["TOT","SUN"]],
+            30: [["BOU","IPS"],["BHA","COV"],["CHE","ARS"],["CRY","MCI"],["EVE","BRE"],["FUL","HUL"],["LEE","AVL"],["LIV","NOT"],["NEW","MUN"],["SUN","TOT"]],
+            31: [["ARS","CRY"],["AVL","LEE"],["BRE","FUL"],["COV","EVE"],["HUL","LIV"],["IPS","CHE"],["MCI","BHA"],["NOT","MUN"],["TOT","BOU"],["NEW","SUN"]],
+            32: [["BOU","ARS"],["BHA","NOT"],["CHE","FUL"],["CRY","AVL"],["EVE","IPS"],["SUN","COV"],["LEE","TOT"],["LIV","BRE"],["MUN","HUL"],["NEW","MCI"]],
+            33: [["ARS","NEW"],["AVL","CRY"],["BRE","LEE"],["COV","BHA"],["HUL","CHE"],["IPS","BOU"],["MCI","LIV"],["NOT","EVE"],["TOT","MUN"],["FUL","SUN"]],
+            34: [["BOU","AVL"],["BHA","IPS"],["CHE","BRE"],["CRY","FUL"],["EVE","ARS"],["SUN","LEE"],["LIV","TOT"],["MUN","COV"],["NEW","HUL"],["NOT","MCI"]],
+            35: [["ARS","BHA"],["AVL","NOT"],["BRE","BOU"],["COV","CHE"],["HUL","CRY"],["IPS","MUN"],["LEE","LIV"],["MCI","EVE"],["TOT","FUL"],["NEW","SUN"]],
+            36: [["BOU","MUN"],["BHA","FUL"],["CHE","IPS"],["CRY","BRE"],["EVE","AVL"],["HUL","MCI"],["LIV","COV"],["NEW","LEE"],["NOT","TOT"],["SUN","ARS"]],
+            37: [["ARS","LIV"],["AVL","SUN"],["BRE","HUL"],["COV","BOU"],["IPS","CRY"],["LEE","CHE"],["MCI","NEW"],["MUN","NOT"],["TOT","EVE"],["FUL","BHA"]],
+            38: [["BOU","NOT"],["BHA","MUN"],["CHE","AVL"],["CRY","ARS"],["EVE","FUL"],["HUL","COV"],["LEE","BRE"],["LIV","IPS"],["MCI","SUN"],["TOT","NEW"]]
         };
 
-
         function initRoundDropdown() {
-
-            const select =
-                document.getElementById('roundSelect');
-
+            const select = document.getElementById('roundSelect');
             select.innerHTML = '';
-
             for (let i = 1; i <= 38; i++) {
-
-                let opt =
-                    document.createElement('option');
-
+                let opt = document.createElement('option');
                 opt.value = i;
-
-                opt.innerText =
-                    `Round ${i}`;
-
-                if (i === currentRound)
-                    opt.selected = true;
-
+                opt.innerText = `Round ${i}`;
+                if (i === currentRound) opt.selected = true;
                 select.appendChild(opt);
             }
         }
 
-
         function selectRound(val) {
-
-            currentRound =
-                parseInt(val);
-
+            currentRound = parseInt(val);
             renderFixtures();
-
-            if (activeTab === 'standings')
-                renderStandings();
+            if (activeTab === 'standings') renderStandings();
         }
-
 
         function switchTab(tabName) {
-
             activeTab = tabName;
+            document.getElementById('fixturesToggleBtn').classList.toggle('active', tabName === 'fixtures');
+            document.getElementById('standingsToggleBtn').classList.toggle('active', tabName === 'standings');
 
-            document
-                .getElementById('fixturesToggleBtn')
-                .classList
-                .toggle(
-                    'active',
-                    tabName === 'fixtures'
-                );
-
-            document
-                .getElementById('standingsToggleBtn')
-                .classList
-                .toggle(
-                    'active',
-                    tabName === 'standings'
-                );
-
-            document
-                .querySelectorAll('.tab-content')
-                .forEach(el =>
-                    el.classList.remove('active')
-                );
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
 
             if (tabName === 'standings') {
-
                 renderStandings();
-
-                document
-                    .getElementById('standingsTab')
-                    .classList
-                    .add('active');
-
+                document.getElementById('standingsTab').classList.add('active');
             } else {
-
-                document
-                    .getElementById('fixturesTab')
-                    .classList
-                    .add('active');
-
+                document.getElementById('fixturesTab').classList.add('active');
             }
         }
-
 
         function unlockEditWithPassword() {
-
-            const pass =
-                prompt("Enter password to edit:");
-
+            const pass = prompt("Enter password to edit:");
             if (pass === "1999") {
-
                 editMode = true;
-
-                document
-                    .getElementById('editPanel')
-                    .style.display = 'flex';
-
+                document.getElementById('editPanel').style.display = 'flex';
                 renderFixtures();
-
-                showToast(
-                    "Edit mode enabled ✓",
-                    true
-                );
-
+                showToast("Edit mode enabled ✓", true);
             } else if (pass !== null) {
-
                 alert("Incorrect password!");
-
             }
         }
 
-
         function exitEditMode() {
-
             editMode = false;
-
-            document
-                .getElementById('editPanel')
-                .style.display = 'none';
-
+            document.getElementById('editPanel').style.display = 'none';
             renderFixtures();
-
             renderStandings();
         }
 
-
         async function saveCurrentRound() {
-
-            if (isSaving)
-                return;
-
+            if (isSaving) return;
             isSaving = true;
+            showToast("Saving...", false);
+            document.getElementById('saveRoundBtn').disabled = true;
+            document.getElementById('clearRoundBtn').disabled = true;
 
-            showToast(
-                "Saving...",
-                false
-            );
-
-            document
-                .getElementById('saveRoundBtn')
-                .disabled = true;
-
-            document
-                .getElementById('clearRoundBtn')
-                .disabled = true;
-
-
-            const matches =
-                matchweeks[currentRound] || [];
-
-
+            const matches = matchweeks[currentRound] || [];
             matches.forEach((match, idx) => {
-
-                const homeInput =
-                    document.getElementById(
-                        `home_r${currentRound}_m${idx}`
-                    );
-
-                const awayInput =
-                    document.getElementById(
-                        `away_r${currentRound}_m${idx}`
-                    );
-
-
-                if (
-                    homeInput &&
-                    awayInput
-                ) {
-
-                    scoresStorage[
-                        `r${currentRound}_m${idx}_home`
-                    ] =
-                        homeInput.value;
-
-                    scoresStorage[
-                        `r${currentRound}_m${idx}_away`
-                    ] =
-                        awayInput.value;
-
+                const homeInput = document.getElementById(`home_r${currentRound}_m${idx}`);
+                const awayInput = document.getElementById(`away_r${currentRound}_m${idx}`);
+                if (homeInput && awayInput) {
+                    scoresStorage[`r${currentRound}_m${idx}_home`] = homeInput.value;
+                    scoresStorage[`r${currentRound}_m${idx}_away`] = awayInput.value;
                 }
-
             });
 
+            localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
 
-            localStorage.setItem(
-                'fpl_scores',
-                JSON.stringify(scoresStorage)
-            );
-
-
-            let result = {
-                ok: true
-            };
-
-
-            if (
-                typeof saveRoundToSupabase ===
-                'function'
-            ) {
-
+            let result = { ok: true };
+            if (typeof saveRoundToSupabase === 'function') {
                 try {
-
-                    result =
-                        await saveRoundToSupabase(
-                            currentRound,
-                            matchweeks,
-                            scoresStorage
-                        );
-
+                    result = await saveRoundToSupabase(currentRound, matchweeks, scoresStorage);
                 } catch (e) {
-
-                    result = {
-                        ok: false,
-                        error: e
-                    };
-
+                    result = { ok: false, error: e };
                 }
             }
 
-
             isSaving = false;
-
-            document
-                .getElementById('saveRoundBtn')
-                .disabled = false;
-
-            document
-                .getElementById('clearRoundBtn')
-                .disabled = false;
-
+            document.getElementById('saveRoundBtn').disabled = false;
+            document.getElementById('clearRoundBtn').disabled = false;
 
             if (result.ok) {
-
-                showToast(
-                    "Saved successfully ✓",
-                    true
-                );
-
+                showToast("Saved successfully ✓", true);
                 exitEditMode();
-
             } else {
-
-                const errMsg =
-                    (
-                        result.error &&
-                        result.error.message
-                    )
-                        ? result.error.message
-                        : (
-                            result.error
-                                ? String(result.error)
-                                : 'Unknown error'
-                        );
-
-                showToast(
-                    "Save failed: " + errMsg,
-                    false,
-                    20000
-                );
+                const errMsg = (result.error && result.error.message) ? result.error.message : (result.error ? String(result.error) : 'Unknown error');
+                showToast("Save failed: " + errMsg, false, 20000);
             }
         }
-
 
         async function clearCurrentRound() {
-
-            if (isSaving)
-                return;
-
-            const confirmed =
-                confirm(
-                    `Are you sure you want to clear round ${currentRound}?`
-                );
-
-            if (!confirmed)
-                return;
-
+            if (isSaving) return;
+            const confirmed = confirm(`Are you sure you want to clear round ${currentRound}?`);
+            if (!confirmed) return;
 
             isSaving = true;
+            showToast("Clearing...", false);
+            document.getElementById('saveRoundBtn').disabled = true;
+            document.getElementById('clearRoundBtn').disabled = true;
 
-            showToast(
-                "Clearing...",
-                false
-            );
-
-
-            document
-                .getElementById('saveRoundBtn')
-                .disabled = true;
-
-            document
-                .getElementById('clearRoundBtn')
-                .disabled = true;
-
-
-            const matches =
-                matchweeks[currentRound] || [];
-
-
+            const matches = matchweeks[currentRound] || [];
             matches.forEach((match, idx) => {
-
-                delete scoresStorage[
-                    `r${currentRound}_m${idx}_home`
-                ];
-
-                delete scoresStorage[
-                    `r${currentRound}_m${idx}_away`
-                ];
-
+                delete scoresStorage[`r${currentRound}_m${idx}_home`];
+                delete scoresStorage[`r${currentRound}_m${idx}_away`];
             });
 
+            localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
 
-            localStorage.setItem(
-                'fpl_scores',
-                JSON.stringify(scoresStorage)
-            );
-
-
-            let result = {
-                ok: true
-            };
-
-
-            if (
-                typeof clearRoundFromSupabase ===
-                'function'
-            ) {
-
+            let result = { ok: true };
+            if (typeof clearRoundFromSupabase === 'function') {
                 try {
-
-                    result =
-                        await clearRoundFromSupabase(
-                            currentRound
-                        );
-
+                    result = await clearRoundFromSupabase(currentRound);
                 } catch (e) {
-
-                    result = {
-                        ok: false,
-                        error: e
-                    };
-
+                    result = { ok: false, error: e };
                 }
             }
-
 
             isSaving = false;
-
-
-            document
-                .getElementById('saveRoundBtn')
-                .disabled = false;
-
-            document
-                .getElementById('clearRoundBtn')
-                .disabled = false;
-
+            document.getElementById('saveRoundBtn').disabled = false;
+            document.getElementById('clearRoundBtn').disabled = false;
 
             if (result.ok) {
-
-                showToast(
-                    "Round cleared ✓",
-                    true
-                );
-
+                showToast("Round cleared ✓", true);
                 exitEditMode();
-
             } else {
-
-                const errMsg =
-                    (
-                        result.error &&
-                        result.error.message
-                    )
-                        ? result.error.message
-                        : (
-                            result.error
-                                ? String(result.error)
-                                : 'Unknown error'
-                        );
-
-                showToast(
-                    "Clear failed: " + errMsg,
-                    false,
-                    20000
-                );
+                const errMsg = (result.error && result.error.message) ? result.error.message : (result.error ? String(result.error) : 'Unknown error');
+                showToast("Clear failed: " + errMsg, false, 20000);
             }
         }
 
-
-        function updateScore(
-            round,
-            idx,
-            type,
-            val,
-            inputElement
-        ) {
-
-            scoresStorage[
-                `r${round}_m${idx}_${type}`
-            ] = val;
-
+        function updateScore(round, idx, type, val, inputElement) {
+            scoresStorage[`r${round}_m${idx}_${type}`] = val;
         }
 
-
-        function calculateStandingsUpToRound(
-            targetRound
-        ) {
-
+        function calculateStandingsUpToRound(targetRound) {
             let calculated = {};
-
-
-            for (
-                let teamKey in initialBasePoints
-            ) {
-
-                calculated[teamKey] = {
-                    key: teamKey,
-                    gf: 0,
-                    pts: 0
-                };
-
+            for (let teamKey in initialBasePoints) {
+                calculated[teamKey] = { key: teamKey, gf: 0, pts: 0 };
             }
 
+            for (let r = 1; r <= targetRound; r++) {
+                let roundMatches = matchweeks[r];
+                if (!roundMatches) continue;
 
-            for (
-                let r = 1;
-                r <= targetRound;
-                r++
-            ) {
+                roundMatches.forEach((match, idx) => {
+                    let hKey = match[0];
+                    let aKey = match[1];
+                    let hVal = scoresStorage[`r${r}_m${idx}_home`];
+                    let aVal = scoresStorage[`r${r}_m${idx}_away`];
 
-                let roundMatches =
-                    matchweeks[r];
+                    if (hVal !== undefined && aVal !== undefined && hVal !== '' && aVal !== '') {
+                        let hScore = parseFloat(hVal);
+                        let aScore = parseFloat(aVal);
 
-                if (!roundMatches)
-                    continue;
+                        calculated[hKey].gf += hScore;
+                        calculated[aKey].gf += aScore;
 
-
-                roundMatches.forEach(
-                    (match, idx) => {
-
-                        let hKey =
-                            match[0];
-
-                        let aKey =
-                            match[1];
-
-
-                        let hVal =
-                            scoresStorage[
-                                `r${r}_m${idx}_home`
-                            ];
-
-                        let aVal =
-                            scoresStorage[
-                                `r${r}_m${idx}_away`
-                            ];
-
-
-                        if (
-                            hVal !== undefined &&
-                            aVal !== undefined &&
-                            hVal !== '' &&
-                            aVal !== ''
-                        ) {
-
-                            let hScore =
-                                parseFloat(hVal);
-
-                            let aScore =
-                                parseFloat(aVal);
-
-
-                            calculated[hKey].gf +=
-                                hScore;
-
-                            calculated[aKey].gf +=
-                                aScore;
-
-
-                            if (
-                                hScore > aScore
-                            ) {
-
-                                calculated[hKey].pts +=
-                                    3;
-
-                            } else if (
-                                aScore > hScore
-                            ) {
-
-                                calculated[aKey].pts +=
-                                    3;
-
-                            } else if (
-                                hScore === aScore
-                            ) {
-
-                                calculated[hKey].pts +=
-                                    1;
-
-                                calculated[aKey].pts +=
-                                    1;
-
-                            }
+                        if (hScore > aScore) {
+                            calculated[hKey].pts += 3;
+                        } else if (aScore > hScore) {
+                            calculated[aKey].pts += 3;
+                        } else if (hScore === aScore) {
+                            calculated[hKey].pts += 1;
+                            calculated[aKey].pts += 1;
                         }
-
                     }
-                );
-
+                });
             }
 
-
-            return Object
-                .values(calculated)
-                .sort(
-                    (a, b) =>
-                        b.pts - a.pts ||
-                        b.gf - a.gf
-                );
+            return Object.values(calculated).sort((a, b) => b.pts - a.pts || b.gf - a.gf);
         }
-
 
         function calculateStandings() {
-
-            return calculateStandingsUpToRound(
-                currentRound
-            );
-
+            return calculateStandingsUpToRound(currentRound);
         }
-
 
         function renderStandings() {
-
-            const tbody =
-                document.getElementById(
-                    'standingsBody'
-                );
-
+            const tbody = document.getElementById('standingsBody');
             tbody.innerHTML = '';
 
-
-            let sortedTeams =
-                calculateStandings();
-
+            let sortedTeams = calculateStandings();
             let prevRanks = {};
 
-
             if (currentRound >= 2) {
-
-                let prevSortedTeams =
-                    calculateStandingsUpToRound(
-                        currentRound - 1
-                    );
-
-                prevSortedTeams.forEach(
-                    (team, idx) => {
-
-                        prevRanks[team.key] =
-                            idx + 1;
-
-                    }
-                );
+                let prevSortedTeams = calculateStandingsUpToRound(currentRound - 1);
+                prevSortedTeams.forEach((team, idx) => { prevRanks[team.key] = idx + 1; });
             }
 
+            sortedTeams.forEach((team, index) => {
+                let teamInfo = teamsMap[team.key] || { name: team.key, logo: "" };
+                let position = index + 1;
 
-            sortedTeams.forEach(
-                (team, index) => {
+                let rowClass = '';
+                if (position === 1) rowClass = 'green-line';
+                else if (position === 17) rowClass = 'red-line';
 
-                    let teamInfo =
-                        teamsMap[team.key] || {
-                            name: team.key,
-                            logo: ""
-                        };
+                let indicatorHtml = '';
 
+                if (currentRound >= 2 && prevRanks[team.key] !== undefined) {
+                    let oldPos = prevRanks[team.key];
+                    let imgSrc = '';
+                    if (position < oldPos) imgSrc = 'arrow_up_green.png';
+                    else if (position > oldPos) imgSrc = 'arrow_down_red.png';
+                    else imgSrc = 'equal_gray.png';
 
-                    let position =
-                        index + 1;
-
-
-                    let rowClass = '';
-
-
-                    if (position === 1)
-                        rowClass = 'green-line';
-
-                    else if (position === 17)
-                        rowClass = 'red-line';
-
-
-                    let indicatorHtml = '';
-
-
-                    if (
-                        currentRound >= 2 &&
-                        prevRanks[team.key] !== undefined
-                    ) {
-
-                        let oldPos =
-                            prevRanks[team.key];
-
-                        let imgSrc = '';
-
-
-                        if (
-                            position < oldPos
-                        ) {
-
-                            imgSrc =
-                                'arrow_up_green.png';
-
-                        } else if (
-                            position > oldPos
-                        ) {
-
-                            imgSrc =
-                                'arrow_down_red.png';
-
-                        } else {
-
-                            imgSrc =
-                                'equal_gray.png';
-
-                        }
-
-
-                        indicatorHtml = `
-                            <img
-                                src="${imgSrc}"
-                                class="pos-indicator-img"
-                                alt="trend"
-                                onerror="this.style.display='none'"
-                            >
-                        `;
-                    }
-
-
-                    tbody.innerHTML += `
-
-                        <tr class="${rowClass}">
-
-                            <td>
-
-                                <div class="pos-container">
-
-                                    ${indicatorHtml}
-
-                                    <span class="pos-number">
-                                        ${position}
-                                    </span>
-
-                                </div>
-
-                            </td>
-
-
-                            <td>
-
-                                <div class="team-cell">
-
-                                    <span class="logo-20">
-
-                                        <img
-                                            src="${teamInfo.logo}"
-                                            alt="${teamInfo.name}"
-                                            onerror="this.style.display='none'"
-                                        >
-
-                                    </span>
-
-                                    ${teamInfo.name}
-
-                                </div>
-
-                            </td>
-
-
-                            <td>
-                                <span class="stat-number">
-                                    ${team.gf}
-                                </span>
-                            </td>
-
-
-                            <td>
-                                <span
-                                    class="stat-number"
-                                    style="color:#7138f5;">
-                                    ${team.pts}
-                                </span>
-                            </td>
-
-                        </tr>
-
-                    `;
-
+                    indicatorHtml = `<img src="${imgSrc}" class="pos-indicator-img" alt="trend" onerror="this.style.display='none'">`;
                 }
-            );
-        }
 
+                tbody.innerHTML += `
+                    <tr class="${rowClass}">
+                        <td>
+                            <div class="pos-container">
+                                ${indicatorHtml}
+                                <span class="pos-number">${position}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="team-cell">
+                                <span class="logo-20">
+                                    <img src="${teamInfo.logo}" alt="${teamInfo.name}" onerror="this.style.display='none'">
+                                </span>
+                                ${teamInfo.name}
+                            </div>
+                        </td>
+                        <td><span class="stat-number">${team.gf}</span></td>
+                        <td><span class="stat-number" style="color:#7138f5;">${team.pts}</span></td>
+                    </tr>
+                `;
+            });
+        }
 
         function renderFixtures() {
-
             try {
-
-                const list =
-                    document.getElementById(
-                        'fixturesList'
-                    );
-
-
-                document
-                    .getElementById(
-                        'currentRoundTitle'
-                    )
-                    .innerText =
-                    `MATCHWEEK ${currentRound}`;
-
-
-                const selectEl =
-                    document.getElementById(
-                        'roundSelect'
-                    );
-
-
-                if (selectEl)
-                    selectEl.value =
-                        currentRound;
-
-
+                const list = document.getElementById('fixturesList');
+                document.getElementById('currentRoundTitle').innerText = `MATCHWEEK ${currentRound}`;
+                const selectEl = document.getElementById('roundSelect');
+                if (selectEl) selectEl.value = currentRound;
                 list.innerHTML = '';
 
+                let matches = matchweeks[currentRound] || [];
 
-                let matches =
-                    matchweeks[currentRound] || [];
+                matches.forEach((match, idx) => {
+                    let home = teamsMap[match[0]] || { name: match[0], logo: "" };
+                    let away = teamsMap[match[1]] || { name: match[1], logo: "" };
 
+                    let homeScore = scoresStorage[`r${currentRound}_m${idx}_home`] ?? '';
+                    let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
 
-                matches.forEach(
-                    (match, idx) => {
+                    let scoreContent = editMode ? `
+                        <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
+                        <span style="font-weight:900; color:#fff; font-size:16px; line-height:1.2;">:</span>
+                        <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
+                    ` : `
+                        <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
+                        <span class="vs-text">VS</span>
+                        <span class="score-display">${awayScore !== '' ? awayScore : '-'}</span>
+                    `;
 
-                        let home =
-                            teamsMap[match[0]] || {
-                                name: match[0],
-                                logo: ""
-                            };
-
-
-                        let away =
-                            teamsMap[match[1]] || {
-                                name: match[1],
-                                logo: ""
-                            };
-
-
-                        let homeScore =
-                            scoresStorage[
-                                `r${currentRound}_m${idx}_home`
-                            ] ?? '';
-
-
-                        let awayScore =
-                            scoresStorage[
-                                `r${currentRound}_m${idx}_away`
-                            ] ?? '';
-
-
-                        let scoreContent;
-
-
-                        if (editMode) {
-
-                            scoreContent = `
-
-                                <input
-                                    type="number"
-                                    class="score-input"
-                                    id="home_r${currentRound}_m${idx}"
-                                    value="${homeScore}"
-                                    placeholder="0"
-                                    oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)"
-                                >
-
-                                <span
-                                    style="
-                                        font-weight:900;
-                                        color:#fff;
-                                        font-size:16px;
-                                        line-height:1.2;
-                                    ">
-                                    :
+                    list.innerHTML += `
+                        <div class="fixture-row">
+                            <div class="team-box home">
+                                <span>${match[0]}</span>
+                                <span class="logo-24">
+                                    <img src="${home.logo}" alt="${match[0]}" onerror="this.style.display='none'">
                                 </span>
-
-                                <input
-                                    type="number"
-                                    class="score-input"
-                                    id="away_r${currentRound}_m${idx}"
-                                    value="${awayScore}"
-                                    placeholder="0"
-                                    oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)"
-                                >
-
-                            `;
-
-                        } else {
-
-                            scoreContent = `
-
-                                <span class="score-display">
-                                    ${
-                                        homeScore !== ''
-                                            ? homeScore
-                                            : '-'
-                                    }
-                                </span>
-
-                                <span class="vs-text">
-                                    VS
-                                </span>
-
-                                <span class="score-display">
-                                    ${
-                                        awayScore !== ''
-                                            ? awayScore
-                                            : '-'
-                                    }
-                                </span>
-
-                            `;
-
-                        }
-
-
-                        list.innerHTML += `
-
-                            <div class="fixture-row">
-
-                                <div class="team-box home">
-
-                                    <span>
-                                        ${home.name}
-                                    </span>
-
-                                    <span class="logo-24">
-
-                                        <img
-                                            src="${home.logo}"
-                                            alt="${home.name}"
-                                            onerror="this.style.display='none'"
-                                        >
-
-                                    </span>
-
-                                </div>
-
-
-                                <div class="match-score-center">
-
-                                    ${scoreContent}
-
-                                </div>
-
-
-                                <div class="team-box away">
-
-                                    <span class="logo-24">
-
-                                        <img
-                                            src="${away.logo}"
-                                            alt="${away.name}"
-                                            onerror="this.style.display='none'"
-                                        >
-
-                                    </span>
-
-                                    <span>
-                                        ${away.name}
-                                    </span>
-
-                                </div>
-
                             </div>
-
-                        `;
-
-                    }
-                );
-
-
+                            <div class="match-score-center">
+                                ${scoreContent}
+                            </div>
+                            <div class="team-box away">
+                                <span class="logo-24">
+                                    <img src="${away.logo}" alt="${match[1]}" onerror="this.style.display='none'">
+                                </span>
+                                <span>${match[1]}</span>
+                            </div>
+                        </div>
+                    `;
+                });
             } catch (e) {
-
-                console.error(
-                    'renderFixtures error:',
-                    e
-                );
-
-                if (window.onerror)
-                    window.onerror(
-                        'renderFixtures: ' +
-                        e.message,
-                        '',
-                        0,
-                        0,
-                        e
-                    );
+                console.error('renderFixtures error:', e);
+                if (window.onerror) window.onerror('renderFixtures: ' + e.message, '', 0, 0, e);
             }
         }
 
-
         function changeRound(step) {
-
             currentRound += step;
-
-
-            if (currentRound < 1)
-                currentRound = 1;
-
-
-            if (currentRound > 38)
-                currentRound = 38;
-
+            if (currentRound < 1) currentRound = 1;
+            if (currentRound > 38) currentRound = 38;
 
             renderFixtures();
-
-
-            if (activeTab === 'standings')
-                renderStandings();
+            if (activeTab === 'standings') renderStandings();
         }
-
 
         function waitForImagesToLoad(element) {
-
-            const images =
-                Array.from(
-                    element.querySelectorAll('img')
-                );
-
-
+            const images = Array.from(element.querySelectorAll('img'));
             return Promise.all(
-
                 images.map(img => {
-
-                    if (
-                        img.complete &&
-                        img.naturalWidth > 0
-                    ) {
-
-                        if (img.decode)
-                            return img.decode()
-                                .catch(() => {});
-
+                    if (img.complete && img.naturalWidth > 0) {
+                        if (img.decode) return img.decode().catch(() => {});
                         return Promise.resolve();
-
                     }
-
-
-                    return new Promise(
-                        resolve => {
-
-                            let finished = false;
-
-
-                            const finish = () => {
-
-                                if (finished)
-                                    return;
-
-                                finished = true;
-
-                                img.removeEventListener(
-                                    'load',
-                                    finish
-                                );
-
-                                img.removeEventListener(
-                                    'error',
-                                    finish
-                                );
-
-                                resolve();
-
-                            };
-
-
-                            img.addEventListener(
-                                'load',
-                                finish,
-                                { once: true }
-                            );
-
-                            img.addEventListener(
-                                'error',
-                                finish,
-                                { once: true }
-                            );
-
-
-                            setTimeout(
-                                finish,
-                                5000
-                            );
-
-                        }
-                    );
-
+                    return new Promise(resolve => {
+                        let finished = false;
+                        const finish = () => {
+                            if (finished) return;
+                            finished = true;
+                            img.removeEventListener('load', finish);
+                            img.removeEventListener('error', finish);
+                            resolve();
+                        };
+                        img.addEventListener('load', finish, { once: true });
+                        img.addEventListener('error', finish, { once: true });
+                        setTimeout(finish, 5000);
+                    });
                 })
-
             );
         }
 
-
-        function applyRoundedCorners(
-            sourceCanvas,
-            radius
-        ) {
-
-            const w =
-                sourceCanvas.width;
-
-            const h =
-                sourceCanvas.height;
-
-
-            const outputCanvas =
-                document.createElement('canvas');
-
-
+        function applyRoundedCorners(sourceCanvas, radius) {
+            const w = sourceCanvas.width;
+            const h = sourceCanvas.height;
+            const outputCanvas = document.createElement('canvas');
             outputCanvas.width = w;
             outputCanvas.height = h;
-
-
-            const ctx =
-                outputCanvas.getContext('2d');
-
+            const ctx = outputCanvas.getContext('2d');
 
             ctx.beginPath();
-
-            ctx.moveTo(
-                radius,
-                0
-            );
-
-            ctx.lineTo(
-                w - radius,
-                0
-            );
-
-            ctx.quadraticCurveTo(
-                w,
-                0,
-                w,
-                radius
-            );
-
-            ctx.lineTo(
-                w,
-                h - radius
-            );
-
-            ctx.quadraticCurveTo(
-                w,
-                h,
-                w - radius,
-                h
-            );
-
-            ctx.lineTo(
-                radius,
-                h
-            );
-
-            ctx.quadraticCurveTo(
-                0,
-                h,
-                0,
-                h - radius
-            );
-
-            ctx.lineTo(
-                0,
-                radius
-            );
-
-            ctx.quadraticCurveTo(
-                0,
-                0,
-                radius,
-                0
-            );
-
+            ctx.moveTo(radius, 0);
+            ctx.lineTo(w - radius, 0);
+            ctx.quadraticCurveTo(w, 0, w, radius);
+            ctx.lineTo(w, h - radius);
+            ctx.quadraticCurveTo(w, h, w - radius, h);
+            ctx.lineTo(radius, h);
+            ctx.quadraticCurveTo(0, h, 0, h - radius);
+            ctx.lineTo(0, radius);
+            ctx.quadraticCurveTo(0, 0, radius, 0);
             ctx.closePath();
-
             ctx.clip();
 
-            ctx.drawImage(
-                sourceCanvas,
-                0,
-                0
-            );
-
+            ctx.drawImage(sourceCanvas, 0, 0);
             return outputCanvas;
         }
 
-
         function downloadAsImage() {
+            if (activeTab === 'fixtures') renderFixtures();
+            else renderStandings();
 
-            if (activeTab === 'fixtures')
-                renderFixtures();
+            const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
+            const element = document.getElementById(targetId);
 
-            else
-                renderStandings();
-
-
-            const targetId =
-                activeTab === 'fixtures'
-                    ? 'captureFixtures'
-                    : 'captureStandings';
-
-
-            const element =
-                document.getElementById(
-                    targetId
-                );
-
-
-            showToast(
-                "Preparing image...",
-                false
-            );
-
+            showToast("Preparing image...", false);
 
             const scaleFactor = 4;
-
-            const cornerRadius =
-                20 * scaleFactor;
-
+            const cornerRadius = 20 * scaleFactor;
 
             waitForImagesToLoad(element)
-
                 .then(() => {
+                    return html2canvas(element, {
+                        backgroundColor: null,
+                        scale: scaleFactor,
+                        useCORS: true,
+                        allowTaint: true,
+                        logging: false,
+                        width: element.offsetWidth,
+                        height: element.offsetHeight,
+                        windowWidth: element.scrollWidth,
+                        windowHeight: element.scrollHeight,
+                        imageTimeout: 0,
+                        onclone: function(clonedDoc, clonedElement) {
+                            const wrappers = clonedElement.querySelectorAll('.logo-20, .logo-24');
+                            wrappers.forEach(wrapper => {
+                                const isSmall = wrapper.classList.contains('logo-20');
+                                const size = isSmall ? '20px' : '24px';
+                                wrapper.style.width = size;
+                                wrapper.style.height = size;
+                                wrapper.style.minWidth = size;
+                                wrapper.style.minHeight = size;
+                                wrapper.style.maxWidth = size;
+                                wrapper.style.maxHeight = size;
+                                wrapper.style.overflow = 'hidden';
+                                wrapper.style.position = 'relative';
+                                wrapper.style.display = 'inline-block';
+                            });
 
-                    return html2canvas(
-                        element,
-                        {
+                            const logos = clonedElement.querySelectorAll('.logo-20 img, .logo-24 img');
+                            logos.forEach(img => {
+                                img.style.position = 'absolute';
+                                img.style.top = '50%';
+                                img.style.left = '50%';
+                                img.style.transform = 'translate(-50%, -50%)';
+                                img.style.width = 'auto';
+                                img.style.height = 'auto';
+                                img.style.maxWidth = '100%';
+                                img.style.maxHeight = '100%';
+                                img.style.objectFit = 'contain';
+                                img.style.display = 'block';
+                            });
 
-                            backgroundColor: null,
-
-                            scale: scaleFactor,
-
-                            useCORS: true,
-
-                            allowTaint: true,
-
-                            logging: false,
-
-                            width:
-                                element.offsetWidth,
-
-                            height:
-                                element.offsetHeight,
-
-                            windowWidth:
-                                element.scrollWidth,
-
-                            windowHeight:
-                                element.scrollHeight,
-
-                            imageTimeout: 0,
-
-
-                            onclone:
-                                function(
-                                    clonedDoc,
-                                    clonedElement
-                                ) {
-
-                                    const wrappers =
-                                        clonedElement
-                                            .querySelectorAll(
-                                                '.logo-20, .logo-24'
-                                            );
-
-
-                                    wrappers.forEach(
-                                        wrapper => {
-
-                                            const isSmall =
-                                                wrapper.classList.contains(
-                                                    'logo-20'
-                                                );
-
-
-                                            const size =
-                                                isSmall
-                                                    ? '20px'
-                                                    : '24px';
-
-
-                                            wrapper.style.width =
-                                                size;
-
-                                            wrapper.style.height =
-                                                size;
-
-                                            wrapper.style.minWidth =
-                                                size;
-
-                                            wrapper.style.minHeight =
-                                                size;
-
-                                            wrapper.style.maxWidth =
-                                                size;
-
-                                            wrapper.style.maxHeight =
-                                                size;
-
-                                            wrapper.style.overflow =
-                                                'hidden';
-
-                                            wrapper.style.position =
-                                                'relative';
-
-                                            wrapper.style.display =
-                                                'inline-block';
-
-                                        }
-                                    );
-
-
-                                    const logos =
-                                        clonedElement
-                                            .querySelectorAll(
-                                                '.logo-20 img, .logo-24 img'
-                                            );
-
-
-                                    logos.forEach(
-                                        img => {
-
-                                            img.style.position =
-                                                'absolute';
-
-                                            img.style.top =
-                                                '50%';
-
-                                            img.style.left =
-                                                '50%';
-
-                                            img.style.transform =
-                                                'translate(-50%, -50%)';
-
-                                            img.style.width =
-                                                'auto';
-
-                                            img.style.height =
-                                                'auto';
-
-                                            img.style.maxWidth =
-                                                '100%';
-
-                                            img.style.maxHeight =
-                                                '100%';
-
-                                            img.style.objectFit =
-                                                'contain';
-
-                                            img.style.display =
-                                                'block';
-
-                                        }
-                                    );
-
-
-                                    const indicators =
-                                        clonedElement
-                                            .querySelectorAll(
-                                                '.pos-indicator-img'
-                                            );
-
-
-                                    indicators.forEach(
-                                        img => {
-
-                                            const size =
-                                                '25px';
-
-                                            img.style.width =
-                                                size;
-
-                                            img.style.height =
-                                                size;
-
-                                            img.style.minWidth =
-                                                size;
-
-                                            img.style.minHeight =
-                                                size;
-
-                                            img.style.maxWidth =
-                                                size;
-
-                                            img.style.maxHeight =
-                                                size;
-
-                                            img.style.objectFit =
-                                                'contain';
-
-                                        }
-                                    );
-
-                                }
-
+                            const indicators = clonedElement.querySelectorAll('.pos-indicator-img');
+                            indicators.forEach(img => {
+                                const size = '25px';
+                                img.style.width = size;
+                                img.style.height = size;
+                                img.style.minWidth = size;
+                                img.style.minHeight = size;
+                                img.style.maxWidth = size;
+                                img.style.maxHeight = size;
+                                img.style.objectFit = 'contain';
+                            });
                         }
-                    );
-
+                    });
                 })
-
-
                 .then(canvas => {
+                    const roundedCanvas = applyRoundedCorners(canvas, cornerRadius);
+                    roundedCanvas.toBlob(function(blob) {
+                        if (!blob) {
+                            showToast("Failed to create image!", false);
+                            return;
+                        }
 
-                    const roundedCanvas =
-                        applyRoundedCorners(
-                            canvas,
-                            cornerRadius
-                        );
+                        if (navigator.share && navigator.canShare) {
+                            const file = new File([blob], activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings_GW${currentRound}.png`, { type: 'image/png' });
+                            const shareData = {
+                                files: [file],
+                                title: activeTab === 'fixtures' ? `Matchweek ${currentRound}` : `League Standings GW ${currentRound}`
+                            };
 
-
-                    roundedCanvas.toBlob(
-                        function(blob) {
-
-                            if (!blob) {
-
-                                showToast(
-                                    "Failed to create image!",
-                                    false
-                                );
-
-                                return;
-                            }
-
-
-                            if (
-                                navigator.share &&
-                                navigator.canShare
-                            ) {
-
-                                const file =
-                                    new File(
-                                        [blob],
-                                        activeTab === 'fixtures'
-                                            ? `Matchweek_${currentRound}.png`
-                                            : `League_Standings_GW${currentRound}.png`,
-                                        {
-                                            type: 'image/png'
-                                        }
-                                    );
-
-
-                                const shareData = {
-
-                                    files: [file],
-
-                                    title:
-                                        activeTab === 'fixtures'
-                                            ? `Matchweek ${currentRound}`
-                                            : `League Standings GW ${currentRound}`
-
-                                };
-
-
-                                if (
-                                    navigator.canShare(
-                                        shareData
-                                    )
-                                ) {
-
-                                    navigator.share(
-                                        shareData
-                                    )
-                                    .then(() => {
-
-                                        showToast(
-                                            "Image saved successfully ✓",
-                                            true
-                                        );
-
-                                    })
-                                    .catch(err => {
-
-                                        if (
-                                            err.name !==
-                                            'AbortError'
-                                        ) {
-
-                                            fallbackDownload(
-                                                blob
-                                            );
-
-                                        } else {
-
-                                            showToast(
-                                                "Cancelled",
-                                                false
-                                            );
-
-                                        }
-
-                                    });
-
-                                } else {
-
-                                    fallbackDownload(
-                                        blob
-                                    );
-
-                                }
-
+                            if (navigator.canShare(shareData)) {
+                                navigator.share(shareData).then(() => {
+                                    showToast("Image saved successfully ✓", true);
+                                }).catch((err) => {
+                                    if (err.name !== 'AbortError') fallbackDownload(blob);
+                                    else showToast("Cancelled", false);
+                                });
                             } else {
-
-                                fallbackDownload(
-                                    blob
-                                );
-
+                                fallbackDownload(blob);
                             }
-
-
-                        },
-                        'image/png',
-                        1.0
-                    );
-
+                        } else {
+                            fallbackDownload(blob);
+                        }
+                    }, 'image/png', 1.0);
                 })
-
-
                 .catch(err => {
-
-                    console.error(
-                        'html2canvas error:',
-                        err
-                    );
-
-                    showToast(
-                        "Error generating image!",
-                        false
-                    );
-
+                    console.error('html2canvas error:', err);
+                    showToast("Error generating image!", false);
                 });
-
         }
-
 
         function fallbackDownload(blob) {
-
-            const link =
-                document.createElement('a');
-
-
-            link.download =
-                activeTab === 'fixtures'
-                    ? `Matchweek_${currentRound}.png`
-                    : `League_Standings_GW${currentRound}.png`;
-
-
-            link.href =
-                URL.createObjectURL(blob);
-
-
+            const link = document.createElement('a');
+            link.download = activeTab === 'fixtures' ? `Matchweek_${currentRound}.png` : `League_Standings_GW${currentRound}.png`;
+            link.href = URL.createObjectURL(blob);
             document.body.appendChild(link);
-
             link.click();
-
             document.body.removeChild(link);
-
-
             setTimeout(() => {
-
-                URL.revokeObjectURL(
-                    link.href
-                );
-
-                showToast(
-                    "Image downloaded ✓",
-                    true
-                );
-
+                URL.revokeObjectURL(link.href);
+                showToast("Image downloaded ✓", true);
             }, 100);
-
         }
 
-
         setInterval(() => {
-
-            if (
-                Object.keys(scoresStorage).length > 0
-            ) {
-
-                localStorage.setItem(
-                    'fpl_scores',
-                    JSON.stringify(
-                        scoresStorage
-                    )
-                );
-
+            if (Object.keys(scoresStorage).length > 0) {
+                localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
             }
-
         }, 5000);
 
-
         initRoundDropdown();
-
         renderFixtures();
-
         renderStandings();
 
-
-        // ===== اضغط على MATCHWEEK 5 مرات لفتح Eruda =====
-
         (function() {
-
             let clickCount = 0;
-
             let clickTimer = null;
-
-            const titleEl =
-                document.getElementById(
-                    'currentRoundTitle'
-                );
-
-
+            const titleEl = document.getElementById('currentRoundTitle');
             if (titleEl) {
-
-                titleEl.addEventListener(
-                    'click',
-                    function() {
-
-                        clickCount++;
-
-                        clearTimeout(
-                            clickTimer
-                        );
-
-
-                        if (clickCount >= 5) {
-
-                            clickCount = 0;
-
-
-                            if (
-                                typeof eruda !==
-                                'undefined' &&
-                                eruda.init
-                            ) {
-
-                                try {
-
-                                    eruda.init();
-
-                                    eruda.show();
-
-                                } catch(e) {}
-
-                            }
-
+                titleEl.addEventListener('click', function() {
+                    clickCount++;
+                    clearTimeout(clickTimer);
+                    if (clickCount >= 5) {
+                        clickCount = 0;
+                        if (typeof eruda !== 'undefined' && eruda.init) {
+                            try {
+                                eruda.init();
+                                eruda.show();
+                            } catch(e) {}
                         }
-
-
-                        clickTimer =
-                            setTimeout(
-                                () => {
-                                    clickCount = 0;
-                                },
-                                2000
-                            );
-
                     }
-                );
-
+                    clickTimer = setTimeout(() => { clickCount = 0; }, 2000);
+                });
             }
-
         })();
-
 
         (async function initFromSupabase() {
-
-            if (
-                !window.sbClient ||
-                typeof loadScoresFromSupabase !==
-                'function'
-            )
-                return;
-
+            if (!window.sbClient || typeof loadScoresFromSupabase !== 'function') return;
 
             try {
-
-                const {
-                    error: testError
-                } =
-                    await window.sbClient
-                        .from('match_results')
-                        .select('id')
-                        .limit(1);
-
-
+                const { error: testError } = await window.sbClient.from('match_results').select('id').limit(1);
                 if (testError) {
-
-                    console.warn(
-                        'DB Connection Error:',
-                        testError.message
-                    );
-
+                    console.warn('DB Connection Error:', testError.message);
                     return;
                 }
-
             } catch (connErr) {
-
-                console.warn(
-                    'Network Error:',
-                    connErr.message
-                );
-
+                console.warn('Network Error:', connErr.message);
                 return;
             }
 
-
             try {
-
-                const remoteScores =
-                    await loadScoresFromSupabase(
-                        matchweeks
-                    );
-
-
-                if (
-                    remoteScores &&
-                    Object.keys(
-                        remoteScores
-                    ).length > 0
-                ) {
-
-                    scoresStorage =
-                        remoteScores;
-
+                const remoteScores = await loadScoresFromSupabase(matchweeks);
+                if (remoteScores && Object.keys(remoteScores).length > 0) {
+                    scoresStorage = remoteScores;
                     renderFixtures();
-
                     renderStandings();
-
                 }
-
             } catch (e) {
-
-                console.warn(
-                    'Load from Supabase failed:',
-                    e.message
-                );
-
+                console.warn('Load from Supabase failed:', e.message);
             }
-
         })();
-
     </script>
-
 </body>
 </html>
