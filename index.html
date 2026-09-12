@@ -310,7 +310,7 @@
         .edit-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         #captureFixtures {
-            padding: 18px 14px;
+            padding: 16px 12px;
             background: linear-gradient(135deg, #3281ff 0%, #00d2ff 45%, #a835ff 100%), #4b92ff;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -343,15 +343,17 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             flex-wrap: nowrap;
+            gap: 6px;
         }
         .fixture-row:last-child { margin-bottom: 0; }
 
-        /* ===== أسماء الفرق مختصرة (3 أحرف) ===== */
+        /* ===== أسماء الفرق (كود مختصر) ===== */
         .team-box {
             display: flex;
             align-items: center;
-            width: 26%;
-            font-size: 16px;
+            flex: 1 1 0;
+            min-width: 0;
+            font-size: 15px;
             font-weight: 900;
             color: #38003c;
             text-transform: uppercase;
@@ -361,8 +363,14 @@
             letter-spacing: 0.5px;
         }
 
-        .team-box.home { justify-content: flex-end; text-align: right; }
-        .team-box.away { justify-content: flex-start; text-align: left; }
+        .team-box.home {
+            justify-content: flex-end;
+            text-align: right;
+        }
+        .team-box.away {
+            justify-content: flex-start;
+            text-align: left;
+        }
 
         .logo-20 {
             display: inline-block;
@@ -385,14 +393,14 @@
 
         .logo-24 {
             display: inline-block;
-            width: 24px; height: 24px;
-            min-width: 24px; min-height: 24px;
-            max-width: 24px; max-height: 24px;
+            width: 22px; height: 22px;
+            min-width: 22px; min-height: 22px;
+            max-width: 22px; max-height: 22px;
             flex-shrink: 0;
             position: relative;
             overflow: hidden;
             vertical-align: middle;
-            margin: 0 4px;
+            margin: 0 3px;
         }
         .logo-24 img {
             position: absolute;
@@ -403,18 +411,19 @@
             display: block;
         }
 
-        /* ===== مركز النتيجة أعرض وأوضح ===== */
+        /* ===== مركز النتيجة (وسط) ===== */
         .match-score-center {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            width: 34%;
+            gap: 6px;
+            flex: 0 0 auto;
+            width: 95px;
+            min-width: 95px;
             background: #7138f5;
-            padding: 8px 10px;
+            padding: 6px 8px;
             border-radius: 6px;
             position: relative;
-            min-width: 100px;
             flex-shrink: 0;
         }
 
@@ -422,7 +431,7 @@
         .score-input,
         .pos-number,
         .stat-number {
-            font-size: 17px;
+            font-size: 15px;
             font-weight: 900;
             line-height: 1.2;
             display: inline-block;
@@ -432,8 +441,8 @@
         .score-display { color: #ffffff; }
 
         .score-input {
-            width: 38px;
-            height: 28px;
+            width: 34px;
+            height: 24px;
             text-align: center;
             background: #ffffff;
             color: #38003c;
@@ -441,13 +450,13 @@
             border-radius: 4px;
             outline: none;
             padding: 0;
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .vs-text {
             font-weight: 900;
             color: #ffffff;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         #captureStandings {
@@ -1013,7 +1022,7 @@
 
                     let scoreContent = editMode ? `
                         <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
-                        <span style="font-weight:900; color:#fff; font-size:16px; line-height:1.2;">:</span>
+                        <span style="font-weight:900; color:#fff; font-size:14px; line-height:1.2;">:</span>
                         <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
                     ` : `
                         <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
@@ -1135,7 +1144,7 @@
                             const wrappers = clonedElement.querySelectorAll('.logo-20, .logo-24');
                             wrappers.forEach(wrapper => {
                                 const isSmall = wrapper.classList.contains('logo-20');
-                                const size = isSmall ? '20px' : '24px';
+                                const size = isSmall ? '20px' : '22px';
                                 wrapper.style.width = size;
                                 wrapper.style.height = size;
                                 wrapper.style.minWidth = size;
