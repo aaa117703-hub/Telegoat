@@ -100,18 +100,17 @@
             display: block;
         }
 
-        /* ===== الأزرار: حدها مع حد البنر ===== */
+        /* ===== الأزرار داخل البنر - حد وحد مع حواف البنر ===== */
         .tabs-bar {
             position: absolute;
-            top: 70.5%;
-            left: 50%;
-            right: 2.2%;
-            height: 23.5%;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 26%;
             display: flex;
             gap: 0;
             z-index: 5;
             line-height: 1;
-            border-radius: 10px 10px 0 0;
             overflow: hidden;
         }
 
@@ -414,22 +413,101 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* ===== تصغير الأسماء على الموبايل فقط ===== */
+        /* ============================================
+           ضبط الموبايل — شاشة أصغر من 480px
+           ============================================ */
         @media (max-width: 480px) {
+
+            /* ===== الأزرار ===== */
+            .banner-tab {
+                font-size: 11px;
+                padding: 0 4px;
+            }
+
+            /* ===== المواجهات ===== */
+            #captureFixtures { padding: 12px 8px; }
+
+            .fixtures-header-box {
+                padding: 8px;
+                margin-bottom: 10px;
+                border-radius: 10px;
+            }
+            .fixtures-header-title { font-size: 15px; }
+
+            .fixture-row {
+                padding: 6px 8px;
+                margin-bottom: 5px;
+                border-radius: 6px;
+                gap: 3px;
+            }
+
             .team-box { font-size: 11px; }
+
             .logo-24 {
-                width: 20px; height: 20px;
-                min-width: 20px; min-height: 20px;
-                max-width: 20px; max-height: 20px;
+                width: 18px; height: 18px;
+                min-width: 18px; min-height: 18px;
+                max-width: 18px; max-height: 18px;
                 margin: 0 2px;
             }
+
             .match-score-center {
-                width: 78px; min-width: 78px;
-                padding: 5px 5px;
+                width: 72px; min-width: 72px;
+                padding: 5px 4px;
+                gap: 3px;
+                border-radius: 5px;
             }
-            .score-display { font-size: 14px; }
-            .vs-text { font-size: 12px; }
-            .fixture-row { padding: 7px 8px; }
+
+            .score-display { font-size: 13px; }
+            .vs-text { font-size: 11px; }
+            .score-input {
+                width: 28px; height: 22px;
+                font-size: 12px;
+            }
+
+            /* ===== الترتيب ===== */
+            .standings-content-area { padding: 8px; }
+
+            th {
+                font-size: 11px;
+                padding: 6px 2px;
+            }
+
+            td {
+                height: 34px; max-height: 34px;
+                padding: 0 2px;
+            }
+
+            .team-cell {
+                font-size: 12px;
+                gap: 4px;
+                padding: 0 8px 0 0;
+            }
+
+            .logo-20 {
+                width: 16px; height: 16px;
+                min-width: 16px; min-height: 16px;
+                max-width: 16px; max-height: 16px;
+            }
+
+            .pos-indicator-img {
+                width: 18px; height: 18px;
+                min-width: 18px; min-height: 18px;
+                max-width: 18px; max-height: 18px;
+            }
+
+            .pos-container { gap: 3px; height: 24px; }
+
+            .pos-number {
+                font-size: 13px;
+                min-width: 15px;
+            }
+
+            .stat-number { font-size: 13px; }
+
+            .col-pos { width: 16%; }
+            .col-club { width: 46%; }
+            .col-gf { width: 18%; }
+            .col-pts { width: 20%; }
         }
     </style>
 </head>
@@ -813,7 +891,7 @@
                     let awayScore = scoresStorage[`r${currentRound}_m${idx}_away`] ?? '';
                     let scoreContent = editMode ? `
                         <input type="number" class="score-input" id="home_r${currentRound}_m${idx}" value="${homeScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'home', this.value, this)">
-                        <span style="font-weight:900; color:#fff; font-size:14px;">:</span>
+                        <span style="font-weight:900; color:#fff; font-size:12px;">:</span>
                         <input type="number" class="score-input" id="away_r${currentRound}_m${idx}" value="${awayScore}" placeholder="0" oninput="updateScore(${currentRound}, ${idx}, 'away', this.value, this)">
                     ` : `
                         <span class="score-display">${homeScore !== '' ? homeScore : '-'}</span>
