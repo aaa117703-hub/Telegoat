@@ -41,13 +41,10 @@
         body {
             background-color: var(--pl-dark-bg);
             color: var(--text-white);
-            padding-bottom: 40px;
             width: 100%;
             max-width: 768px;
             margin: 0 auto;
-            padding-left: 10px;
-            padding-right: 10px;
-            min-height: 100vh;
+            padding: 0 10px 20px 10px;
             overflow-x: hidden;
         }
 
@@ -97,7 +94,7 @@
             position: relative;
             width: 100%;
             max-width: 768px;
-            margin: 15px auto 0;
+            margin: 12px auto 0;
             border-radius: 25px;
             overflow: hidden;
             border: 4px solid #ffffff;
@@ -115,19 +112,20 @@
             display: block;
         }
 
-        /* ===== شريط الأزرار داخل البنر (يغطي أزرار الصورة) ===== */
+        /* ===== شريط الأزرار داخل البنر ===== */
         .tabs-bar {
             position: absolute;
-            top: 73%;
+            top: 70.5%;
             left: 57.5%;
             right: 2.5%;
-            height: 25%;
+            height: 27%;
             display: flex;
             gap: 0;
             z-index: 5;
             line-height: 1;
-            border-radius: 12px 12px 0 0;
+            border-radius: 12px 12px 14px 14px;
             overflow: hidden;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
         }
 
         .banner-tab {
@@ -136,9 +134,9 @@
             background: var(--fantasy-dark);
             color: #ffffff;
             border: none;
-            padding: 0 6px;
+            padding: 0 8px;
             font-weight: 700;
-            font-size: clamp(11px, 1.5vw, 14px);
+            font-size: clamp(12px, 1.6vw, 15px);
             cursor: pointer;
             outline: none;
             transition: background 0.2s;
@@ -153,18 +151,14 @@
             justify-content: center;
         }
 
-        .banner-tab:hover {
-            background: var(--fantasy-hover);
-        }
+        .banner-tab:hover { background: var(--fantasy-hover); }
 
         .banner-tab.active {
             background: var(--fantasy-darker);
             font-weight: 900;
         }
 
-        .banner-tab.active:hover {
-            background: #2a1035;
-        }
+        .banner-tab.active:hover { background: #2a1035; }
 
         select.banner-tab {
             appearance: none;
@@ -174,14 +168,12 @@
             background-repeat: no-repeat;
             background-position: right 8px center;
             background-color: var(--fantasy-dark);
-            padding-right: 20px;
+            padding-right: 22px;
             padding-left: 8px;
             color: #ffffff;
         }
 
-        select.banner-tab:hover {
-            background-color: var(--fantasy-hover);
-        }
+        select.banner-tab:hover { background-color: var(--fantasy-hover); }
 
         select.banner-tab option {
             background: var(--fantasy-dark);
@@ -192,7 +184,7 @@
         .header {
             background-color: transparent;
             color: #ffffff;
-            padding: 12px 0 8px 0;
+            padding: 10px 0 6px 0;
             text-align: center;
         }
 
@@ -201,7 +193,6 @@
             align-items: center;
             justify-content: center;
             gap: 20px;
-            margin: 8px 0 0 0;
             flex-wrap: wrap;
         }
 
@@ -250,14 +241,13 @@
             width: 100%;
             max-width: 768px;
             margin: 0 auto;
-            padding: 0 5px;
         }
 
-        /* ===== لوحة التعديل (Save + Clear + Download) ===== */
+        /* ===== لوحة التعديل ===== */
         .edit-panel {
             display: flex;
-            gap: 10px;
-            margin-bottom: 12px;
+            gap: 8px;
+            margin-bottom: 10px;
             padding: 8px;
             background: rgba(255, 255, 255, 0.12);
             border-radius: 12px;
@@ -268,41 +258,30 @@
         .edit-action-btn {
             font-weight: 900;
             font-size: 14px;
-            padding: 10px 18px;
+            padding: 10px 16px;
             border-radius: 8px;
             border: none;
             cursor: pointer;
             flex: 1 1 auto;
-            min-width: 110px;
+            min-width: 100px;
             transition: 0.2s;
             color: #ffffff;
         }
 
-        .save-round-btn {
-            background: #00c853;
-            box-shadow: 0 3px 0 #009b40;
-        }
+        .save-round-btn { background: #00c853; box-shadow: 0 3px 0 #009b40; }
         .save-round-btn:hover { background: #00b34a; }
 
-        .clear-round-btn {
-            background: #ff005a;
-            box-shadow: 0 3px 0 #b8003f;
-        }
+        .clear-round-btn { background: #ff005a; box-shadow: 0 3px 0 #b8003f; }
         .clear-round-btn:hover { background: #e6004f; }
 
-        .download-action-btn {
-            background: #3281ff;
-            box-shadow: 0 3px 0 #1f5dbf;
-        }
+        .download-action-btn { background: #3281ff; box-shadow: 0 3px 0 #1f5dbf; }
         .download-action-btn:hover { background: #2871e6; }
 
-        .edit-action-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .edit-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+        /* ===== Fixtures ===== */
         #captureFixtures {
-            padding: 20px 15px;
+            padding: 18px 14px;
             background: linear-gradient(135deg, #3281ff 0%, #00d2ff 45%, #a835ff 100%), #4b92ff;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -314,7 +293,7 @@
             border-radius: 12px;
             padding: 10px;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
@@ -336,6 +315,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             flex-wrap: nowrap;
         }
+        .fixture-row:last-child { margin-bottom: 0; }
 
         .team-box {
             display: flex;
@@ -437,9 +417,8 @@
             font-size: 14px;
         }
 
+        /* ===== Standings ===== */
         #captureStandings {
-            display: flex;
-            flex-direction: column;
             background: #ffffff;
             border-radius: 20px;
             overflow: hidden;
@@ -449,18 +428,13 @@
         }
 
         .standings-content-area {
-            flex: 1;
             background: #f4f5f7;
-            overflow-x: visible;
             width: 100%;
             padding: 10px;
-            display: block !important;
         }
 
         .standings-card {
             background: transparent;
-            border-radius: 0;
-            overflow: visible;
             padding: 5px;
             width: 100%;
         }
@@ -471,7 +445,6 @@
             border-spacing: 0;
             text-align: center;
             color: #333;
-            display: table !important;
             table-layout: fixed;
         }
 
@@ -493,8 +466,8 @@
             line-height: 1.2;
             background-color: #ffffff;
             border-bottom: 1px solid #d1d5db;
-            height: 36px;
-            max-height: 36px;
+            height: 38px;
+            max-height: 38px;
             overflow: hidden;
         }
 
@@ -689,50 +662,50 @@
         Object.keys(teamsMap).forEach(key => { initialBasePoints[key] = { gf: 0, pts: 0 }; });
 
         const matchweeks = {
-            1: [["ARS", "COV"],["HUL", "MUN"],["EVE", "CRY"],["IPS", "SUN"],["NOT", "LEE"],["BRE", "TOT"],["BHA", "AVL"],["MCI", "BOU"],["NEW", "LIV"],["FUL", "CHE"]],
-            2: [["BOU", "EVE"],["AVL", "ARS"],["CHE", "BHA"],["COV", "HUL"],["CRY", "MCI"],["LEE", "BRE"],["LIV", "NOT"],["MUN", "IPS"],["SUN", "FUL"],["TOT", "NEW"]],
-            3: [["ARS", "CHE"],["BRE", "SUN"],["BHA", "LEE"],["EVE", "MUN"],["FUL", "CRY"],["HUL", "AVL"],["IPS", "LIV"],["MCI", "COV"],["NEW", "BOU"],["NOT", "TOT"]],
-            4: [["BOU", "BRE"],["AVL", "NOT"],["CHE", "HUL"],["COV", "BHA"],["CRY", "IPS"],["LEE", "NEW"],["LIV", "FUL"],["MUN", "MCI"],["SUN", "ARS"],["TOT", "EVE"]],
-            5: [["BOU", "LIV"],["BRE", "CHE"],["BHA", "ARS"],["EVE", "IPS"],["FUL", "MUN"],["LEE", "CRY"],["MCI", "SUN"],["NEW", "HUL"],["NOT", "COV"],["TOT", "AVL"]],
-            6: [["ARS", "LEE"],["AVL", "BRE"],["CHE", "BOU"],["COV", "NEW"],["CRY", "NOT"],["HUL", "EVE"],["IPS", "FUL"],["LIV", "MCI"],["MUN", "TOT"],["SUN", "BHA"]],
-            7: [["BOU", "SUN"],["BRE", "LIV"],["BHA", "CRY"],["EVE", "CHE"],["FUL", "HUL"],["LEE", "MUN"],["MCI", "IPS"],["NEW", "AVL"],["NOT", "ARS"],["TOT", "COV"]],
-            8: [["ARS", "EVE"],["AVL", "MCI"],["CHE", "TOT"],["COV", "FUL"],["CRY", "NEW"],["HUL", "BRE"],["IPS", "NOT"],["LIV", "BHA"],["MUN", "BOU"],["SUN", "LEE"]],
-            9: [["BOU", "LEE"],["BRE", "NOT"],["CHE", "MUN"],["COV", "SUN"],["HUL", "IPS"],["LIV", "ARS"],["MCI", "BHA"],["NEW", "EVE"],["TOT", "CRY"],["AVL", "FUL"]],
-            10: [["ARS", "HUL"],["BHA", "BRE"],["CRY", "LIV"],["EVE", "COV"],["FUL", "NEW"],["IPS", "BOU"],["LEE", "TOT"],["MUN", "AVL"],["NOT", "MCI"],["SUN", "CHE"]],
-            11: [["BRE", "EVE"],["CHE", "LEE"],["COV", "CRY"],["HUL", "BHA"],["LIV", "MUN"],["MCI", "FUL"],["NEW", "ARS"],["TOT", "IPS"],["NOT", "SUN"],["AVL", "CRY"]],
-            12: [["ARS", "MCI"],["BHA", "NEW"],["CRY", "HUL"],["EVE", "LIV"],["FUL", "BOU"],["IPS", "AVL"],["LEE", "COV"],["MUN", "BRE"],["NOT", "CHE"],["SUN", "TOT"]],
-            13: [["BOU", "BHA"],["AVL", "EVE"],["BRE", "ARS"],["CHE", "CRY"],["COV", "IPS"],["HUL", "NOT"],["LIV", "SUN"],["MCI", "LEE"],["NEW", "MUN"],["TOT", "FUL"]],
-            14: [["BOU", "HUL"],["AVL", "CRY"],["BRE", "MCI"],["CHE", "LIV"],["EVE", "FUL"],["LEE", "IPS"],["MUN", "COV"],["NEW", "SUN"],["NOT", "BHA"],["TOT", "ARS"]],
-            15: [["ARS", "BOU"],["BHA", "EVE"],["COV", "AVL"],["CRY", "MUN"],["FUL", "BRE"],["HUL", "TOT"],["IPS", "NEW"],["LIV", "LEE"],["MCI", "CHE"],["SUN", "NOT"]],
-            16: [["BOU", "COV"],["ARS", "MUN"],["BRE", "NEW"],["BHA", "IPS"],["CHE", "AVL"],["LEE", "FUL"],["LIV", "TOT"],["MCI", "HUL"],["NOT", "EVE"],["SUN", "CRY"]],
-            17: [["AVL", "LEE"],["COV", "CHE"],["CRY", "ARS"],["EVE", "SUN"],["FUL", "BHA"],["HUL", "LIV"],["IPS", "BRE"],["MUN", "NOT"],["NEW", "MCI"],["TOT", "BOU"]],
-            18: [["AVL", "LIV"],["COV", "BRE"],["CRY", "BOU"],["EVE", "MCI"],["FUL", "ARS"],["HUL", "LEE"],["IPS", "CHE"],["MUN", "SUN"],["NEW", "NOT"],["TOT", "BHA"]],
-            19: [["BOU", "AVL"],["ARS", "IPS"],["BRE", "CRY"],["BHA", "MUN"],["CHE", "NEW"],["LEE", "EVE"],["LIV", "COV"],["MCI", "TOT"],["NOT", "FUL"],["SUN", "HUL"]],
-            20: [["ARS", "BRE"],["BHA", "BOU"],["CRY", "CHE"],["EVE", "AVL"],["FUL", "TOT"],["IPS", "COV"],["LEE", "MCI"],["MUN", "NEW"],["NOT", "HUL"],["SUN", "LIV"]],
-            21: [["AVL", "EVE"],["BRE", "BHA"],["CHE", "SUN"],["COV", "LIV"],["CRY", "BOU"],["FUL", "MUN"],["HUL", "NEW"],["LEE", "ARS"],["MCI", "IPS"],["TOT", "LEE"]],
-            22: [["BOU", "NOT"],["ARS", "LEE"],["BHA", "MCI"],["EVE", "HUL"],["IPS", "AVL"],["LIV", "NEW"],["MUN", "FUL"],["NOT", "BOU"],["SUN", "COV"],["TOT", "BRE"]],
-            23: [["AVL", "LIV"],["BRE", "EVE"],["CHE", "NEW"],["COV", "MUN"],["CRY", "SUN"],["HUL", "ARS"],["IPS", "LEE"],["MCI", "BHA"],["NOT", "FUL"],["TOT", "BOU"]],
-            24: [["BOU", "COV"],["ARS", "AVL"],["BHA", "LIV"],["EVE", "NOT"],["FUL", "IPS"],["LEE", "HUL"],["MUN", "CRY"],["NEW", "TOT"],["SUN", "BRE"],["MCI", "LEE"]],
-            25: [["AVL", "BOU"],["BRE", "CRY"],["COV", "ARS"],["HUL", "MCI"],["IPS", "EVE"],["LEE", "SUN"],["LIV", "FUL"],["MUN", "NEW"],["NOT", "BHA"],["TOT", "CHE"]],
-            26: [["BOU", "LEE"],["BHA", "AVL"],["CHE", "HUL"],["CRY", "COV"],["EVE", "LIV"],["FUL", "NOT"],["MCI", "BRE"],["NEW", "MUN"],["SUN", "IPS"],["TOT", "ARS"]],
-            27: [["AVL", "CHE"],["BRE", "FUL"],["COV", "CRY"],["HUL", "BOU"],["IPS", "BHA"],["LEE", "EVE"],["LIV", "MUN"],["MUN", "MCI"],["NOT", "SUN"],["TOT", "NEW"]],
-            28: [["ARS", "NOT"],["BOU", "BRE"],["BHA", "HUL"],["CRY", "AVL"],["EVE", "LEE"],["FUL", "LIV"],["MCI", "TOT"],["NEW", "IPS"],["SUN", "MUN"],["CHE", "COV"]],
-            29: [["ARS", "FUL"],["AVL", "CHE"],["BRE", "NEW"],["COV", "LEE"],["HUL", "CRY"],["IPS", "MCI"],["LIV", "BHA"],["MUN", "EVE"],["NOT", "BOU"],["TOT", "SUN"]],
-            30: [["BOU", "IPS"],["BHA", "COV"],["CHE", "ARS"],["CRY", "MCI"],["EVE", "BRE"],["FUL", "HUL"],["LEE", "AVL"],["LIV", "NOT"],["NEW", "FUL"],["SUN", "TOT"]],
-            31: [["ARS", "CRY"],["AVL", "LEE"],["BRE", "FUL"],["COV", "EVE"],["HUL", "LIV"],["IPS", "CHE"],["MCI", "BHA"],["NOT", "MUN"],["TOT", "BOU"],["NEW", "MCI"]],
-            32: [["BOU", "ARS"],["BHA", "NOT"],["CHE", "FUL"],["CRY", "AVL"],["EVE", "IPS"],["FUL", "COV"],["LEE", "TOT"],["LIV", "BRE"],["MUN", "HUL"],["NEW", "MCI"]],
-            33: [["ARS", "NEW"],["AVL", "CRY"],["BRE", "LEE"],["COV", "BHA"],["HUL", "CHE"],["IPS", "BOU"],["MCI", "LIV"],["NOT", "EVE"],["TOT", "MUN"],["FUL", "NEW"]],
-            34: [["BOU", "AVL"],["BHA", "IPS"],["CHE", "BRE"],["CRY", "FUL"],["EVE", "ARS"],["FUL", "LEE"],["LIV", "TOT"],["MUN", "COV"],["NEW", "HUL"],["NOT", "MCI"]],
-            35: [["ARS", "BHA"],["AVL", "NOT"],["BRE", "BOU"],["COV", "CHE"],["HUL", "CRY"],["IPS", "MUN"],["LEE", "LIV"],["MCI", "EVE"],["TOT", "FUL"],["NEW", "FUL"]],
-            36: [["BOU", "MUN"],["BHA", "FUL"],["CHE", "IPS"],["CRY", "BRE"],["EVE", "AVL"],["FUL", "MCI"],["LIV", "COV"],["NEW", "LEE"],["NOT", "TOT"],["SUN", "ARS"]],
-            37: [["ARS", "LIV"],["AVL", "SUN"],["BRE", "HUL"],["COV", "BOU"],["IPS", "CRY"],["LEE", "CHE"],["MCI", "NEW"],["MUN", "NOT"],["TOT", "EVE"],["FUL", "BHA"]],
-            38: [["BOU", "NOT"],["BHA", "MUN"],["CHE", "AVL"],["CRY", "ARS"],["EVE", "FUL"],["HUL", "COV"],["LEE", "BRE"],["LIV", "IPS"],["MCI", "SUN"],["TOT", "NEW"]]
+            1: [["ARS","COV"],["HUL","MUN"],["EVE","CRY"],["IPS","SUN"],["NOT","LEE"],["BRE","TOT"],["BHA","AVL"],["MCI","BOU"],["NEW","LIV"],["FUL","CHE"]],
+            2: [["BOU","EVE"],["AVL","ARS"],["CHE","BHA"],["COV","HUL"],["CRY","MCI"],["LEE","BRE"],["LIV","NOT"],["MUN","IPS"],["SUN","FUL"],["TOT","NEW"]],
+            3: [["ARS","CHE"],["BRE","SUN"],["BHA","LEE"],["EVE","MUN"],["FUL","CRY"],["HUL","AVL"],["IPS","LIV"],["MCI","COV"],["NEW","BOU"],["NOT","TOT"]],
+            4: [["BOU","BRE"],["AVL","NOT"],["CHE","HUL"],["COV","BHA"],["CRY","IPS"],["LEE","NEW"],["LIV","FUL"],["MUN","MCI"],["SUN","ARS"],["TOT","EVE"]],
+            5: [["BOU","LIV"],["BRE","CHE"],["BHA","ARS"],["EVE","IPS"],["FUL","MUN"],["LEE","CRY"],["MCI","SUN"],["NEW","HUL"],["NOT","COV"],["TOT","AVL"]],
+            6: [["ARS","LEE"],["AVL","BRE"],["CHE","BOU"],["COV","NEW"],["CRY","NOT"],["HUL","EVE"],["IPS","FUL"],["LIV","MCI"],["MUN","TOT"],["SUN","BHA"]],
+            7: [["BOU","SUN"],["BRE","LIV"],["BHA","CRY"],["EVE","CHE"],["FUL","HUL"],["LEE","MUN"],["MCI","IPS"],["NEW","AVL"],["NOT","ARS"],["TOT","COV"]],
+            8: [["ARS","EVE"],["AVL","MCI"],["CHE","TOT"],["COV","FUL"],["CRY","NEW"],["HUL","BRE"],["IPS","NOT"],["LIV","BHA"],["MUN","BOU"],["SUN","LEE"]],
+            9: [["BOU","LEE"],["BRE","NOT"],["CHE","MUN"],["COV","SUN"],["HUL","IPS"],["LIV","ARS"],["MCI","BHA"],["NEW","EVE"],["TOT","CRY"],["AVL","FUL"]],
+            10: [["ARS","HUL"],["BHA","BRE"],["CRY","LIV"],["EVE","COV"],["FUL","NEW"],["IPS","BOU"],["LEE","TOT"],["MUN","AVL"],["NOT","MCI"],["SUN","CHE"]],
+            11: [["BRE","EVE"],["CHE","LEE"],["COV","CRY"],["HUL","BHA"],["LIV","MUN"],["MCI","FUL"],["NEW","ARS"],["TOT","IPS"],["NOT","SUN"],["AVL","BOU"]],
+            12: [["ARS","MCI"],["BHA","NEW"],["CRY","HUL"],["EVE","LIV"],["FUL","BOU"],["IPS","AVL"],["LEE","COV"],["MUN","BRE"],["NOT","CHE"],["SUN","TOT"]],
+            13: [["BOU","BHA"],["AVL","EVE"],["BRE","ARS"],["CHE","CRY"],["COV","IPS"],["HUL","NOT"],["LIV","SUN"],["MCI","LEE"],["NEW","MUN"],["TOT","FUL"]],
+            14: [["BOU","HUL"],["AVL","CRY"],["BRE","MCI"],["CHE","LIV"],["EVE","FUL"],["LEE","IPS"],["MUN","COV"],["NEW","SUN"],["NOT","BHA"],["TOT","ARS"]],
+            15: [["ARS","BOU"],["BHA","EVE"],["COV","AVL"],["CRY","MUN"],["FUL","BRE"],["HUL","TOT"],["IPS","NEW"],["LIV","LEE"],["MCI","CHE"],["SUN","NOT"]],
+            16: [["BOU","COV"],["ARS","MUN"],["BRE","NEW"],["BHA","IPS"],["CHE","AVL"],["LEE","FUL"],["LIV","TOT"],["MCI","HUL"],["NOT","EVE"],["SUN","CRY"]],
+            17: [["AVL","LEE"],["COV","CHE"],["CRY","ARS"],["EVE","SUN"],["FUL","BHA"],["HUL","LIV"],["IPS","BRE"],["MUN","NOT"],["NEW","MCI"],["TOT","BOU"]],
+            18: [["AVL","LIV"],["COV","BRE"],["CRY","BOU"],["EVE","MCI"],["FUL","ARS"],["HUL","LEE"],["IPS","CHE"],["MUN","SUN"],["NEW","NOT"],["TOT","BHA"]],
+            19: [["BOU","AVL"],["ARS","IPS"],["BRE","CRY"],["BHA","MUN"],["CHE","NEW"],["LEE","EVE"],["LIV","COV"],["MCI","TOT"],["NOT","FUL"],["SUN","HUL"]],
+            20: [["ARS","BRE"],["BHA","BOU"],["CRY","CHE"],["EVE","AVL"],["FUL","TOT"],["IPS","COV"],["LEE","MCI"],["MUN","NEW"],["NOT","HUL"],["SUN","LIV"]],
+            21: [["AVL","EVE"],["BRE","BHA"],["CHE","SUN"],["COV","LIV"],["CRY","BOU"],["FUL","MUN"],["HUL","NEW"],["LEE","ARS"],["MCI","IPS"],["TOT","NOT"]],
+            22: [["BOU","CRY"],["ARS","LEE"],["BHA","MCI"],["EVE","HUL"],["IPS","AVL"],["LIV","NEW"],["MUN","FUL"],["NOT","CHE"],["SUN","COV"],["TOT","BRE"]],
+            23: [["AVL","LIV"],["BRE","EVE"],["CHE","NEW"],["COV","MUN"],["CRY","SUN"],["HUL","ARS"],["IPS","LEE"],["MCI","BHA"],["NOT","FUL"],["TOT","BOU"]],
+            24: [["BOU","COV"],["ARS","AVL"],["BHA","LIV"],["EVE","NOT"],["FUL","IPS"],["LEE","HUL"],["MUN","CRY"],["NEW","TOT"],["SUN","BRE"],["MCI","CHE"]],
+            25: [["AVL","BOU"],["BRE","CRY"],["COV","ARS"],["HUL","MCI"],["IPS","EVE"],["LEE","SUN"],["LIV","FUL"],["MUN","NEW"],["NOT","BHA"],["TOT","CHE"]],
+            26: [["BOU","LEE"],["BHA","AVL"],["CHE","HUL"],["CRY","COV"],["EVE","LIV"],["FUL","NOT"],["MCI","BRE"],["NEW","MUN"],["SUN","IPS"],["TOT","ARS"]],
+            27: [["AVL","CHE"],["BRE","FUL"],["COV","CRY"],["HUL","BOU"],["IPS","BHA"],["LEE","EVE"],["LIV","MUN"],["ARS","MCI"],["NOT","SUN"],["TOT","NEW"]],
+            28: [["ARS","NOT"],["BOU","BRE"],["BHA","HUL"],["CRY","AVL"],["EVE","LEE"],["FUL","LIV"],["MCI","TOT"],["NEW","IPS"],["SUN","MUN"],["CHE","COV"]],
+            29: [["ARS","FUL"],["AVL","CHE"],["BRE","NEW"],["COV","LEE"],["HUL","CRY"],["IPS","MCI"],["LIV","BHA"],["MUN","EVE"],["NOT","BOU"],["TOT","SUN"]],
+            30: [["BOU","IPS"],["BHA","COV"],["CHE","ARS"],["CRY","MCI"],["EVE","BRE"],["FUL","HUL"],["LEE","AVL"],["LIV","NOT"],["NEW","MUN"],["SUN","TOT"]],
+            31: [["ARS","CRY"],["AVL","LEE"],["BRE","FUL"],["COV","EVE"],["HUL","LIV"],["IPS","CHE"],["MCI","BHA"],["NOT","MUN"],["TOT","BOU"],["NEW","SUN"]],
+            32: [["BOU","ARS"],["BHA","NOT"],["CHE","FUL"],["CRY","AVL"],["EVE","IPS"],["SUN","COV"],["LEE","TOT"],["LIV","BRE"],["MUN","HUL"],["NEW","MCI"]],
+            33: [["ARS","NEW"],["AVL","CRY"],["BRE","LEE"],["COV","BHA"],["HUL","CHE"],["IPS","B <=OU"], ["MCI","LIV"],["NOT","EVE"],["TOT","MUN"],["FUL","SUN"]],
+            34: [["BOU","AVL"],["BHA","IPS"],["CHE","BRE"],["CRY","FUL"],["EVE","ARS"],["SUN","LEE"],["LIV","TOT"],["MUN","COV"],["NEW","HUL"],["NOT","MCI"]],
+            35: [["ARS","BHA"],["AVL","NOT"],["BRE","BOU"],["COV","CHE"],["HUL","CRY"],["IPS","MUN"],["LEE","LIV"],["MCI","EVE"],["TOT","FUL"],["NEW","SUN"]],
+            36: [["BOU","MUN"],["BHA","FUL"],["CHE","IPS"],["CRY","BRE"],["EVE","AVL"],["HUL","MCI"],["LIV","COV"],["NEW","LEE"],["NOT","TOT"],["SUN","ARS"]],
+            37: [["ARS","LIV"],["AVL","SUN"],["BRE","HUL"],["COV","BOU"],["IPS","CRY"],["LEE","CHE"],["MCI","NEW"],["MUN","NOT"],["TOT","EVE"],["FUL","BHA"]],
+            38: [["BOU","NOT"],["BHA","MUN"],["CHE","AVL"],["CRY","ARS"],["EVE","FUL"],["HUL","COV"],["LEE","BRE"],["LIV","IPS"],["MCI","SUN"],["TOT","NEW"]]
         };
 
         function initRoundDropdown() {
             const select = document.getElementById('roundSelect');
             select.innerHTML = '';
-            for (let i = 1; i <= 38; i++) {
+            for (let i = 1; i38; i++) {
                 let opt = document.createElement('option');
                 opt.value = i;
                 opt.innerText = `Round ${i}`;
