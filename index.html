@@ -6,6 +6,8 @@
     <title>TELEGRAM GOAT - Premier League</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
     <script src="app.js"></script>
     <style>
         @font-face {
@@ -89,7 +91,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ===== البنر ===== */
         .banner-container {
             position: relative;
             width: 100%;
@@ -112,7 +113,6 @@
             display: block;
         }
 
-        /* ===== شريط الأزرار داخل البنر ===== */
         .tabs-bar {
             position: absolute;
             top: 70.5%;
@@ -180,7 +180,6 @@
             color: #fff;
         }
 
-        /* ===== الهيدر / التنقل ===== */
         .header {
             background-color: transparent;
             color: #ffffff;
@@ -243,7 +242,6 @@
             margin: 0 auto;
         }
 
-        /* ===== لوحة التعديل ===== */
         .edit-panel {
             display: flex;
             gap: 8px;
@@ -279,7 +277,6 @@
 
         .edit-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* ===== Fixtures ===== */
         #captureFixtures {
             padding: 18px 14px;
             background: linear-gradient(135deg, #3281ff 0%, #00d2ff 45%, #a835ff 100%), #4b92ff;
@@ -417,7 +414,6 @@
             font-size: 14px;
         }
 
-        /* ===== Standings ===== */
         #captureStandings {
             background: #ffffff;
             border-radius: 20px;
@@ -535,7 +531,6 @@
         <span id="toastContent">Saving...</span>
     </div>
 
-    <!-- ===== البنر + الأزرار الـ 3 ===== -->
     <div class="banner-container">
         <img id="bannerImg" src="image_5.png" alt="Premier League Banner" onerror="handleBannerError(this)">
 
@@ -546,7 +541,6 @@
         </div>
     </div>
 
-    <!-- ===== التنقل بين الجولات ===== -->
     <div class="header">
         <div class="round-nav-container">
             <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
@@ -694,7 +688,7 @@
             30: [["BOU","IPS"],["BHA","COV"],["CHE","ARS"],["CRY","MCI"],["EVE","BRE"],["FUL","HUL"],["LEE","AVL"],["LIV","NOT"],["NEW","MUN"],["SUN","TOT"]],
             31: [["ARS","CRY"],["AVL","LEE"],["BRE","FUL"],["COV","EVE"],["HUL","LIV"],["IPS","CHE"],["MCI","BHA"],["NOT","MUN"],["TOT","BOU"],["NEW","SUN"]],
             32: [["BOU","ARS"],["BHA","NOT"],["CHE","FUL"],["CRY","AVL"],["EVE","IPS"],["SUN","COV"],["LEE","TOT"],["LIV","BRE"],["MUN","HUL"],["NEW","MCI"]],
-            33: [["ARS","NEW"],["AVL","CRY"],["BRE","LEE"],["COV","BHA"],["HUL","CHE"],["IPS","B <=OU"], ["MCI","LIV"],["NOT","EVE"],["TOT","MUN"],["FUL","SUN"]],
+            33: [["ARS","NEW"],["AVL","CRY"],["BRE","LEE"],["COV","BHA"],["HUL","CHE"],["IPS","BOU"],["MCI","LIV"],["NOT","EVE"],["TOT","MUN"],["FUL","SUN"]],
             34: [["BOU","AVL"],["BHA","IPS"],["CHE","BRE"],["CRY","FUL"],["EVE","ARS"],["SUN","LEE"],["LIV","TOT"],["MUN","COV"],["NEW","HUL"],["NOT","MCI"]],
             35: [["ARS","BHA"],["AVL","NOT"],["BRE","BOU"],["COV","CHE"],["HUL","CRY"],["IPS","MUN"],["LEE","LIV"],["MCI","EVE"],["TOT","FUL"],["NEW","SUN"]],
             36: [["BOU","MUN"],["BHA","FUL"],["CHE","IPS"],["CRY","BRE"],["EVE","AVL"],["HUL","MCI"],["LIV","COV"],["NEW","LEE"],["NOT","TOT"],["SUN","ARS"]],
@@ -705,7 +699,7 @@
         function initRoundDropdown() {
             const select = document.getElementById('roundSelect');
             select.innerHTML = '';
-            for (let i = 1; i38; i++) {
+            for (let i = 1; i <= 38; i++) {
                 let opt = document.createElement('option');
                 opt.value = i;
                 opt.innerText = `Round ${i}`;
@@ -772,7 +766,15 @@
             });
 
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
-            const result = await saveRoundToSupabase(currentRound, matchweeks, scoresStorage);
+
+            let result = { ok: true };
+            if (typeof saveRoundToSupabase === 'function') {
+                try {
+                    result = await saveRoundToSupabase(currentRound, matchweeks, scoresStorage);
+                } catch (e) {
+                    result = { ok: false, error: e };
+                }
+            }
 
             isSaving = false;
             document.getElementById('saveRoundBtn').disabled = false;
@@ -804,7 +806,15 @@
             });
 
             localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
-            const result = await clearRoundFromSupabase(currentRound);
+
+            let result = { ok: true };
+            if (typeof clearRoundFromSupabase === 'function') {
+                try {
+                    result = await clearRoundFromSupabase(currentRound);
+                } catch (e) {
+                    result = { ok: false, error: e };
+                }
+            }
 
             isSaving = false;
             document.getElementById('saveRoundBtn').disabled = false;
@@ -1160,22 +1170,28 @@
         renderStandings();
 
         (async function initFromSupabase() {
+            if (!window.sbClient || typeof loadScoresFromSupabase !== 'function') return;
+
             try {
                 const { error: testError } = await window.sbClient.from('match_results').select('id').limit(1);
                 if (testError) {
-                    showToast('⚠️ DB Connection Error: ' + testError.message, false, 20000);
+                    console.warn('DB Connection Error:', testError.message);
                     return;
                 }
             } catch (connErr) {
-                showToast('⚠️ Network Error: ' + connErr.message, false, 20000);
+                console.warn('Network Error:', connErr.message);
                 return;
             }
 
-            const remoteScores = await loadScoresFromSupabase(matchweeks);
-            if (remoteScores && Object.keys(remoteScores).length > 0) {
-                scoresStorage = remoteScores;
-                renderFixtures();
-                renderStandings();
+            try {
+                const remoteScores = await loadScoresFromSupabase(matchweeks);
+                if (remoteScores && Object.keys(remoteScores).length > 0) {
+                    scoresStorage = remoteScores;
+                    renderFixtures();
+                    renderStandings();
+                }
+            } catch (e) {
+                console.warn('Load from Supabase failed:', e.message);
             }
         })();
     </script>
