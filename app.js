@@ -948,15 +948,22 @@ const matchweeks = {
 const carouselSlides = [
 
     {
-        image: './banner_matches.png',
+        image: './banner1.png',
         tab: 'fixtures',
         alt: 'Matches'
     },
 
     {
-        image: './banner_standings.png',
+        image: './banner2.png',
         tab: 'standings',
         alt: 'Standings'
+    },
+
+    {
+        image: './banner3.png',
+        tab: 'fpl',
+        alt: 'FPL',
+        locked: true
     }
 
 ];
@@ -1024,14 +1031,48 @@ function buildCarousel() {
 
             item.appendChild(img);
 
-            item.addEventListener(
-                'click',
-                () => {
-                    switchTab(
-                        slide.tab
+            if (slide.locked) {
+
+                const overlay =
+                    document.createElement(
+                        'div'
                     );
-                }
-            );
+
+                overlay.className =
+                    'locked-overlay';
+
+                overlay.innerHTML =
+                    '<div class="lock-text">' +
+                        '<span>⚠️</span>' +
+                        '<span>قريباً</span>' +
+                    '</div>';
+
+                item.appendChild(overlay);
+
+                item.style.cursor = 'pointer';
+
+                item.addEventListener(
+                    'click',
+                    function () {
+                        showToast(
+                            'FPL — قريباً! ⚠️',
+                            false,
+                            3000
+                        );
+                    }
+                );
+
+            } else {
+
+                item.addEventListener(
+                    'click',
+                    () => {
+                        switchTab(
+                            slide.tab
+                        );
+                    }
+                );
+            }
 
             track.appendChild(item);
 
@@ -1315,6 +1356,17 @@ function selectRound(value) {
 ========================================================= */
 
 function switchTab(tabName) {
+
+    if (tabName === 'fpl') {
+
+        showToast(
+            'FPL — قريباً! ⚠️',
+            false,
+            3000
+        );
+
+        return;
+    }
 
     activeTab = tabName;
 
