@@ -1,32 +1,25 @@
 /* =========================================================
    supabase.js
-   دوال التعامل مع Supabase (قراءة / حفظ / حذف)
-========================================================= */
-
-
-/* =========================================================
-   SUPABASE - LOAD
 ========================================================= */
 
 async function loadScoresFromSupabase(matchweeks) {
     try {
-        const { data, error } = await window.sbClient
+        const res = await window.sbClient
             .from('match_results')
             .select('round, home_team, away_team, home_score, away_score');
 
-        if (error) {
-            console.error('Supabase load error:', error);
+        if (res.error) {
+            console.error('Supabase load error:', res.error);
             return null;
         }
 
-        if (!data || data.length === 0) {
-            console.log('لا توجد بيانات في Supabase بعد');
+        if (!res.data || res.data.length === 0) {
             return null;
         }
 
         const result = {};
 
-        data.forEach(function(row) {
+        res.data.forEach(function(row) {
             const round = parseInt(row.round, 10);
 
             if (!matchweeks || !matchweeks[round]) {
@@ -54,15 +47,11 @@ async function loadScoresFromSupabase(matchweeks) {
 
         return result;
     } catch (e) {
-        console.error('خطأ غير متوقع في Supabase:', e);
+        console.error('Supabase load exception:', e);
         return null;
     }
 }
 
-
-/* =========================================================
-   SUPABASE - SAVE ROUND
-========================================================= */
 
 async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
     try {
@@ -88,56 +77,50 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
             }
         });
 
-        const delResult = await window.sbClient
+        const delRes = await window.sbClient
             .from('match_results')
             .delete()
             .eq('round', String(round));
 
-        if (delResult.error) {
-            console.error('خطأ في حذف الجولة من Supabase:', delResult.error);
-            return { ok: false, error: delResult.error };
+        if (delRes.error) {
+            console.error('Delete error:', delRes.error);
+            return { ok: false, error: delRes.error };
         }
 
         if (rows.length > 0) {
-            const insResult = await window.sbClient
-                .from(' →match_results')
+            const insRes = await window.sbClient
+                .from('match_results')
                 .insert(rows);
 
-            if (insResult.error) {
-                console.error(' أخطأ في إدخال البيانات إلى Supabase:', insResult.error);
-                return { ok: false, error: insResult.error };
-           رس }
+            if (insRes.error) {
+                console.error('Insert error:', insRes.error);
+                return { ok: false, error: insRes.error };
+            }
         }
 
-        console.log('✅ تم رفع ' + rows.length + ' صف للجولة ' + round + ' إلى Supabase');
         return { ok: true, count: rows.length };
     } catch (e) {
-        console.error('خطأ غير متوقع في saveRoundToSupabase:', e);
+        console.error('Save exception:', e);
         return { ok: false, error: e };
     }
 }
 
 
-/* =========================================================
-   SUPABASE - CLEAR ROUND
-========================================================= */
-
 async function clearRoundFromSupabase(round) {
     try {
-        const result = await window.sbClient
+        const res = await window.sbClient
             .from('match_results')
             .delete()
             .eq('round', String(round));
 
-        if (result.error) {
-            console.error('خطأ في حذف الجولة:', result.error);
-            return { ok: false, error: result.error };
+        if (res.error) {
+            console.error('Clear error:', res.error);
+            return { ok: false, error: res.error };
         }
 
-        console.log('✅ تم حذف صفوف الجولة ' + round + ' من Supabase');
         return { ok: true };
     } catch (e) {
-        console.error('خطأ غير متوقع في clearRoundFromSupabase:', e);
+        console.error('Clear exception:', e);
         return { ok: false, error: e };
     }
 }
