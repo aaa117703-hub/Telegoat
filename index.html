@@ -988,6 +988,9 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
 </div>
 
+<!-- =========================================================
+     ERROR HANDLER (يجب أن يكون قبل باقي الملفات)
+========================================================= -->
 <script>
 (function(){
     const box=document.getElementById('errorBox');
@@ -1017,7 +1020,17 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 })();
 </script>
 
-<script src="app.js"></script>
+<!-- =========================================================
+     APPLICATION FILES (الترتيب مهم جداً!)
+========================================================= -->
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script src="supabase.js"></script>
+<script src="carousel.js"></script>
+<script src="fixtures.js"></script>
+<script src="standings.js"></script>
+<script src="download.js"></script>
+<script src="main.js"></script>
 
 </body>
 </html>
