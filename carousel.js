@@ -1,19 +1,21 @@
 /* =========================================================
    carousel.js
+   البنرات (Carousel)
 ========================================================= */
 
+
 const carouselSlides = [
+
+    {
+        image: './banner1.png.png',
+        tab: 'standings',
+        alt: 'STANDINGS'
+    },
 
     {
         image: './banner2.png.png',
         tab: 'fixtures',
         alt: 'MATCHES'
-    },
-
-    {
-        image: './standings-banner.jpg.png',
-        tab: 'standings',
-        alt: 'STANDINGS'
     },
 
     {
@@ -30,6 +32,10 @@ let carouselTimer = null;
 let touchStartX = 0;
 let touchEndX = 0;
 
+
+/* =========================================================
+   BUILD CAROUSEL
+========================================================= */
 
 function buildCarousel() {
 
@@ -79,9 +85,6 @@ function buildCarousel() {
 
         item.appendChild(img);
 
-        /* ============================================
-           FPL banner: locked (لا زر — الضغط على الصورة)
-        ============================================ */
         if (slide.locked) {
 
             item.style.cursor = 'pointer';
@@ -117,6 +120,10 @@ function buildCarousel() {
 }
 
 
+/* =========================================================
+   GO TO CAROUSEL SLIDE
+========================================================= */
+
 function goToCarousel(index) {
 
     carouselIndex = (index + carouselSlides.length) % carouselSlides.length;
@@ -134,16 +141,28 @@ function goToCarousel(index) {
 }
 
 
+/* =========================================================
+   NEXT CAROUSEL
+========================================================= */
+
 function nextCarousel() {
     goToCarousel(carouselIndex + 1);
 }
 
+
+/* =========================================================
+   START CAROUSEL
+========================================================= */
 
 function startCarousel() {
     stopCarousel();
     carouselTimer = setInterval(nextCarousel, 5000);
 }
 
+
+/* =========================================================
+   STOP CAROUSEL
+========================================================= */
 
 function stopCarousel() {
     if (carouselTimer) {
@@ -152,6 +171,10 @@ function stopCarousel() {
     }
 }
 
+
+/* =========================================================
+   CAROUSEL TOUCH / SWIPE
+========================================================= */
 
 function setupCarouselTouch() {
 
