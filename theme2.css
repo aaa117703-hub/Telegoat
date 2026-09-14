@@ -67,7 +67,7 @@ body.theme-2 .team-box{
     gap:6px;
 }
 
-/* الفريق المستضيف — الاسم قرب النتيجة */
+/* الفريق المستضيف — الشعار ثم الاسم (الاسم قرب النتيجة) */
 body.theme-2 .team-box.home{
     justify-content:flex-end;
     text-align:right;
@@ -75,7 +75,7 @@ body.theme-2 .team-box.home{
     padding-right:4px;
 }
 
-/* الفريق الضيف — الاسم قرب النتيجة */
+/* الفريق الضيف — الاسم ثم الشعار (الاسم قرب النتيجة) */
 body.theme-2 .team-box.away{
     justify-content:flex-start;
     text-align:left;
