@@ -23,7 +23,7 @@ const matchweeks = {
         ["BOU","EVE"],
         ["AVL","ARS"],
         ["CHE","BHA"],
-        ["COV","HUL       "],
+        ["COV","HUL"],
         ["CRY","MCI"],
         ["LEE","BRE"],
         ["LIV","NOT"],
@@ -47,20 +47,19 @@ const matchweeks = {
 
     4: [
         ["BOU","BRE"],
-        [" ["AVL","NOT"],
-        ["CHEB","HUL"],
-        ["COV","BOUHA"],
+        ["AVL","NOT"],
+        ["CHE","HUL"],
+        ["COV","BHA"],
         ["CRY","IPS"],
-","        ["LEE","NEW"],
-       S ["LIV","FUL"],
-        ["MUNUN","MCI"],
-        ["SUN",""],
-ARS"],
-        ["TOT","EVE       "]
+        ["LEE","NEW"],
+        ["LIV","FUL"],
+        ["MUN","MCI"],
+        ["SUN","ARS"],
+        ["TOT","EVE"]
     ],
 
     5: [
- ["BRE","        ["BOU","LIV"],
+        ["BOU","LIV"],
         ["BRE","CHE"],
         ["BHA","ARS"],
         ["EVE","IPS"],
@@ -86,7 +85,8 @@ ARS"],
     ],
 
     7: [
-LIV"],
+        ["BOU","SUN"],
+        ["BRE","LIV"],
         ["BHA","CRY"],
         ["EVE","CHE"],
         ["FUL","HUL"],
