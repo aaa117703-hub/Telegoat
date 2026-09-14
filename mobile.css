@@ -1,1 +1,197 @@
+/* =========================================================
+   mobile.css
+   تصميم الموبايل فقط (أقل من 480px)
+========================================================= */
 
+@media(max-width:480px){
+
+    body{
+        padding:0 0 16px;
+    }
+
+    .carousel-wrapper{
+        padding0 3px;
+        margin-top:5px;
+    }
+
+    .carousel{
+        border-radius:12px;
+        border-width:3px;
+    }
+
+    .carousel-dots{
+        margin-top:5px;
+    }
+
+    .round-selector-row{
+        margin-top:4px;
+        padding:0 3px;
+    }
+
+    .round-select-pill{
+        font-size:13px;
+        padding:8px 32px 8px 16px;
+        min-width:140px;
+    }
+
+    .round-nav-container{
+        gap:10px;
+    }
+
+    .round-indicator{
+        font-size:20px;
+        padding:6px 14px;
+    }
+
+    .nav-arrow-btn{
+        width:40px;
+        height:40px;
+        font-size:22px;
+    }
+
+    .main-container{
+        padding:0 2px;
+    }
+
+    /* ============================================
+       FIXTURES - المواجهات
+    ============================================ */
+    #captureFixtures{
+        padding:8px 5px;
+        border-radius:12px;
+        border-width:3px;
+    }
+
+    .fixtures-header-box{
+        padding:8px;
+        margin-bottom:8px;
+        border-radius:8px;
+    }
+
+    .fixtures-header-title{
+        font-size:15px;
+    }
+
+    .fixture-row{
+        padding:10px 8px;
+        margin-bottom:5px;
+        border-radius:8px;
+        gap:2px;
+        min-height:54px;
+    }
+
+    .team-box{
+        font-size:14px;
+        gap:4px;
+        letter-spacing:0;
+        font-weight:900;
+    }
+
+    .logo-24{
+        width:26px;
+        height:26px;
+        min-width:26px;
+        min-height:26px;
+        max-width:26px;
+        max-height:26px;
+        margin:0 4px;
+    }
+
+    .match-score-center{
+        width:104px;
+        min-width:104px;
+        padding:6px 6px;
+        gap:4px;
+        border-radius:6px;
+    }
+
+    .score-display{
+        font-size:14px;
+        letter-spacing:0;
+        font-weight:900;
+    }
+
+    .vs-text{
+        font-size:11px;
+    }
+
+    .score-input{
+        width:36px;
+        height:26px;
+        font-size:14px;
+    }
+
+    /* ============================================
+       STANDINGS - الترتيب
+    ============================================ */
+    .standings-content-area{
+        padding:8px;
+    }
+
+    .standings-card{
+        padding:3px;
+    }
+
+    th{
+        font-size:14px;
+        padding:10px 3px;
+        font-weight:900;
+    }
+
+    td{
+        height:46px;
+        max-height:46px;
+        padding:0 3px;
+    }
+
+    .team-cell{
+        font-size:14px;
+        gap:6px;
+        padding:0 10px 0 0;
+        font-weight:900;
+    }
+
+    .logo-20{
+        width:24px;
+        height:24px;
+        min-width:24px;
+        min-height:24px;
+        max-width:24px;
+        max-height:24px;
+    }
+
+    .pos-indicator-img{
+        width:22px;
+        height:22px;
+        min-width:22px;
+        min-height:22px;
+        max-width:22px;
+        max-height:22px;
+    }
+
+    .pos-container{
+        gap:4px;
+        height:28px;
+    }
+
+    .pos-number{
+        font-size:15px;
+        min-width:18px;
+        font-weight:900;
+    }
+
+    .stat-number{
+        font-size:15px;
+        font-weight:900;
+    }
+
+    .col-pos{width:15%}
+    .col-club{width:47%}
+    .col-gf{width:18%}
+    .col-pts{width:20%}
+
+    .lock-text{
+        font-size:18px;
+        padding:10px 22px;
+    }
+}
