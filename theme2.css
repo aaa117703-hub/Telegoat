@@ -1,0 +1,374 @@
+/* =========================================================
+   theme2.css
+   التصميم الجديد (Modern) — المباريات + الترتيب
+   يُطبَّق فقط عند إضافة class="theme-2" على <body>
+========================================================= */
+
+
+/* =========================================================
+   FIXTURES - تصميم المباريات الجديد
+========================================================= */
+
+body.theme-2 #captureFixtures{
+    background:#f0f2f5;
+    border:none;
+    border-radius:20px;
+    padding:16px 12px 0 12px;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+
+/* الترويسة الجديدة */
+body.theme-2 .fixtures-header-box{
+    background:transparent;
+    border-radius:0;
+    padding:0;
+    margin-bottom:16px;
+    box-shadow:none;
+    text-align:center;
+}
+
+body.theme-2 .fixtures-header-title{
+    font-size:26px;
+    font-weight:900;
+    color:#2e0b3d;
+    letter-spacing:0;
+    text-transform:none;
+}
+
+
+/* صف المباراة */
+body.theme-2 .fixture-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 4px;
+    margin-bottom:0;
+    background:transparent;
+    border-radius:0;
+    box-shadow:none;
+    border-bottom:1px solid #d4edda;
+    gap:4px;
+    min-height:60px;
+}
+
+body.theme-2 .fixture-row:last-child{
+    border-bottom:none;
+}
+
+
+/* اسم الفريق */
+body.theme-2 .team-box{
+    font-size:14px;
+    font-weight:700;
+    color:#2e0b3d;
+    text-transform:none;
+    letter-spacing:0;
+    gap:6px;
+}
+
+body.theme-2 .team-box.home{
+    justify-content:flex-start;
+    text-align:left;
+    padding-left:2px;
+}
+
+body.theme-2 .team-box.away{
+    justify-content:flex-end;
+    text-align:right;
+    padding-right:2px;
+}
+
+/* قلب ترتيب العنصر في home (الشعار أولاً) */
+body.theme-2 .team-box.home{
+    flex-direction:row-reverse;
+}
+
+body.theme-2 .team-box.away{
+    flex-direction:row;
+}
+
+
+/* الشعار */
+body.theme-2 .logo-24{
+    width:32px;
+    height:32px;
+    min-width:32px;
+    min-height:32px;
+    max-width:32px;
+    max-height:32px;
+    margin:0 4px;
+}
+
+
+/* صندوق النتيجة */
+body.theme-2 .match-score-center{
+    width:98px;
+    min-width:98px;
+    background:#2e0b3d;
+    padding:12px 8px;
+    border-radius:4px;
+    gap:2px;
+    flex-shrink:0;
+}
+
+body.theme-2 .score-display{
+    color:#fff;
+    font-size:17px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+body.theme-2 .vs-text{
+    color:#fff;
+    font-size:12px;
+    font-weight:900;
+    opacity:.9;
+}
+
+
+/* الشريط الأخضر أسفل الجدول — مع شعار PL */
+body.theme-2 #captureFixtures::after{
+    content:'';
+    display:block;
+    height:60px;
+    margin:16px -12px 0 -12px;
+    background:linear-gradient(90deg, #a8e063 0%, #56ab2f 50%, #00d2ff 100%);
+    border-radius:0 0 20px 20px;
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='15' fill='%232e0b3d'/%3E%3C/svg%3E"),
+        linear-gradient(90deg, #a8e063 0%, #56ab2f 50%, #00d2ff 100%);
+    background-repeat:no-repeat, no-repeat;
+    background-position:center center, center center;
+    background-size:40px 40px, 100% 100%;
+}
+
+
+/* =========================================================
+   STANDINGS - تصميم الترتيب الجديد
+========================================================= */
+
+body.theme-2 #captureStandings{
+    background:#fff;
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    position:relative;
+    padding-left:70px;
+}
+
+body.theme-2 .standings-content-area{
+    background:#fff;
+    padding:10px;
+}
+
+
+/* الشريط الجانبي الأخضر */
+body.theme-2 #captureStandings::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    width:60px;
+    background:linear-gradient(180deg, #a8e063 0%, #56ab2f 50%, #00d2ff 100%);
+    z-index:1;
+}
+
+
+/* نص الشريط الجانبي (الشعار + الموسم) */
+body.theme-2 #captureStandings::after{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    width:60px;
+    z-index:2;
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%232e0b3d'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:center 30px;
+    background-size:36px 36px;
+}
+
+
+/* عناوين الأعمدة */
+body.theme-2 th{
+    background:transparent;
+    color:#2e0b3d;
+    padding:10px 4px;
+    font-weight:900;
+    border-bottom:1px solid #2e0b3d;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+}
+
+body.theme-2 td{
+    padding:0 4px;
+    font-weight:700;
+    background:#fff;
+    border-bottom:1px solid #e5e7eb;
+    height:44px;
+    max-height:44px;
+    color:#2e0b3d;
+}
+
+body.theme-2 tr:last-child td{
+    border-bottom:none;
+}
+
+body.theme-2 tr.green-line td{
+    border-bottom:2px solid #2e0b3d !important;
+}
+
+body.theme-2 tr.red-line td{
+    border-bottom:2px solid #e11d48 !important;
+}
+
+
+/* اسم الفريق */
+body.theme-2 .team-cell{
+    font-size:14px;
+    font-weight:700;
+    color:#2e0b3d;
+    text-transform:none;
+    gap:8px;
+    padding:0 6px 0 0;
+}
+
+
+/* رقم المركز */
+body.theme-2 .pos-number{
+    font-size:15px;
+    font-weight:900;
+    color:#2e0b3d;
+    min-width:20px;
+}
+
+
+/* الأرقام — GF و Pts */
+body.theme-2 .stat-number{
+    font-size:15px;
+    font-weight:900;
+    color:#2e0b3d;
+}
+
+/* ⚠️ GF و Pts — الألوان في التصميم الجديد */
+body.theme-2 td:nth-child(3) .stat-number{
+    color:#3b82f6;
+}
+
+body.theme-2 td:nth-child(4) .stat-number{
+    color:#2e0b3d;
+}
+
+
+/* الشعارات في الترتيب */
+body.theme-2 .logo-20{
+    width:26px;
+    height:26px;
+    min-width:26px;
+    min-height:26px;
+    max-width:26px;
+    max-height:26px;
+}
+
+
+/* أسهم الترتيب */
+body.theme-2 .pos-indicator-img{
+    width:20px;
+    height:20px;
+    min-width:20px;
+    min-height:20px;
+    max-width:20px;
+    max-height:20px;
+}
+
+
+/* موبايل — تعديلات إضافية */
+@media(max-width:480px){
+
+    body.theme-2 #captureFixtures{
+        padding:12px 8px 0 8px;
+        border-radius:14px;
+    }
+
+    body.theme-2 .fixtures-header-title{
+        font-size:20px;
+    }
+
+    body.theme-2 .fixture-row{
+        padding:10px 2px;
+        min-height:54px;
+    }
+
+    body.theme-2 .team-box{
+        font-size:12px;
+        gap:4px;
+    }
+
+    body.theme-2 .logo-24{
+        width:26px;
+        height:26px;
+        min-width:26px;
+        min-height:26px;
+        max-width:26px;
+        max-height:26px;
+    }
+
+    body.theme-2 .match-score-center{
+        width:82px;
+        min-width:82px;
+        padding:10px 6px;
+    }
+
+    body.theme-2 .score-display{
+        font-size:14px;
+    }
+
+    body.theme-2 #captureFixtures::after{
+        height:50px;
+        margin:14px -8px 0 -8px;
+    }
+
+    body.theme-2 #captureStandings{
+        padding-left:50px;
+    }
+
+    body.theme-2 #captureStandings::before,
+    body.theme-2 #captureStandings::after{
+        width:44px;
+    }
+
+    body.theme-2 #captureStandings::after{
+        background-size:28px 28px;
+        background-position:center 20px;
+    }
+
+    body.theme-2 .team-cell{
+        font-size:12px;
+        gap:5px;
+    }
+
+    body.theme-2 .logo-20{
+        width:22px;
+        height:22px;
+        min-width:22px;
+        min-height:22px;
+        max-width:22px;
+        max-height:22px;
+    }
+
+    body.theme-2 .pos-number,
+    body.theme-2 .stat-number{
+        font-size:13px;
+    }
+
+    body.theme-2 td{
+        height:38px;
+        max-height:38px;
+    }
+}
