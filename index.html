@@ -160,21 +160,21 @@ body{
 /* CAROUSEL */
 .carousel-wrapper{
     width:100%;
-    margin:12px auto 0;
-    padding:0 10px;
+    margin:10px auto 0;
+    padding:0 8px;
 }
 
 .carousel{
     position:relative;
     width:100%;
-    height:320px;
     overflow:hidden;
     border:3px solid #00ff87;
-    border-radius:20px;
+    border-radius:16px;
     background:#38003c;
-    box-shadow:0 0 10px rgba(0,255,135,.35);
+    box-shadow:0 0 12px rgba(0,255,135,.5);
     touch-action:pan-y;
     cursor:pointer;
+    aspect-ratio:16/9;
 }
 
 .carousel-track{
@@ -216,9 +216,8 @@ body{
 }
 
 .carousel:hover{
-    transform:scale(1.01);
-    box-shadow:0 0 20px rgba(0,255,135,.55);
-    transition:transform .25s ease,box-shadow .25s ease;
+    box-shadow:0 0 22px rgba(0,255,135,.7);
+    transition:box-shadow .25s ease;
 }
 
 .carousel-dots{
@@ -226,7 +225,7 @@ body{
     justify-content:center;
     align-items:center;
     gap:8px;
-    margin-top:9px;
+    margin-top:8px;
 }
 
 .carousel-dot{
@@ -252,8 +251,8 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    margin:10px 0 4px;
-    padding:0 10px;
+    margin:8px 0 2px;
+    padding:0 8px;
 }
 
 .round-select-pill{
@@ -290,7 +289,7 @@ body{
 .header{
     background:transparent;
     color:#fff;
-    padding:6px 0;
+    padding:4px 0;
     text-align:center;
 }
 
@@ -298,7 +297,7 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:20px;
+    gap:16px;
     flex-wrap:wrap;
 }
 
@@ -310,7 +309,7 @@ body{
     cursor:pointer;
     user-select:none;
     text-align:center;
-    padding:6px 20px;
+    padding:6px 16px;
     border-radius:8px;
     border:2px dashed transparent;
     transition:.2s;
@@ -325,8 +324,8 @@ body{
     background:#38003c;
     color:#fff;
     border:1px solid #5a055a;
-    width:40px;
-    height:40px;
+    width:38px;
+    height:38px;
     border-radius:50%;
     cursor:pointer;
     font-size:20px;
@@ -348,7 +347,7 @@ body{
     width:100%;
     max-width:768px;
     margin:0 auto;
-    padding:0 8px;
+    padding:0 6px;
 }
 
 .edit-panel{
@@ -400,7 +399,7 @@ body{
 
 /* FIXTURES */
 #captureFixtures{
-    padding:16px 12px;
+    padding:12px 10px;
     background:
         linear-gradient(
             135deg,
@@ -408,22 +407,22 @@ body{
             #00d2ff 45%,
             #a835ff 100%
         );
-    border-radius:20px;
+    border-radius:16px;
     box-shadow:0 10px 30px rgba(0,0,0,.3);
-    border:4px solid #fff;
+    border:3px solid #fff;
 }
 
 .fixtures-header-box{
     background:#fff;
-    border-radius:12px;
-    padding:10px;
+    border-radius:10px;
+    padding:8px;
     text-align:center;
-    margin-bottom:12px;
+    margin-bottom:10px;
     box-shadow:0 4px 10px rgba(0,0,0,.1);
 }
 
 .fixtures-header-title{
-    font-size:18px;
+    font-size:17px;
     font-weight:900;
     color:#38003c;
     letter-spacing:1px;
@@ -440,6 +439,7 @@ body{
     box-shadow:0 2px 5px rgba(0,0,0,.05);
     flex-wrap:nowrap;
     gap:4px;
+    min-height:44px;
 }
 
 .fixture-row:last-child{margin-bottom:0}
@@ -513,7 +513,7 @@ body{
     position:relative;
     overflow:hidden;
     vertical-align:middle;
-    margin:0 3px;
+    margin:0 4px;
 }
 
 .logo-24 img{
@@ -533,12 +533,12 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:5px;
+    gap:6px;
     flex:0 0 auto;
-    width:88px;
-    min-width:88px;
+    width:110px;
+    min-width:110px;
     background:#7138f5;
-    padding:6px;
+    padding:6px 8px;
     border-radius:6px;
     position:relative;
     flex-shrink:0;
@@ -555,11 +555,15 @@ body{
     vertical-align:middle;
 }
 
-.score-display{color:#fff}
+.score-display{
+    color:#fff;
+    font-size:14px;
+    letter-spacing:.5px;
+}
 
 .score-input{
-    width:32px;
-    height:24px;
+    width:38px;
+    height:26px;
     text-align:center;
     background:#fff;
     color:#38003c;
@@ -573,16 +577,17 @@ body{
 .vs-text{
     font-weight:900;
     color:#fff;
-    font-size:13px;
+    font-size:12px;
+    opacity:.9;
 }
 
 /* STANDINGS */
 #captureStandings{
     background:#fff;
-    border-radius:20px;
+    border-radius:16px;
     overflow:hidden;
     box-shadow:0 10px 30px rgba(0,0,0,.3);
-    border:4px solid #fff;
+    border:3px solid #fff;
     width:100%;
 }
 
@@ -703,16 +708,16 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     }
 
     .carousel{
-        height:200px;
-        border-radius:16px;
+        border-radius:14px;
+        border-width:3px;
     }
 
     .carousel-dots{
-        margin-top:7px;
+        margin-top:6px;
     }
 
     .round-selector-row{
-        margin-top:8px;
+        margin-top:6px;
         padding:0 6px;
     }
 
@@ -723,17 +728,17 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     }
 
     .round-nav-container{
-        gap:12px;
+        gap:10px;
     }
 
     .round-indicator{
-        font-size:18px;
-        padding:5px 12px;
+        font-size:17px;
+        padding:4px 10px;
     }
 
     .nav-arrow-btn{
-        width:36px;
-        height:36px;
+        width:34px;
+        height:34px;
         font-size:18px;
     }
 
@@ -742,56 +747,64 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     }
 
     #captureFixtures{
-        padding:10px 6px;
-        border-radius:16px;
+        padding:8px 6px;
+        border-radius:14px;
         border-width:3px;
     }
 
     .fixtures-header-box{
-        padding:8px;
-        margin-bottom:10px;
-        border-radius:10px;
+        padding:7px;
+        margin-bottom:8px;
+        border-radius:8px;
     }
 
     .fixtures-header-title{
-        font-size:15px;
+        font-size:14px;
     }
 
     .fixture-row{
-        padding:7px 6px;
+        padding:6px 6px;
         margin-bottom:5px;
-        border-radius:8px;
-        gap:2px;
+        border-radius:7px;
+        gap:3px;
+        min-height:40px;
     }
 
     .team-box{
-        font-size:11px;
+        font-size:10px;
         gap:2px;
+        letter-spacing:0;
     }
 
     .logo-24{
-        width:18px;
-        height:18px;
-        min-width:18px;
-        min-height:18px;
-        max-width:18px;
-        max-height:18px;
+        width:16px;
+        height:16px;
+        min-width:16px;
+        min-height:16px;
+        max-width:16px;
+        max-height:16px;
         margin:0 2px;
     }
 
     .match-score-center{
-        width:74px;
-        min-width:74px;
-        padding:5px 4px;
-        gap:3px;
+        width:96px;
+        min-width:96px;
+        padding:5px 6px;
+        gap:4px;
         border-radius:5px;
     }
 
-    .score-display{font-size:13px}
-    .vs-text{font-size:11px}
+    .score-display{
+        font-size:12px;
+        letter-spacing:0;
+    }
+
+    .vs-text{
+        font-size:10px;
+    }
 
     .score-input{
-        width:28px;
+        width:32px;
         height:22px;
         font-size:12px;
     }
