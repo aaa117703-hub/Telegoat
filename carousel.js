@@ -11,13 +11,13 @@
 const carouselSlides = [
 
     {
-        image: './banner1.png',
+        image: './banner1.png.JPEG',
         tab: 'fixtures',
         alt: 'MATCHES'
     },
 
     {
-        image: './banner2.png',
+        image: './banner2.png.JPEG',
         tab: 'standings',
         alt: 'STANDINGS'
     },
