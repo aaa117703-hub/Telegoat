@@ -157,7 +157,7 @@ body{
     gap:10px;
 }
 
-/* CAROUSEL - تم تعديل هذا الجزء */
+/* CAROUSEL */
 .carousel-wrapper{
     width:100%;
     margin:10px auto 0;
@@ -169,58 +169,43 @@ body{
     width:100%;
     overflow:hidden;
     border:3px solid #00ff87;
-    border-radius:16px;
+    border-radius:20px;
     background:#38003c;
-    box-shadow:0 0 12px rgba(0,255,135,.5);
+    box-shadow:0 0 15px rgba(0,255,135,.6);
     touch-action:pan-y;
     cursor:pointer;
-    aspect-ratio:16/9; /* هذا يحدد أبعاد الإطار */
-    padding:0; /* تم التأكد من عدم وجود حشوة */
 }
 
 .carousel-track{
     position:relative;
     width:100%;
-    height:100%;
+    height:auto;
 }
 
 .carousel-slide{
-    position:absolute;
+    position:relative;
     inset:0;
     width:100%;
-    height:100%;
+    display:none;
     opacity:0;
-    visibility:hidden;
-    transform:translateX(25px);
-    transition:
-        opacity .7s ease,
-        transform .7s ease,
-        visibility .7s ease;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:0; /* تم التأكد من عدم وجود حشوة */
+    transition:opacity .7s ease;
 }
 
 .carousel-slide.active{
+    display:block;
     opacity:1;
-    visibility:visible;
-    transform:translateX(0);
-    z-index:2;
 }
 
-/* *** هذا هو التعديل الرئيسي: object-fit: cover بدلاً من contain *** */
 .carousel-slide img{
     width:100%;
-    height:100%;
+    height:auto;
     display:block;
-    object-fit:cover; /* تم التغيير من contain إلى cover لملء الإطار بالكامل */
+    object-fit:contain;
     object-position:center;
-    border-radius:0; /* لضمان عدم وجود زوايا مقطوعة */
 }
 
 .carousel:hover{
-    box-shadow:0 0 22px rgba(0,255,135,.7);
+    box-shadow:0 0 22px rgba(0,255,135,.8);
     transition:box-shadow .25s ease;
 }
 
@@ -472,20 +457,16 @@ body{
     text-align:left;
 }
 
-.teampx-box>span{
+.team-box>span{
     overflow:hidden;
-    text-over;
-flow:ellipsis;
-   }
-
- white-space:nowrap;
+    text-overflow:ellipsis;
+    white-space:nowrap;
 }
 
-.log.scoreo-20{
-    display:inline-block-input;
+.logo-20{
+    display:inline-block;
     width:20px;
-   {
- height:20px;
+    height:20px;
     min-width:20px;
     min-height:20px;
     max-width:20px;
@@ -566,7 +547,11 @@ flow:ellipsis;
 .score-display{
     color:#fff;
     font-size:14px;
-    letter-spacing:.5    width:38px;
+    letter-spacing:.5px;
+}
+
+.score-input{
+    width:38px;
     height:26px;
     text-align:center;
     background:#fff;
@@ -712,7 +697,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     }
 
     .carousel{
-        border-radius:14px;
+        border-radius:16px;
         border-width:3px;
     }
 
@@ -992,9 +977,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
 </div>
 
-<!-- =========================================================
-     ERROR HANDLER (يجب أن يكون قبل باقي الملفات)
-========================================================= -->
 <script>
 (function(){
     const box=document.getElementById('errorBox');
@@ -1024,9 +1006,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 })();
 </script>
 
-<!-- =========================================================
-     APPLICATION FILES (الترتيب مهم جداً!)
-========================================================= -->
 <script src="config.js"></script>
 <script src="data.js"></script>
 <script src="supabase.js"></script>
