@@ -102,8 +102,8 @@ body{
     border-radius:30px;
     font-weight:900;
     font-size:15px;
-    border:2px solid #ff005a;
-    box-shadow:0 10px 30px rgba(0,0,0,.5);
+    border:2px solid #00ff87;
+    box-shadow:0 0 20px rgba(0,255,135,.8);
     z-index:999;
     opacity:0;
     transition:opacity .4s ease;
@@ -114,7 +114,14 @@ body{
     max-width:92%;
     text-align:center;
 }
+
+#toast.error{
+    border:2px solid #ff005a;
+    box-shadow:0 0 20px rgba(255,0,90,.8);
+}
+
 #toast.show{opacity:1}
+
 .toast-spinner{
     display:inline-block;
     width:18px;
