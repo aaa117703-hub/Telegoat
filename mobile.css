@@ -1,197 +1,157 @@
 /* =========================================================
-   mobile.css
-   تصميم الموبايل فقط (أقل من 480px)
-========================================================= */
+   1. تنسيقات شاشات الموبايل (أصغر من 600px)
+   تصميم مريح للعين، ملموم، وواضح لللمس
+   ========================================================= */
+@media screen and (max-width: 599px) {
 
-@media(max-width:480px){
-
-    body{
-        padding:0 0 16px;
+    /* حاوية المباريات والكرت الرئيسي */
+    .fixtures-container, 
+    .match-card, 
+    .fixture-row {
+        padding: 6px 8px !important;
+        margin-bottom: 8px !important;
+        border-radius: 10px !important;
+        background: #1e1e2d !important; /* خلفية داكنة مريحة للعين */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
     }
 
-    .carousel-wrapper{
-        padding:0 3px;
-        margin-top:5px;
+    /* صف المباراة الواحدة (استخدام Flexbox متناسق) */
+    .fixture-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        min-height: 48px !important;
     }
 
-    .carousel{
-        border-radius:12px;
-        border-width:3px;
+    /* أطراف الفريقين (صاحب الأرض والضيف) */
+    .team-side {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex: 1 !important;
     }
 
-    .carousel-dots{
-        margin-top:5px;
+    .team-side.home {
+        justify-content: flex-end !important;
+        text-align: left !important;
     }
 
-    .round-selector-row{
-        margin-top:4px;
-        padding:0 3px;
+    .team-side.away {
+        justify-content: flex-start !important;
+        text-align: right !important;
     }
 
-    .round-select-pill{
-        font-size:13px;
-        padding:8px 32px 8px 16px;
-        min-width:140px;
+    /* أسماء الفرق - خط بارز وواضح */
+    .team-name {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: #ffffff !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 85px !important;
     }
 
-    .round-nav-container{
-        gap:10px;
+    /* شعارات الفرق للموبايل */
+    .team-logo, .logo-20, .logo-24 {
+        width: 22px !important;
+        height: 22px !important;
+        object-fit: contain !important;
     }
 
-    .round-indicator{
-        font-size:20px;
-        padding:6px 14px;
+    /* صندوق النتيجة في المنتصف */
+    .match-score-center {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: #12121a !important;
+        padding: 4px 10px !important;
+        border-radius: 6px !important;
+        min-width: 54px !important;
+        margin: 0 6px !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
     }
 
-    .nav-arrow-btn{
-        width:40px;
-        height:40px;
-        font-size:22px;
+    .match-score-center span {
+        font-family: 'EnglishFont', sans-serif !important;
+        font-size: 14px !important;
+        font-weight: bold !important;
+        color: #00ff87 !important; /* لون أخضر الفانتازي المريح */
+        letter-spacing: 1px !important;
+    }
+}
+
+
+/* =========================================================
+   2. تنسيقات شاشات الأيباد والتابلت (من 600px إلى 1024px)
+   قياسات ثابتة، توزيع أوسع، وخطوط أكبر
+   ========================================================= */
+@media screen and (min-width: 600px) and (max-width: 1024px) {
+
+    /* حاوية المباريات للأيباد */
+    .fixtures-container, 
+    .match-card, 
+    .fixture-row {
+        padding: 10px 16px !important;
+        margin-bottom: 12px !important;
+        border-radius: 12px !important;
+        background: #1b1b28 !important;
     }
 
-    .main-container{
-        padding:0 2px;
+    .fixture-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        min-height: 56px !important;
     }
 
-    /* ============================================
-       FIXTURES - المواجهات
-    ============================================ */
-    #captureFixtures{
-        padding:8px 5px;
-        border-radius:12px;
-        border-width:3px;
+    .team-side {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        flex: 1 !important;
     }
 
-    .fixtures-header-box{
-        padding:8px;
-        margin-bottom:8px;
-        border-radius:8px;
+    .team-side.home {
+        justify-content: flex-end !important;
     }
 
-    .fixtures-header-title{
-        font-size:15px;
+    .team-side.away {
+        justify-content: flex-start !important;
     }
 
-    .fixture-row{
-        padding:10px 8px;
-        margin-bottom:5px;
-        border-radius:8px;
-        gap:2px;
-        min-height:54px;
+    /* أسماء الفرق للأيباد - مساحة أكبر وحجم أضخم */
+    .team-name {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #ffffff !important;
+        max-width: 160px !important;
     }
 
-    .team-box{
-        font-size:14px;
-        gap:4px;
-        letter-spacing:0;
-        font-weight:900;
+    /* شعارات الفرق للأيباد */
+    .team-logo, .logo-20, .logo-24 {
+        width: 32px !important;
+        height: 32px !important;
+        object-fit: contain !important;
     }
 
-    .logo-24{
-        width:26px;
-        height:26px;
-        min-width:26px;
-        min-height:26px;
-        max-width:26px;
-        max-height:26px;
-        margin:0 4px;
+    /* صندوق النتيجة في المنتصف للأيباد */
+    .match-score-center {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: #0f0f17 !important;
+        padding: 6px 16px !important;
+        border-radius: 8px !important;
+        min-width: 75px !important;
+        margin: 0 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
     }
 
-    .match-score-center{
-        width:104px;
-        min-width:104px;
-        padding:6px 6px;
-        gap:4px;
-        border-radius:6px;
-    }
-
-    .score-display{
-        font-size:14px;
-        letter-spacing:0;
-        font-weight:900;
-    }
-
-    .vs-text{
-        font-size:11px;
-    }
-
-    .score-input{
-        width:36px;
-        height:26px;
-        font-size:14px;
-    }
-
-    /* ============================================
-       STANDINGS - الترتيب
-    ============================================ */
-    .standings-content-area{
-        padding:8px;
-    }
-
-    .standings-card{
-        padding:3px;
-    }
-
-    th{
-        font-size:14px;
-        padding:10px 3px;
-        font-weight:900;
-    }
-
-    td{
-        height:46px;
-        max-height:46px;
-        padding:0 3px;
-    }
-
-    .team-cell{
-        font-size:14px;
-        gap:6px;
-        padding:0 10px 0 0;
-        font-weight:900;
-    }
-
-    .logo-20{
-        width:24px;
-        height:24px;
-        min-width:24px;
-        min-height:24px;
-        max-width:24px;
-        max-height:24px;
-    }
-
-    .pos-indicator-img{
-        width:22px;
-        height:22px;
-        min-width:22px;
-        min-height:22px;
-        max-width:22px;
-        max-height:22px;
-    }
-
-    .pos-container{
-        gap:4px;
-        height:28px;
-    }
-
-    .pos-number{
-        font-size:15px;
-        min-width:18px;
-        font-weight:900;
-    }
-
-    .stat-number{
-        font-size:15px;
-        font-weight:900;
-    }
-
-    .col-pos{width:15%}
-    .col-club{width:47%}
-    .col-gf{width:18%}
-    .col-pts{width:20%}
-
-    .lock-text{
-        font-size:18px;
-        padding:10px 22px;
+    .match-score-center span {
+        font-family: 'EnglishFont', sans-serif !important;
+        font-size: 18px !important;
+        font-weight: 800 !important;
+        color: #00ff87 !important;
     }
 }
