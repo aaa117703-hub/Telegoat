@@ -1,11 +1,5 @@
 /* =========================================================
    download.js
-   تحميل الجداول كصور (html2canvas + Share + Fallback)
-========================================================= */
-
-
-/* =========================================================
-   WAIT FOR IMAGES
 ========================================================= */
 
 function waitForImagesToLoad(element) {
@@ -41,10 +35,6 @@ function waitForImagesToLoad(element) {
 }
 
 
-/* =========================================================
-   ROUNDED CORNERS
-========================================================= */
-
 function applyRoundedCorners(sourceCanvas, radius) {
     const w = sourceCanvas.width;
     const h = sourceCanvas.height;
@@ -73,10 +63,6 @@ function applyRoundedCorners(sourceCanvas, radius) {
     return outputCanvas;
 }
 
-
-/* =========================================================
-   DOWNLOAD AS IMAGE
-========================================================= */
 
 function downloadAsImage() {
     if (activeTab === 'fixtures') {
@@ -164,7 +150,7 @@ function downloadAsImage() {
 
             roundedCanvas.toBlob(function(blob) {
                 if (!blob) {
-                    showToast('Failed to create image!', false);
+                    showToast('Failed to create image', false);
                     return;
                 }
 
@@ -185,7 +171,7 @@ function downloadAsImage() {
                     if (navigator.canShare(shareData)) {
                         navigator.share(shareData)
                             .then(function() {
-                                showToast('Image saved successfully ✓', true);
+                                showToast('Image saved', true);
                             })
                             .catch(function(err) {
                                 if (err.name !== 'AbortError') {
@@ -204,14 +190,10 @@ function downloadAsImage() {
         })
         .catch(function(err) {
             console.error('html2canvas error:', err);
-            showToast('Error generating image!', false);
+            showToast('Error generating image', false);
         });
 }
 
-
-/* =========================================================
-   FALLBACK DOWNLOAD
-========================================================= */
 
 function fallbackDownload(blob) {
     const link = document.createElement('a');
@@ -228,6 +210,6 @@ function fallbackDownload(blob) {
 
     setTimeout(function() {
         URL.revokeObjectURL(link.href);
-        showToast('Image downloaded ✓', true);
+        showToast('Image downloaded', true);
     }, 100);
 }
