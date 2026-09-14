@@ -950,13 +950,13 @@ const carouselSlides = [
     {
         image: './banner1.png',
         tab: 'fixtures',
-        alt: 'Matches'
+        alt: 'MATCHES'
     },
 
     {
         image: './banner2.png',
         tab: 'standings',
-        alt: 'Standings'
+        alt: 'STANDINGS'
     },
 
     {
@@ -1022,11 +1022,65 @@ function buildCarousel() {
             img.src = slide.image;
             img.alt = slide.alt;
 
+            /* ============================================
+               FALLBACK: إذا فشل تحميل الصورة
+               يعرض خلفية gradient ملونة
+            ============================================ */
             img.onerror = function () {
+
                 console.error(
                     'Carousel image not found:',
                     slide.image
                 );
+
+                this.style.display = 'none';
+
+                const parent =
+                    this.parentElement;
+
+                if (
+                    parent &&
+                    !parent.querySelector(
+                        '.carousel-fallback'
+                    )
+                ) {
+
+                    const fallback =
+                        document.createElement(
+                            'div'
+                        );
+
+                    fallback.className =
+                        'carousel-fallback';
+
+                    fallback.style.cssText = `
+                        position:absolute;
+                        inset:0;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        background:linear-gradient(
+                            135deg,
+                            #38003c 0%,
+                            #ff005a 100%
+                        );
+                        color:#fff;
+                        font-weight:900;
+                        font-size:clamp(20px,5vw,36px);
+                        letter-spacing:3px;
+                        text-transform:uppercase;
+                        text-shadow:0 4px 15px rgba(0,0,0,.6);
+                        text-align:center;
+                        padding:20px;
+                    `;
+
+                    fallback.textContent =
+                        slide.alt || 'BANNER';
+
+                    parent.appendChild(
+                        fallback
+                    );
+                }
             };
 
             item.appendChild(img);
@@ -1988,7 +2042,7 @@ function renderStandings() {
 
                             <span class="logo-20">
                                 <img
-                                    src="./${teamInfo.logo}"
+                                    src="./${teamInfo.log valueo}"
                                     alt="${teamInfo.name}"
                                     onerror="
                                         this.style.display='none'
@@ -2109,7 +2163,7 @@ function renderFixtures() {
                                 type="number"
                                 class="score-input"
                                 id="home_r${currentRound}_m${idx}"
-                                value="${homeScore}"
+                               ="${homeScore}"
                                 placeholder="0"
                                 oninput="
                                     updateScore(
