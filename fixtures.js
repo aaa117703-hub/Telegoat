@@ -19,8 +19,10 @@ function showToast(msg, isSuccess, duration) {
 
     if (isSuccess) {
         content.innerHTML = 'OK ' + msg;
+        toast.classList.remove('error');
     } else {
         content.innerHTML = '<span class="toast-spinner"></span> ' + msg;
+        toast.classList.add('error');
     }
 
     toast.classList.add('show');
