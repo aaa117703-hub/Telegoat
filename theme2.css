@@ -57,7 +57,7 @@ body.theme-2 .fixture-row:last-child{
 }
 
 
-/* اسم الفريق */
+/* اسم الفريق + الشعار */
 body.theme-2 .team-box{
     font-size:14px;
     font-weight:700;
@@ -67,18 +67,20 @@ body.theme-2 .team-box{
     gap:6px;
 }
 
+/* الفريق المستضيف — الاسم قرب النتيجة */
 body.theme-2 .team-box.home{
+    justify-content:flex-end;
+    text-align:right;
+    flex-direction:row-reverse;
+    padding-right:4px;
+}
+
+/* الفريق الضيف — الاسم قرب النتيجة */
+body.theme-2 .team-box.away{
     justify-content:flex-start;
     text-align:left;
     flex-direction:row-reverse;
-    padding-left:2px;
-}
-
-body.theme-2 .team-box.away{
-    justify-content:flex-end;
-    text-align:right;
-    flex-direction:row;
-    padding-right:2px;
+    padding-left:4px;
 }
 
 
