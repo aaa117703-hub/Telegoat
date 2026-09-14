@@ -1,6 +1,6 @@
 /* =========================================================
    theme-switcher.js
-   تبديل التصميم بضغطة طويلة على MATCHWEEK
+   تبديل التصميم من داخل لوحة التعديل
 ========================================================= */
 
 
@@ -24,7 +24,7 @@ function applyTheme(theme) {
 
 
 /* =========================================================
-   TOGGLE THEME
+   TOGGLE THEME - تبديل التصميم
 ========================================================= */
 
 function toggleTheme() {
@@ -49,99 +49,14 @@ function toggleTheme() {
 
 
 /* =========================================================
-   SETUP LONG PRESS ON MATCHWEEK
-   ضغطة طويلة (800ms) = تبديل التصميم
-========================================================= */
-
-function setupLongPress() {
-
-    const titleEl = document.getElementById('currentRoundTitle');
-
-    if (!titleEl) {
-        console.warn('currentRoundTitle not found');
-        return;
-    }
-
-    let pressTimer = null;
-    let longPressTriggered = false;
-
-
-    /* ========== TOUCH (الموبايل) ========== */
-
-    titleEl.addEventListener('touchstart', function(event) {
-
-        longPressTriggered = false;
-
-        pressTimer = setTimeout(function() {
-
-            longPressTriggered = true;
-            toggleTheme();
-
-        }, 800);
-
-    }, { passive: true });
-
-
-    titleEl.addEventListener('touchend', function(event) {
-
-        clearTimeout(pressTimer);
-
-        if (longPressTriggered) {
-            event.preventDefault();
-        }
-
-    });
-
-
-    titleEl.addEventListener('touchcancel', function() {
-
-        clearTimeout(pressTimer);
-        longPressTriggered = false;
-    });
-
-
-    /* ========== MOUSE (الكمبيوتر) ========== */
-
-    titleEl.addEventListener('mousedown', function(event) {
-
-        longPressTriggered = false;
-
-        pressTimer = setTimeout(function() {
-
-            longPressTriggered = true;
-            toggleTheme();
-
-        }, 800);
-    });
-
-
-    titleEl.addEventListener('mouseup', function() {
-
-        clearTimeout(pressTimer);
-    });
-
-
-    titleEl.addEventListener('mouseleave', function() {
-
-        clearTimeout(pressTimer);
-        longPressTriggered = false;
-    });
-}
-
-
-/* =========================================================
-   INIT THEME
+   INIT THEME - تطبيق التصميم المحفوظ
 ========================================================= */
 
 function initTheme() {
 
-    /* تطبيق التصميم المحفوظ */
     if (currentTheme === 'theme2') {
         applyTheme('theme2');
     } else {
         applyTheme('default');
     }
-
-    /* تفعيل الضغطة الطويلة */
-    setupLongPress();
 }
