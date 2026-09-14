@@ -2042,7 +2042,7 @@ function renderStandings() {
 
                             <span class="logo-20">
                                 <img
-                                    src="./${teamInfo.log valueo}"
+                                    src="./${teamInfo.logo}"
                                     alt="${teamInfo.name}"
                                     onerror="
                                         this.style.display='none'
