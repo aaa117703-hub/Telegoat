@@ -6,11 +6,11 @@
 @media(max-width:480px){
 
     body{
-        padding: 0 3px;
+        padding:0 0 16px;
     }
 
     .carousel-wrapper{
-        padding0 3px;
+        padding:0 3px;
         margin-top:5px;
     }
 
