@@ -1,55 +1,29 @@
 /* =========================================================
-   1. تنسيقات شاشات الموبايل (أصغر من 600px)
-   تصميم مريح للعين، ملموم، وواضح لللمس
+   1. تعديل أحجام الموبايل (أصغر من 600px)
+   الحفاظ على الألوان الأصلية مع ضبط القياسات فقط
    ========================================================= */
 @media screen and (max-width: 599px) {
 
-    /* حاوية المباريات والكرت الرئيسي */
-    .fixtures-container, 
-    .match-card, 
+    /* صف المباراة - ضبط المسافات والارتفاع فقط */
     .fixture-row {
-        padding: 6px 8px !important;
-        margin-bottom: 8px !important;
-        border-radius: 10px !important;
-        background: #1e1e2d !important; /* خلفية داكنة مريحة للعين */
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+        padding: 4px 6px !important;
+        margin-bottom: 6px !important;
+        min-height: 44px !important;
     }
 
-    /* صف المباراة الواحدة (استخدام Flexbox متناسق) */
-    .fixture-row {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        min-height: 48px !important;
-    }
-
-    /* أطراف الفريقين (صاحب الأرض والضيف) */
+    /* أطراف الفريقين */
     .team-side {
-        display: flex !important;
-        align-items: center !important;
         gap: 6px !important;
-        flex: 1 !important;
     }
 
-    .team-side.home {
-        justify-content: flex-end !important;
-        text-align: left !important;
-    }
-
-    .team-side.away {
-        justify-content: flex-start !important;
-        text-align: right !important;
-    }
-
-    /* أسماء الفرق - خط بارز وواضح */
+    /* أسماء الفرق - إرجاع الألوان وإصلاح الحجم والشفافية */
     .team-name {
-        font-size: 12px !important;
-        font-weight: 700 !important;
-        color: #ffffff !important;
+        font-size: 11px !important;
+        font-weight: bold !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
-        max-width: 85px !important;
+        max-width: 80px !important;
     }
 
     /* شعارات الفرق للموبايل */
@@ -61,97 +35,51 @@
 
     /* صندوق النتيجة في المنتصف */
     .match-score-center {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background: #12121a !important;
-        padding: 4px 10px !important;
-        border-radius: 6px !important;
-        min-width: 54px !important;
-        margin: 0 6px !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        padding: 2px 8px !important;
+        min-width: 50px !important;
+        margin: 0 4px !important;
     }
 
     .match-score-center span {
-        font-family: 'EnglishFont', sans-serif !important;
-        font-size: 14px !important;
-        font-weight: bold !important;
-        color: #00ff87 !important; /* لون أخضر الفانتازي المريح */
-        letter-spacing: 1px !important;
+        font-size: 13px !important;
     }
 }
 
 
 /* =========================================================
-   2. تنسيقات شاشات الأيباد والتابلت (من 600px إلى 1024px)
-   قياسات ثابتة، توزيع أوسع، وخطوط أكبر
+   2. تعديل أحجام الأيباد (من 600px إلى 1024px)
    ========================================================= */
 @media screen and (min-width: 600px) and (max-width: 1024px) {
 
-    /* حاوية المباريات للأيباد */
-    .fixtures-container, 
-    .match-card, 
     .fixture-row {
-        padding: 10px 16px !important;
-        margin-bottom: 12px !important;
-        border-radius: 12px !important;
-        background: #1b1b28 !important;
-    }
-
-    .fixture-row {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        min-height: 56px !important;
+        padding: 8px 12px !important;
+        margin-bottom: 10px !important;
+        min-height: 52px !important;
     }
 
     .team-side {
-        display: flex !important;
-        align-items: center !important;
-        gap: 12px !important;
-        flex: 1 !important;
+        gap: 10px !important;
     }
 
-    .team-side.home {
-        justify-content: flex-end !important;
-    }
-
-    .team-side.away {
-        justify-content: flex-start !important;
-    }
-
-    /* أسماء الفرق للأيباد - مساحة أكبر وحجم أضخم */
     .team-name {
-        font-size: 16px !important;
-        font-weight: 700 !important;
-        color: #ffffff !important;
-        max-width: 160px !important;
+        font-size: 15px !important;
+        font-weight: bold !important;
+        max-width: 150px !important;
     }
 
-    /* شعارات الفرق للأيباد */
     .team-logo, .logo-20, .logo-24 {
-        width: 32px !important;
-        height: 32px !important;
+        width: 30px !important;
+        height: 30px !important;
         object-fit: contain !important;
     }
 
-    /* صندوق النتيجة في المنتصف للأيباد */
     .match-score-center {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background: #0f0f17 !important;
-        padding: 6px 16px !important;
-        border-radius: 8px !important;
-        min-width: 75px !important;
-        margin: 0 12px !important;
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        padding: 4px 12px !important;
+        min-width: 70px !important;
+        margin: 0 10px !important;
     }
 
     .match-score-center span {
-        font-family: 'EnglishFont', sans-serif !important;
-        font-size: 18px !important;
-        font-weight: 800 !important;
-        color: #00ff87 !important;
+        font-size: 17px !important;
     }
 }
