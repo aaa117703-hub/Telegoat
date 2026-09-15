@@ -26,13 +26,6 @@
     --text-white:#fff;
     --border-dark:#5a055a;
     --font-en:'EnglishCustom',sans-serif;
-    --bg-color:#240024;
-    --text-color:#fff;
-}
-
-body.light-mode{
-    --bg-color:#f0f2f5;
-    --text-color:#1a1a2e;
 }
 
 *{
@@ -43,19 +36,17 @@ body.light-mode{
 }
 
 html{
-    background:var(--bg-color);
-    transition:background .3s ease;
+    background:#240024;
 }
 
 body{
-    background:var(--bg-color);
-    color:var(--text-color);
+    background:#240024;
+    color:#fff;
     width:100%;
     max-width:768px;
     margin:0 auto;
     padding:0 0 20px;
     overflow-x:hidden;
-    transition:background .3s ease, color .3s ease;
 }
 
 #errorBox{
@@ -96,41 +87,6 @@ body{
     font-weight:900;
     font-size:16px;
     cursor:pointer;
-}
-
-#themeToggle{
-    position:fixed;
-    top:16px;
-    right:16px;
-    width:44px;
-    height:44px;
-    border-radius:50%;
-    background:linear-gradient(135deg, #6b21a8 0%, #38003c 100%);
-    color:#fff;
-    border:2px solid #00ff87;
-    box-shadow:0 0 15px rgba(0,255,135,.5);
-    cursor:pointer;
-    font-size:20px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:1000;
-    transition:all .3s ease;
-}
-
-#themeToggle:hover{
-    transform:scale(1.1) rotate(15deg);
-    box-shadow:0 0 25px rgba(0,255,135,.8);
-}
-
-#themeToggle:active{
-    transform:scale(.95);
-}
-
-body.light-mode #themeToggle{
-    background:linear-gradient(135deg, #ffb700 0%, #ff8c00 100%);
-    border-color:#ffb700;
-    box-shadow:0 0 15px rgba(255,183,0,.5);
 }
 
 #toast{
@@ -406,12 +362,6 @@ body.light-mode #themeToggle{
     transition:all .2s ease;
 }
 
-body.light-mode .round-select-pill{
-    background:rgba(0,0,0,.05);
-    color:#1a1a2e;
-    border-color:rgba(0,0,0,.15);
-}
-
 .round-select-pill:hover,
 .round-select-pill:focus{
     border-color:#00ff87;
@@ -425,7 +375,7 @@ body.light-mode .round-select-pill{
 
 .header{
     background:transparent;
-    color:var(--text-color);
+    color:#fff;
     padding:4px 0;
     text-align:center;
 }
@@ -442,7 +392,7 @@ body.light-mode .round-select-pill{
     font-size:20px;
     font-weight:900;
     letter-spacing:1px;
-    color:var(--text-color);
+    color:#fff;
     cursor:pointer;
     user-select:none;
     text-align:center;
@@ -455,11 +405,6 @@ body.light-mode .round-select-pill{
 .round-indicator:hover{
     border-color:rgba(255,255,255,.2);
     background:rgba(255,255,255,.05);
-}
-
-body.light-mode .round-indicator:hover{
-    border-color:rgba(0,0,0,.2);
-    background:rgba(0,0,0,.05);
 }
 
 .nav-arrow-btn{
@@ -507,11 +452,6 @@ body.light-mode .round-indicator:hover{
     flex-wrap:wrap;
     border:2px solid rgba(255,255,255,.1);
     box-shadow:0 4px 20px rgba(0,0,0,.3);
-}
-
-body.light-mode .edit-panel{
-    background:rgba(0,0,0,.05);
-    border-color:rgba(0,0,0,.1);
 }
 
 .edit-action-btn{
@@ -998,8 +938,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     <div id="errorContent"></div>
 </div>
 
-<button id="themeToggle" onclick="toggleLightMode()">☀️</button>
-
 <div id="toast">
     <span id="toastContent">Saving...</span>
 </div>
@@ -1120,7 +1058,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script src="standings.js"></script>
 <script src="download.js"></script>
 <script src="main.js"></script>
-<script src="theme-toggle.js"></script>
+<script src="share.js"></script>
 
 </body>
 </html>
