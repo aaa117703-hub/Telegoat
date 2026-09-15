@@ -2,8 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=768, user-scalable=yes, maximum-scale=5.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>TELEGRAM GOAT - Premier League</title>
+
+<script>
+/* منع double-tap zoom */
+document.addEventListener('dblclick', function(e) { e.preventDefault(); }, { passive: false });
+let _lastTouchEnd = 0;
+document.addEventListener('touchend', function(e) {
+    const now = Date.now();
+    if (now - _lastTouchEnd <= 300) { e.preventDefault(); }
+    _lastTouchEnd = now;
+}, false);
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -37,6 +48,7 @@
 
 html{
     background:#240024;
+    touch-action:manipulation;
 }
 
 body{
@@ -47,6 +59,7 @@ body{
     margin:0 auto;
     padding:0 0 90px;
     overflow-x:hidden;
+    touch-action:manipulation;
 }
 
 #errorBox{
@@ -89,10 +102,6 @@ body{
     cursor:pointer;
 }
 
-/* ============================================
-   DOWNLOAD BUTTON
-============================================ */
-
 #downloadFab{
     position:fixed;
     bottom:24px;
@@ -124,9 +133,6 @@ body{
 
 #downloadFab:active{
     transform:scale(.94);
-    box-shadow:
-        0 2px 6px rgba(0,200,83,.5),
-        0 0 12px rgba(0,255,135,.3);
 }
 
 #downloadFab svg{
@@ -160,11 +166,8 @@ body{
     100%{transform:rotate(360deg);}
 }
 
-/* ============================================
-   HIDDEN EDIT BUTTON - Aqeel Al Rowai
-============================================ */
-
-#hiddenEditBtn{
+#hiddenEditBtn,
+#hiddenEditBtn2{
     display:block;
     width:100%;
     padding:8px 10px;
@@ -181,21 +184,23 @@ body{
     transition:color .3s ease;
     user-select:none;
     -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    -webkit-touch-callout:none;
     -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
     outline:none;
 }
 
-#hiddenEditBtn:hover{
+#hiddenEditBtn:hover,
+#hiddenEditBtn2:hover{
     color:rgba(255,255,255,0.3);
 }
 
-#hiddenEditBtn:active{
+#hiddenEditBtn:active,
+#hiddenEditBtn2:active{
     color:rgba(255,255,255,0.4);
 }
-
-/* ============================================
-   TOAST
-============================================ */
 
 #toast{
     position:fixed;
@@ -241,10 +246,6 @@ body{
     0%{transform:rotate(0)}
     100%{transform:rotate(360deg)}
 }
-
-/* ============================================
-   SHARE MODAL
-============================================ */
 
 #shareModal{
     display:none;
@@ -342,10 +343,6 @@ body{
 
 .share-close:hover{transform:scale(1.05);}
 
-/* ============================================
-   LOCKED OVERLAY
-============================================ */
-
 .locked-overlay{
     position:absolute;
     top:0;
@@ -372,10 +369,6 @@ body{
     align-items:center;
     gap:10px;
 }
-
-/* ============================================
-   CAROUSEL
-============================================ */
 
 .carousel-wrapper{
     width:100%;
@@ -454,10 +447,6 @@ body{
     box-shadow:0 0 8px rgba(0,255,135,.45);
 }
 
-/* ============================================
-   ROUND SELECT
-============================================ */
-
 .round-selector-row{
     display:flex;
     justify-content:center;
@@ -484,6 +473,7 @@ body{
     background-repeat:no-repeat;
     background-position:right 12px center;
     transition:all .2s ease;
+    touch-action:manipulation;
 }
 
 .round-select-pill:hover,
@@ -496,10 +486,6 @@ body{
     background:#2d0a3d;
     color:#fff;
 }
-
-/* ============================================
-   HEADER
-============================================ */
 
 .header{
     background:transparent;
@@ -523,11 +509,15 @@ body{
     color:#fff;
     cursor:pointer;
     user-select:none;
+    -webkit-user-select:none;
+    -webkit-touch-callout:none;
+    -webkit-tap-highlight-color:transparent;
     text-align:center;
     padding:6px 16px;
     border-radius:8px;
     border:2px dashed transparent;
     transition:.2s;
+    touch-action:manipulation;
 }
 
 .round-indicator:hover{
@@ -550,6 +540,7 @@ body{
     justify-content:center;
     transition:all .2s ease;
     flex-shrink:0;
+    touch-action:manipulation;
 }
 
 .nav-arrow-btn:hover{
@@ -561,10 +552,6 @@ body{
 .nav-arrow-btn:active{
     transform:scale(.95);
 }
-
-/* ============================================
-   MAIN
-============================================ */
 
 .main-container{
     width:100%;
@@ -605,6 +592,7 @@ body{
     overflow:hidden;
     letter-spacing:.5px;
     text-shadow:0 1px 2px rgba(0,0,0,.3);
+    touch-action:manipulation;
 }
 
 .edit-action-btn:active{
@@ -649,10 +637,6 @@ body{
     cursor:not-allowed;
     transform:none;
 }
-
-/* ============================================
-   FIXTURES
-============================================ */
 
 #captureFixtures{
     padding:0;
@@ -880,10 +864,6 @@ body{
     opacity:.9;
 }
 
-/* ============================================
-   STANDINGS
-============================================ */
-
 #captureStandings{
     background:#fff;
     border-radius:16px;
@@ -1078,7 +1058,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     <div id="errorContent"></div>
 </div>
 
-<!-- زر التحميل الدائري -->
 <button id="downloadFab" onclick="downloadAsImage()" title="Download">
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 3v12"/>
@@ -1138,7 +1117,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
             <div id="fixturesList"></div>
         </div>
 
-        <button id="hiddenEditBtn" onclick="handleHiddenEditClick()">Aqeel Al Rowai</button>
+        <button id="hiddenEditBtn" class="hidden-edit-btn">Aqeel Al Rowai</button>
     </div>
 
     <div id="standingsTab" class="tab-content">
@@ -1168,30 +1147,86 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
             </div>
         </div>
 
-        <button id="hiddenEditBtn2" onclick="handleHiddenEditClick()">Aqeel Al Rowai</button>
+        <button id="hiddenEditBtn2" class="hidden-edit-btn">Aqeel Al Rowai</button>
     </div>
 
 </div>
 
 <script>
-let hiddenClickCount = 0;
-let hiddenClickTimer = null;
+/* ============================================
+   ضغط مطول على Aqeel Al Rowai = كلمة السر
+============================================ */
 
-function handleHiddenEditClick() {
-    hiddenClickCount++;
-    
-    clearTimeout(hiddenClickTimer);
-    
-    if (hiddenClickCount >= 2) {
-        hiddenClickCount = 0;
-        unlockEditWithPassword();
-        return;
+(function() {
+
+    let pressTimer = null;
+    let longPressTriggered = false;
+
+    function setupButton(btn) {
+
+        if (!btn) return;
+
+        btn.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        btn.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        btn.addEventListener('copy', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        btn.addEventListener('touchstart', function(event) {
+
+            longPressTriggered = false;
+
+            pressTimer = setTimeout(function() {
+                longPressTriggered = true;
+                unlockEditWithPassword();
+            }, 800);
+
+        }, { passive: true });
+
+        btn.addEventListener('touchend', function() {
+            clearTimeout(pressTimer);
+        });
+
+        btn.addEventListener('touchcancel', function() {
+            clearTimeout(pressTimer);
+            longPressTriggered = false;
+        });
+
+        btn.addEventListener('mousedown', function() {
+
+            longPressTriggered = false;
+
+            pressTimer = setTimeout(function() {
+                longPressTriggered = true;
+                unlockEditWithPassword();
+            }, 800);
+        });
+
+        btn.addEventListener('mouseup', function() {
+            clearTimeout(pressTimer);
+        });
+
+        btn.addEventListener('mouseleave', function() {
+            clearTimeout(pressTimer);
+            longPressTriggered = false;
+        });
     }
-    
-    hiddenClickTimer = setTimeout(function() {
-        hiddenClickCount = 0;
-    }, 500);
-}
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setupButton(document.getElementById('hiddenEditBtn'));
+        setupButton(document.getElementById('hiddenEditBtn2'));
+    });
+
+})();
 </script>
 
 <script>
