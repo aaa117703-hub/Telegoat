@@ -1,7 +1,6 @@
 /* =========================================================
    theme2.css
    التصميم الجديد (Modern) — المباريات + الترتيب
-   يُطبَّق فقط عند إضافة class="theme-2" على <body>
 ========================================================= */
 
 
@@ -12,28 +11,36 @@
 body.theme-2 #captureFixtures{
     background:#f0f2f5;
     border:none;
-    border-radius:16px;
-    padding:16px 8px 0 8px;
+    border-radius:20px;
+    padding:0;
     box-shadow:0 10px 30px rgba(0,0,0,.15);
+    overflow:hidden;
 }
 
 
-/* الترويسة */
+/* الترويسة — شريط بنفسجي */
 body.theme-2 .fixtures-header-box{
-    background:transparent;
+    background:#6b21a8;
     border-radius:0;
-    padding:0;
-    margin-bottom:14px;
+    padding:16px 12px;
+    margin-bottom:0;
     box-shadow:none;
     text-align:center;
 }
 
 body.theme-2 .fixtures-header-title{
-    font-size:22px;
+    font-size:24px;
     font-weight:900;
-    color:#2e0b3d;
+    color:#fff;
     letter-spacing:0;
     text-transform:none;
+}
+
+
+/* صندوق الجدول */
+body.theme-2 #fixturesList{
+    padding:8px 12px 12px 12px;
+    background:#fff;
 }
 
 
@@ -42,98 +49,81 @@ body.theme-2 .fixture-row{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:10px 4px;
+    padding:10px 0;
     margin-bottom:0;
     background:transparent;
     border-radius:0;
     box-shadow:none;
-    border-bottom:1px solid #a8e063;
-    gap:2px;
-    min-height:58px;
-}
-
-body.theme-2 .fixture-row:last-child{
     border-bottom:none;
+    gap:8px;
+    min-height:56px;
 }
 
 
 /* اسم الفريق + الشعار */
 body.theme-2 .team-box{
-    font-size:14px;
+    font-size:15px;
     font-weight:700;
-    color:#2e0b3d;
+    color:#1a1a2e;
     text-transform:none;
     letter-spacing:0;
     gap:6px;
+    flex:1 1 auto;
+    justify-content:center;
 }
 
-/* الفريق المستضيف — الشعار ثم الاسم (الاسم قرب النتيجة) */
 body.theme-2 .team-box.home{
     justify-content:flex-end;
     text-align:right;
-    flex-direction:row-reverse;
-    padding-right:4px;
+    flex-direction:row;
+    padding-right:6px;
 }
 
-/* الفريق الضيف — الاسم ثم الشعار (الاسم قرب النتيجة) */
 body.theme-2 .team-box.away{
     justify-content:flex-start;
     text-align:left;
     flex-direction:row-reverse;
-    padding-left:4px;
+    padding-left:6px;
 }
 
 
 /* الشعار */
 body.theme-2 .logo-24{
-    width:34px;
-    height:34px;
-    min-width:34px;
-    min-height:34px;
-    max-width:34px;
-    max-height:34px;
-    margin:0 4px;
+    width:32px;
+    height:32px;
+    min-width:32px;
+    min-height:32px;
+    max-width:32px;
+    max-height:32px;
+    margin:0;
 }
 
 
 /* صندوق النتيجة */
 body.theme-2 .match-score-center{
-    width:96px;
-    min-width:96px;
-    background:#2e0b3d;
-    padding:10px 6px;
-    border-radius:4px;
-    border:2px solid #fff;
+    width:100px;
+    min-width:100px;
+    background:#6b21a8;
+    padding:8px 6px;
+    border-radius:6px;
+    border:none;
     gap:3px;
     flex-shrink:0;
 }
 
 body.theme-2 .score-display{
     color:#fff;
-    font-size:16px;
+    font-size:17px;
     font-weight:900;
     letter-spacing:0;
 }
 
 body.theme-2 .vs-text{
     color:#fff;
-    font-size:11px;
+    font-size:12px;
     font-weight:900;
-    opacity:.85;
-    margin:0 1px;
-}
-
-
-/* الشريط الأخضر أسفل الجدول — مع شعار PL */
-body.theme-2 #captureFixtures::after{
-    content:'';
-    display:block;
-    height:70px;
-    margin:14px -8px 0 -8px;
-    background:
-        url('./premier-league-logo.png') center center / 44px 44px no-repeat,
-        linear-gradient(90deg, #a8e063 0%, #56ab2f 50%, #00d2ff 100%);
-    border-radius:0 0 16px 16px;
+    opacity:.9;
+    margin:0 2px;
 }
 
 
@@ -144,53 +134,26 @@ body.theme-2 #captureFixtures::after{
 body.theme-2 #captureStandings{
     background:#fff;
     border:none;
-    border-radius:16px;
+    border-radius:20px;
     overflow:hidden;
     box-shadow:0 10px 30px rgba(0,0,0,.15);
     position:relative;
-    padding-left:60px;
+    padding-left:0;
 }
 
 body.theme-2 .standings-content-area{
     background:#fff;
-    padding:8px;
-}
-
-
-/* الشريط الجانبي الأخضر */
-body.theme-2 #captureStandings::before{
-    content:'';
-    position:absolute;
-    top:0;
-    left:0;
-    bottom:0;
-    width:56px;
-    background:linear-gradient(180deg, #a8e063 0%, #56ab2f 50%, #00d2ff 100%);
-    z-index:1;
-}
-
-
-/* شعار PL في أعلى الشريط الجانبي */
-body.theme-2 #captureStandings::after{
-    content:'';
-    position:absolute;
-    top:0;
-    left:0;
-    bottom:0;
-    width:56px;
-    z-index:2;
-    background:
-        url('./premier-league-logo.png') center 20px / 32px 32px no-repeat;
+    padding:10px;
 }
 
 
 /* عناوين الأعمدة */
 body.theme-2 th{
     background:transparent;
-    color:#2e0b3d;
+    color:#1a1a2e;
     padding:10px 4px;
     font-weight:900;
-    border-bottom:1px solid #2e0b3d;
+    border-bottom:2px solid #6b21a8;
     font-size:12px;
     text-transform:uppercase;
     letter-spacing:0.5px;
@@ -200,10 +163,10 @@ body.theme-2 td{
     padding:0 4px;
     font-weight:700;
     background:#fff;
-    border-bottom:1px solid #e5e7eb;
+    border-bottom:1px solid #f0f0f0;
     height:46px;
     max-height:46px;
-    color:#2e0b3d;
+    color:#1a1a2e;
 }
 
 body.theme-2 tr:last-child td{
@@ -211,7 +174,7 @@ body.theme-2 tr:last-child td{
 }
 
 body.theme-2 tr.green-line td{
-    border-bottom:2px solid #2e0b3d !important;
+    border-bottom:2px solid #00c853 !important;
 }
 
 body.theme-2 tr.red-line td{
@@ -223,7 +186,7 @@ body.theme-2 tr.red-line td{
 body.theme-2 .team-cell{
     font-size:14px;
     font-weight:700;
-    color:#2e0b3d;
+    color:#1a1a2e;
     text-transform:none;
     gap:8px;
     padding:0 6px 0 0;
@@ -234,7 +197,7 @@ body.theme-2 .team-cell{
 body.theme-2 .pos-number{
     font-size:15px;
     font-weight:900;
-    color:#2e0b3d;
+    color:#1a1a2e;
     min-width:20px;
 }
 
@@ -243,7 +206,7 @@ body.theme-2 .pos-number{
 body.theme-2 .stat-number{
     font-size:15px;
     font-weight:900;
-    color:#2e0b3d;
+    color:#1a1a2e;
 }
 
 body.theme-2 td:nth-child(3) .stat-number{
@@ -280,39 +243,54 @@ body.theme-2 .pos-indicator-img{
 @media(max-width:480px){
 
     body.theme-2 #captureFixtures{
-        padding:12px 6px 0 6px;
-        border-radius:14px;
+        border-radius:16px;
+    }
+
+    body.theme-2 .fixtures-header-box{
+        padding:14px 10px;
     }
 
     body.theme-2 .fixtures-header-title{
-        font-size:19px;
+        font-size:20px;
+    }
+
+    body.theme-2 #fixturesList{
+        padding:6px 8px 10px 8px;
     }
 
     body.theme-2 .fixture-row{
-        padding:9px 2px;
-        min-height:52px;
+        padding:8px 0;
+        min-height:50px;
+        gap:6px;
     }
 
     body.theme-2 .team-box{
-        font-size:12px;
+        font-size:13px;
         gap:4px;
     }
 
+    body.theme-2 .team-box.home{
+        padding-right:4px;
+    }
+
+    body.theme-2 .team-box.away{
+        padding-left:4px;
+    }
+
     body.theme-2 .logo-24{
-        width:28px;
-        height:28px;
-        min-width:28px;
-        min-height:28px;
-        max-width:28px;
-        max-height:28px;
-        margin:0 3px;
+        width:26px;
+        height:26px;
+        min-width:26px;
+        min-height:26px;
+        max-width:26px;
+        max-height:26px;
     }
 
     body.theme-2 .match-score-center{
-        width:86px;
-        min-width:86px;
-        padding:8px 5px;
-        border:2px solid #fff;
+        width:80px;
+        min-width:80px;
+        padding:7px 4px;
+        border-radius:5px;
     }
 
     body.theme-2 .score-display{
@@ -321,28 +299,22 @@ body.theme-2 .pos-indicator-img{
 
     body.theme-2 .vs-text{
         font-size:10px;
+        margin:0 1px;
     }
 
-    body.theme-2 #captureFixtures::after{
-        height:56px;
-        margin:12px -6px 0 -6px;
-        background:
-            url('./premier-league-logo.png') center center / 34px 34px no-repeat,
-            linear-gradient(90deg, #a8e063 0%, #56ab2f 50%, #00d2ff 100%);
+    body.theme-2 .standings-content-area{
+        padding:8px;
     }
 
-    body.theme-2 #captureStandings{
-        padding-left:46px;
+    body.theme-2 th{
+        font-size:11px;
+        padding:8px 2px;
     }
 
-    body.theme-2 #captureStandings::before,
-    body.theme-2 #captureStandings::after{
-        width:42px;
-    }
-
-    body.theme-2 #captureStandings::after{
-        background:
-            url('./premier-league-logo.png') center 16px / 26px 26px no-repeat;
+    body.theme-2 td{
+        height:40px;
+        max-height:40px;
+        padding:0 2px;
     }
 
     body.theme-2 .team-cell{
@@ -364,8 +336,12 @@ body.theme-2 .pos-indicator-img{
         font-size:13px;
     }
 
-    body.theme-2 td{
-        height:40px;
-        max-height:40px;
+    body.theme-2 .pos-indicator-img{
+        width:18px;
+        height:18px;
+        min-width:18px;
+        min-height:18px;
+        max-width:18px;
+        max-height:18px;
     }
 }
