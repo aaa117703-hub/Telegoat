@@ -171,7 +171,7 @@ function renderFixtures() {
         }
 
         if (fixturesTitle) {
-            fixturesTitle.innerText = 'MATCHWEEK ' + currentRound + ' RESULTS';
+            fixturesTitle.innerText = 'MATCHWEEK ' + currentRound;
         }
 
         list.innerHTML = '';
@@ -193,7 +193,7 @@ function renderFixtures() {
             if (editMode) {
                 scoreContent =
                     '<input type="number" class="score-input" id="home_r' + currentRound + '_m' + idx + '" value="' + homeScoreStr + '" placeholder="0" oninput="updateScore(' + currentRound + ',' + idx + ',\'home\',this.value)">' +
-                    '<span style="font-weight:900;color:#fff;font-size:12px;">:</span>' +
+                    '<span class="vs-text">-</span>' +
                     '<input type="number" class="score-input" id="away_r' + currentRound + '_m' + idx + '" value="' + awayScoreStr + '" placeholder="0" oninput="updateScore(' + currentRound + ',' + idx + ',\'away\',this.value)">';
             } else {
                 const hDisplay = homeScoreStr !== '' ? homeScoreStr : '-';
@@ -201,7 +201,7 @@ function renderFixtures() {
 
                 scoreContent =
                     '<span class="score-display">' + hDisplay + '</span>' +
-                    '<span class="vs-text">VS</span>' +
+                    '<span class="vs-text">-</span>' +
                     '<span class="score-display">' + aDisplay + '</span>';
             }
 
