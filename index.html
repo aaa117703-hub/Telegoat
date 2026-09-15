@@ -45,7 +45,7 @@ body{
     width:100%;
     max-width:768px;
     margin:0 auto;
-    padding:0 0 20px;
+    padding:0 0 90px;
     overflow-x:hidden;
 }
 
@@ -89,9 +89,86 @@ body{
     cursor:pointer;
 }
 
+/* ============================================
+   DOWNLOAD BUTTON - الزر الصغير الدائري
+============================================ */
+
+#downloadFab{
+    position:fixed;
+    bottom:24px;
+    right:24px;
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    background:linear-gradient(135deg, #00e676 0%, #00c853 60%, #009b40 100%);
+    border:2px solid #fff;
+    box-shadow:
+        0 4px 12px rgba(0,200,83,.5),
+        0 0 20px rgba(0,255,135,.3);
+    cursor:pointer;
+    z-index:9998;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:all .3s ease;
+    padding:0;
+    outline:none;
+}
+
+#downloadFab:hover{
+    transform:scale(1.08) translateY(-2px);
+    box-shadow:
+        0 6px 18px rgba(0,200,83,.7),
+        0 0 30px rgba(0,255,135,.5);
+}
+
+#downloadFab:active{
+    transform:scale(.94);
+    box-shadow:
+        0 2px 6px rgba(0,200,83,.5),
+        0 0 12px rgba(0,255,135,.3);
+}
+
+#downloadFab svg{
+    width:24px;
+    height:24px;
+    display:block;
+    stroke:#fff;
+    stroke-width:2.5;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    fill:none;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.3));
+}
+
+#downloadFab svg path,
+#downloadFab svg line,
+#downloadFab svg polyline{
+    stroke:#fff;
+}
+
+/* عند التحميل */
+#downloadFab.loading{
+    pointer-events:none;
+    opacity:.7;
+}
+
+#downloadFab.loading svg{
+    animation:rotateFab 1s linear infinite;
+}
+
+@keyframes rotateFab{
+    0%{transform:rotate(0);}
+    100%{transform:rotate(360deg);}
+}
+
+/* ============================================
+   TOAST
+============================================ */
+
 #toast{
     position:fixed;
-    bottom:30px;
+    bottom:100px;
     left:50%;
     transform:translateX(-50%);
     background:#1e0d33;
@@ -133,6 +210,10 @@ body{
     0%{transform:rotate(0)}
     100%{transform:rotate(360deg)}
 }
+
+/* ============================================
+   SHARE MODAL
+============================================ */
 
 #shareModal{
     display:none;
@@ -230,6 +311,10 @@ body{
 
 .share-close:hover{transform:scale(1.05);}
 
+/* ============================================
+   LOCKED OVERLAY
+============================================ */
+
 .locked-overlay{
     position:absolute;
     top:0;
@@ -256,6 +341,10 @@ body{
     align-items:center;
     gap:10px;
 }
+
+/* ============================================
+   CAROUSEL
+============================================ */
 
 .carousel-wrapper{
     width:100%;
@@ -334,6 +423,10 @@ body{
     box-shadow:0 0 8px rgba(0,255,135,.45);
 }
 
+/* ============================================
+   ROUND SELECT
+============================================ */
+
 .round-selector-row{
     display:flex;
     justify-content:center;
@@ -372,6 +465,10 @@ body{
     background:#2d0a3d;
     color:#fff;
 }
+
+/* ============================================
+   HEADER
+============================================ */
 
 .header{
     background:transparent;
@@ -433,6 +530,10 @@ body{
 .nav-arrow-btn:active{
     transform:scale(.95);
 }
+
+/* ============================================
+   MAIN
+============================================ */
 
 .main-container{
     width:100%;
@@ -517,6 +618,10 @@ body{
     cursor:not-allowed;
     transform:none;
 }
+
+/* ============================================
+   FIXTURES
+============================================ */
 
 #captureFixtures{
     padding:0;
@@ -744,6 +849,10 @@ body{
     opacity:.9;
 }
 
+/* ============================================
+   STANDINGS
+============================================ */
+
 #captureStandings{
     background:#fff;
     border-radius:16px;
@@ -923,80 +1032,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 .col-pts{width:14%}
 .col-form{width:21%}
 
-/* ============================================
-   DOWNLOAD BUTTON - زر التحميل
-============================================ */
-
-#downloadBtn{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:12px;
-    width:100%;
-    padding:16px 24px;
-    margin:14px 0 0 0;
-    background:linear-gradient(135deg, #6b21a8 0%, #38003c 50%, #1f5dbf 100%);
-    border:3px solid #00ff87;
-    border-radius:16px;
-    color:#fff;
-    font-size:16px;
-    font-weight:900;
-    letter-spacing:1px;
-    cursor:pointer;
-    box-shadow:
-        0 4px 0 #0d2e5c,
-        0 8px 25px rgba(0,255,135,.4),
-        inset 0 1px 0 rgba(255,255,255,.2);
-    transition:all .25s ease;
-    position:relative;
-    overflow:hidden;
-    font-family:var(--font-en);
-}
-
-#downloadBtn::before{
-    content:'';
-    position:absolute;
-    top:0;
-    left:-100%;
-    width:100%;
-    height:100%;
-    background:linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
-    transition:left .6s ease;
-}
-
-#downloadBtn:hover::before{
-    left:100%;
-}
-
-#downloadBtn:hover{
-    transform:translateY(-3px);
-    box-shadow:
-        0 7px 0 #0d2e5c,
-        0 12px 35px rgba(0,255,135,.7),
-        inset 0 1px 0 rgba(255,255,255,.3);
-    border-color:#00ffaa;
-}
-
-#downloadBtn:active{
-    transform:translateY(0);
-    box-shadow:
-        0 2px 0 #0d2e5c,
-        0 4px 15px rgba(0,255,135,.5),
-        inset 0 1px 0 rgba(255,255,255,.2);
-}
-
-#downloadBtn .btn-icon{
-    font-size:22px;
-    filter:drop-shadow(0 2px 3px rgba(0,0,0,.4));
-}
-
-#downloadBtn .btn-text{
-    font-size:15px;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-    text-shadow:0 2px 4px rgba(0,0,0,.5);
-}
-
 .tab-content{display:none}
 .tab-content.active{display:block}
 </style>
@@ -1011,6 +1046,15 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     <button class="err-close" onclick="document.getElementById('errorBox').classList.remove('show')">✕</button>
     <div id="errorContent"></div>
 </div>
+
+<!-- زر التحميل الدائري الصغير -->
+<button id="downloadFab" onclick="downloadAsImage()" title="Download">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 3v12"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="5" y1="21" x2="19" y2="21"/>
+    </svg>
+</button>
 
 <div id="toast">
     <span id="toastContent">Saving...</span>
@@ -1062,11 +1106,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
             </div>
             <div id="fixturesList"></div>
         </div>
-
-        <button id="downloadBtn" onclick="downloadAsImage()">
-            <span class="btn-icon">📥</span>
-            <span class="btn-text">حفظ الجدول كصورة</span>
-        </button>
     </div>
 
     <div id="standingsTab" class="tab-content">
@@ -1095,11 +1134,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
                 </div>
             </div>
         </div>
-
-        <button id="downloadBtn2" onclick="downloadAsImage()">
-            <span class="btn-icon">📥</span>
-            <span class="btn-text">حفظ الترتيب كصورة</span>
-        </button>
     </div>
 
 </div>
