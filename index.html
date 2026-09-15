@@ -45,7 +45,7 @@ body{
     width:100%;
     max-width:768px;
     margin:0 auto;
-    padding:0 0 20px;
+    padding:0 0 80px;
     overflow-x:hidden;
 }
 
@@ -89,9 +89,104 @@ body{
     cursor:pointer;
 }
 
+/* ============================================
+   FLOATING DOWNLOAD BUTTON - الزر العائم
+============================================ */
+
+#downloadFab{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:64px;
+    height:64px;
+    border-radius:50%;
+    background:linear-gradient(135deg, #00e676 0%, #00c853 50%, #009b40 100%);
+    border:3px solid #fff;
+    box-shadow:
+        0 4px 0 #006b2c,
+        0 8px 25px rgba(0,200,83,.6),
+        0 0 30px rgba(0,255,135,.4),
+        inset 0 1px 0 rgba(255,255,255,.4);
+    cursor:pointer;
+    z-index:9998;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:all .3s ease;
+    color:#fff;
+    font-size:28px;
+    padding:0;
+    animation:fabPulse 2.5s ease-in-out infinite;
+}
+
+#downloadFab:hover{
+    transform:scale(1.1) translateY(-3px);
+    box-shadow:
+        0 6px 0 #006b2c,
+        0 12px 35px rgba(0,200,83,.8),
+        0 0 40px rgba(0,255,135,.7),
+        inset 0 1px 0 rgba(255,255,255,.5);
+    animation:none;
+}
+
+#downloadFab:active{
+    transform:scale(.95) translateY(0);
+    box-shadow:
+        0 2px 0 #006b2c,
+        0 4px 15px rgba(0,200,83,.6),
+        inset 0 1px 0 rgba(255,255,255,.3);
+}
+
+#downloadFab .fab-icon{
+    display:block;
+    line-height:1;
+    font-size:30px;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.3));
+}
+
+#downloadFab .fab-label{
+    display:none;
+}
+
+@keyframes fabPulse{
+    0%, 100%{
+        box-shadow:
+            0 4px 0 #006b2c,
+            0 8px 25px rgba(0,200,83,.6),
+            0 0 30px rgba(0,255,135,.4),
+            inset 0 1px 0 rgba(255,255,255,.4);
+    }
+    50%{
+        box-shadow:
+            0 4px 0 #006b2c,
+            0 8px 25px rgba(0,200,83,.7),
+            0 0 50px rgba(0,255,135,.8),
+            inset 0 1px 0 rgba(255,255,255,.4);
+    }
+}
+
+/* عند التحميل */
+#downloadFab.loading{
+    pointer-events:none;
+    opacity:.7;
+}
+
+#downloadFab.loading .fab-icon{
+    animation:rotateFab 1s linear infinite;
+}
+
+@keyframes rotateFab{
+    0%{transform:rotate(0);}
+    100%{transform:rotate(360deg);}
+}
+
+/* ============================================
+   TOAST
+============================================ */
+
 #toast{
     position:fixed;
-    bottom:30px;
+    bottom:100px;
     left:50%;
     transform:translateX(-50%);
     background:#1e0d33;
@@ -133,6 +228,10 @@ body{
     0%{transform:rotate(0)}
     100%{transform:rotate(360deg)}
 }
+
+/* ============================================
+   SHARE MODAL
+============================================ */
 
 #shareModal{
     display:none;
@@ -230,6 +329,10 @@ body{
 
 .share-close:hover{transform:scale(1.05);}
 
+/* ============================================
+   LOCKED OVERLAY
+============================================ */
+
 .locked-overlay{
     position:absolute;
     top:0;
@@ -256,6 +359,10 @@ body{
     align-items:center;
     gap:10px;
 }
+
+/* ============================================
+   CAROUSEL
+============================================ */
 
 .carousel-wrapper{
     width:100%;
@@ -334,6 +441,10 @@ body{
     box-shadow:0 0 8px rgba(0,255,135,.45);
 }
 
+/* ============================================
+   ROUND SELECT
+============================================ */
+
 .round-selector-row{
     display:flex;
     justify-content:center;
@@ -372,6 +483,10 @@ body{
     background:#2d0a3d;
     color:#fff;
 }
+
+/* ============================================
+   HEADER
+============================================ */
 
 .header{
     background:transparent;
@@ -433,6 +548,10 @@ body{
 .nav-arrow-btn:active{
     transform:scale(.95);
 }
+
+/* ============================================
+   MAIN
+============================================ */
 
 .main-container{
     width:100%;
@@ -517,6 +636,10 @@ body{
     cursor:not-allowed;
     transform:none;
 }
+
+/* ============================================
+   FIXTURES
+============================================ */
 
 #captureFixtures{
     padding:0;
@@ -744,6 +867,10 @@ body{
     opacity:.9;
 }
 
+/* ============================================
+   STANDINGS
+============================================ */
+
 #captureStandings{
     background:#fff;
     border-radius:16px;
@@ -938,6 +1065,11 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     <div id="errorContent"></div>
 </div>
 
+<!-- الزر العائم للتحميل -->
+<button id="downloadFab" onclick="downloadAsImage()" title="Download Image">
+    <span class="fab-icon">📥</span>
+</button>
+
 <div id="toast">
     <span id="toastContent">Saving...</span>
 </div>
@@ -1057,8 +1189,8 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script src="fixtures.js"></script>
 <script src="standings.js"></script>
 <script src="download.js"></script>
-<script src="main.js"></script>
 <script src="share.js"></script>
+<script src="main.js"></script>
 
 </body>
 </html>
