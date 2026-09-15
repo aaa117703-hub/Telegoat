@@ -5,7 +5,7 @@
 
 
 /* =========================================================
-   FIXTURES - تصميم المباريات الجديد
+   FIXTURES
 ========================================================= */
 
 body.theme-2 #captureFixtures{
@@ -55,7 +55,7 @@ body.theme-2 .fixture-row{
     border-radius:0;
     box-shadow:none;
     border-bottom:none;
-    gap:8px;
+    gap:6px;
     min-height:56px;
 }
 
@@ -68,22 +68,24 @@ body.theme-2 .team-box{
     text-transform:none;
     letter-spacing:0;
     gap:6px;
-    flex:1 1 auto;
-    justify-content:center;
+    flex:0 1 auto;
+    min-width:0;
 }
 
+/* الفريق المستضيف — الشعار بعد الاسم */
 body.theme-2 .team-box.home{
     justify-content:flex-end;
     text-align:right;
     flex-direction:row;
-    padding-right:6px;
+    padding-right:4px;
 }
 
+/* الفريق الضيف — الاسم بعد الشعار (الشعار أولاً، الاسم بجانبه) */
 body.theme-2 .team-box.away{
     justify-content:flex-start;
     text-align:left;
-    flex-direction:row-reverse;
-    padding-left:6px;
+    flex-direction:row;
+    padding-left:4px;
 }
 
 
@@ -128,7 +130,7 @@ body.theme-2 .vs-text{
 
 
 /* =========================================================
-   STANDINGS - تصميم الترتيب الجديد
+   STANDINGS
 ========================================================= */
 
 body.theme-2 #captureStandings{
@@ -255,26 +257,26 @@ body.theme-2 .pos-indicator-img{
     }
 
     body.theme-2 #fixturesList{
-        padding:6px 8px 10px 8px;
+        padding:6px 10px 10px 10px;
     }
 
     body.theme-2 .fixture-row{
         padding:8px 0;
         min-height:50px;
-        gap:6px;
+        gap:5px;
     }
 
     body.theme-2 .team-box{
         font-size:13px;
-        gap:4px;
+        gap:5px;
     }
 
     body.theme-2 .team-box.home{
-        padding-right:4px;
+        padding-right:3px;
     }
 
     body.theme-2 .team-box.away{
-        padding-left:4px;
+        padding-left:3px;
     }
 
     body.theme-2 .logo-24{
@@ -287,9 +289,9 @@ body.theme-2 .pos-indicator-img{
     }
 
     body.theme-2 .match-score-center{
-        width:80px;
-        min-width:80px;
-        padding:7px 4px;
+        width:86px;
+        min-width:86px;
+        padding:7px 5px;
         border-radius:5px;
     }
 
