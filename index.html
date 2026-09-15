@@ -346,54 +346,109 @@ body{
     padding:0 6px;
 }
 
+/* ============================================
+   EDIT PANEL - الأزرار الاحترافية الجديدة
+============================================ */
+
 .edit-panel{
     display:flex;
-    gap:8px;
-    margin-bottom:10px;
-    padding:8px;
-    background:rgba(255,255,255,.12);
-    border-radius:12px;
+    gap:10px;
+    margin-bottom:12px;
+    padding:12px;
+    background:rgba(255,255,255,.08);
+    border-radius:16px;
     justify-content:center;
     flex-wrap:wrap;
+    border:2px solid rgba(255,255,255,.1);
+    box-shadow:0 4px 20px rgba(0,0,0,.3);
 }
 
 .edit-action-btn{
     font-weight:900;
     font-size:14px;
-    padding:10px 16px;
-    border-radius:8px;
+    padding:14px 18px;
+    border-radius:12px;
     border:none;
     cursor:pointer;
     flex:1 1 auto;
-    min-width:100px;
-    transition:.2s;
+    min-width:110px;
+    transition:all .25s ease;
     color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    position:relative;
+    overflow:hidden;
+    letter-spacing:.5px;
+    text-shadow:0 1px 2px rgba(0,0,0,.3);
 }
 
+.edit-action-btn:active{
+    transform:scale(.96);
+}
+
+/* زر Save - أخضر متدرج */
 .save-round-btn{
-    background:#00c853;
-    box-shadow:0 3px 0 #009b40;
+    background:linear-gradient(135deg, #00e676 0%, #00c853 50%, #009b40 100%);
+    box-shadow:
+        0 4px 0 #006b2c,
+        0 6px 15px rgba(0,200,83,.4),
+        inset 0 1px 0 rgba(255,255,255,.3);
 }
-.save-round-btn:hover{background:#00b34a}
 
+.save-round-btn:hover{
+    background:linear-gradient(135deg, #00f57d 0%, #00d95a 50%, #00a848 100%);
+    box-shadow:
+        0 4px 0 #006b2c,
+        0 8px 20px rgba(0,200,83,.6),
+        inset 0 1px 0 rgba(255,255,255,.4);
+}
+
+/* زر Clear - أحمر متدرج */
 .clear-round-btn{
-    background:#ff005a;
-    box-shadow:0 3px 0 #b8003f;
+    background:linear-gradient(135deg, #ff4081 0%, #ff005a 50%, #b8003f 100%);
+    box-shadow:
+        0 4px 0 #800028,
+        0 6px 15px rgba(255,0,90,.4),
+        inset 0 1px 0 rgba(255,255,255,.3);
 }
-.clear-round-btn:hover{background:#e6004f}
 
-.download-action-btn{
-    background:#3281ff;
-    box-shadow:0 3px 0 #1f5dbf;
+.clear-round-btn:hover{
+    background:linear-gradient(135deg, #ff558f 0%, #ff1a6b 50%, #c70046 100%);
+    box-shadow:
+        0 4px 0 #800028,
+        0 8px 20px rgba(255,0,90,.6),
+        inset 0 1px 0 rgba(255,255,255,.4);
 }
-.download-action-btn:hover{background:#2871e6}
+
+/* زر Download - أزرق متدرج */
+.download-action-btn{
+    background:linear-gradient(135deg, #448aff 0%, #3281ff 50%, #1f5dbf 100%);
+    box-shadow:
+        0 4px 0 #103c7a,
+        0 6px 15px rgba(50,129,255,.4),
+        inset 0 1px 0 rgba(255,255,255,.3);
+}
+
+.download-action-btn:hover{
+    background:linear-gradient(135deg, #5c9bff 0%, #3d8dff 50%, #296bc9 100%);
+    box-shadow:
+        0 4px 0 #103c7a,
+        0 8px 20px rgba(50,129,255,.6),
+        inset 0 1px 0 rgba(255,255,255,.4);
+}
 
 .edit-action-btn:disabled{
     opacity:.5;
     cursor:not-allowed;
+    transform:none;
 }
 
-/* FIXTURES */
+/* ============================================
+   FIXTURES
+============================================ */
+
 #captureFixtures{
     padding:12px 10px;
     background:
