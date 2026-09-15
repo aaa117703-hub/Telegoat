@@ -80,8 +80,8 @@ function calculateStandingsUpToRound(targetRound) {
 }
 
 
-function calculateStandings {
-()    return calculateStandingsUpToRound(currentRound);
+function calculateStandings() {
+    return calculateStandingsUpToRound(currentRound);
 }
 
 
@@ -91,7 +91,6 @@ function renderForm(formArray) {
         return '<span style="color:#ccc;">-</span>';
     }
 
-    /* آخر 5 مباريات */
     const last5 = formArray.slice(-5);
 
     let html = '<div class="form-cell">';
