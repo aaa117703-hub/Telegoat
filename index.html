@@ -26,6 +26,20 @@
     --text-white:#fff;
     --border-dark:#5a055a;
     --font-en:'EnglishCustom',sans-serif;
+    
+    /* متغيرات الوضع الليلي/النهاري */
+    --bg-color:#240024;
+    --text-color:#fff;
+    --card-bg:#fff;
+    --card-text:#1a1a2e;
+}
+
+/* الوضع النهاري */
+body.light-mode{
+    --bg-color:#f0f2f5;
+    --text-color:#1a1a2e;
+    --card-bg:#fff;
+    --card-text:#1a1a2e;
 }
 
 *{
@@ -36,17 +50,19 @@
 }
 
 html{
-    background:#240024;
+    background:var(--bg-color);
+    transition:background .3s ease;
 }
 
 body{
-    background:#240024;
-    color:#fff;
+    background:var(--bg-color);
+    color:var(--text-color);
     width:100%;
     max-width:768px;
     margin:0 auto;
     padding:0 0 20px;
     overflow-x:hidden;
+    transition:background .3s ease, color .3s ease;
 }
 
 /* ERROR */
@@ -88,6 +104,42 @@ body{
     font-weight:900;
     font-size:16px;
     cursor:pointer;
+}
+
+/* THEME TOGGLE BUTTON */
+#themeToggle{
+    position:fixed;
+    top:16px;
+    right:16px;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:linear-gradient(135deg, #6b21a8 0%, #38003c 100%);
+    color:#fff;
+    border:2px solid #00ff87;
+    box-shadow:0 0 15px rgba(0,255,135,.5);
+    cursor:pointer;
+    font-size:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+    transition:all .3s ease;
+}
+
+#themeToggle:hover{
+    transform:scale(1.1) rotate(15deg);
+    box-shadow:0 0 25px rgba(0,255,135,.8);
+}
+
+#themeToggle:active{
+    transform:scale(.95);
+}
+
+body.light-mode #themeToggle{
+    background:linear-gradient(135deg, #ffb700 0%, #ff8c00 100%);
+    border-color:#ffb700;
+    box-shadow:0 0 15px rgba(255,183,0,.5);
 }
 
 /* TOAST */
@@ -136,6 +188,103 @@ body{
     100%{transform:rotate(360deg)}
 }
 
+/* SHARE MODAL */
+#shareModal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:rgba(0,0,0,.75);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    opacity:0;
+    transition:opacity .3s ease;
+}
+
+#shareModal.show{
+    display:flex;
+    opacity:1;
+}
+
+.share-box{
+    background:linear-gradient(135deg, #2e0b3d 0%, #38003c 100%);
+    border:3px solid #00ff87;
+    border-radius:20px;
+    padding:24px 20px;
+    max-width:400px;
+    width:100%;
+    text-align:center;
+    box-shadow:0 0 40px rgba(0,255,135,.5);
+    animation:popIn .3s ease;
+}
+
+@keyframes popIn{
+    0%{transform:scale(.8); opacity:0;}
+    100%{transform:scale(1); opacity:1;}
+}
+
+.share-title{
+    font-size:20px;
+    font-weight:900;
+    color:#fff;
+    margin-bottom:16px;
+    letter-spacing:1px;
+}
+
+.share-score{
+    font-size:28px;
+    font-weight:900;
+    color:#00ff87;
+    margin-bottom:8px;
+    letter-spacing:2px;
+}
+
+.share-teams{
+    font-size:15px;
+    color:#fff;
+    margin-bottom:20px;
+    font-weight:700;
+}
+
+.share-btn{
+    display:inline-block;
+    padding:12px 20px;
+    border-radius:10px;
+    border:none;
+    font-weight:900;
+    font-size:14px;
+    cursor:pointer;
+    color:#fff;
+    margin:4px;
+    transition:all .2s ease;
+    min-width:110px;
+}
+
+.share-copy{
+    background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
+    box-shadow:0 3px 0 #103c7a;
+}
+
+.share-copy:hover{transform:scale(1.05);}
+
+.share-twitter{
+    background:linear-gradient(135deg, #1da1f2 0%, #0d8ecf 100%);
+    box-shadow:0 3px 0 #0a6a99;
+}
+
+.share-twitter:hover{transform:scale(1.05);}
+
+.share-close{
+    background:linear-gradient(135deg, #ff4081 0%, #b8003f 100%);
+    box-shadow:0 3px 0 #800028;
+}
+
+.share-close:hover{transform:scale(1.05);}
+
 /* LOCKED OVERLAY */
 .locked-overlay{
     position:absolute;
@@ -181,6 +330,7 @@ body{
     box-shadow:0 0 15px rgba(0,255,135,.6);
     touch-action:pan-y;
     cursor:pointer;
+    transition:box-shadow .3s ease;
 }
 
 .carousel-track{
@@ -212,8 +362,7 @@ body{
 }
 
 .carousel:hover{
-    box-shadow:0 0 22px rgba(0,255,135,.8);
-    transition:box-shadow .25s ease;
+    box-shadow:0 0 25px rgba(0,255,135,.9);
 }
 
 .carousel-dots{
@@ -268,6 +417,13 @@ body{
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='white' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
     background-repeat:no-repeat;
     background-position:right 12px center;
+    transition:all .2s ease;
+}
+
+body.light-mode .round-select-pill{
+    background:rgba(0,0,0,.05);
+    color:#1a1a2e;
+    border-color:rgba(0,0,0,.15);
 }
 
 .round-select-pill:hover,
@@ -284,7 +440,7 @@ body{
 /* HEADER */
 .header{
     background:transparent;
-    color:#fff;
+    color:var(--text-color);
     padding:4px 0;
     text-align:center;
 }
@@ -301,7 +457,7 @@ body{
     font-size:20px;
     font-weight:900;
     letter-spacing:1px;
-    color:#fff;
+    color:var(--text-color);
     cursor:pointer;
     user-select:none;
     text-align:center;
@@ -314,6 +470,11 @@ body{
 .round-indicator:hover{
     border-color:rgba(255,255,255,.2);
     background:rgba(255,255,255,.05);
+}
+
+body.light-mode .round-indicator:hover{
+    border-color:rgba(0,0,0,.2);
+    background:rgba(0,0,0,.05);
 }
 
 .nav-arrow-btn{
@@ -329,13 +490,18 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    transition:.2s;
+    transition:all .2s ease;
     flex-shrink:0;
 }
 
 .nav-arrow-btn:hover{
     background:#ff005a;
     border-color:#ff005a;
+    transform:scale(1.1);
+}
+
+.nav-arrow-btn:active{
+    transform:scale(.95);
 }
 
 /* MAIN */
@@ -358,6 +524,11 @@ body{
     flex-wrap:wrap;
     border:2px solid rgba(255,255,255,.1);
     box-shadow:0 4px 20px rgba(0,0,0,.3);
+}
+
+body.light-mode .edit-panel{
+    background:rgba(0,0,0,.05);
+    border-color:rgba(0,0,0,.1);
 }
 
 .edit-action-btn{
@@ -387,50 +558,35 @@ body{
 
 .save-round-btn{
     background:linear-gradient(135deg, #00e676 0%, #00c853 50%, #009b40 100%);
-    box-shadow:
-        0 4px 0 #006b2c,
-        0 6px 15px rgba(0,200,83,.4),
-        inset 0 1px 0 rgba(255,255,255,.3);
+    box-shadow:0 4px 0 #006b2c, 0 6px 15px rgba(0,200,83,.4), inset 0 1px 0 rgba(255,255,255,.3);
 }
 
 .save-round-btn:hover{
     background:linear-gradient(135deg, #00f57d 0%, #00d95a 50%, #00a848 100%);
-    box-shadow:
-        0 4px 0 #006b2c,
-        0 8px 20px rgba(0,200,83,.6),
-        inset 0 1px 0 rgba(255,255,255,.4);
+    box-shadow:0 4px 0 #006b2c, 0 8px 20px rgba(0,200,83,.6), inset 0 1px 0 rgba(255,255,255,.4);
+    transform:translateY(-2px);
 }
 
 .clear-round-btn{
     background:linear-gradient(135deg, #ff4081 0%, #ff005a 50%, #b8003f 100%);
-    box-shadow:
-        0 4px 0 #800028,
-        0 6px 15px rgba(255,0,90,.4),
-        inset 0 1px 0 rgba(255,255,255,.3);
+    box-shadow:0 4px 0 #800028, 0 6px 15px rgba(255,0,90,.4), inset 0 1px 0 rgba(255,255,255,.3);
 }
 
 .clear-round-btn:hover{
     background:linear-gradient(135deg, #ff558f 0%, #ff1a6b 50%, #c70046 100%);
-    box-shadow:
-        0 4px 0 #800028,
-        0 8px 20px rgba(255,0,90,.6),
-        inset 0 1px 0 rgba(255,255,255,.4);
+    box-shadow:0 4px 0 #800028, 0 8px 20px rgba(255,0,90,.6), inset 0 1px 0 rgba(255,255,255,.4);
+    transform:translateY(-2px);
 }
 
 .download-action-btn{
     background:linear-gradient(135deg, #448aff 0%, #3281ff 50%, #1f5dbf 100%);
-    box-shadow:
-        0 4px 0 #103c7a,
-        0 6px 15px rgba(50,129,255,.4),
-        inset 0 1px 0 rgba(255,255,255,.3);
+    box-shadow:0 4px 0 #103c7a, 0 6px 15px rgba(50,129,255,.4), inset 0 1px 0 rgba(255,255,255,.3);
 }
 
 .download-action-btn:hover{
     background:linear-gradient(135deg, #5c9bff 0%, #3d8dff 50%, #296bc9 100%);
-    box-shadow:
-        0 4px 0 #103c7a,
-        0 8px 20px rgba(50,129,255,.6),
-        inset 0 1px 0 rgba(255,255,255,.4);
+    box-shadow:0 4px 0 #103c7a, 0 8px 20px rgba(50,129,255,.6), inset 0 1px 0 rgba(255,255,255,.4);
+    transform:translateY(-2px);
 }
 
 .edit-action-btn:disabled{
@@ -440,17 +596,12 @@ body{
 }
 
 /* ============================================
-   FIXTURES — التصميم الجديد
+   FIXTURES
 ============================================ */
 
 #captureFixtures{
     padding:0;
-    background:linear-gradient(
-        135deg,
-        #3281ff 0%,
-        #00d2ff 45%,
-        #a835ff 100%
-    );
+    background:linear-gradient(135deg, #3281ff 0%, #00d2ff 45%, #a835ff 100%);
     border-radius:16px;
     box-shadow:0 10px 30px rgba(0,0,0,.3);
     border:3px solid #fff;
@@ -479,6 +630,7 @@ body{
     padding:10px 12px;
 }
 
+/* صف المباراة */
 .fixture-row{
     display:flex;
     align-items:center;
@@ -492,10 +644,37 @@ body{
     flex-wrap:nowrap;
     gap:6px;
     min-height:54px;
+    transition:all .25s ease;
+    cursor:pointer;
 }
 
 .fixture-row:last-child{
     border-bottom:none;
+}
+
+.fixture-row:hover{
+    background:linear-gradient(90deg, rgba(113,56,245,.05) 0%, rgba(0,255,135,.05) 100%);
+    padding-left:6px;
+    padding-right:6px;
+    border-radius:8px;
+}
+
+/* المباراة البارزة */
+.fixture-row.featured-row{
+    background:linear-gradient(90deg, rgba(255,183,0,.15) 0%, rgba(255,215,0,.08) 50%, rgba(255,183,0,.15) 100%);
+    border-left:4px solid #ffb700;
+    padding-left:8px;
+    border-radius:8px;
+    position:relative;
+}
+
+.fixture-row.featured-row::before{
+    content:'⭐';
+    position:absolute;
+    top:-8px;
+    right:8px;
+    font-size:16px;
+    filter:drop-shadow(0 0 5px rgba(255,183,0,.8));
 }
 
 .team-box{
@@ -568,6 +747,7 @@ body{
     overflow:hidden;
     vertical-align:middle;
     margin:0 6px;
+    transition:transform .25s ease;
 }
 
 .logo-24 img{
@@ -581,6 +761,10 @@ body{
     height:auto;
     object-fit:contain;
     display:block;
+}
+
+.fixture-row:hover .logo-24{
+    transform:scale(1.15);
 }
 
 .match-score-center{
@@ -598,6 +782,12 @@ body{
     box-shadow:0 3px 8px rgba(56,0,60,.3);
     position:relative;
     flex-shrink:0;
+    transition:transform .25s ease;
+}
+
+.fixture-row:hover .match-score-center{
+    transform:scale(1.05);
+    box-shadow:0 5px 15px rgba(56,0,60,.5);
 }
 
 .score-display,
@@ -638,7 +828,7 @@ body{
 }
 
 /* ============================================
-   STANDINGS — التصميم الجديد
+   STANDINGS
 ============================================ */
 
 #captureStandings{
@@ -648,12 +838,38 @@ body{
     box-shadow:0 10px 30px rgba(0,0,0,.3);
     border:3px solid #fff;
     width:100%;
+    position:relative;
+}
+
+/* الشريط الجانبي الأخضر */
+#captureStandings::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    width:48px;
+    background:linear-gradient(180deg, #a8e063 0%, #56ab2f 50%, #00d2ff 100%);
+    z-index:1;
+}
+
+#captureStandings::after{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    width:48px;
+    z-index:2;
+    background:url('./premier-league-logo.png') center 16px / 30px 30px no-repeat;
 }
 
 .standings-content-area{
     background:#fff;
     width:100%;
-    padding:10px;
+    padding:10px 10px 10px 58px;
+    position:relative;
+    z-index:3;
 }
 
 .standings-card{
@@ -694,9 +910,14 @@ td{
     height:44px;
     max-height:44px;
     overflow:hidden;
+    transition:background .2s ease;
 }
 
 tr:last-child td{border-bottom:none}
+
+tr:hover td{
+    background:rgba(113,56,245,.05);
+}
 
 tr.pos-1 td{
     background:linear-gradient(90deg, #d4f5dd 0%, #ffffff 100%);
@@ -805,28 +1026,45 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     <div id="errorContent"></div>
 </div>
 
+<!-- زر تبديل الوضع -->
+<button id="themeToggle" onclick="toggleLightMode()">☀️</button>
+
 <div id="toast">
     <span id="toastContent">Saving...</span>
+</div>
+
+<!-- نافذة المشاركة -->
+<div id="shareModal" onclick="closeShareModal(event)">
+    <div class="share-box" onclick="event.stopPropagation()">
+        <div class="share-title">📤 Share Result</div>
+        <div class="share-score" id="shareScore">-</div>
+        <div class="share-teams" id="shareTeams">-</div>
+        <button class="share-btn share-copy" onclick="copyShareText()">📋 Copy</button>
+        <button class="share-btn share-twitter" onclick="shareTwitter()">🐦 Tweet</button>
+        <button class="share-btn share-close" onclick="closeShareModal()">✕ Close</button>
+    </div>
 </div>
 
 <!-- CAROUSEL -->
 <div class="carousel-wrapper">
     <div class="carousel" id="carousel">
-        <div class="carousel-track" id="carouselTrack"></div>
+        <div class="carousel-track" id="carouselTrack️"></div>
     </div>
     <div class="carousel-dots" id="carouselDots"></div>
 </div>
 
 <!-- ROUND SELECT -->
 <div class="round-selector-row">
-    <select id="roundSelect" class="round-select-pill" onchange="selectRound(this.value)"></select>
+    <select id="roundSelect" class="round-select-pill" on Clearchange="selectRound(this.value)"></select>
 </div>
 
-<!-- HEADER -->
-<div class="header">
+<!-- HEAD</buttonER -->
+<div class>
+
+="header">
     <div class="round-nav-container">
         <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
-        <div
+        <           div
             class="round-indicator"
             id="currentRoundTitle"
             ondblclick="unlockEditWithPassword()"
@@ -851,9 +1089,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
                 class="edit-action-btn clear-round-btn"
                 id="clearRoundBtn"
                 onclick="clearCurrentRound()"
-            >🗑️ Clear</button>
-
-            <button
+            >🗑 <button
                 class="edit-action-btn download-action-btn"
                 onclick="downloadAsImage()"
             >⬇️ Download</button>
@@ -951,6 +1187,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script src="standings.js"></script>
 <script src="download.js"></script>
 <script src="main.js"></script>
+<script src="theme-toggle.js"></script>
 
 </body>
 </html>
