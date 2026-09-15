@@ -388,12 +388,6 @@ body{
 }
 .download-action-btn:hover{background:#2871e6}
 
-.theme-action-btn{
-    background:#a835ff;
-    box-shadow:0 3px 0 #7a1ec2;
-}
-.theme-action-btn:hover{background:#9528e0}
-
 .edit-action-btn:disabled{
     opacity:.5;
     cursor:not-allowed;
@@ -699,7 +693,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 </style>
 
 <link rel="stylesheet" href="mobile.css">
-<link rel="stylesheet" href="theme2.css">
 
 </head>
 
@@ -762,11 +755,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
                 class="edit-action-btn download-action-btn"
                 onclick="downloadAsImage()"
             >⬇️ Download</button>
-
-            <button
-                class="edit-action-btn theme-action-btn"
-                onclick="toggleTheme()"
-            >🎨 Theme</button>
         </div>
 
         <div id="captureFixtures" class="export-area">
@@ -858,7 +846,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script src="fixtures.js"></script>
 <script src="standings.js"></script>
 <script src="download.js"></script>
-<script src="theme-switcher.js"></script>
 <script src="main.js"></script>
 
 </body>
