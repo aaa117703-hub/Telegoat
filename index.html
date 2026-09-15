@@ -26,20 +26,13 @@
     --text-white:#fff;
     --border-dark:#5a055a;
     --font-en:'EnglishCustom',sans-serif;
-    
-    /* متغيرات الوضع الليلي/النهاري */
     --bg-color:#240024;
     --text-color:#fff;
-    --card-bg:#fff;
-    --card-text:#1a1a2e;
 }
 
-/* الوضع النهاري */
 body.light-mode{
     --bg-color:#f0f2f5;
     --text-color:#1a1a2e;
-    --card-bg:#fff;
-    --card-text:#1a1a2e;
 }
 
 *{
@@ -65,7 +58,6 @@ body{
     transition:background .3s ease, color .3s ease;
 }
 
-/* ERROR */
 #errorBox{
     display:none;
     position:fixed;
@@ -106,7 +98,6 @@ body{
     cursor:pointer;
 }
 
-/* THEME TOGGLE BUTTON */
 #themeToggle{
     position:fixed;
     top:16px;
@@ -142,7 +133,6 @@ body.light-mode #themeToggle{
     box-shadow:0 0 15px rgba(255,183,0,.5);
 }
 
-/* TOAST */
 #toast{
     position:fixed;
     bottom:30px;
@@ -188,7 +178,6 @@ body.light-mode #themeToggle{
     100%{transform:rotate(360deg)}
 }
 
-/* SHARE MODAL */
 #shareModal{
     display:none;
     position:fixed;
@@ -285,7 +274,6 @@ body.light-mode #themeToggle{
 
 .share-close:hover{transform:scale(1.05);}
 
-/* LOCKED OVERLAY */
 .locked-overlay{
     position:absolute;
     top:0;
@@ -313,7 +301,6 @@ body.light-mode #themeToggle{
     gap:10px;
 }
 
-/* CAROUSEL */
 .carousel-wrapper{
     width:100%;
     margin:10px auto 0;
@@ -391,7 +378,6 @@ body.light-mode #themeToggle{
     box-shadow:0 0 8px rgba(0,255,135,.45);
 }
 
-/* ROUND SELECT */
 .round-selector-row{
     display:flex;
     justify-content:center;
@@ -437,7 +423,6 @@ body.light-mode .round-select-pill{
     color:#fff;
 }
 
-/* HEADER */
 .header{
     background:transparent;
     color:var(--text-color);
@@ -504,7 +489,6 @@ body.light-mode .round-indicator:hover{
     transform:scale(.95);
 }
 
-/* MAIN */
 .main-container{
     width:100%;
     max-width:768px;
@@ -512,7 +496,6 @@ body.light-mode .round-indicator:hover{
     padding:0 6px;
 }
 
-/* EDIT PANEL */
 .edit-panel{
     display:flex;
     gap:10px;
@@ -595,10 +578,6 @@ body.light-mode .edit-panel{
     transform:none;
 }
 
-/* ============================================
-   FIXTURES
-============================================ */
-
 #captureFixtures{
     padding:0;
     background:linear-gradient(135deg, #3281ff 0%, #00d2ff 45%, #a835ff 100%);
@@ -630,7 +609,6 @@ body.light-mode .edit-panel{
     padding:10px 12px;
 }
 
-/* صف المباراة */
 .fixture-row{
     display:flex;
     align-items:center;
@@ -659,7 +637,6 @@ body.light-mode .edit-panel{
     border-radius:8px;
 }
 
-/* المباراة البارزة */
 .fixture-row.featured-row{
     background:linear-gradient(90deg, rgba(255,183,0,.15) 0%, rgba(255,215,0,.08) 50%, rgba(255,183,0,.15) 100%);
     border-left:4px solid #ffb700;
@@ -827,10 +804,6 @@ body.light-mode .edit-panel{
     opacity:.9;
 }
 
-/* ============================================
-   STANDINGS
-============================================ */
-
 #captureStandings{
     background:#fff;
     border-radius:16px;
@@ -841,7 +814,6 @@ body.light-mode .edit-panel{
     position:relative;
 }
 
-/* الشريط الجانبي الأخضر */
 #captureStandings::before{
     content:'';
     position:absolute;
@@ -1026,14 +998,12 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     <div id="errorContent"></div>
 </div>
 
-<!-- زر تبديل الوضع -->
 <button id="themeToggle" onclick="toggleLightMode()">☀️</button>
 
 <div id="toast">
     <span id="toastContent">Saving...</span>
 </div>
 
-<!-- نافذة المشاركة -->
 <div id="shareModal" onclick="closeShareModal(event)">
     <div class="share-box" onclick="event.stopPropagation()">
         <div class="share-title">📤 Share Result</div>
@@ -1045,81 +1015,48 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     </div>
 </div>
 
-<!-- CAROUSEL -->
 <div class="carousel-wrapper">
     <div class="carousel" id="carousel">
-        <div class="carousel-track" id="carouselTrack️"></div>
+        <div class="carousel-track" id="carouselTrack"></div>
     </div>
     <div class="carousel-dots" id="carouselDots"></div>
 </div>
 
-<!-- ROUND SELECT -->
 <div class="round-selector-row">
-    <select id="roundSelect" class="round-select-pill" on Clearchange="selectRound(this.value)"></select>
+    <select id="roundSelect" class="round-select-pill" onchange="selectRound(this.value)"></select>
 </div>
 
-<!-- HEAD</buttonER -->
-<div class>
-
-="header">
+<div class="header">
     <div class="round-nav-container">
         <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
-        <           div
-            class="round-indicator"
-            id="currentRoundTitle"
-            ondblclick="unlockEditWithPassword()"
-        >MATCHWEEK 1</div>
+        <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockEditWithPassword()">MATCHWEEK 1</div>
         <button class="nav-arrow-btn" onclick="changeRound(-1)">‹</button>
     </div>
 </div>
 
 <div class="main-container">
 
-    <!-- FIXTURES -->
     <div id="fixturesTab" class="tab-content active">
 
         <div id="editPanel" class="edit-panel" style="display:none;">
-            <button
-                class="edit-action-btn save-round-btn"
-                id="saveRoundBtn"
-                onclick="saveCurrentRound()"
-            >💾 Save</button>
-
-            <button
-                class="edit-action-btn clear-round-btn"
-                id="clearRoundBtn"
-                onclick="clearCurrentRound()"
-            >🗑 <button
-                class="edit-action-btn download-action-btn"
-                onclick="downloadAsImage()"
-            >⬇️ Download</button>
+            <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">💾 Save</button>
+            <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">🗑️ Clear</button>
+            <button class="edit-action-btn download-action-btn" onclick="downloadAsImage()">⬇️ Download</button>
         </div>
 
         <div id="captureFixtures" class="export-area">
-
             <div class="fixtures-header-box">
-                <div
-                    class="fixtures-header-title"
-                    id="fixturesBannerTitle"
-                >MATCHWEEK 1</div>
+                <div class="fixtures-header-title" id="fixturesBannerTitle">MATCHWEEK 1</div>
             </div>
-
             <div id="fixturesList"></div>
-
         </div>
     </div>
 
-    <!-- STANDINGS -->
     <div id="standingsTab" class="tab-content">
-
         <div id="captureStandings" class="export-area">
-
             <div class="standings-content-area">
-
                 <div class="standings-card">
-
                     <table>
-
                         <colgroup>
                             <col class="col-pos">
                             <col class="col-club">
@@ -1127,7 +1064,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
                             <col class="col-pts">
                             <col class="col-form">
                         </colgroup>
-
                         <thead>
                             <tr>
                                 <th>Pos</th>
@@ -1137,11 +1073,8 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
                                 <th style="text-align:center;">Form</th>
                             </tr>
                         </thead>
-
                         <tbody id="standingsBody"></tbody>
-
                     </table>
-
                 </div>
             </div>
         </div>
