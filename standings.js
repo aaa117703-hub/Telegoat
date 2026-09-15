@@ -2,7 +2,6 @@
    standings.js
 ========================================================= */
 
-
 function calculateStandingsUpToRound(targetRound) {
 
     const calculated = {};
