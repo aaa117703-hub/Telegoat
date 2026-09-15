@@ -6,7 +6,6 @@
 <title>TELEGRAM GOAT - Premier League</title>
 
 <script>
-/* منع double-tap zoom */
 document.addEventListener('dblclick', function(e) { e.preventDefault(); }, { passive: false });
 let _lastTouchEnd = 0;
 document.addEventListener('touchend', function(e) {
@@ -666,22 +665,22 @@ body{
 
 #fixturesList{
     background:#fff;
-    padding:10px 12px;
+    padding:8px 10px;
 }
 
 .fixture-row{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:12px 0;
+    padding:10px 0;
     margin-bottom:0;
     background:transparent;
     border-radius:0;
     box-shadow:none;
     border-bottom:1px solid #f0f0f0;
     flex-wrap:nowrap;
-    gap:6px;
-    min-height:54px;
+    gap:4px;
+    min-height:52px;
     transition:all .25s ease;
     cursor:pointer;
 }
@@ -719,39 +718,42 @@ body{
     align-items:center;
     flex:1 1 0;
     min-width:0;
-    font-size:13px;
+    font-size:11px;
     font-weight:700;
     color:#1a1a2e;
     text-transform:none;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+    white-space:normal;
+    word-break:break-word;
+    line-height:1.15;
+    gap:4px;
 }
 
 .team-box.home{
     justify-content:flex-end;
     text-align:right;
+    flex-direction:row;
 }
 
 .team-box.away{
     justify-content:flex-start;
     text-align:left;
+    flex-direction:row;
 }
 
 .team-box>span{
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
+    white-space:normal;
+    word-break:break-word;
+    line-height:1.15;
 }
 
 .logo-20{
     display:inline-block;
-    width:20px;
-    height:20px;
-    min-width:20px;
-    min-height:20px;
-    max-width:20px;
-    max-height:20px;
+    width:18px;
+    height:18px;
+    min-width:18px;
+    min-height:18px;
+    max-width:18px;
+    max-height:18px;
     flex-shrink:0;
     position:relative;
     overflow:hidden;
@@ -773,17 +775,17 @@ body{
 
 .logo-24{
     display:inline-block;
-    width:26px;
-    height:26px;
-    min-width:26px;
-    min-height:26px;
-    max-width:26px;
-    max-height:26px;
+    width:24px;
+    height:24px;
+    min-width:24px;
+    min-height:24px;
+    max-width:24px;
+    max-height:24px;
     flex-shrink:0;
     position:relative;
     overflow:hidden;
     vertical-align:middle;
-    margin:0 6px;
+    margin:0 4px;
     transition:transform .25s ease;
 }
 
@@ -808,13 +810,13 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:5px;
+    gap:4px;
     flex:0 0 auto;
-    width:106px;
-    min-width:106px;
+    width:92px;
+    min-width:92px;
     background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
-    padding:8px 8px;
-    border-radius:10px;
+    padding:6px 5px;
+    border-radius:9px;
     border:none;
     box-shadow:0 3px 8px rgba(56,0,60,.3);
     position:relative;
@@ -831,7 +833,7 @@ body{
 .score-input,
 .pos-number,
 .stat-number{
-    font-size:15px;
+    font-size:14px;
     font-weight:900;
     line-height:1.2;
     display:inline-block;
@@ -840,13 +842,13 @@ body{
 
 .score-display{
     color:#fff;
-    font-size:15px;
+    font-size:14px;
     letter-spacing:0;
 }
 
 .score-input{
-    width:38px;
-    height:26px;
+    width:34px;
+    height:24px;
     text-align:center;
     background:#fff;
     color:#38003c;
@@ -854,13 +856,13 @@ body{
     border-radius:4px;
     outline:none;
     padding:0;
-    font-size:14px;
+    font-size:13px;
 }
 
 .vs-text{
     font-weight:900;
     color:#fff;
-    font-size:13px;
+    font-size:12px;
     opacity:.9;
 }
 
@@ -880,7 +882,7 @@ body{
     top:0;
     left:0;
     bottom:0;
-    width:48px;
+    width:44px;
     background:linear-gradient(180deg, #a8e063 0%, #56ab2f 50%, #00d2ff 100%);
     z-index:1;
 }
@@ -891,22 +893,22 @@ body{
     top:0;
     left:0;
     bottom:0;
-    width:48px;
+    width:44px;
     z-index:2;
-    background:url('./premier-league-logo.png') center 16px / 30px 30px no-repeat;
+    background:url('./premier-league-logo.png') center 14px / 28px 28px no-repeat;
 }
 
 .standings-content-area{
     background:#fff;
     width:100%;
-    padding:10px 10px 10px 58px;
+    padding:8px 8px 8px 52px;
     position:relative;
     z-index:3;
 }
 
 .standings-card{
     background:transparent;
-    padding:5px;
+    padding:4px;
     width:100%;
 }
 
@@ -922,25 +924,25 @@ table{
 th{
     background:transparent;
     color:#38003c;
-    padding:10px 4px;
+    padding:8px 3px;
     font-weight:900;
     border-bottom:2px solid #38003c;
-    font-size:12px;
+    font-size:11px;
     text-transform:uppercase;
-    letter-spacing:0.5px;
+    letter-spacing:0.3px;
     vertical-align:middle;
     line-height:1.2;
 }
 
 td{
-    padding:0 4px;
+    padding:0 3px;
     font-weight:800;
     vertical-align:middle;
     line-height:1.2;
     background:#fff;
     border-bottom:1px solid #f0f0f0;
-    height:44px;
-    max-height:44px;
+    height:40px;
+    max-height:40px;
     overflow:hidden;
     transition:background .2s ease;
 }
@@ -970,11 +972,11 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     display:flex;
     align-items:center;
     justify-content:flex-start;
-    gap:6px;
-    font-size:14px;
+    gap:5px;
+    font-size:12px;
     text-transform:uppercase;
     color:#1a1a1a;
-    padding:0 8px 0 0;
+    padding:0 6px 0 0;
     white-space:nowrap;
     font-weight:700;
 }
@@ -983,18 +985,18 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    gap:5px;
-    height:28px;
+    gap:4px;
+    height:26px;
     vertical-align:middle;
 }
 
 .pos-indicator-img{
-    width:22px;
-    height:22px;
-    min-width:22px;
-    min-height:22px;
-    max-width:22px;
-    max-height:22px;
+    width:20px;
+    height:20px;
+    min-width:20px;
+    min-height:20px;
+    max-width:20px;
+    max-height:20px;
     object-fit:contain;
     display:inline-block;
     flex-shrink:0;
@@ -1002,15 +1004,15 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 }
 
 .pos-number{
-    font-size:14px;
+    font-size:13px;
     font-weight:900;
     line-height:1;
-    min-width:18px;
+    min-width:16px;
     text-align:center;
 }
 
 .stat-number{
-    font-size:14px;
+    font-size:13px;
     font-weight:900;
     line-height:1;
 }
@@ -1021,16 +1023,16 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     justify-content:center;
     gap:2px;
     font-weight:900;
-    font-size:12px;
+    font-size:11px;
     letter-spacing:-0.5px;
 }
 
 .form-letter{
     display:inline-block;
-    width:14px;
+    width:13px;
     text-align:center;
     font-weight:900;
-    font-size:12px;
+    font-size:11px;
 }
 
 .form-W{color:#00c853;}
@@ -1135,7 +1137,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
                         <thead>
                             <tr>
                                 <th>Pos</th>
-                                <th style="text-align:right;padding-right:10px;">Club</th>
+                                <th style="text-align:right;padding-right:8px;">Club</th>
                                 <th style="text-align:center;">GF</th>
                                 <th style="text-align:center;">Pts</th>
                                 <th style="text-align:center;">Form</th>
@@ -1153,10 +1155,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 </div>
 
 <script>
-/* ============================================
-   ضغط مطول على Aqeel Al Rowai = كلمة السر
-============================================ */
-
 (function() {
 
     let pressTimer = null;
@@ -1182,14 +1180,11 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
         });
 
         btn.addEventListener('touchstart', function(event) {
-
             longPressTriggered = false;
-
             pressTimer = setTimeout(function() {
                 longPressTriggered = true;
                 unlockEditWithPassword();
             }, 800);
-
         }, { passive: true });
 
         btn.addEventListener('touchend', function() {
@@ -1202,9 +1197,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
         });
 
         btn.addEventListener('mousedown', function() {
-
             longPressTriggered = false;
-
             pressTimer = setTimeout(function() {
                 longPressTriggered = true;
                 unlockEditWithPassword();
