@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test - Mobile Preview</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#1a1a2e;
+    color:#fff;
+    padding:20px;
+    min-height:100vh;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+    font-size:20px;
+    color:#00ff87;
+}
+
+/* أزرار التحكم */
+.controls{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.controls button{
+    background:#38003c;
+    color:#fff;
+    border:2px solid #5a055a;
+    border-radius:8px;
+    padding:12px 20px;
+    font-size:14px;
+    font-weight:900;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.controls button:hover{
+    background:#ff005a;
+    border-color:#ff005a;
+}
+
+.controls button.active{
+    background:#00ff87;
+    color:#1a1a2e;
+    border-color:#00ff87;
+}
+
+/* الإطار */
+.preview-container{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:20px;
+    background:#0d0d1a;
+    border-radius:12px;
+    overflow:auto;
+    max-height:calc(100vh - 200px);
+}
+
+.preview-frame{
+    border:4px solid #00ff87;
+    border-radius:20px;
+    background:#fff;
+    box-shadow:0 0 30px rgba(0,255,135,.5);
+    transition:width .3s ease;
+    height:900px;
+    max-height:80vh;
+}
+
+/* معلومات */
+.info{
+    text-align:center;
+    margin-top:15px;
+    color:#aaa;
+    font-size:13px;
+}
+
+.info strong{
+    color:#00ff87;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>📱 Mobile Preview - Telegoat</h1>
+
+<div class="controls">
+    <button onclick="setWidth(360, this)" class="active">360px (صغير)</button>
+    <button onclick="setWidth(390, this)">390px (iPhone)</button>
+    <button onclick="setWidth(414, this)">414px (iPhone Plus)</button>
+    <button onclick="setWidth(428, this)">428px (iPhone Pro Max)</button>
+    <button onclick="setWidth(768, this)">768px (آيباد مصغر)</button>
+</div>
+
+<div class="preview-container">
+    <iframe
+        id="previewFrame"
+        class="preview-frame"
+        src="https://aaa117703-hub.github.io/Telegoat/"
+        style="width:360px;"
+    ></iframe>
+</div>
+
+<div class="info">
+    العرض الحالي: <strong id="currentWidth">360px</strong>
+    <br>
+    <small>⚠️ غيّر العرض — لترى الموقع كما يراه زائر الموبايل</small>
+</div>
+
+<script>
+function setWidth(px, btn) {
+
+    /* تحديث عرض iframe */
+    const frame = document.getElementById('previewFrame');
+    frame.style.width = px + 'px';
+
+    /* تحديث عرض الحاوية */
+    const container = frame.parentElement;
+    container.style.justifyContent = 'center';
+
+    /* تحديث النص */
+    document.getElementById('currentWidth').innerText = px + 'px';
+
+    /* تحديث الزر النشط */
+    const buttons = document.querySelectorAll('.controls button');
+    buttons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+</script>
+
+</body>
+</html>
