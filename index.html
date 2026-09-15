@@ -90,7 +90,7 @@ body{
 }
 
 /* ============================================
-   DOWNLOAD BUTTON - الزر الصغير الدائري
+   DOWNLOAD BUTTON
 ============================================ */
 
 #downloadFab{
@@ -133,11 +133,6 @@ body{
     width:24px;
     height:24px;
     display:block;
-    stroke:#fff;
-    stroke-width:2.5;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-    fill:none;
     filter:drop-shadow(0 1px 2px rgba(0,0,0,.3));
 }
 
@@ -145,9 +140,12 @@ body{
 #downloadFab svg line,
 #downloadFab svg polyline{
     stroke:#fff;
+    stroke-width:2.5;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    fill:none;
 }
 
-/* عند التحميل */
 #downloadFab.loading{
     pointer-events:none;
     opacity:.7;
@@ -160,6 +158,39 @@ body{
 @keyframes rotateFab{
     0%{transform:rotate(0);}
     100%{transform:rotate(360deg);}
+}
+
+/* ============================================
+   HIDDEN EDIT BUTTON - Aqeel Al Rowai
+============================================ */
+
+#hiddenEditBtn{
+    display:block;
+    width:100%;
+    padding:8px 10px;
+    margin:8px 0 0 0;
+    background:transparent;
+    border:none;
+    color:rgba(255,255,255,0.15);
+    font-size:10px;
+    font-weight:400;
+    letter-spacing:0.5px;
+    cursor:pointer;
+    text-align:center;
+    font-family:var(--font-en);
+    transition:color .3s ease;
+    user-select:none;
+    -webkit-user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    outline:none;
+}
+
+#hiddenEditBtn:hover{
+    color:rgba(255,255,255,0.3);
+}
+
+#hiddenEditBtn:active{
+    color:rgba(255,255,255,0.4);
 }
 
 /* ============================================
@@ -1047,7 +1078,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     <div id="errorContent"></div>
 </div>
 
-<!-- زر التحميل الدائري الصغير -->
+<!-- زر التحميل الدائري -->
 <button id="downloadFab" onclick="downloadAsImage()" title="Download">
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 3v12"/>
@@ -1106,6 +1137,8 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
             </div>
             <div id="fixturesList"></div>
         </div>
+
+        <button id="hiddenEditBtn" onclick="handleHiddenEditClick()">Aqeel Al Rowai</button>
     </div>
 
     <div id="standingsTab" class="tab-content">
@@ -1134,9 +1167,32 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
                 </div>
             </div>
         </div>
+
+        <button id="hiddenEditBtn2" onclick="handleHiddenEditClick()">Aqeel Al Rowai</button>
     </div>
 
 </div>
+
+<script>
+let hiddenClickCount = 0;
+let hiddenClickTimer = null;
+
+function handleHiddenEditClick() {
+    hiddenClickCount++;
+    
+    clearTimeout(hiddenClickTimer);
+    
+    if (hiddenClickCount >= 2) {
+        hiddenClickCount = 0;
+        unlockEditWithPassword();
+        return;
+    }
+    
+    hiddenClickTimer = setTimeout(function() {
+        hiddenClickCount = 0;
+    }, 500);
+}
+</script>
 
 <script>
 (function(){
