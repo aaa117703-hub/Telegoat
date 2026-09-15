@@ -1,907 +1,386 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=768, user-scalable=yes, maximum-scale=5.0">
-<title>TELEGRAM GOAT - Premier League</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-
-<style>
-@font-face{
-    font-family:'SultanCustom';
-    src:url('./Sultan.ttf') format('truetype');
-}
-@font-face{
-    font-family:'EnglishCustom';
-    src:url('./english-font.ttf') format('truetype');
-}
-
-:root{
-    --pl-dark-bg:#240024;
-    --pl-pink:#ff005a;
-    --pl-purple-btn:#38003c;
-    --text-white:#fff;
-    --border-dark:#5a055a;
-    --font-en:'EnglishCustom',sans-serif;
-}
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:var(--font-en);
-}
-
-html{
-    background:#240024;
-}
-
-body{
-    background:#240024;
-    color:#fff;
-    width:100%;
-    max-width:768px;
-    margin:0 auto;
-    padding:0 0 20px;
-    overflow-x:hidden;
-}
-
-/* ERROR */
-#errorBox{
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    background:#ff0040;
-    color:#fff;
-    padding:12px 16px;
-    font-size:13px;
-    font-weight:700;
-    z-index:99999;
-    max-height:40vh;
-    overflow-y:auto;
-    border-bottom:3px solid #fff;
-    direction:ltr;
-    text-align:left;
-    font-family:monospace;
-}
-#errorBox.show{display:block}
-#errorBox .err-line{
-    padding:6px 0;
-    border-bottom:1px solid rgba(255,255,255,.3);
-}
-#errorBox .err-line:last-child{border-bottom:none}
-#errorBox .err-close{
-    position:absolute;
-    top:6px;
-    right:10px;
-    background:#fff;
-    color:#ff0040;
-    border:none;
-    border-radius:50%;
-    width:26px;
-    height:26px;
-    font-weight:900;
-    font-size:16px;
-    cursor:pointer;
-}
-
-/* TOAST */
-#toast{
-    position:fixed;
-    bottom:30px;
-    left:50%;
-    transform:translateX(-50%);
-    background:#1e0d33;
-    color:#fff;
-    padding:12px 28px;
-    border-radius:30px;
-    font-weight:900;
-    font-size:15px;
-    border:2px solid #00ff87;
-    box-shadow:0 0 20px rgba(0,255,135,.8);
-    z-index:999;
-    opacity:0;
-    transition:opacity .4s ease;
-    pointer-events:none;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    max-width:92%;
-    text-align:center;
-}
-
-#toast.error{
-    border:2px solid #ff005a;
-    box-shadow:0 0 20px rgba(255,0,90,.8);
-}
-
-#toast.show{opacity:1}
-
-.toast-spinner{
-    display:inline-block;
-    width:18px;
-    height:18px;
-    border:3px solid rgba(255,255,255,.2);
-    border-radius:50%;
-    border-top-color:#ff005a;
-    animation:spin .6s linear infinite;
-}
-@keyframes spin{
-    0%{transform:rotate(0)}
-    100%{transform:rotate(360deg)}
-}
-
-/* LOCKED OVERLAY */
-.locked-overlay{
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    background:rgba(0,0,0,.55);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:3;
-}
-
-.lock-text{
-    color:#fff;
-    font-weight:900;
-    font-size:clamp(18px,3vw,28px);
-    text-shadow:0 4px 15px rgba(0,0,0,.9);
-    background:rgba(255,0,90,.85);
-    padding:12px 28px;
-    border-radius:50px;
-    border:3px solid #fff;
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-/* CAROUSEL */
-.carousel-wrapper{
-    width:100%;
-    margin:10px auto 0;
-    padding:0 8px;
-}
-
-.carousel{
-    position:relative;
-    width:100%;
-    overflow:hidden;
-    border:3px solid #00ff87;
-    border-radius:20px;
-    background:#38003c;
-    box-shadow:0 0 15px rgba(0,255,135,.6);
-    touch-action:pan-y;
-    cursor:pointer;
-}
-
-.carousel-track{
-    position:relative;
-    width:100%;
-    height:auto;
-}
-
-.carousel-slide{
-    position:relative;
-    inset:0;
-    width:100%;
-    display:none;
-    opacity:0;
-    transition:opacity .7s ease;
-}
-
-.carousel-slide.active{
-    display:block;
-    opacity:1;
-}
-
-.carousel-slide img{
-    width:100%;
-    height:auto;
-    display:block;
-    object-fit:contain;
-    object-position:center;
-}
-
-.carousel:hover{
-    box-shadow:0 0 22px rgba(0,255,135,.8);
-    transition:box-shadow .25s ease;
-}
-
-.carousel-dots{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:8px;
-    margin-top:8px;
-}
-
-.carousel-dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    border:none;
-    background:rgba(255,255,255,.35);
-    cursor:pointer;
-    padding:0;
-    transition:.25s;
-}
-
-.carousel-dot.active{
-    width:22px;
-    border-radius:10px;
-    background:#00ff87;
-    box-shadow:0 0 8px rgba(0,255,135,.45);
-}
-
-/* ROUND SELECT */
-.round-selector-row{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    margin:8px 0 2px;
-    padding:0 8px;
-}
-
-.round-select-pill{
-    background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:20px;
-    padding:8px 32px 8px 16px;
-    font-size:13px;
-    font-weight:800;
-    min-width:140px;
-    color:#fff;
-    text-align:center;
-    outline:none;
-    cursor:pointer;
-    appearance:none;
-    -webkit-appearance:none;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='white' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;
-    background-position:right 12px center;
-}
-
-.round-select-pill:hover,
-.round-select-pill:focus{
-    border-color:#00ff87;
-    box-shadow:0 0 10px rgba(0,255,135,.35);
-}
-
-.round-select-pill option{
-    background:#2d0a3d;
-    color:#fff;
-}
-
-/* HEADER */
-.header{
-    background:transparent;
-    color:#fff;
-    padding:4px 0;
-    text-align:center;
-}
-
-.round-nav-container{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:16px;
-    flex-wrap:wrap;
-}
-
-.round-indicator{
-    font-size:20px;
-    font-weight:900;
-    letter-spacing:1px;
-    color:#fff;
-    cursor:pointer;
-    user-select:none;
-    text-align:center;
-    padding:6px 16px;
-    border-radius:8px;
-    border:2px dashed transparent;
-    transition:.2s;
-}
-
-.round-indicator:hover{
-    border-color:rgba(255,255,255,.2);
-    background:rgba(255,255,255,.05);
-}
-
-.nav-arrow-btn{
-    background:#38003c;
-    color:#fff;
-    border:1px solid #5a055a;
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    cursor:pointer;
-    font-size:20px;
-    font-weight:bold;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition:.2s;
-    flex-shrink:0;
-}
-
-.nav-arrow-btn:hover{
-    background:#ff005a;
-    border-color:#ff005a;
-}
-
-/* MAIN */
-.main-container{
-    width:100%;
-    max-width:768px;
-    margin:0 auto;
-    padding:0 6px;
-}
-
-/* ============================================
-   EDIT PANEL - الأزرار الاحترافية الجديدة
-============================================ */
-
-.edit-panel{
-    display:flex;
-    gap:10px;
-    margin-bottom:12px;
-    padding:12px;
-    background:rgba(255,255,255,.08);
-    border-radius:16px;
-    justify-content:center;
-    flex-wrap:wrap;
-    border:2px solid rgba(255,255,255,.1);
-    box-shadow:0 4px 20px rgba(0,0,0,.3);
-}
-
-.edit-action-btn{
-    font-weight:900;
-    font-size:14px;
-    padding:14px 18px;
-    border-radius:12px;
-    border:none;
-    cursor:pointer;
-    flex:1 1 auto;
-    min-width:110px;
-    transition:all .25s ease;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    position:relative;
-    overflow:hidden;
-    letter-spacing:.5px;
-    text-shadow:0 1px 2px rgba(0,0,0,.3);
-}
-
-.edit-action-btn:active{
-    transform:scale(.96);
-}
-
-/* زر Save - أخضر متدرج */
-.save-round-btn{
-    background:linear-gradient(135deg, #00e676 0%, #00c853 50%, #009b40 100%);
-    box-shadow:
-        0 4px 0 #006b2c,
-        0 6px 15px rgba(0,200,83,.4),
-        inset 0 1px 0 rgba(255,255,255,.3);
-}
-
-.save-round-btn:hover{
-    background:linear-gradient(135deg, #00f57d 0%, #00d95a 50%, #00a848 100%);
-    box-shadow:
-        0 4px 0 #006b2c,
-        0 8px 20px rgba(0,200,83,.6),
-        inset 0 1px 0 rgba(255,255,255,.4);
-}
-
-/* زر Clear - أحمر متدرج */
-.clear-round-btn{
-    background:linear-gradient(135deg, #ff4081 0%, #ff005a 50%, #b8003f 100%);
-    box-shadow:
-        0 4px 0 #800028,
-        0 6px 15px rgba(255,0,90,.4),
-        inset 0 1px 0 rgba(255,255,255,.3);
-}
-
-.clear-round-btn:hover{
-    background:linear-gradient(135deg, #ff558f 0%, #ff1a6b 50%, #c70046 100%);
-    box-shadow:
-        0 4px 0 #800028,
-        0 8px 20px rgba(255,0,90,.6),
-        inset 0 1px 0 rgba(255,255,255,.4);
-}
-
-/* زر Download - أزرق متدرج */
-.download-action-btn{
-    background:linear-gradient(135deg, #448aff 0%, #3281ff 50%, #1f5dbf 100%);
-    box-shadow:
-        0 4px 0 #103c7a,
-        0 6px 15px rgba(50,129,255,.4),
-        inset 0 1px 0 rgba(255,255,255,.3);
-}
-
-.download-action-btn:hover{
-    background:linear-gradient(135deg, #5c9bff 0%, #3d8dff 50%, #296bc9 100%);
-    box-shadow:
-        0 4px 0 #103c7a,
-        0 8px 20px rgba(50,129,255,.6),
-        inset 0 1px 0 rgba(255,255,255,.4);
-}
-
-.edit-action-btn:disabled{
-    opacity:.5;
-    cursor:not-allowed;
-    transform:none;
-}
-
-/* ============================================
-   FIXTURES
-============================================ */
-
-#captureFixtures{
-    padding:12px 10px;
-    background:
-        linear-gradient(
-            135deg,
-            #3281ff 0%,
-            #00d2ff 45%,
-            #a835ff 100%
-        );
-    border-radius:16px;
-    box-shadow:0 10px 30px rgba(0,0,0,.3);
-    border:3px solid #fff;
-}
-
-.fixtures-header-box{
-    background:#fff;
-    border-radius:10px;
-    padding:8px;
-    text-align:center;
-    margin-bottom:10px;
-    box-shadow:0 4px 10px rgba(0,0,0,.1);
-}
-
-.fixtures-header-title{
-    font-size:17px;
-    font-weight:900;
-    color:#38003c;
-    letter-spacing:1px;
-}
-
-.fixture-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:8px 10px;
-    margin-bottom:6px;
-    background:#fff;
-    border-radius:8px;
-    box-shadow:0 2px 5px rgba(0,0,0,.05);
-    flex-wrap:nowrap;
-    gap:4px;
-    min-height:44px;
-}
-
-.fixture-row:last-child{margin-bottom:0}
-
-.team-box{
-    display:flex;
-    align-items:center;
-    flex:1 1 0;
-    min-width:0;
-    font-size:12px;
-    font-weight:800;
-    color:#38003c;
-    text-transform:uppercase;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.team-box.home{
-    justify-content:flex-end;
-    text-align:right;
-}
-
-.team-box.away{
-    justify-content:flex-start;
-    text-align:left;
-}
-
-.team-box>span{
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-}
-
-.logo-20{
-    display:inline-block;
-    width:20px;
-    height:20px;
-    min-width:20px;
-    min-height:20px;
-    max-width:20px;
-    max-height:20px;
-    flex-shrink:0;
-    position:relative;
-    overflow:hidden;
-    vertical-align:middle;
-}
-
-.logo-20 img{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    max-width:100%;
-    max-height:100%;
-    width:auto;
-    height:auto;
-    object-fit:contain;
-    display:block;
-}
-
-.logo-24{
-    display:inline-block;
-    width:22px;
-    height:22px;
-    min-width:22px;
-    min-height:22px;
-    max-width:22px;
-    max-height:22px;
-    flex-shrink:0;
-    position:relative;
-    overflow:hidden;
-    vertical-align:middle;
-    margin:0 4px;
-}
-
-.logo-24 img{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    max-width:100%;
-    max-height:100%;
-    width:auto;
-    height:auto;
-    object-fit:contain;
-    display:block;
-}
-
-.match-score-center{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    flex:0 0 auto;
-    width:110px;
-    min-width:110px;
-    background:#7138f5;
-    padding:6px 8px;
-    border-radius:6px;
-    position:relative;
-    flex-shrink:0;
-}
-
-.score-display,
-.score-input,
-.pos-number,
-.stat-number{
-    font-size:15px;
-    font-weight:900;
-    line-height:1.2;
-    display:inline-block;
-    vertical-align:middle;
-}
-
-.score-display{
-    color:#fff;
-    font-size:14px;
-    letter-spacing:.5px;
-}
-
-.score-input{
-    width:38px;
-    height:26px;
-    text-align:center;
-    background:#fff;
-    color:#38003c;
-    border:1px solid #7138f5;
-    border-radius:4px;
-    outline:none;
-    padding:0;
-    font-size:14px;
-}
-
-.vs-text{
-    font-weight:900;
-    color:#fff;
-    font-size:12px;
-    opacity:.9;
-}
-
-/* STANDINGS */
-#captureStandings{
-    background:#fff;
-    border-radius:16px;
-    overflow:hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,.3);
-    border:3px solid #fff;
-    width:100%;
-}
-
-.standings-content-area{
-    background:#f4f5f7;
-    width:100%;
-    padding:10px;
-}
-
-.standings-card{
-    background:transparent;
-    padding:5px;
-    width:100%;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    border-spacing:0;
-    text-align:center;
-    color:#333;
-    table-layout:fixed;
-}
-
-th{
-    background:transparent;
-    color:#38003c;
-    padding:8px 4px;
-    font-weight:900;
-    border-bottom:2px solid #38003c;
-    font-size:13px;
-    vertical-align:middle;
-    line-height:1.2;
-}
-
-td{
-    padding:0 4px;
-    font-weight:800;
-    vertical-align:middle;
-    line-height:1.2;
-    background:#fff;
-    border-bottom:1px solid #d1d5db;
-    height:38px;
-    max-height:38px;
-    overflow:hidden;
-}
-
-tr:last-child td{border-bottom:none}
-tr.green-line td{border-bottom:3px solid #00ff87!important}
-tr.red-line td{border-bottom:3px solid #ff005a!important}
-
-.team-cell{
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    gap:6px;
-    font-size:15px;
-    text-transform:uppercase;
-    color:#1a1a1a;
-    padding:0 12px 0 0;
-    white-space:nowrap;
-}
-
-.pos-container{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:5px;
-    height:28px;
-    vertical-align:middle;
-}
-
-.pos-indicator-img{
-    width:25px;
-    height:25px;
-    min-width:25px;
-    min-height:25px;
-    max-width:25px;
-    max-height:25px;
-    object-fit:contain;
-    display:inline-block;
-    flex-shrink:0;
-    vertical-align:middle;
-}
-
-.pos-number{
-    font-size:15px;
-    font-weight:900;
-    line-height:1;
-    min-width:18px;
-    text-align:center;
-}
-
-.stat-number{
-    font-size:15px;
-    font-weight:900;
-    line-height:1;
-}
-
-.col-pos{width:14%}
-.col-club{width:42%}
-.col-gf{width:20%}
-.col-pts{width:24%}
-
-.tab-content{display:none}
-.tab-content.active{display:block}
-</style>
-
-<link rel="stylesheet" href="mobile.css">
-
-</head>
-
-<body>
-
-<div id="errorBox">
-    <button class="err-close" onclick="document.getElementById('errorBox').classList.remove('show')">✕</button>
-    <div id="errorContent"></div>
-</div>
-
-<div id="toast">
-    <span id="toastContent">Saving...</span>
-</div>
-
-<!-- CAROUSEL -->
-<div class="carousel-wrapper">
-    <div class="carousel" id="carousel">
-        <div class="carousel-track" id="carouselTrack"></div>
-    </div>
-    <div class="carousel-dots" id="carouselDots"></div>
-</div>
-
-<!-- ROUND SELECT -->
-<div class="round-selector-row">
-    <select id="roundSelect" class="round-select-pill" onchange="selectRound(this.value)"></select>
-</div>
-
-<!-- HEADER -->
-<div class="header">
-    <div class="round-nav-container">
-        <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
-        <div
-            class="round-indicator"
-            id="currentRoundTitle"
-            ondblclick="unlockEditWithPassword()"
-        >MATCHWEEK 1</div>
-        <button class="nav-arrow-btn" onclick="changeRound(-1)">‹</button>
-    </div>
-</div>
-
-<div class="main-container">
-
-    <!-- FIXTURES -->
-    <div id="fixturesTab" class="tab-content active">
-
-        <div id="editPanel" class="edit-panel" style="display:none;">
-            <button
-                class="edit-action-btn save-round-btn"
-                id="saveRoundBtn"
-                onclick="saveCurrentRound()"
-            >💾 Save</button>
-
-            <button
-                class="edit-action-btn clear-round-btn"
-                id="clearRoundBtn"
-                onclick="clearCurrentRound()"
-            >🗑️ Clear</button>
-
-            <button
-                class="edit-action-btn download-action-btn"
-                onclick="downloadAsImage()"
-            >⬇️ Download</button>
-        </div>
-
-        <div id="captureFixtures" class="export-area">
-
-            <div class="fixtures-header-box">
-                <div
-                    class="fixtures-header-title"
-                    id="fixturesBannerTitle"
-                >MATCHWEEK RESULTS</div>
-            </div>
-
-            <div id="fixturesList"></div>
-
-        </div>
-    </div>
-
-    <!-- STANDINGS -->
-    <div id="standingsTab" class="tab-content">
-
-        <div id="captureStandings" class="export-area">
-
-            <div class="standings-content-area">
-
-                <div class="standings-card">
-
-                    <table>
-
-                        <colgroup>
-                            <col class="col-pos">
-                            <col class="col-club">
-                            <col class="col-gf">
-                            <col class="col-pts">
-                        </colgroup>
-
-                        <thead>
-                            <tr>
-                                <th>Pos</th>
-                                <th style="text-align:right;padding-right:12px;">Club</th>
-                                <th style="text-align:center;">GF</th>
-                                <th style="text-align:center;">Pts</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="standingsBody"></tbody>
-
-                    </table>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<script>
-(function(){
-    const box=document.getElementById('errorBox');
-    const content=document.getElementById('errorContent');
-
-    function showError(msg){
-        const line=document.createElement('div');
-        line.className='err-line';
-        line.textContent=msg;
-        content.appendChild(line);
-        box.classList.add('show');
+/* =========================================================
+   fixtures.js
+========================================================= */
+
+function showToast(msg, isSuccess, duration) {
+    isSuccess = isSuccess || false;
+    duration = duration || 3000;
+
+    const toast = document.getElementById('toast');
+    const content = document.getElementById('toastContent');
+
+    if (!toast || !content) {
+        return;
     }
 
-    window.onerror=function(message,source,lineno,colno,error){
-        showError('❌ '+message+' | '+(source||'')+':'+lineno);
-        return false;
-    };
+    if (toastTimeout) {
+        clearTimeout(toastTimeout);
+    }
 
-    window.addEventListener('unhandledrejection',function(e){
-        showError(
-            '⚠️ Promise: '+
-            (e.reason&&e.reason.message
-                ?e.reason.message
-                :String(e.reason))
-        );
+    if (isSuccess) {
+        content.innerHTML = 'OK ' + msg;
+        toast.classList.remove('error');
+    } else {
+        content.innerHTML = '<span class="toast-spinner"></span> ' + msg;
+        toast.classList.add('error');
+    }
+
+    toast.classList.add('show');
+
+    toastTimeout = setTimeout(function() {
+        toast.classList.remove('show');
+    }, duration);
+}
+
+
+function initRoundDropdown() {
+    const select = document.getElementById('roundSelect');
+
+    if (!select) {
+        return;
+    }
+
+    select.innerHTML = '';
+
+    for (let i = 1; i <= 38; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.innerText = 'Round ' + i;
+
+        if (i === currentRound) {
+            opt.selected = true;
+        }
+
+        select.appendChild(opt);
+    }
+}
+
+
+function selectRound(value) {
+    currentRound = parseInt(value, 10);
+    renderFixtures();
+
+    if (activeTab === 'standings') {
+        renderStandings();
+    }
+}
+
+
+function changeRound(step) {
+    currentRound += step;
+
+    if (currentRound < 1) {
+        currentRound = 1;
+    }
+
+    if (currentRound > 38) {
+        currentRound = 38;
+    }
+
+    renderFixtures();
+
+    if (activeTab === 'standings') {
+        renderStandings();
+    }
+}
+
+
+function switchTab(tabName) {
+    if (tabName === 'fpl') {
+        showToast('FPL - coming soon', false, 3000);
+        return;
+    }
+
+    activeTab = tabName;
+
+    const tabs = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(function(el) {
+        el.classList.remove('active');
     });
-})();
-</script>
 
-<script src="config.js"></script>
-<script src="teams.js"></script>
-<script src="matchweeks.js"></script>
-<script src="supabase.js"></script>
-<script src="carousel.js"></script>
-<script src="fixtures.js"></script>
-<script src="standings.js"></script>
-<script src="download.js"></script>
-<script src="main.js"></script>
+    if (tabName === 'standings') {
+        const el = document.getElementById('standingsTab');
+        if (el) {
+            el.classList.add('active');
+        }
+        renderStandings();
+    } else {
+        const el = document.getElementById('fixturesTab');
+        if (el) {
+            el.classList.add('active');
+        }
+    }
+}
 
-</body>
-</html>
+
+function unlockEditWithPassword() {
+    const pass = prompt('Enter password to edit:');
+
+    if (pass === '1999') {
+        editMode = true;
+
+        const panel = document.getElementById('editPanel');
+        if (panel) {
+            panel.style.display = 'flex';
+        }
+
+        renderFixtures();
+        showToast('Edit mode enabled', true);
+    } else if (pass !== null) {
+        alert('Incorrect password!');
+    }
+}
+
+
+function exitEditMode() {
+    editMode = false;
+
+    const panel = document.getElementById('editPanel');
+    if (panel) {
+        panel.style.display = 'none';
+    }
+
+    renderFixtures();
+    renderStandings();
+}
+
+
+function updateScore(round, idx, type, val) {
+    scoresStorage['r' + round + '_m' + idx + '_' + type] = val;
+}
+
+
+function renderFixtures() {
+    try {
+        const list = document.getElementById('fixturesList');
+        const title = document.getElementById('currentRoundTitle');
+        const selectEl = document.getElementById('roundSelect');
+        const fixturesTitle = document.getElementById('fixturesBannerTitle');
+
+        if (!list) {
+            return;
+        }
+
+        if (title) {
+            title.innerText = 'MATCHWEEK ' + currentRound;
+        }
+
+        if (selectEl) {
+            selectEl.value = currentRound;
+        }
+
+        if (fixturesTitle) {
+            fixturesTitle.innerText = 'MATCHWEEK ' + currentRound;
+        }
+
+        list.innerHTML = '';
+
+        const matches = matchweeks[currentRound] || [];
+
+        matches.forEach(function(match, idx) {
+            const home = teamsMap[match[0]] || { name: match[0], logo: '' };
+            const away = teamsMap[match[1]] || { name: match[1], logo: '' };
+
+            const homeScore = scoresStorage['r' + currentRound + '_m' + idx + '_home'];
+            const awayScore = scoresStorage['r' + currentRound + '_m' + idx + '_away'];
+
+            const homeScoreStr = (homeScore === undefined || homeScore === null) ? '' : homeScore;
+            const awayScoreStr = (awayScore === undefined || awayScore === null) ? '' : awayScore;
+
+            let scoreContent = '';
+
+            if (editMode) {
+                scoreContent =
+                    '<input type="number" class="score-input" id="home_r' + currentRound + '_m' + idx + '" value="' + homeScoreStr + '" placeholder="0" oninput="updateScore(' + currentRound + ',' + idx + ',\'home\',this.value)">' +
+                    '<span class="vs-text">-</span>' +
+                    '<input type="number" class="score-input" id="away_r' + currentRound + '_m' + idx + '" value="' + awayScoreStr + '" placeholder="0" oninput="updateScore(' + currentRound + ',' + idx + ',\'away\',this.value)">';
+            } else {
+                const hDisplay = homeScoreStr !== '' ? homeScoreStr : '-';
+                const aDisplay = awayScoreStr !== '' ? awayScoreStr : '-';
+
+                scoreContent =
+                    '<span class="score-display">' + hDisplay + '</span>' +
+                    '<span class="vs-text">-</span>' +
+                    '<span class="score-display">' + aDisplay + '</span>';
+            }
+
+            const imgOnError = 'this.style.display=\'none\'';
+
+            list.innerHTML +=
+                '<div class="fixture-row">' +
+                    '<div class="team-box home">' +
+                        '<span>' + home.name + '</span>' +
+                        '<span class="logo-24">' +
+                            '<img src="./' + home.logo + '" alt="' + home.name + '" onerror="' + imgOnError + '">' +
+                        '</span>' +
+                    '</div>' +
+                    '<div class="match-score-center">' + scoreContent + '</div>' +
+                    '<div class="team-box away">' +
+                        '<span class="logo-24">' +
+                            '<img src="./' + away.logo + '" alt="' + away.name + '" onerror="' + imgOnError + '">' +
+                        '</span>' +
+                        '<span>' + away.name + '</span>' +
+                    '</div>' +
+                '</div>';
+        });
+    } catch (e) {
+        console.error('renderFixtures error:', e);
+    }
+}
+
+
+async function saveCurrentRound() {
+    if (isSaving) {
+        return;
+    }
+
+    isSaving = true;
+    showToast('Saving...', false);
+
+    const saveBtn = document.getElementById('saveRoundBtn');
+    const clearBtn = document.getElementById('clearRoundBtn');
+
+    if (saveBtn) { saveBtn.disabled = true; }
+    if (clearBtn) { clearBtn.disabled = true; }
+
+    const matches = matchweeks[currentRound] || [];
+
+    matches.forEach(function(match, idx) {
+        const homeInput = document.getElementById('home_r' + currentRound + '_m' + idx);
+        const awayInput = document.getElementById('away_r' + currentRound + '_m' + idx);
+
+        if (homeInput && awayInput) {
+            scoresStorage['r' + currentRound + '_m' + idx + '_home'] = homeInput.value;
+            scoresStorage['r' + currentRound + '_m' + idx + '_away'] = awayInput.value;
+        }
+    });
+
+    localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+
+    let result = { ok: true };
+
+    try {
+        result = await saveRoundToSupabase(currentRound, matchweeks, scoresStorage);
+    } catch (e) {
+        result = { ok: false, error: e };
+    }
+
+    isSaving = false;
+
+    if (saveBtn) { saveBtn.disabled = false; }
+    if (clearBtn) { clearBtn.disabled = false; }
+
+    if (result.ok) {
+        showToast('Saved successfully', true);
+        exitEditMode();
+    } else {
+        let errMsg = 'Unknown error';
+
+        if (result.error && result.error.message) {
+            errMsg = result.error.message;
+        } else if (result.error) {
+            errMsg = String(result.error);
+        }
+
+        showToast('Save failed: ' + errMsg, false, 20000);
+    }
+}
+
+
+async function clearCurrentRound() {
+    if (isSaving) {
+        return;
+    }
+
+    const confirmed = confirm('Clear round ' + currentRound + '?');
+
+    if (!confirmed) {
+        return;
+    }
+
+    isSaving = true;
+    showToast('Clearing...', false);
+
+    const saveBtn = document.getElementById('saveRoundBtn');
+    const clearBtn = document.getElementById('clearRoundBtn');
+
+    if (saveBtn) { saveBtn.disabled = true; }
+    if (clearBtn) { clearBtn.disabled = true; }
+
+    const matches = matchweeks[currentRound] || [];
+
+    matches.forEach(function(match, idx) {
+        delete scoresStorage['r' + currentRound + '_m' + idx + '_home'];
+        delete scoresStorage['r' + currentRound + '_m' + idx + '_away'];
+    });
+
+    localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+
+    let result = { ok: true };
+
+    try {
+        result = await clearRoundFromSupabase(currentRound);
+    } catch (e) {
+        result = { ok: false, error: e };
+    }
+
+    isSaving = false;
+
+    if (saveBtn) { saveBtn.disabled = false; }
+    if (clearBtn) { clearBtn.disabled = false; }
+
+    if (result.ok) {
+        showToast('Round cleared', true);
+        exitEditMode();
+    } else {
+        let errMsg = 'Unknown error';
+
+        if (result.error && result.error.message) {
+            errMsg = result.error.message;
+        } else if (result.error) {
+            errMsg = String(result.error);
+        }
+
+        showToast('Clear failed: ' + errMsg, false, 20000);
+    }
+}
+
+
+setInterval(function() {
+    if (Object.keys(scoresStorage).length > 0) {
+        localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+    }
+}, 5000);
+
+
+function setupEruda() {
+    let clickCount = 0;
+    let clickTimer = null;
+
+    const titleEl = document.getElementById('currentRoundTitle');
+
+    if (!titleEl) {
+        return;
+    }
+
+    titleEl.addEventListener('click', function() {
+        clickCount++;
+        clearTimeout(clickTimer);
+
+        if (clickCount >= 5) {
+            clickCount = 0;
+
+            if (typeof eruda !== 'undefined' && eruda.init) {
+                try {
+                    eruda.init();
+                    eruda.show();
+                } catch (e) {}
+            }
+        }
+
+        clickTimer = setTimeout(function() {
+            clickCount = 0;
+        }, 2000);
+    });
+}
