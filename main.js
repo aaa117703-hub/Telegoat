@@ -1,64 +1,25 @@
 /* =========================================================
    main.js
-   نقطة التشغيل الرئيسية للتطبيق
-========================================================= */
-
-
-/* =========================================================
-   INITIALIZE - تشغيل التطبيق
 ========================================================= */
 
 async function init() {
 
-    /* =====================================================
-       1) CAROUSEL - البنرات
-    ===================================================== */
-
     buildCarousel();
-
     setupCarouselTouch();
-
     startCarousel();
-
-
-    /* =====================================================
-       2) ROUND SELECTOR - قائمة الجولات
-    ===================================================== */
 
     initRoundDropdown();
 
-
-    /* =====================================================
-       3) INITIAL UI - الواجهة الأولية
-    ===================================================== */
-
     renderFixtures();
-
     renderStandings();
 
     setupEruda();
-
-
-    /* =====================================================
-       4) INIT THEME - تفعيل التصميم (الضغطة الطويلة)
-    ===================================================== */
-
-    initTheme();
-
-
-    /* =====================================================
-       5) SUPABASE CONNECTION TEST
-    ===================================================== */
 
     if (
         !window.sbClient ||
         typeof loadScoresFromSupabase !== 'function'
     ) {
-
-        console.warn(
-            'Supabase client is not available.'
-        );
-
+        console.warn('Supabase client is not available.');
         return;
     }
 
@@ -71,36 +32,19 @@ async function init() {
                 .limit(1);
 
         if (testError) {
-
-            console.warn(
-                'DB Connection Error:',
-                testError.message
-            );
-
+            console.warn('DB Connection Error:', testError.message);
             return;
         }
 
     } catch (connErr) {
-
-        console.warn(
-            'Network Error:',
-            connErr.message
-        );
-
+        console.warn('Network Error:', connErr.message);
         return;
     }
-
-
-    /* =====================================================
-       6) LOAD RESULTS FROM SUPABASE
-    ===================================================== */
 
     try {
 
         const remoteScores =
-            await loadScoresFromSupabase(
-                matchweeks
-            );
+            await loadScoresFromSupabase(matchweeks);
 
         if (
             remoteScores &&
@@ -115,22 +59,12 @@ async function init() {
             );
 
             renderFixtures();
-
             renderStandings();
         }
 
     } catch (e) {
-
-        console.warn(
-            'Load from Supabase failed:',
-            e.message
-        );
+        console.warn('Load from Supabase failed:', e.message);
     }
 }
-
-
-/* =========================================================
-   START APPLICATION
-========================================================= */
 
 init();
