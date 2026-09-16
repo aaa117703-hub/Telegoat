@@ -98,8 +98,19 @@ function createTOTWCard(player) {
     const name = player.player_name || player.entry_name || 'Unknown';
     const points = player.event_total || 0;
 
+    /* البحث عن الفريق */
+    let teamName = '';
+    if (typeof findPlayerTeam === 'function') {
+        teamName = findPlayerTeam(name) || findPlayerTeam(player.entry_name) || '';
+    }
+
+    const teamHtml = teamName
+        ? '<div class="tc-team">' + teamName + '</div>'
+        : '';
+
     return '<div class="totw-card">' +
         '<div class="tc-name">' + name + '</div>' +
+        teamHtml +
         '<div class="tc-points">' + points + ' pts</div>' +
     '</div>';
 }
