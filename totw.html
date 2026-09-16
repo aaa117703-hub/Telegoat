@@ -137,8 +137,8 @@ body{
     color:#fff;
 }
 
-.refresh-btn,
-.save-btn{
+/* زر Refresh */
+.refresh-btn{
     color:#fff;
     border:2px solid #00ff87;
     border-radius:12px;
@@ -149,32 +149,66 @@ body{
     letter-spacing:1px;
     text-transform:uppercase;
     transition:all .25s ease;
-}
-
-.refresh-btn{
     background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
     box-shadow:0 0 15px rgba(0,255,135,.4);
 }
 
-.save-btn{
-    background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
-    box-shadow:0 0 15px rgba(50,129,255,.4);
-}
-
-.refresh-btn:hover,
-.save-btn:hover{
+.refresh-btn:hover{
     transform:scale(1.05);
 }
 
-.refresh-btn:active,
-.save-btn:active{
+.refresh-btn:active{
     transform:scale(.96);
 }
 
-.refresh-btn.loading,
-.save-btn.loading{
+.refresh-btn.loading{
     opacity:.6;
     pointer-events:none;
+}
+
+/* ============================================
+   DOWNLOAD BUTTON - بنفس أسلوب زر الجدول
+============================================ */
+
+.download-action-btn{
+    font-weight:900;
+    font-size:14px;
+    padding:14px 18px;
+    border-radius:12px;
+    border:none;
+    cursor:pointer;
+    flex:1 1 auto;
+    min-width:110px;
+    transition:all .25s ease;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    position:relative;
+    overflow:hidden;
+    letter-spacing:.5px;
+    text-shadow:0 1px 2px rgba(0,0,0,.3);
+    touch-action:manipulation;
+    background:linear-gradient(135deg, #448aff 0%, #3281ff 50%, #1f5dbf 100%);
+    box-shadow:0 4px 0 #103c7a, 0 6px 15px rgba(50,129,255,.4), inset 0 1px 0 rgba(255,255,255,.3);
+    font-family:'EnglishCustom',sans-serif;
+}
+
+.download-action-btn:hover{
+    background:linear-gradient(135deg, #5c9bff 0%, #3d8dff 50%, #296bc9 100%);
+    box-shadow:0 4px 0 #103c7a, 0 8px 20px rgba(50,129,255,.6), inset 0 1px 0 rgba(255,255,255,.4);
+    transform:translateY(-2px);
+}
+
+.download-action-btn:active{
+    transform:scale(.96);
+}
+
+.download-action-btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+    transform:none;
 }
 
 /* ============================================
@@ -325,7 +359,7 @@ body{
 }
 
 /* ============================================
-   PLAYER CARD - احترافي
+   PLAYER CARD
 ============================================ */
 
 .player-card{
@@ -534,8 +568,8 @@ body{
         🔄 Refresh
     </button>
 
-    <button id="saveBtn" class="save-btn" onclick="saveImage()">
-        📥 Save
+    <button id="saveBtn" class="download-action-btn" onclick="saveImage()">
+        ⬇️ Download
     </button>
 </div>
 
@@ -720,7 +754,7 @@ async function loadTOTW() {
 
 
 /* ============================================
-   SAVE IMAGE
+   SAVE IMAGE - بجودة عالية
 ============================================ */
 
 async function saveImage() {
@@ -730,23 +764,51 @@ async function saveImage() {
 
     if (!pitch) return;
 
-    saveBtn.classList.add('loading');
+    saveBtn.disabled = true;
     saveBtn.textContent = '⏳ Saving...';
 
     try {
 
+        /* انتظار الصور */
+        const images = pitch.querySelectorAll('img');
+        await Promise.all(Array.from(images).map(img => {
+            if (img.complete) return Promise.resolve();
+            return new Promise(resolve => {
+                img.addEventListener('load', resolve, { once: true });
+                img.addEventListener('error', resolve, { once: true });
+            });
+        }));
+
+        /* HTML2Canvas بجودة عالية */
         const canvas = await html2canvas(pitch, {
             backgroundColor: '#240024',
-            scale: 3,
+            scale: 4,                          /* ✅ جودة عالية */
             useCORS: true,
-            allowTaint: true,
-            logging: false
+            allowTaint: false,
+            logging: false,
+            imageTimeout: 0,
+            width: pitch.offsetWidth,
+            height: pitch.offsetHeight,
+            windowWidth: pitch.scrollWidth,
+            windowHeight: pitch.scrollHeight,
+            onclone: function(clonedDoc, clonedElement) {
+
+                /* ✅ ضبط الكروت في النسخة */
+                const cards = clonedElement.querySelectorAll('.player-card');
+                cards.forEach(card => {
+                    card.style.backgroundSize = 'contain';
+                    card.style.backgroundRepeat = 'no-repeat';
+                    card.style.backgroundPosition = 'center';
+                });
+            }
         });
 
         canvas.toBlob(function(blob) {
 
             if (!blob) {
                 alert('Failed to create image');
+                saveBtn.disabled = false;
+                saveBtn.textContent = '⬇️ Download';
                 return;
             }
 
@@ -761,15 +823,19 @@ async function saveImage() {
                 URL.revokeObjectURL(url);
             }, 100);
 
+            saveBtn.disabled = false;
+            saveBtn.textContent = '⬇️ Download';
+
         }, 'image/png', 1.0);
 
     } catch (e) {
+
         console.error('Save error:', e);
         alert('Error: ' + e.message);
-    }
 
-    saveBtn.classList.remove('loading');
-    saveBtn.textContent = '📥 Save';
+        saveBtn.disabled = false;
+        saveBtn.textContent = '⬇️ Download';
+    }
 }
 
 
