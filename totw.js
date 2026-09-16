@@ -1,6 +1,5 @@
 /* =========================================================
    totw.js
-   Team of the Week - من FPL Worker
 ========================================================= */
 
 const TOTW_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -13,10 +12,6 @@ const TOTW_NUMBERS = {
     FWD: [7, 9, 11]
 };
 
-
-/* =========================================================
-   FETCH ALL PAGES - جلب كل الصفحات
-========================================================= */
 
 async function fetchTOTWPages() {
 
@@ -53,10 +48,6 @@ async function fetchTOTWPages() {
 }
 
 
-/* =========================================================
-   TOP 11
-========================================================= */
-
 function getTOTWTop11(allResults) {
 
     const sorted = [...allResults].sort(function(a, b) {
@@ -66,10 +57,6 @@ function getTOTWTop11(allResults) {
     return sorted.slice(0, 11);
 }
 
-
-/* =========================================================
-   RENDER CARDS
-========================================================= */
 
 function renderTOTWCards(top11) {
 
@@ -84,21 +71,18 @@ function renderTOTWCards(top11) {
 
     let html = '';
 
-    /* صف المهاجمين */
     html += '<div class="totw-row totw-row-1">';
     html += createTOTWCard(forwards[1], TOTW_NUMBERS.FWD[0]);
     html += createTOTWCard(forwards[0], TOTW_NUMBERS.FWD[1]);
     html += createTOTWCard(forwards[2], TOTW_NUMBERS.FWD[2]);
     html += '</div>';
 
-    /* صف الوسط */
     html += '<div class="totw-row totw-row-2">';
     html += createTOTWCard(midfielders[0], TOTW_NUMBERS.MID[0]);
     html += createTOTWCard(midfielders[1], TOTW_NUMBERS.MID[1]);
     html += createTOTWCard(midfielders[2], TOTW_NUMBERS.MID[2]);
     html += '</div>';
 
-    /* صف الدفاع */
     html += '<div class="totw-row totw-row-3">';
     html += createTOTWCard(defenders[1], TOTW_NUMBERS.DEF[3]);
     html += createTOTWCard(defenders[0], TOTW_NUMBERS.DEF[1]);
@@ -106,7 +90,6 @@ function renderTOTWCards(top11) {
     html += createTOTWCard(defenders[3], TOTW_NUMBERS.DEF[0]);
     html += '</div>';
 
-    /* صف الحارس */
     html += '<div class="totw-row totw-row-4">';
     html += createTOTWCard(goalkeeper[0], TOTW_NUMBERS.GK);
     html += '</div>';
@@ -130,17 +113,12 @@ function createTOTWCard(player, number) {
 }
 
 
-/* =========================================================
-   LOAD TOTW
-========================================================= */
-
 async function loadTOTW() {
 
     const loadingBox = document.getElementById('totwLoadingBox');
     const pitchWrapper = document.getElementById('totwPitchWrapper');
     const errorBox = document.getElementById('totwErrorBox');
     const refreshBtn = document.getElementById('totwRefreshBtn');
-    const updatedEl = document.getElementById('totwUpdated');
 
     if (!loadingBox) return;
 
@@ -164,11 +142,6 @@ async function loadTOTW() {
 
         renderTOTWCards(top11);
 
-        const now = new Date();
-        if (updatedEl) {
-            updatedEl.textContent = 'Updated: ' + now.toLocaleString();
-        }
-
         loadingBox.style.display = 'none';
         pitchWrapper.style.display = 'flex';
 
@@ -187,18 +160,10 @@ async function loadTOTW() {
 }
 
 
-/* =========================================================
-   CHANGE GAMEWEEK
-========================================================= */
-
 function changeTOTWGameweek() {
     loadTOTW();
 }
 
-
-/* =========================================================
-   INITIALIZE
-========================================================= */
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -208,3 +173,93 @@ document.addEventListener('DOMContentLoaded', function() {
         gwSelect.addEventListener('change', changeTOTWGameweek);
     }
 });
+
+
+/* ============================================
+   SAVE TOTW IMAGE
+============================================ */
+
+async function saveTOTWImage() {
+
+    const pitch = document.getElementById('totwPitchToSave');
+    const saveBtn = document.getElementById('totwSaveBtn');
+
+    if (!pitch) {
+        alert('Pitch not found');
+        return;
+    }
+
+    if (typeof html2canvas === 'undefined') {
+        alert('html2canvas not loaded');
+        return;
+    }
+
+    if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = '⏳ Saving...';
+    }
+
+    try {
+
+        const images = pitch.querySelectorAll('img');
+
+        await Promise.all(Array.from(images).map(function(img) {
+            if (img.complete) return Promise.resolve();
+            return new Promise(function(resolve) {
+                img.addEventListener('load', resolve, { once: true });
+                img.addEventListener('error', resolve, { once: true });
+            });
+        }));
+
+        const canvas = await html2canvas(pitch, {
+            backgroundColor: '#240024',
+            scale: 4,
+            useCORS: true,
+            allowTaint: true,
+            logging: false,
+            imageTimeout: 0
+        });
+
+        canvas.toBlob(function(blob) {
+
+            if (!blob) {
+                alert('Failed to create image');
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = '⬇️ Download';
+                }
+                return;
+            }
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            const gw = document.getElementById('totwGwSelect');
+            const gwValue = gw ? gw.value : '5';
+            link.download = 'TOTW_GW' + gwValue + '.png';
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            setTimeout(function() {
+                URL.revokeObjectURL(url);
+            }, 100);
+
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.textContent = '⬇️ Download';
+            }
+
+        }, 'image/png', 1.0);
+
+    } catch (e) {
+
+        console.error('Save error:', e);
+        alert('Error: ' + e.message);
+
+        if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = '⬇️ Download';
+        }
+    }
+}
