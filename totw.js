@@ -104,13 +104,17 @@ function createTOTWCard(player) {
         teamName = findPlayerTeam(name) || findPlayerTeam(player.entry_name) || '';
     }
 
-    const teamHtml = teamName
-        ? '<div class="tc-team">' + teamName + '</div>'
-        : '';
+    /* شعار الفريق */
+    let logoHtml = '';
+    if (teamName && typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName]) {
+        logoHtml = '<div class="tc-logo">' +
+            '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
+        '</div>';
+    }
 
     return '<div class="totw-card">' +
         '<div class="tc-name">' + name + '</div>' +
-        teamHtml +
+        logoHtml +
         '<div class="tc-points">' + points + ' pts</div>' +
     '</div>';
 }
@@ -215,7 +219,7 @@ async function saveTOTWImage() {
         }));
 
         const canvas = await html2canvas(pitch, {
-            backgroundColor: '#240024',
+            backgroundColor: '#ffffff',
             scale: 4,
             useCORS: true,
             allowTaint: true,
