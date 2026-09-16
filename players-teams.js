@@ -1,0 +1,411 @@
+/* =========================================================
+   players-teams.js
+   خريطة: اسم اللاعب → الفريق
+========================================================= */
+
+const PLAYERS_TEAMS = {
+
+    /* =====================================================
+       Aston Villa
+    ===================================================== */
+    "Aston Villa": [
+        "Abo Ali",
+        "Yasseen Elhaslok",
+        "Yahya Ahmed",
+        "Mohammed Hyderr",
+        "Mohamed farqad Al-Fatlawi",
+        "Ibrahim Fc",
+        "Abo Najeem",
+        "Faris Waad",
+        "ALi Mo",
+        "BAKR RMD",
+        "Mustafa Qeesa",
+        "The Godfather",
+        "عثمان ."
+    ],
+
+    /* =====================================================
+       Nottingham Forest
+    ===================================================== */
+    "Nottingham Forest": [
+        "Nooh Aqrawy",
+        "رسول كريم",
+        "عمر شهاب",
+        "Ahmed Alrawi SOU",
+        "Hasan Jasem",
+        "Cxv vdc",
+        "Bashar Syouf",
+        "MAYU MO",
+        "zyad rajeh",
+        "Murtada A.K",
+        "حسون العراقي 🤍",
+        "Ali Khaled",
+        "Ahmed Moatsem"
+    ],
+
+    /* =====================================================
+       Bournemouth
+    ===================================================== */
+    "Bournemouth": [
+        "hakam marwan",
+        "Mahdi Ahmed",
+        "مصطفى السامرائي",
+        "Mustafa Raheem",
+        "Firas Madrid",
+        "O Flow",
+        "Hassan AlJubouri",
+        "mohammad abdulqadir",
+        "AlHassan Mohamed",
+        "Ahmad Kteich/BOU",
+        "Hassan Bournemouth",
+        "Bournemouth Saif",
+        "Karar Najim"
+    ],
+
+    /* =====================================================
+       Brighton
+    ===================================================== */
+    "Brighton": [
+        "3bs 10",
+        "Lionel Messi",
+        "Ameer Ahmed",
+        "Apex Star",
+        "كريم الشمري",
+        "AHMED RIYADH",
+        "mohamed tariq",
+        "Alosh -56",
+        "ali adnan",
+        "anas ahmed",
+        "Mohammed sagban ali",
+        "bakr ali",
+        "عمر الصفار"
+    ],
+
+    /* =====================================================
+       Chelsea
+    ===================================================== */
+    "Chelsea": [
+        "Ahmed KM 🇮🇶",
+        "Ali Qais",
+        "زيار كركوك",
+        "محمد الاسدي",
+        "Je Ko",
+        "Mohammed Faez --",
+        "Mustafa Falah",
+        "Hussain ali 123",
+        "ali haider",
+        "Hussein Mhoummed",
+        "Haider Ali",
+        "Omar Sabah",
+        "Emad Ahmed"
+    ],
+
+    /* =====================================================
+       Hull City
+    ===================================================== */
+    "Hull City": [
+        "Maithm Kamil",
+        "كرار حيدر----",
+        "Ali Qahtan",
+        "abbas falcon",
+        "khalid abdullah",
+        "Haji Muammal",
+        "Mohammed Hussein .",
+        "Ali Aliraqi",
+        "Wolf Rahim",
+        "Ahmed Karim",
+        "Karrar Alsadwe",
+        "Mohammed Kadham",
+        "Ahad Hussein"
+    ],
+
+    /* =====================================================
+       Crystal Palace
+    ===================================================== */
+    "Crystal Palace": [
+        "farouq fuad",
+        "Ammar Yasser",
+        "MoHaMmEd Ali",
+        "Ahmed Shamel",
+        "momen marwan",
+        "Mohammad HA",
+        "Yasser Qais",
+        "Alfaruq Maad",
+        "علي محمد",
+        "Ali Khalid",
+        "fawaz twfic",
+        "Arsenal ミ",
+        "Hussein soprano"
+    ],
+
+    /* =====================================================
+       Ipswich Town
+    ===================================================== */
+    "Ipswich Town": [
+        "Mahmoud Alkilany",
+        "Abdullah Khaldun",
+        "Abdullah Alhusain",
+        "مصطفى مصطفى",
+        "ali alsallal",
+        "Abd Naji",
+        "Obaida Bahaa",
+        "Muhimen Albadri",
+        "abdulrahman firas",
+        "Mahmood Mohameed",
+        "Hassan Yassin",
+        "Ahmed Ammar",
+        "Hussein Dhari"
+    ],
+
+    /* =====================================================
+       Liverpool
+    ===================================================== */
+    "Liverpool": [
+        "yuossif Mohammed",
+        "Sajad Abbas",
+        "BRHM 🚬",
+        "Serwan Waleed",
+        "ahmed ali",
+        "Mohammed Tawfiq",
+        "xxALIxx AAA",
+        "Mohammed Nazar",
+        "Al_Gorilla *",
+        "Hassan Haidar",
+        "Ameer Habib",
+        "Hussein Lowi"
+    ],
+
+    /* =====================================================
+       Fulham
+    ===================================================== */
+    "Fulham": [
+        "mohammed Mahdi",
+        "Mohamed Khalid",
+        "H4SOON Khudair",
+        "mohamed alaa1",
+        "Humam 〆",
+        "Hassanin Wadai",
+        "عبدالله عصام",
+        "Ehab Mo",
+        "Abdullah Aldoury",
+        "Hassan Wadhah Mahbuba",
+        "Moamel Hassan",
+        "Hussain Andaleeb",
+        "Islam Suhaib"
+    ],
+
+    /* =====================================================
+       Spurs
+    ===================================================== */
+    "Spurs": [
+        "Haider Adnan",
+        "Malak Riyad",
+        "Yousef Haider",
+        "أخلاقي سر سعادتي",
+        "Abdullah Arshad",
+        "محمد صادق",
+        "Mariam Aead",
+        "Murtadha Nizar",
+        "محمد حسام",
+        "Yousif Khalid",
+        "ALi Ghazi",
+        "Yasser Abdul Amir",
+        "Yousif Al-Kubaici"
+    ],
+
+    /* =====================================================
+       Everton
+    ===================================================== */
+    "Everton": [
+        "AOUS ALRASHDI",
+        "Brow n",
+        "Mujtaba French",
+        "Omar Sherif",
+        "Abdulmalik Harby",
+        "Haider Alkarrar",
+        "Baraa suhaib",
+        "ali fpl",
+        "AHMED YAHYA",
+        "Aqeel Al Rowai",
+        "Mustafa Abdullah"
+    ],
+
+    /* =====================================================
+       Sunderland
+    ===================================================== */
+    "Sunderland": [
+        "محمد حسن علي",
+        "Zain Kareem",
+        "🐺The Wolf",
+        "Sajad Oaled",
+        "عمر فاروق",
+        "Corey Mird",
+        "Abdullah Muhsin",
+        "Hassan koja",
+        "yonis abd",
+        "Liv Hayder",
+        "Ali Nazar",
+        "Mustafa Muslim",
+        "Hussein Al Madridi"
+    ],
+
+    /* =====================================================
+       Arsenal
+    ===================================================== */
+    "Arsenal": [
+        "Hussain Muqdad",
+        "Bassam Ahmed",
+        "yousef morad",
+        "MALEK Khlil",
+        "ABBAS Khaled",
+        "Abdullah Kutaiba",
+        "ahmed hany-28",
+        "Aymen Nazar",
+        "HUSSEN ALI",
+        "كرار الجوذري",
+        "Ali Ali Hussein",
+        "Hussein Zaid",
+        "علي محمد"
+    ],
+
+    /* =====================================================
+       Coventry City
+    ===================================================== */
+    "Coventry City": [
+        "Abdullah Qmar",
+        "Ali Emad",
+        "Zaid Abdalrhman",
+        "Deku Bluz",
+        "خليها على الله",
+        "SOOFY MB",
+        "Huseen H",
+        "Hussein Haithem",
+        "abd alhadi",
+        "Krrar musa",
+        "3li Coventry City",
+        "HERE WE GO !",
+        "Liam mlnr"
+    ],
+
+    /* =====================================================
+       Brentford
+    ===================================================== */
+    "Brentford": [
+        "Abdullah Husham",
+        "Hussein Ali",
+        "Ali Saad",
+        "iQjhNm_- Hasan",
+        "Qadees Sh",
+        "ali qassim",
+        "𝔸𝔹𝕆𝕆𝔻𝕐 𝔸𝕃ℍ𝕐𝔻𝔸ℝ𝕀",
+        "Mohamed Shadow",
+        "saif ahmed",
+        "noor Alaa --",
+        "MOAMAL GOAT",
+        "Mohammed king"
+    ],
+
+    /* =====================================================
+       Man Utd
+    ===================================================== */
+    "Man Utd": [
+        "Karzan Karo",
+        "adnan wisam",
+        "Ali Jamal",
+        "Basil Hider",
+        "N.1 المقلد",
+        "Real Madried",
+        "Yasser Mohammed",
+        "ALI AL-QAYSI",
+        "narges mortada",
+        "حسن ثابت حسن",
+        "Wael Emad",
+        "Ahmed King",
+        "Ahmed Kareem"
+    ],
+
+    /* =====================================================
+       Man City
+    ===================================================== */
+    "Man City": [
+        "faez faris",
+        "Mohammad Alzuhiri",
+        "Haider Ali",
+        "Ali Emad",
+        "Jaafar Jawad",
+        "fog fighter",
+        "Sajad Rasheed",
+        "Ja3FaR ZwaeD --",
+        "M7mad Alzaidy",
+        "Omer Daghistany",
+        "Ghaith Alsabti",
+        "Debel tov",
+        "Mahdi Mo7"
+    ],
+
+    /* =====================================================
+       Leeds United
+    ===================================================== */
+    "Leeds United": [
+        "Mohammed Nawras",
+        "شلال خليل",
+        "RC5 .",
+        "Abod ALbasha",
+        "ABDULLAH JALAL",
+        "karar h",
+        "Adnan Emad",
+        "KARAR AMAR",
+        "Abdullah Adel",
+        "Hossein jowaid",
+        "Manar Naoum",
+        "كرار ضياء",
+        "Dhafer AB"
+    ],
+
+    /* =====================================================
+       Newcastle
+    ===================================================== */
+    "Newcastle": [
+        "Hussein Amir",
+        "EZEeeeee youuu",
+        "ali mu",
+        "Luka Modric .",
+        "hamza -f",
+        "Hassan Alaa",
+        "karrar zeher",
+        "M Jathom",
+        "Octy K",
+        "Hussein Ali",
+        "Abdul Hadi",
+        "YASSER .N",
+        "Yousif Abaas"
+    ]
+};
+
+
+/* =========================================================
+   دالة البحث - Find team by player name
+========================================================= */
+
+function findPlayerTeam(playerName) {
+
+    if (!playerName) return null;
+
+    const cleanName = playerName.trim().toLowerCase();
+
+    for (const team in PLAYERS_TEAMS) {
+
+        const players = PLAYERS_TEAMS[team];
+
+        for (let i = 0; i < players.length; i++) {
+
+            const player = players[i].trim().toLowerCase();
+
+            if (player === cleanName) {
+                return team;
+            }
+        }
+    }
+
+    return null;
+}
