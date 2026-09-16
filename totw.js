@@ -5,13 +5,6 @@
 const TOTW_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
 const TOTW_TOTAL_PAGES = 7;
 
-const TOTW_NUMBERS = {
-    GK: 1,
-    DEF: [2, 4, 5, 12],
-    MID: [6, 8, 10],
-    FWD: [7, 9, 11]
-};
-
 
 async function fetchTOTWPages() {
 
@@ -72,33 +65,33 @@ function renderTOTWCards(top11) {
     let html = '';
 
     html += '<div class="totw-row totw-row-1">';
-    html += createTOTWCard(forwards[1], TOTW_NUMBERS.FWD[0]);
-    html += createTOTWCard(forwards[0], TOTW_NUMBERS.FWD[1]);
-    html += createTOTWCard(forwards[2], TOTW_NUMBERS.FWD[2]);
+    html += createTOTWCard(forwards[1]);
+    html += createTOTWCard(forwards[0]);
+    html += createTOTWCard(forwards[2]);
     html += '</div>';
 
     html += '<div class="totw-row totw-row-2">';
-    html += createTOTWCard(midfielders[0], TOTW_NUMBERS.MID[0]);
-    html += createTOTWCard(midfielders[1], TOTW_NUMBERS.MID[1]);
-    html += createTOTWCard(midfielders[2], TOTW_NUMBERS.MID[2]);
+    html += createTOTWCard(midfielders[0]);
+    html += createTOTWCard(midfielders[1]);
+    html += createTOTWCard(midfielders[2]);
     html += '</div>';
 
     html += '<div class="totw-row totw-row-3">';
-    html += createTOTWCard(defenders[1], TOTW_NUMBERS.DEF[3]);
-    html += createTOTWCard(defenders[0], TOTW_NUMBERS.DEF[1]);
-    html += createTOTWCard(defenders[2], TOTW_NUMBERS.DEF[2]);
-    html += createTOTWCard(defenders[3], TOTW_NUMBERS.DEF[0]);
+    html += createTOTWCard(defenders[1]);
+    html += createTOTWCard(defenders[0]);
+    html += createTOTWCard(defenders[2]);
+    html += createTOTWCard(defenders[3]);
     html += '</div>';
 
     html += '<div class="totw-row totw-row-4">';
-    html += createTOTWCard(goalkeeper[0], TOTW_NUMBERS.GK);
+    html += createTOTWCard(goalkeeper[0]);
     html += '</div>';
 
     pitch.innerHTML = html;
 }
 
 
-function createTOTWCard(player, number) {
+function createTOTWCard(player) {
 
     if (!player) return '';
 
@@ -106,7 +99,6 @@ function createTOTWCard(player, number) {
     const points = player.event_total || 0;
 
     return '<div class="totw-card">' +
-        '<div class="tc-number">' + number + '</div>' +
         '<div class="tc-name">' + name + '</div>' +
         '<div class="tc-points">' + points + ' pts</div>' +
     '</div>';
