@@ -19,8 +19,7 @@ const carouselSlides = [
     {
         image: './banner3.png',
         tab: 'totw',
-        alt: 'TOTW',
-        link: './totw.html'
+        alt: 'TOTW'
     }
 
 ];
@@ -30,10 +29,6 @@ let carouselTimer = null;
 let touchStartX = 0;
 let touchEndX = 0;
 
-
-/* =========================================================
-   BUILD CAROUSEL
-========================================================= */
 
 function buildCarousel() {
 
@@ -83,25 +78,7 @@ function buildCarousel() {
 
         item.appendChild(img);
 
-        /* ============================================
-           معالج الضغط
-        ============================================ */
-
         item.addEventListener('click', function() {
-
-            /* إذا يوجد رابط مباشر */
-            if (slide.link) {
-                window.location.href = slide.link;
-                return;
-            }
-
-            /* TOTW */
-            if (slide.tab === 'totw') {
-                window.location.href = './totw.html';
-                return;
-            }
-
-            /* Tabs العادية */
             switchTab(slide.tab);
         });
 
@@ -125,10 +102,6 @@ function buildCarousel() {
 }
 
 
-/* =========================================================
-   GO TO CAROUSEL SLIDE
-========================================================= */
-
 function goToCarousel(index) {
 
     carouselIndex = (index + carouselSlides.length) % carouselSlides.length;
@@ -146,28 +119,16 @@ function goToCarousel(index) {
 }
 
 
-/* =========================================================
-   NEXT CAROUSEL
-========================================================= */
-
 function nextCarousel() {
     goToCarousel(carouselIndex + 1);
 }
 
-
-/* =========================================================
-   START CAROUSEL
-========================================================= */
 
 function startCarousel() {
     stopCarousel();
     carouselTimer = setInterval(nextCarousel, 5000);
 }
 
-
-/* =========================================================
-   STOP CAROUSEL
-========================================================= */
 
 function stopCarousel() {
     if (carouselTimer) {
@@ -176,10 +137,6 @@ function stopCarousel() {
     }
 }
 
-
-/* =========================================================
-   CAROUSEL TOUCH / SWIPE
-========================================================= */
 
 function setupCarouselTouch() {
 
