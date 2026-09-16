@@ -1,13 +1,10 @@
 /* =========================================================
    players-teams.js
-   خريطة: اسم اللاعب → الفريق
+   خريطة: اسم اللاعب → الفريق + شعارات الفرق
 ========================================================= */
 
 const PLAYERS_TEAMS = {
 
-    /* =====================================================
-       Aston Villa
-    ===================================================== */
     "Aston Villa": [
         "Abo Ali",
         "Yasseen Elhaslok",
@@ -24,9 +21,6 @@ const PLAYERS_TEAMS = {
         "عثمان ."
     ],
 
-    /* =====================================================
-       Nottingham Forest
-    ===================================================== */
     "Nottingham Forest": [
         "Nooh Aqrawy",
         "رسول كريم",
@@ -43,9 +37,6 @@ const PLAYERS_TEAMS = {
         "Ahmed Moatsem"
     ],
 
-    /* =====================================================
-       Bournemouth
-    ===================================================== */
     "Bournemouth": [
         "hakam marwan",
         "Mahdi Ahmed",
@@ -62,9 +53,6 @@ const PLAYERS_TEAMS = {
         "Karar Najim"
     ],
 
-    /* =====================================================
-       Brighton
-    ===================================================== */
     "Brighton": [
         "3bs 10",
         "Lionel Messi",
@@ -81,9 +69,6 @@ const PLAYERS_TEAMS = {
         "عمر الصفار"
     ],
 
-    /* =====================================================
-       Chelsea
-    ===================================================== */
     "Chelsea": [
         "Ahmed KM 🇮🇶",
         "Ali Qais",
@@ -100,9 +85,6 @@ const PLAYERS_TEAMS = {
         "Emad Ahmed"
     ],
 
-    /* =====================================================
-       Hull City
-    ===================================================== */
     "Hull City": [
         "Maithm Kamil",
         "كرار حيدر----",
@@ -119,9 +101,6 @@ const PLAYERS_TEAMS = {
         "Ahad Hussein"
     ],
 
-    /* =====================================================
-       Crystal Palace
-    ===================================================== */
     "Crystal Palace": [
         "farouq fuad",
         "Ammar Yasser",
@@ -138,9 +117,6 @@ const PLAYERS_TEAMS = {
         "Hussein soprano"
     ],
 
-    /* =====================================================
-       Ipswich Town
-    ===================================================== */
     "Ipswich Town": [
         "Mahmoud Alkilany",
         "Abdullah Khaldun",
@@ -157,9 +133,6 @@ const PLAYERS_TEAMS = {
         "Hussein Dhari"
     ],
 
-    /* =====================================================
-       Liverpool
-    ===================================================== */
     "Liverpool": [
         "yuossif Mohammed",
         "Sajad Abbas",
@@ -175,9 +148,6 @@ const PLAYERS_TEAMS = {
         "Hussein Lowi"
     ],
 
-    /* =====================================================
-       Fulham
-    ===================================================== */
     "Fulham": [
         "mohammed Mahdi",
         "Mohamed Khalid",
@@ -194,9 +164,6 @@ const PLAYERS_TEAMS = {
         "Islam Suhaib"
     ],
 
-    /* =====================================================
-       Spurs
-    ===================================================== */
     "Spurs": [
         "Haider Adnan",
         "Malak Riyad",
@@ -205,17 +172,15 @@ const PLAYERS_TEAMS = {
         "Abdullah Arshad",
         "محمد صادق",
         "Mariam Aead",
-        "Murtadha Nizar",
-        "محمد حسام",
-        "Yousif Khalid",
-        "ALi Ghazi",
+ Kh        "Murtadha Nizar",
+        "aledمحمد حسام",
+",
+        "Yous       if Khalid",
+        "ALi " Ghazi",
         "Yasser Abdul Amir",
         "Yousif Al-Kubaici"
     ],
 
-    /* =====================================================
-       Everton
-    ===================================================== */
     "Everton": [
         "AOUS ALRASHDI",
         "Brow n",
@@ -230,9 +195,6 @@ const PLAYERS_TEAMS = {
         "Mustafa Abdullah"
     ],
 
-    /* =====================================================
-       Sunderland
-    ===================================================== */
     "Sunderland": [
         "محمد حسن علي",
         "Zain Kareem",
@@ -249,16 +211,12 @@ const PLAYERS_TEAMS = {
         "Hussein Al Madridi"
     ],
 
-    /* =====================================================
-       Arsenal
-    ===================================================== */
     "Arsenal": [
         "Hussain Muqdad",
         "Bassam Ahmed",
         "yousef morad",
         "MALEK Khlil",
-        "ABBAS Khaled",
-        "Abdullah Kutaiba",
+        "ABBASAbdullah Kutaiba",
         "ahmed hany-28",
         "Aymen Nazar",
         "HUSSEN ALI",
@@ -268,9 +226,6 @@ const PLAYERS_TEAMS = {
         "علي محمد"
     ],
 
-    /* =====================================================
-       Coventry City
-    ===================================================== */
     "Coventry City": [
         "Abdullah Qmar",
         "Ali Emad",
@@ -287,9 +242,6 @@ const PLAYERS_TEAMS = {
         "Liam mlnr"
     ],
 
-    /* =====================================================
-       Brentford
-    ===================================================== */
     "Brentford": [
         "Abdullah Husham",
         "Hussein Ali",
@@ -305,9 +257,6 @@ const PLAYERS_TEAMS = {
         "Mohammed king"
     ],
 
-    /* =====================================================
-       Man Utd
-    ===================================================== */
     "Man Utd": [
         "Karzan Karo",
         "adnan wisam",
@@ -324,9 +273,6 @@ const PLAYERS_TEAMS = {
         "Ahmed Kareem"
     ],
 
-    /* =====================================================
-       Man City
-    ===================================================== */
     "Man City": [
         "faez faris",
         "Mohammad Alzuhiri",
@@ -343,9 +289,6 @@ const PLAYERS_TEAMS = {
         "Mahdi Mo7"
     ],
 
-    /* =====================================================
-       Leeds United
-    ===================================================== */
     "Leeds United": [
         "Mohammed Nawras",
         "شلال خليل",
@@ -362,9 +305,6 @@ const PLAYERS_TEAMS = {
         "Dhafer AB"
     ],
 
-    /* =====================================================
-       Newcastle
-    ===================================================== */
     "Newcastle": [
         "Hussein Amir",
         "EZEeeeee youuu",
@@ -384,7 +324,7 @@ const PLAYERS_TEAMS = {
 
 
 /* =========================================================
-   دالة البحث - Find team by player name
+   FIND PLAYER TEAM - البحث عن فريق اللاعب
 ========================================================= */
 
 function findPlayerTeam(playerName) {
@@ -409,3 +349,31 @@ function findPlayerTeam(playerName) {
 
     return null;
 }
+
+
+/* =========================================================
+   TEAMS LOGOS - شعارات الفرق
+========================================================= */
+
+const TEAMS_LOGOS = {
+    "Aston Villa": "aston_villa.png.WEBP",
+    "Nottingham Forest": "forest.png.PNG",
+    "Bournemouth": "bournemouth.png.WEBP",
+    "Brighton": "brighton.png.WEBP",
+    "Chelsea": "chelsea.png.WEBP",
+    "Hull City": "hull.png.WEBP",
+    "Crystal Palace": "crystal_palace.png.WEBP",
+    "Ipswich Town": "ipswich.png.WEBP",
+    "Liverpool": "liverpool.png.WEBP",
+    "Fulham": "fulham.png.WEBP",
+    "Spurs": "tottenham.png.WEBP",
+    "Everton": "everton.png.WEBP",
+    "Sunderland": "sunderland.png.WEBP",
+    "Arsenal": "arsenal.png.WEBP",
+    "Coventry City": "coventry.png.WEBP",
+    "Brentford": "brentford.png.PNG",
+    "Man Utd": "man_utd.png.WEBP",
+    "Man City": "man_city.png.WEBP",
+    "Leeds United": "leeds.png.WEBP",
+    "Newcastle": "newcastle.png.WEBP"
+};
