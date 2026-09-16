@@ -1,8 +1,6 @@
 /* =========================================================
    carousel.js
-   البنرات (Carousel)
 ========================================================= */
-
 
 const carouselSlides = [
 
@@ -20,9 +18,9 @@ const carouselSlides = [
 
     {
         image: './banner3.png',
-        tab: 'fpl',
-        alt: 'FPL',
-        locked: true
+        tab: 'totw',
+        alt: 'TOTW',
+        link: './totw.html'
     }
 
 ];
@@ -32,10 +30,6 @@ let carouselTimer = null;
 let touchStartX = 0;
 let touchEndX = 0;
 
-
-/* =========================================================
-   BUILD CAROUSEL
-========================================================= */
 
 function buildCarousel() {
 
@@ -85,20 +79,23 @@ function buildCarousel() {
 
         item.appendChild(img);
 
-        if (slide.locked) {
+        item.addEventListener('click', function() {
 
-            item.style.cursor = 'pointer';
+            /* إذا كان هناك رابط — انتقل إليه */
+            if (slide.link) {
+                window.location.href = slide.link;
+                return;
+            }
 
-            item.addEventListener('click', function() {
-                showToast('FPL — قريباً! ⚠️', false, 3000);
-            });
+            /* إذا كان tab = totw — أيضاً */
+            if (slide.tab === 'totw') {
+                window.location.href = './totw.html';
+                return;
+            }
 
-        } else {
-
-            item.addEventListener('click', function() {
-                switchTab(slide.tab);
-            });
-        }
+            /* خلاف ذلك — switchTab */
+            switchTab(slide.tab);
+        });
 
         track.appendChild(item);
 
@@ -120,10 +117,6 @@ function buildCarousel() {
 }
 
 
-/* =========================================================
-   GO TO CAROUSEL SLIDE
-========================================================= */
-
 function goToCarousel(index) {
 
     carouselIndex = (index + carouselSlides.length) % carouselSlides.length;
@@ -141,28 +134,16 @@ function goToCarousel(index) {
 }
 
 
-/* =========================================================
-   NEXT CAROUSEL
-========================================================= */
-
 function nextCarousel() {
     goToCarousel(carouselIndex + 1);
 }
 
-
-/* =========================================================
-   START CAROUSEL
-========================================================= */
 
 function startCarousel() {
     stopCarousel();
     carouselTimer = setInterval(nextCarousel, 5000);
 }
 
-
-/* =========================================================
-   STOP CAROUSEL
-========================================================= */
 
 function stopCarousel() {
     if (carouselTimer) {
@@ -171,10 +152,6 @@ function stopCarousel() {
     }
 }
 
-
-/* =========================================================
-   CAROUSEL TOUCH / SWIPE
-========================================================= */
 
 function setupCarouselTouch() {
 
