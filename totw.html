@@ -67,7 +67,7 @@ body{
 }
 
 @keyframes headerGlow{
-    0%,100%{transform:scale(1); opacity:.5;}
+    0%,100%{transform:-sizescale(1); opacity:.5;}
     50%{transform:scale(1.2); opacity:.8;}
 }
 
@@ -83,8 +83,8 @@ body{
     z-index:1;
 }
 
-.totw-subtitle{
-    font-size:14px;
+.totw-sub:title{
+    font14px;
     font-weight:700;
     color:#00ff87;
     letter-spacing:2px;
@@ -283,7 +283,7 @@ body{
 }
 
 /* ============================================
-   ROWS - توزيع اللاعبين
+   ROWS
 ============================================ */
 
 .row{
@@ -294,26 +294,22 @@ body{
     position:relative;
 }
 
-/* صف المهاجمين - 3 لاعبين: جناح يسار / رأس حربة / جناح يمين */
 .row-1{
     justify-content:space-between;
     padding:0 8%;
     margin-top:2%;
 }
 
-/* صف الوسط - 3 لاعبين: يمين / وسط / يسار */
 .row-2{
     justify-content:space-between;
     padding:0 6%;
 }
 
-/* صف الدفاع - 4 لاعبين: ظهير / قلب / قلب / ظهير */
 .row-3{
     justify-content:space-between;
     padding:0 2%;
 }
 
-/* صف الحارس - 1 لاعب */
 .row-4{
     justify-content:center;
     margin-bottom:4%;
@@ -326,40 +322,26 @@ body{
 .player-card{
     width:84px;
     min-height:100px;
-    background:linear-gradient(145deg, #38003c 0%, #2e0b3d 50%, #38003c 100%);
-    border:2.5px solid #00ff87;
-    border-radius:16px;
-    box-shadow:
-        0 0 15px rgba(0,255,135,.6),
-        0 6px 15px rgba(0,0,0,.5),
-        inset 0 1px 0 rgba(255,255,255,.1);
+    background-image:url('./card-bg.png');
+    background-size:100% 100%;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-color:transparent;
+    border:none;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    padding:8px 5px;
-    transition:transform .3s ease, box-shadow .3s ease;
+    padding:8px 6px;
+    transition:transform .3s ease, filter .3s ease;
     position:relative;
-    overflow:hidden;
-}
-
-.player-card::before{
-    content:'';
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    height:3px;
-    background:linear-gradient(90deg, transparent 0%, #00ff87 50%, transparent 100%);
-    opacity:.7;
+    overflow:visible;
+    filter:drop-shadow(0 0 10px rgba(0,255,135,.6));
 }
 
 .player-card:hover{
-    transform:scale(1.12) translateY(-4px);
-    box-shadow:
-        0 0 30px rgba(0,255,135,.9),
-        0 10px 25px rgba(0,0,0,.6),
-        inset 0 1px 0 rgba(255,255,255,.2);
+    transform:scale(1.1) translateY(-4px);
+    filter:drop-shadow(0 0 20px rgba(0,255,135,.9));
     z-index:10;
 }
 
@@ -367,26 +349,22 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:34px;
-    height:34px;
-    background:linear-gradient(145deg, #7138f5 0%, #6b21a8 50%, #38003c 100%);
-    border:2.5px solid #00ff87;
-    border-radius:50%;
     color:#fff;
-    font-size:15px;
+    font-size:26px;
     font-weight:900;
-    margin-bottom:6px;
-    box-shadow:
-        0 0 12px rgba(0,255,135,.7),
-        inset 0 1px 0 rgba(255,255,255,.3);
+    margin-bottom:4px;
+    text-shadow:
+        0 0 8px rgba(0,0,0,.9),
+        0 2px 4px rgba(0,0,0,.7);
+    letter-spacing:1px;
     flex-shrink:0;
-    text-shadow:0 1px 3px rgba(0,0,0,.5);
+    line-height:1;
 }
 
 .player-card .name{
     color:#fff;
-    font-size:10px;
-    font-weight:800;
+    font-size:11px;
+    font-weight:700;
     text-align:center;
     line-height:1.15;
     letter-spacing:0.3px;
@@ -397,17 +375,14 @@ body{
     display:-webkit-box;
     -webkit-line-clamp:2;
     -webkit-box-orient:vertical;
-    text-shadow:0 1px 3px rgba(0,0,0,.6);
+    text-shadow:
+        0 1px 3px rgba(0,0,0,.9),
+        0 0 4px rgba(0,0,0,.7);
+    margin-top:2px;
 }
 
 .player-card .points{
-    color:#00ff87;
-    font-size:12px;
-    font-weight:900;
-    margin-top:4px;
-    letter-spacing:0.5px;
-    flex-shrink:0;
-    text-shadow:0 0 8px rgba(0,255,135,.6);
+    display:none;
 }
 
 /* ============================================
@@ -491,22 +466,14 @@ body{
         width:72px;
         min-height:86px;
         padding:6px 4px;
-        border-radius:14px;
     }
 
     .player-card .number{
-        width:28px;
-        height:28px;
-        font-size:13px;
-        margin-bottom:4px;
+        font-size:22px;
     }
 
     .player-card .name{
-        font-size:9px;
-    }
-
-    .player-card .points{
-        font-size:11px;
+        font-size:10px;
     }
 
     .row-1{
@@ -573,7 +540,6 @@ body{
 const WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
 const TOTAL_PAGES = 7;
 
-/* أرقام المراكز التقليدية */
 const NUMBERS = {
     GK: 1,
     DEF: [2, 4, 5, 12],
@@ -633,7 +599,6 @@ function renderCards(top11) {
 
     if (!pitch) return;
 
-    /* تقسيم: 3 هجوم / 3 وسط / 4 دفاع / 1 حارس */
     const forwards = top11.slice(0, 3);
     const midfielders = top11.slice(3, 6);
     const defenders = top11.slice(6, 10);
@@ -641,42 +606,29 @@ function renderCards(top11) {
 
     let html = '';
 
-    /* ===== صف الهجوم ===== */
-    /* الجناح الأيسر (7) / رأس الحربة (9) / الجناح الأيمن (11) */
+    /* الهجوم: جناح / رأس حربة / جناح */
     html += '<div class="row row-1">';
-
-    /* الجناح الأيسر */
-    html += createCard(forwards[1], NUMBERS.FWD[0]);   /* 7 */
-
-    /* رأس الحربة */
-    html += createCard(forwards[0], NUMBERS.FWD[1]);   /* 9 */
-
-    /* الجناح الأيمن */
-    html += createCard(forwards[2], NUMBERS.FWD[2]);   /* 11 */
-
+    html += createCard(forwards[1], NUMBERS.FWD[0]);
+    html += createCard(forwards[0], NUMBERS.FWD[1]);
+    html += createCard(forwards[2], NUMBERS.FWD[2]);
     html += '</div>';
 
-    /* ===== صف الوسط ===== */
+    /* الوسط */
     html += '<div class="row row-2">';
-
-    html += createCard(midfielders[0], NUMBERS.MID[0]); /* 6 */
-    html += createCard(midfielders[1], NUMBERS.MID[1]); /* 8 */
-    html += createCard(midfielders[2], NUMBERS.MID[2]); /* 10 */
-
+    html += createCard(midfielders[0], NUMBERS.MID[0]);
+    html += createCard(midfielders[1], NUMBERS.MID[1]);
+    html += createCard(midfielders[2], NUMBERS.MID[2]);
     html += '</div>';
 
-    /* ===== صف الدفاع ===== */
-    /* الظهير الأيسر (12) / قلب دفاع (4) / قلب دفاع (5) / الظهير الأيمن (2) */
+    /* الدفاع: ظهير / قلب / قلب / ظهير */
     html += '<div class="row row-3">';
-
-    html += createCard(defenders[1], NUMBERS.DEF[3]);   /* 12 - ظهير أيسر */
-    html += createCard(defenders[0], NUMBERS.DEF[1]);   /* 4 - قلب دفاع */
-    html += createCard(defenders[2], NUMBERS.DEF[2]);   /* 5 - قلب دفاع */
-    html += createCard(defenders[3], NUMBERS.DEF[0]);   /* 2 - ظهير أيمن */
-
+    html += createCard(defenders[1], NUMBERS.DEF[3]);
+    html += createCard(defenders[0], NUMBERS.DEF[1]);
+    html += createCard(defenders[2], NUMBERS.DEF[2]);
+    html += createCard(defenders[3], NUMBERS.DEF[0]);
     html += '</div>';
 
-    /* ===== صف الحارس ===== */
+    /* الحارس */
     html += '<div class="row row-4">';
     html += createCard(goalkeeper[0], NUMBERS.GK);
     html += '</div>';
@@ -696,7 +648,6 @@ function createCard(player, number) {
     return '<div class="player-card">' +
         '<div class="number">' + number + '</div>' +
         '<div class="name">' + name + '</div>' +
-        '<div class="points">' + player.event_total + ' pts</div>' +
     '</div>';
 }
 
@@ -746,11 +697,6 @@ async function loadTOTW() {
 
 
 function changeGameweek() {
-
-    const gw = document.getElementById('gwSelect').value;
-
-    console.log('Gameweek changed to:', gw);
-
     loadTOTW();
 }
 
