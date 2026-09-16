@@ -151,20 +151,6 @@ body{
     fill:none;
 }
 
-#downloadFab.loading{
-    pointer-events:none;
-    opacity:.7;
-}
-
-#downloadFab.loading svg{
-    animation:rotateFab 1s linear infinite;
-}
-
-@keyframes rotateFab{
-    0%{transform:rotate(0);}
-    100%{transform:rotate(360deg);}
-}
-
 #hiddenEditBtn,
 #hiddenEditBtn2{
     display:block;
@@ -194,11 +180,6 @@ body{
 #hiddenEditBtn:hover,
 #hiddenEditBtn2:hover{
     color:rgba(255,255,255,0.3);
-}
-
-#hiddenEditBtn:active,
-#hiddenEditBtn2:active{
-    color:rgba(255,255,255,0.4);
 }
 
 #toast{
@@ -594,19 +575,9 @@ body{
     touch-action:manipulation;
 }
 
-.edit-action-btn:active{
-    transform:scale(.96);
-}
-
 .save-round-btn{
     background:linear-gradient(135deg, #00e676 0%, #00c853 50%, #009b40 100%);
     box-shadow:0 4px 0 #006b2c, 0 6px 15px rgba(0,200,83,.4), inset 0 1px 0 rgba(255,255,255,.3);
-}
-
-.save-round-btn:hover{
-    background:linear-gradient(135deg, #00f57d 0%, #00d95a 50%, #00a848 100%);
-    box-shadow:0 4px 0 #006b2c, 0 8px 20px rgba(0,200,83,.6), inset 0 1px 0 rgba(255,255,255,.4);
-    transform:translateY(-2px);
 }
 
 .clear-round-btn{
@@ -614,27 +585,9 @@ body{
     box-shadow:0 4px 0 #800028, 0 6px 15px rgba(255,0,90,.4), inset 0 1px 0 rgba(255,255,255,.3);
 }
 
-.clear-round-btn:hover{
-    background:linear-gradient(135deg, #ff558f 0%, #ff1a6b 50%, #c70046 100%);
-    box-shadow:0 4px 0 #800028, 0 8px 20px rgba(255,0,90,.6), inset 0 1px 0 rgba(255,255,255,.4);
-    transform:translateY(-2px);
-}
-
 .download-action-btn{
     background:linear-gradient(135deg, #448aff 0%, #3281ff 50%, #1f5dbf 100%);
     box-shadow:0 4px 0 #103c7a, 0 6px 15px rgba(50,129,255,.4), inset 0 1px 0 rgba(255,255,255,.3);
-}
-
-.download-action-btn:hover{
-    background:linear-gradient(135deg, #5c9bff 0%, #3d8dff 50%, #296bc9 100%);
-    box-shadow:0 4px 0 #103c7a, 0 8px 20px rgba(50,129,255,.6), inset 0 1px 0 rgba(255,255,255,.4);
-    transform:translateY(-2px);
-}
-
-.edit-action-btn:disabled{
-    opacity:.5;
-    cursor:not-allowed;
-    transform:none;
 }
 
 #captureFixtures{
@@ -696,23 +649,6 @@ body{
     border-radius:8px;
 }
 
-.fixture-row.featured-row{
-    background:linear-gradient(90deg, rgba(255,183,0,.15) 0%, rgba(255,215,0,.08) 50%, rgba(255,183,0,.15) 100%);
-    border-left:4px solid #ffb700;
-    padding-left:8px;
-    border-radius:8px;
-    position:relative;
-}
-
-.fixture-row.featured-row::before{
-    content:'⭐';
-    position:absolute;
-    top:-8px;
-    right:8px;
-    font-size:16px;
-    filter:drop-shadow(0 0 5px rgba(255,183,0,.8));
-}
-
 .team-box{
     display:flex;
     align-items:center;
@@ -721,7 +657,6 @@ body{
     font-size:13px;
     font-weight:700;
     color:#1a1a2e;
-    text-transform:none;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -783,7 +718,6 @@ body{
     overflow:hidden;
     vertical-align:middle;
     margin:0 6px;
-    transition:transform .25s ease;
 }
 
 .logo-24 img{
@@ -797,10 +731,6 @@ body{
     height:auto;
     object-fit:contain;
     display:block;
-}
-
-.fixture-row:hover .logo-24{
-    transform:scale(1.15);
 }
 
 .match-score-center{
@@ -818,12 +748,6 @@ body{
     box-shadow:0 3px 8px rgba(56,0,60,.3);
     position:relative;
     flex-shrink:0;
-    transition:transform .25s ease;
-}
-
-.fixture-row:hover .match-score-center{
-    transform:scale(1.05);
-    box-shadow:0 5px 15px rgba(56,0,60,.5);
 }
 
 .score-display,
@@ -941,27 +865,9 @@ td{
     height:44px;
     max-height:44px;
     overflow:hidden;
-    transition:background .2s ease;
 }
 
 tr:last-child td{border-bottom:none}
-
-tr:hover td{
-    background:rgba(113,56,245,.05);
-}
-
-tr.pos-1 td{
-    background:linear-gradient(90deg, #d4f5dd 0%, #ffffff 100%);
-}
-
-tr.pos-2 td{
-    background:linear-gradient(90deg, #e8f9ee 0%, #ffffff 100%);
-}
-
-tr.pos-3 td{
-    background:linear-gradient(90deg, #f2fcf6 0%, #ffffff 100%);
-}
-
 tr.green-line td{border-bottom:3px solid #00ff87!important}
 tr.red-line td{border-bottom:3px solid #ff005a!important}
 
@@ -1049,7 +955,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 .totw-header-box{
     text-align:center;
     margin-bottom:14px;
-    padding:14px;
+    padding:16px 14px;
     background:linear-gradient(135deg, #6b21a8 0%, #38003c 100%);
     border-radius:16px;
     border:3px solid #00ff87;
@@ -1063,23 +969,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     letter-spacing:2px;
     text-transform:uppercase;
     text-shadow:0 3px 10px rgba(0,0,0,.6);
-}
-
-.totw-header-sub{
-    font-size:13px;
-    font-weight:700;
-    color:#00ff87;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-    margin-top:4px;
-    text-shadow:0 0 10px rgba(0,255,135,.6);
-}
-
-.totw-updated{
-    font-size:11px;
-    color:rgba(255,255,255,.7);
-    margin-top:6px;
-    font-weight:600;
 }
 
 .totw-controls-row{
@@ -1110,7 +999,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     color:#fff;
 }
 
-.totw-refresh-btn{
+.totw-action-btn{
     color:#fff;
     border:2px solid #00ff87;
     border-radius:10px;
@@ -1121,17 +1010,31 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     letter-spacing:1px;
     text-transform:uppercase;
     transition:all .25s ease;
+    font-family:var(--font-en);
+}
+
+.totw-refresh-btn{
     background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
     box-shadow:0 0 12px rgba(0,255,135,.4);
 }
 
-.totw-refresh-btn:hover{
+.totw-save-btn{
+    background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
+    box-shadow:0 0 12px rgba(50,129,255,.4);
+}
+
+.totw-action-btn:hover{
     transform:scale(1.05);
 }
 
-.totw-refresh-btn.loading{
-    opacity:.6;
-    pointer-events:none;
+.totw-action-btn:active{
+    transform:scale(.96);
+}
+
+.totw-action-btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+    transform:none;
 }
 
 .totw-pitch-wrapper{
@@ -1291,12 +1194,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     filter:drop-shadow(0 0 10px rgba(50,129,255,.7));
 }
 
-.totw-card:hover{
-    transform:scale(1.1) translateY(-4px);
-    filter:drop-shadow(0 0 22px rgba(50,129,255,1));
-    z-index:10;
-}
-
 .totw-card .tc-number{
     color:#fff;
     font-size:18px;
@@ -1371,10 +1268,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
     .totw-header-title{
         font-size:18px;
-    }
-
-    .totw-header-sub{
-        font-size:11px;
     }
 
     .totw-pitch{
@@ -1521,8 +1414,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
         <div class="totw-header-box">
             <div class="totw-header-title">⚽ TEAM OF THE WEEK ⚽</div>
-            <div class="totw-header-sub">General League of TeleGoat</div>
-            <div class="totw-updated" id="totwUpdated">Loading...</div>
         </div>
 
         <div class="totw-controls-row">
@@ -1534,8 +1425,12 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
                 <option value="1">Gameweek 1</option>
             </select>
 
-            <button id="totwRefreshBtn" class="totw-refresh-btn" onclick="loadTOTW()">
+            <button id="totwRefreshBtn" class="totw-action-btn totw-refresh-btn" onclick="loadTOTW()">
                 🔄 Refresh
+            </button>
+
+            <button id="totwSaveBtn" class="totw-action-btn totw-save-btn" onclick="saveTOTWImage()">
+                ⬇️ Download
             </button>
         </div>
 
@@ -1660,12 +1555,12 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=3"></script>
-<script src="fixtures.js"></script>
+<script src="carousel.js?v=4"></script>
+<script src="fixtures.js?v=4"></script>
 <script src="standings.js"></script>
 <script src="download.js"></script>
 <script src="share.js"></script>
-<script src="totw.js"></script>
+<script src="totw.js?v=4"></script>
 <script src="main.js"></script>
 
 </body>
