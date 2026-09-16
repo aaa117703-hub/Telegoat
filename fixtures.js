@@ -85,11 +85,11 @@ function changeRound(step) {
 }
 
 
+/* =========================================================
+   SWITCH TAB - محدّث لدعم TOTW
+========================================================= */
+
 function switchTab(tabName) {
-    if (tabName === 'fpl') {
-        showToast('FPL - coming soon', false, 3000);
-        return;
-    }
 
     activeTab = tabName;
 
@@ -100,12 +100,26 @@ function switchTab(tabName) {
     });
 
     if (tabName === 'standings') {
+
         const el = document.getElementById('standingsTab');
         if (el) {
             el.classList.add('active');
         }
         renderStandings();
+
+    } else if (tabName === 'totw') {
+
+        const el = document.getElementById('totwTab');
+        if (el) {
+            el.classList.add('active');
+        }
+
+        if (typeof loadTOTW === 'function') {
+            loadTOTW();
+        }
+
     } else {
+
         const el = document.getElementById('fixturesTab');
         if (el) {
             el.classList.add('active');
