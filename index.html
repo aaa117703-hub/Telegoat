@@ -1042,8 +1042,375 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 .col-pts{width:14%}
 .col-form{width:21%}
 
+/* ============================================
+   TOTW TAB
+============================================ */
+
+.totw-header-box{
+    text-align:center;
+    margin-bottom:14px;
+    padding:14px;
+    background:linear-gradient(135deg, #6b21a8 0%, #38003c 100%);
+    border-radius:16px;
+    border:3px solid #00ff87;
+    box-shadow:0 0 25px rgba(0,255,135,.5);
+}
+
+.totw-header-title{
+    font-size:22px;
+    font-weight:900;
+    color:#fff;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    text-shadow:0 3px 10px rgba(0,0,0,.6);
+}
+
+.totw-header-sub{
+    font-size:13px;
+    font-weight:700;
+    color:#00ff87;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    margin-top:4px;
+    text-shadow:0 0 10px rgba(0,255,135,.6);
+}
+
+.totw-updated{
+    font-size:11px;
+    color:rgba(255,255,255,.7);
+    margin-top:6px;
+    font-weight:600;
+}
+
+.totw-controls-row{
+    display:flex;
+    gap:8px;
+    margin-bottom:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.totw-gw-select{
+    background:#38003c;
+    border:2px solid #00ff87;
+    border-radius:10px;
+    padding:8px 14px;
+    font-size:12px;
+    font-weight:800;
+    color:#fff;
+    cursor:pointer;
+    outline:none;
+    min-width:120px;
+    text-align:center;
+    box-shadow:0 0 12px rgba(0,255,135,.3);
+}
+
+.totw-gw-select option{
+    background:#2d0a3d;
+    color:#fff;
+}
+
+.totw-refresh-btn{
+    color:#fff;
+    border:2px solid #00ff87;
+    border-radius:10px;
+    padding:8px 14px;
+    font-size:12px;
+    font-weight:900;
+    cursor:pointer;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    transition:all .25s ease;
+    background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
+    box-shadow:0 0 12px rgba(0,255,135,.4);
+}
+
+.totw-refresh-btn:hover{
+    transform:scale(1.05);
+}
+
+.totw-refresh-btn.loading{
+    opacity:.6;
+    pointer-events:none;
+}
+
+.totw-pitch-wrapper{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    margin-bottom:16px;
+}
+
+.totw-pitch{
+    position:relative;
+    width:100%;
+    max-width:480px;
+    aspect-ratio:2/3;
+    background:
+        radial-gradient(ellipse at 50% 20%, rgba(50,129,255,.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 80%, rgba(50,129,255,.15) 0%, transparent 60%),
+        linear-gradient(180deg, #2e0b3d 0%, #38003c 50%, #2e0b3d 100%);
+    border:3px solid #3281ff;
+    border-radius:18px;
+    box-shadow:
+        0 0 35px rgba(50,129,255,.5),
+        inset 0 0 70px rgba(0,0,0,.4);
+    overflow:hidden;
+}
+
+.totw-pitch::before{
+    content:'';
+    position:absolute;
+    top:50%;
+    left:0;
+    right:0;
+    height:3px;
+    background:linear-gradient(90deg, transparent 0%, rgba(50,129,255,.7) 50%, transparent 100%);
+    z-index:1;
+    box-shadow:0 0 10px rgba(50,129,255,.6);
+}
+
+.totw-circle{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:32%;
+    aspect-ratio:1/1;
+    border:3px solid rgba(50,129,255,.6);
+    border-radius:50%;
+    z-index:1;
+    box-shadow:0 0 15px rgba(50,129,255,.4), inset 0 0 15px rgba(50,129,255,.2);
+}
+
+.totw-box-top{
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:55%;
+    height:14%;
+    border:3px solid rgba(50,129,255,.6);
+    border-top:none;
+    z-index:1;
+}
+
+.totw-box-top::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:55%;
+    height:45%;
+    border:3px solid rgba(50,129,255,.6);
+    border-top:none;
+}
+
+.totw-box-bottom{
+    position:absolute;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:55%;
+    height:14%;
+    border:3px solid rgba(50,129,255,.6);
+    border-bottom:none;
+    z-index:1;
+}
+
+.totw-box-bottom::before{
+    content:'';
+    position:absolute;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:55%;
+    height:45%;
+    border:3px solid rgba(50,129,255,.6);
+    border-bottom:none;
+}
+
+.totw-players{
+    position:relative;
+    width:100%;
+    height:100%;
+    z-index:2;
+    padding:4% 3%;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.totw-row{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    position:relative;
+}
+
+.totw-row-1{
+    justify-content:space-between;
+    padding:0 8%;
+    margin-top:2%;
+}
+
+.totw-row-2{
+    justify-content:space-between;
+    padding:0 6%;
+}
+
+.totw-row-3{
+    justify-content:space-between;
+    padding:0 2%;
+}
+
+.totw-row-4{
+    justify-content:center;
+    margin-bottom:4%;
+}
+
+.totw-card{
+    width:78px;
+    height:96px;
+    background-image:url('./card-bg.png');
+    background-size:contain;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-color:transparent;
+    border:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:14px 8px 16px 8px;
+    transition:transform .3s ease, filter .3s ease;
+    position:relative;
+    overflow:visible;
+    filter:drop-shadow(0 0 10px rgba(50,129,255,.7));
+}
+
+.totw-card:hover{
+    transform:scale(1.1) translateY(-4px);
+    filter:drop-shadow(0 0 22px rgba(50,129,255,1));
+    z-index:10;
+}
+
+.totw-card .tc-number{
+    color:#fff;
+    font-size:18px;
+    font-weight:900;
+    margin-bottom:2px;
+    text-shadow:0 0 6px rgba(50,129,255,.9), 0 2px 4px rgba(0,0,0,.8);
+    line-height:1;
+}
+
+.totw-card .tc-name{
+    color:#fff;
+    font-size:9px;
+    font-weight:800;
+    text-align:center;
+    line-height:1.1;
+    word-break:break-word;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    text-shadow:0 1px 2px rgba(0,0,0,.9), 0 0 8px rgba(50,129,255,.8);
+    margin-bottom:2px;
+}
+
+.totw-card .tc-points{
+    color:#00ff87;
+    font-size:9px;
+    font-weight:900;
+    text-align:center;
+    text-shadow:0 0 6px rgba(0,255,135,.9), 0 1px 2px rgba(0,0,0,.8);
+    line-height:1;
+    margin-top:1px;
+}
+
+.totw-loading{
+    text-align:center;
+    padding:40px 20px;
+    color:#00ff87;
+    font-size:15px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.totw-loading .spinner{
+    display:inline-block;
+    width:36px;
+    height:36px;
+    border:4px solid rgba(0,255,135,.2);
+    border-top-color:#00ff87;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin-bottom:14px;
+}
+
+.totw-error{
+    text-align:center;
+    padding:24px 16px;
+    background:rgba(255,0,90,.15);
+    border:2px solid #ff005a;
+    border-radius:12px;
+    color:#ff005a;
+    font-size:13px;
+    font-weight:800;
+}
+
 .tab-content{display:none}
 .tab-content.active{display:block}
+
+@media(max-width:480px){
+
+    .totw-header-title{
+        font-size:18px;
+    }
+
+    .totw-header-sub{
+        font-size:11px;
+    }
+
+    .totw-pitch{
+        max-width:100%;
+    }
+
+    .totw-card{
+        width:72px;
+        height:88px;
+        padding:12px 6px 14px 6px;
+    }
+
+    .totw-card .tc-number{
+        font-size:16px;
+    }
+
+    .totw-card .tc-name{
+        font-size:8px;
+    }
+
+    .totw-card .tc-points{
+        font-size:8px;
+    }
+
+    .totw-row-1{
+        padding:0 5%;
+    }
+
+    .totw-row-2{
+        padding:0 4%;
+    }
+
+    .totw-row-3{
+        padding:0 1%;
+    }
+}
 </style>
 
 <link rel="stylesheet" href="mobile.css">
@@ -1149,6 +1516,47 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
         <button id="hiddenEditBtn2" class="hidden-edit-btn">Aqeel Al Rowai</button>
     </div>
 
+    <!-- TOTW TAB -->
+    <div id="totwTab" class="tab-content">
+
+        <div class="totw-header-box">
+            <div class="totw-header-title">⚽ TEAM OF THE WEEK ⚽</div>
+            <div class="totw-header-sub">General League of TeleGoat</div>
+            <div class="totw-updated" id="totwUpdated">Loading...</div>
+        </div>
+
+        <div class="totw-controls-row">
+            <select id="totwGwSelect" class="totw-gw-select">
+                <option value="5">Gameweek 5</option>
+                <option value="4">Gameweek 4</option>
+                <option value="3">Gameweek 3</option>
+                <option value="2">Gameweek 2</option>
+                <option value="1">Gameweek 1</option>
+            </select>
+
+            <button id="totwRefreshBtn" class="totw-refresh-btn" onclick="loadTOTW()">
+                🔄 Refresh
+            </button>
+        </div>
+
+        <div id="totwLoadingBox" class="totw-loading">
+            <div class="spinner"></div>
+            <div>Loading Team of the Week...</div>
+        </div>
+
+        <div id="totwPitchWrapper" class="totw-pitch-wrapper" style="display:none;">
+            <div class="totw-pitch" id="totwPitchToSave">
+                <div class="totw-circle"></div>
+                <div class="totw-box-top"></div>
+                <div class="totw-box-bottom"></div>
+                <div class="totw-players" id="totwPlayers"></div>
+            </div>
+        </div>
+
+        <div id="totwErrorBox" class="totw-error" style="display:none;"></div>
+
+    </div>
+
 </div>
 
 <script>
@@ -1252,11 +1660,12 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=2"></script>
+<script src="carousel.js?v=3"></script>
 <script src="fixtures.js"></script>
 <script src="standings.js"></script>
 <script src="download.js"></script>
 <script src="share.js"></script>
+<script src="totw.js"></script>
 <script src="main.js"></script>
 
 </body>
