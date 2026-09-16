@@ -1,6 +1,5 @@
 /* =========================================================
    players-teams.js
-   خريطة: اسم اللاعب → الفريق + شعارات الفرق
 ========================================================= */
 
 const PLAYERS_TEAMS = {
@@ -18,7 +17,7 @@ const PLAYERS_TEAMS = {
         "BAKR RMD",
         "Mustafa Qeesa",
         "The Godfather",
-        "عثمان ."
+        "عثمان"
     ],
 
     "Nottingham Forest": [
@@ -32,7 +31,7 @@ const PLAYERS_TEAMS = {
         "MAYU MO",
         "zyad rajeh",
         "Murtada A.K",
-        "حسون العراقي 🤍",
+        "حسون العراقي",
         "Ali Khaled",
         "Ahmed Moatsem"
     ],
@@ -70,7 +69,7 @@ const PLAYERS_TEAMS = {
     ],
 
     "Chelsea": [
-        "Ahmed KM 🇮🇶",
+        "Ahmed KM",
         "Ali Qais",
         "زيار كركوك",
         "محمد الاسدي",
@@ -87,12 +86,12 @@ const PLAYERS_TEAMS = {
 
     "Hull City": [
         "Maithm Kamil",
-        "كرار حيدر----",
+        "كرار حيدر",
         "Ali Qahtan",
         "abbas falcon",
         "khalid abdullah",
         "Haji Muammal",
-        "Mohammed Hussein .",
+        "Mohammed Hussein",
         "Ali Aliraqi",
         "Wolf Rahim",
         "Ahmed Karim",
@@ -136,7 +135,7 @@ const PLAYERS_TEAMS = {
     "Liverpool": [
         "yuossif Mohammed",
         "Sajad Abbas",
-        "BRHM 🚬",
+        "BRHM",
         "Serwan Waleed",
         "ahmed ali",
         "Mohammed Tawfiq",
@@ -153,7 +152,7 @@ const PLAYERS_TEAMS = {
         "Mohamed Khalid",
         "H4SOON Khudair",
         "mohamed alaa1",
-        "Humam 〆",
+        "Humam",
         "Hassanin Wadai",
         "عبدالله عصام",
         "Ehab Mo",
@@ -168,15 +167,14 @@ const PLAYERS_TEAMS = {
         "Haider Adnan",
         "Malak Riyad",
         "Yousef Haider",
-        "أخلاقي سر سعادتي",
+        "أخلاقي سعد",
         "Abdullah Arshad",
         "محمد صادق",
         "Mariam Aead",
- Kh        "Murtadha Nizar",
-        "aledمحمد حسام",
-",
-        "Yous       if Khalid",
-        "ALi " Ghazi",
+        "Murtadha Nizar",
+        "محمد حسام",
+        "Yousif Khalid",
+        "ALi Ghazi",
         "Yasser Abdul Amir",
         "Yousif Al-Kubaici"
     ],
@@ -198,7 +196,7 @@ const PLAYERS_TEAMS = {
     "Sunderland": [
         "محمد حسن علي",
         "Zain Kareem",
-        "🐺The Wolf",
+        "The Wolf",
         "Sajad Oaled",
         "عمر فاروق",
         "Corey Mird",
@@ -216,8 +214,9 @@ const PLAYERS_TEAMS = {
         "Bassam Ahmed",
         "yousef morad",
         "MALEK Khlil",
-        "ABBASAbdullah Kutaiba",
-        "ahmed hany-28",
+        "ABBAS Khaled",
+        "Abdullah Kutaiba",
+        "ahmed hany",
         "Aymen Nazar",
         "HUSSEN ALI",
         "كرار الجوذري",
@@ -238,7 +237,7 @@ const PLAYERS_TEAMS = {
         "abd alhadi",
         "Krrar musa",
         "3li Coventry City",
-        "HERE WE GO !",
+        "HERE WE GO",
         "Liam mlnr"
     ],
 
@@ -249,10 +248,10 @@ const PLAYERS_TEAMS = {
         "iQjhNm_- Hasan",
         "Qadees Sh",
         "ali qassim",
-        "𝔸𝔹𝕆𝕆𝔻𝕐 𝔸𝕃ℍ𝕐𝔻𝔸ℝ𝕀",
+        "ABOODY ALHYDARI",
         "Mohamed Shadow",
         "saif ahmed",
-        "noor Alaa --",
+        "noor Alaa",
         "MOAMAL GOAT",
         "Mohammed king"
     ],
@@ -281,7 +280,7 @@ const PLAYERS_TEAMS = {
         "Jaafar Jawad",
         "fog fighter",
         "Sajad Rasheed",
-        "Ja3FaR ZwaeD --",
+        "Ja3FaR ZwaeD",
         "M7mad Alzaidy",
         "Omer Daghistany",
         "Ghaith Alsabti",
@@ -292,7 +291,7 @@ const PLAYERS_TEAMS = {
     "Leeds United": [
         "Mohammed Nawras",
         "شلال خليل",
-        "RC5 .",
+        "RC5",
         "Abod ALbasha",
         "ABDULLAH JALAL",
         "karar h",
@@ -309,7 +308,7 @@ const PLAYERS_TEAMS = {
         "Hussein Amir",
         "EZEeeeee youuu",
         "ali mu",
-        "Luka Modric .",
+        "Luka Modric",
         "hamza -f",
         "Hassan Alaa",
         "karrar zeher",
@@ -324,7 +323,7 @@ const PLAYERS_TEAMS = {
 
 
 /* =========================================================
-   FIND PLAYER TEAM - البحث عن فريق اللاعب
+   FIND PLAYER TEAM
 ========================================================= */
 
 function findPlayerTeam(playerName) {
@@ -352,7 +351,7 @@ function findPlayerTeam(playerName) {
 
 
 /* =========================================================
-   TEAMS LOGOS - شعارات الفرق
+   TEAMS LOGOS
 ========================================================= */
 
 const TEAMS_LOGOS = {
