@@ -123,17 +123,6 @@ body{
     outline:none;
 }
 
-#downloadFab:hover{
-    transform:scale(1.08) translateY(-2px);
-    box-shadow:
-        0 6px 18px rgba(0,200,83,.7),
-        0 0 30px rgba(0,255,135,.5);
-}
-
-#downloadFab:active{
-    transform:scale(.94);
-}
-
 #downloadFab svg{
     width:24px;
     height:24px;
@@ -169,17 +158,10 @@ body{
     transition:color .3s ease;
     user-select:none;
     -webkit-user-select:none;
-    -moz-user-select:none;
-    -ms-user-select:none;
     -webkit-touch-callout:none;
     -webkit-tap-highlight-color:transparent;
     touch-action:manipulation;
     outline:none;
-}
-
-#hiddenEditBtn:hover,
-#hiddenEditBtn2:hover{
-    color:rgba(255,255,255,0.3);
 }
 
 #toast{
@@ -307,47 +289,14 @@ body{
     box-shadow:0 3px 0 #103c7a;
 }
 
-.share-copy:hover{transform:scale(1.05);}
-
 .share-twitter{
     background:linear-gradient(135deg, #1da1f2 0%, #0d8ecf 100%);
     box-shadow:0 3px 0 #0a6a99;
 }
 
-.share-twitter:hover{transform:scale(1.05);}
-
 .share-close{
     background:linear-gradient(135deg, #ff4081 0%, #b8003f 100%);
     box-shadow:0 3px 0 #800028;
-}
-
-.share-close:hover{transform:scale(1.05);}
-
-.locked-overlay{
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    background:rgba(0,0,0,.55);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:3;
-}
-
-.lock-text{
-    color:#fff;
-    font-weight:900;
-    font-size:clamp(18px,3vw,28px);
-    text-shadow:0 4px 15px rgba(0,0,0,.9);
-    background:rgba(255,0,90,.85);
-    padding:12px 28px;
-    border-radius:50px;
-    border:3px solid #fff;
-    display:flex;
-    align-items:center;
-    gap:10px;
 }
 
 .carousel-wrapper{
@@ -395,10 +344,6 @@ body{
     display:block;
     object-fit:contain;
     object-position:center;
-}
-
-.carousel:hover{
-    box-shadow:0 0 25px rgba(0,255,135,.9);
 }
 
 .carousel-dots{
@@ -452,14 +397,7 @@ body{
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='white' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
     background-repeat:no-repeat;
     background-position:right 12px center;
-    transition:all .2s ease;
     touch-action:manipulation;
-}
-
-.round-select-pill:hover,
-.round-select-pill:focus{
-    border-color:#00ff87;
-    box-shadow:0 0 10px rgba(0,255,135,.35);
 }
 
 .round-select-pill option{
@@ -500,11 +438,6 @@ body{
     touch-action:manipulation;
 }
 
-.round-indicator:hover{
-    border-color:rgba(255,255,255,.2);
-    background:rgba(255,255,255,.05);
-}
-
 .nav-arrow-btn{
     background:#38003c;
     color:#fff;
@@ -518,19 +451,8 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    transition:all .2s ease;
     flex-shrink:0;
     touch-action:manipulation;
-}
-
-.nav-arrow-btn:hover{
-    background:#ff005a;
-    border-color:#ff005a;
-    transform:scale(1.1);
-}
-
-.nav-arrow-btn:active{
-    transform:scale(.95);
 }
 
 .main-container{
@@ -562,14 +484,11 @@ body{
     cursor:pointer;
     flex:1 1 auto;
     min-width:110px;
-    transition:all .25s ease;
     color:#fff;
     display:flex;
     align-items:center;
     justify-content:center;
     gap:6px;
-    position:relative;
-    overflow:hidden;
     letter-spacing:.5px;
     text-shadow:0 1px 2px rgba(0,0,0,.3);
     touch-action:manipulation;
@@ -601,11 +520,8 @@ body{
 
 .fixtures-header-box{
     background:linear-gradient(135deg, #6b21a8 0%, #38003c 100%);
-    border-radius:0;
     padding:14px 10px;
     text-align:center;
-    margin-bottom:0;
-    box-shadow:none;
 }
 
 .fixtures-header-title{
@@ -626,28 +542,12 @@ body{
     align-items:center;
     justify-content:space-between;
     padding:12px 0;
-    margin-bottom:0;
-    background:transparent;
-    border-radius:0;
-    box-shadow:none;
     border-bottom:1px solid #f0f0f0;
-    flex-wrap:nowrap;
     gap:6px;
     min-height:54px;
-    transition:all .25s ease;
-    cursor:pointer;
 }
 
-.fixture-row:last-child{
-    border-bottom:none;
-}
-
-.fixture-row:hover{
-    background:linear-gradient(90deg, rgba(113,56,245,.05) 0%, rgba(0,255,135,.05) 100%);
-    padding-left:6px;
-    padding-right:6px;
-    border-radius:8px;
-}
+.fixture-row:last-child{border-bottom:none}
 
 .team-box{
     display:flex;
@@ -689,7 +589,6 @@ body{
     flex-shrink:0;
     position:relative;
     overflow:hidden;
-    vertical-align:middle;
 }
 
 .logo-20 img{
@@ -699,8 +598,6 @@ body{
     transform:translate(-50%,-50%);
     max-width:100%;
     max-height:100%;
-    width:auto;
-    height:auto;
     object-fit:contain;
     display:block;
 }
@@ -716,7 +613,6 @@ body{
     flex-shrink:0;
     position:relative;
     overflow:hidden;
-    vertical-align:middle;
     margin:0 6px;
 }
 
@@ -727,8 +623,6 @@ body{
     transform:translate(-50%,-50%);
     max-width:100%;
     max-height:100%;
-    width:auto;
-    height:auto;
     object-fit:contain;
     display:block;
 }
@@ -742,29 +636,15 @@ body{
     width:106px;
     min-width:106px;
     background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
-    padding:8px 8px;
+    padding:8px;
     border-radius:10px;
-    border:none;
     box-shadow:0 3px 8px rgba(56,0,60,.3);
-    position:relative;
-    flex-shrink:0;
-}
-
-.score-display,
-.score-input,
-.pos-number,
-.stat-number{
-    font-size:15px;
-    font-weight:900;
-    line-height:1.2;
-    display:inline-block;
-    vertical-align:middle;
 }
 
 .score-display{
     color:#fff;
     font-size:15px;
-    letter-spacing:0;
+    font-weight:900;
 }
 
 .score-input{
@@ -827,39 +707,26 @@ body{
     z-index:3;
 }
 
-.standings-card{
-    background:transparent;
-    padding:5px;
-    width:100%;
-}
-
 table{
     width:100%;
     border-collapse:collapse;
-    border-spacing:0;
     text-align:center;
     color:#333;
     table-layout:fixed;
 }
 
 th{
-    background:transparent;
     color:#38003c;
     padding:10px 4px;
     font-weight:900;
     border-bottom:2px solid #38003c;
     font-size:12px;
     text-transform:uppercase;
-    letter-spacing:0.5px;
-    vertical-align:middle;
-    line-height:1.2;
 }
 
 td{
     padding:0 4px;
     font-weight:800;
-    vertical-align:middle;
-    line-height:1.2;
     background:#fff;
     border-bottom:1px solid #f0f0f0;
     height:44px;
@@ -874,7 +741,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 .team-cell{
     display:flex;
     align-items:center;
-    justify-content:flex-start;
     gap:6px;
     font-size:14px;
     text-transform:uppercase;
@@ -889,8 +755,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     align-items:center;
     justify-content:center;
     gap:5px;
-    height:28px;
-    vertical-align:middle;
 }
 
 .pos-indicator-img{
@@ -901,15 +765,11 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     max-width:22px;
     max-height:22px;
     object-fit:contain;
-    display:inline-block;
-    flex-shrink:0;
-    vertical-align:middle;
 }
 
 .pos-number{
     font-size:14px;
     font-weight:900;
-    line-height:1;
     min-width:18px;
     text-align:center;
 }
@@ -917,7 +777,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 .stat-number{
     font-size:14px;
     font-weight:900;
-    line-height:1;
 }
 
 .form-cell{
@@ -927,7 +786,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     gap:2px;
     font-weight:900;
     font-size:12px;
-    letter-spacing:-0.5px;
 }
 
 .form-letter{
@@ -991,7 +849,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     outline:none;
     min-width:120px;
     text-align:center;
-    box-shadow:0 0 12px rgba(0,255,135,.3);
 }
 
 .totw-gw-select option{
@@ -1009,32 +866,15 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     cursor:pointer;
     letter-spacing:1px;
     text-transform:uppercase;
-    transition:all .25s ease;
     font-family:var(--font-en);
 }
 
 .totw-refresh-btn{
     background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
-    box-shadow:0 0 12px rgba(0,255,135,.4);
 }
 
 .totw-save-btn{
     background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
-    box-shadow:0 0 12px rgba(50,129,255,.4);
-}
-
-.totw-action-btn:hover{
-    transform:scale(1.05);
-}
-
-.totw-action-btn:active{
-    transform:scale(.96);
-}
-
-.totw-action-btn:disabled{
-    opacity:.5;
-    cursor:not-allowed;
-    transform:none;
 }
 
 .totw-pitch-wrapper{
@@ -1083,7 +923,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     border:3px solid rgba(50,129,255,.6);
     border-radius:50%;
     z-index:1;
-    box-shadow:0 0 15px rgba(50,129,255,.4), inset 0 0 15px rgba(50,129,255,.2);
 }
 
 .totw-box-top{
@@ -1175,59 +1014,73 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 }
 
 .totw-card{
-    width:78px;
-    height:96px;
-    background-image:url('./card-bg.png');
-    background-size:contain;
-    background-position:center;
-    background-repeat:no-repeat;
-    background-color:transparent;
+    width:88px;
+    height:auto;
+    background:transparent;
     border:none;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    padding:14px 8px 16px 8px;
+    padding:0;
     transition:transform .3s ease, filter .3s ease;
     position:relative;
     overflow:visible;
-    filter:drop-shadow(0 0 10px rgba(50,129,255,.7));
+    filter:drop-shadow(0 0 8px rgba(50,129,255,.6));
 }
 
-.totw-card .tc-number{
-    color:#fff;
-    font-size:18px;
-    font-weight:900;
-    margin-bottom:2px;
-    text-shadow:0 0 6px rgba(50,129,255,.9), 0 2px 4px rgba(0,0,0,.8);
-    line-height:1;
+.totw-card:hover{
+    transform:scale(1.1) translateY(-4px);
+    filter:drop-shadow(0 0 18px rgba(50,129,255,1));
+    z-index:10;
 }
 
 .totw-card .tc-name{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:88px;
+    min-height:38px;
+    padding:4px 6px;
+    background:linear-gradient(135deg, #6b21a8 0%, #7138f5 100%);
+    border:2px solid #00ff87;
+    border-radius:10px 10px 4px 4px;
     color:#fff;
     font-size:9px;
     font-weight:800;
     text-align:center;
     line-height:1.1;
     word-break:break-word;
-    max-width:100%;
     overflow:hidden;
     text-overflow:ellipsis;
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
-    text-shadow:0 1px 2px rgba(0,0,0,.9), 0 0 8px rgba(50,129,255,.8);
+    text-shadow:0 1px 3px rgba(0,0,0,.8);
+    box-shadow:
+        0 0 10px rgba(0,255,135,.4),
+        inset 0 1px 0 rgba(255,255,255,.2);
     margin-bottom:2px;
 }
 
 .totw-card .tc-points{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:64px;
+    min-height:24px;
+    padding:2px 6px;
+    background:linear-gradient(135deg, #2e0b3d 0%, #38003c 100%);
+    border:2px solid #00ff87;
+    border-radius:4px 4px 10px 10px;
     color:#00ff87;
-    font-size:9px;
+    font-size:11px;
     font-weight:900;
     text-align:center;
-    text-shadow:0 0 6px rgba(0,255,135,.9), 0 1px 2px rgba(0,0,0,.8);
-    line-height:1;
-    margin-top:1px;
+    letter-spacing:0.5px;
+    text-shadow:
+        0 0 6px rgba(0,255,135,.8),
+        0 1px 2px rgba(0,0,0,.8);
+    box-shadow:
+        0 0 10px rgba(0,255,135,.3),
+        inset 0 1px 0 rgba(255,255,255,.1);
 }
 
 .totw-loading{
@@ -1236,7 +1089,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     color:#00ff87;
     font-size:15px;
     font-weight:900;
-    letter-spacing:1px;
 }
 
 .totw-loading .spinner{
@@ -1275,34 +1127,24 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     }
 
     .totw-card{
-        width:72px;
-        height:88px;
-        padding:12px 6px 14px 6px;
-    }
-
-    .totw-card .tc-number{
-        font-size:16px;
+        width:76px;
     }
 
     .totw-card .tc-name{
+        width:76px;
+        min-height:34px;
         font-size:8px;
     }
 
     .totw-card .tc-points{
-        font-size:8px;
+        width:56px;
+        min-height:22px;
+        font-size:10px;
     }
 
-    .totw-row-1{
-        padding:0 5%;
-    }
-
-    .totw-row-2{
-        padding:0 4%;
-    }
-
-    .totw-row-3{
-        padding:0 1%;
-    }
+    .totw-row-1{padding:0 5%;}
+    .totw-row-2{padding:0 4%;}
+    .totw-row-3{padding:0 1%;}
 }
 </style>
 
@@ -1382,27 +1224,25 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     <div id="standingsTab" class="tab-content">
         <div id="captureStandings" class="export-area">
             <div class="standings-content-area">
-                <div class="standings-card">
-                    <table>
-                        <colgroup>
-                            <col class="col-pos">
-                            <col class="col-club">
-                            <col class="col-gf">
-                            <col class="col-pts">
-                            <col class="col-form">
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Pos</th>
-                                <th style="text-align:right;padding-right:10px;">Club</th>
-                                <th style="text-align:center;">GF</th>
-                                <th style="text-align:center;">Pts</th>
-                                <th style="text-align:center;">Form</th>
-                            </tr>
-                        </thead>
-                        <tbody id="standingsBody"></tbody>
-                    </table>
-                </div>
+                <table>
+                    <colgroup>
+                        <col class="col-pos">
+                        <col class="col-club">
+                        <col class="col-gf">
+                        <col class="col-pts">
+                        <col class="col-form">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Pos</th>
+                            <th style="text-align:right;padding-right:10px;">Club</th>
+                            <th>GF</th>
+                            <th>Pts</th>
+                            <th>Form</th>
+                        </tr>
+                    </thead>
+                    <tbody id="standingsBody"></tbody>
+                </table>
             </div>
         </div>
 
@@ -1413,7 +1253,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     <div id="totwTab" class="tab-content">
 
         <div class="totw-header-box">
-            <div class="totw-header-title">⚽ TEAM OF THE WEEK ⚽</div>
+            <div class="totw-header-title"> TEAM OF THE WEEK </div>
         </div>
 
         <div class="totw-controls-row">
@@ -1426,11 +1266,11 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
             </select>
 
             <button id="totwRefreshBtn" class="totw-action-btn totw-refresh-btn" onclick="loadTOTW()">
-                🔄 Refresh
+                 Refresh
             </button>
 
             <button id="totwSaveBtn" class="totw-action-btn totw-save-btn" onclick="saveTOTWImage()">
-                ⬇️ Download
+                 Download
             </button>
         </div>
 
@@ -1458,7 +1298,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 (function() {
 
     let pressTimer = null;
-    let longPressTriggered = false;
 
     function setupButton(btn) {
 
@@ -1474,15 +1313,8 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
             return false;
         });
 
-        btn.addEventListener('copy', function(e) {
-            e.preventDefault();
-            return false;
-        });
-
         btn.addEventListener('touchstart', function(event) {
-            longPressTriggered = false;
             pressTimer = setTimeout(function() {
-                longPressTriggered = true;
                 unlockEditWithPassword();
             }, 800);
         }, { passive: true });
@@ -1493,13 +1325,10 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
         btn.addEventListener('touchcancel', function() {
             clearTimeout(pressTimer);
-            longPressTriggered = false;
         });
 
         btn.addEventListener('mousedown', function() {
-            longPressTriggered = false;
             pressTimer = setTimeout(function() {
-                longPressTriggered = true;
                 unlockEditWithPassword();
             }, 800);
         });
@@ -1510,7 +1339,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
         btn.addEventListener('mouseleave', function() {
             clearTimeout(pressTimer);
-            longPressTriggered = false;
         });
     }
 
@@ -1555,12 +1383,12 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=4"></script>
-<script src="fixtures.js?v=4"></script>
+<script src="carousel.js?v=5"></script>
+<script src="fixtures.js?v=5"></script>
 <script src="standings.js"></script>
 <script src="download.js"></script>
 <script src="share.js"></script>
-<script src="totw.js?v=4"></script>
+<script src="totw.js?v=5"></script>
 <script src="main.js"></script>
 
 </body>
