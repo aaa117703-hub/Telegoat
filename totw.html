@@ -37,10 +37,6 @@ body{
     overflow-x:hidden;
 }
 
-/* ============================================
-   HEADER
-============================================ */
-
 .totw-header{
     text-align:center;
     margin-bottom:20px;
@@ -75,10 +71,6 @@ body{
     margin-top:6px;
     font-weight:600;
 }
-
-/* ============================================
-   CONTROLS - اختيار الجولة + تحديث
-============================================ */
 
 .totw-controls{
     display:flex;
@@ -137,10 +129,6 @@ body{
     pointer-events:none;
 }
 
-/* ============================================
-   PITCH - الملعب
-============================================ */
-
 .pitch-wrapper{
     width:100%;
     display:flex;
@@ -162,7 +150,6 @@ body{
     overflow:hidden;
 }
 
-/* خطوط الملعب */
 .pitch::before{
     content:'';
     position:absolute;
@@ -174,7 +161,6 @@ body{
     z-index:1;
 }
 
-/* دائرة المنتصف */
 .pitch-circle{
     position:absolute;
     top:50%;
@@ -187,7 +173,6 @@ body{
     z-index:1;
 }
 
-/* منطقة الـ 18 في الأعلى */
 .pitch-box-top{
     position:absolute;
     top:0;
@@ -213,7 +198,6 @@ body{
     z-index:1;
 }
 
-/* منطقة الـ 18 في الأسفل */
 .pitch-box-bottom{
     position:absolute;
     bottom:0;
@@ -238,10 +222,6 @@ body{
     border-bottom:none;
     z-index:1;
 }
-
-/* ============================================
-   PLAYERS GRID
-============================================ */
 
 .pitch-players{
     position:relative;
@@ -281,10 +261,6 @@ body{
     justify-content:center;
     gap:25px;
 }
-
-/* ============================================
-   PLAYER CARD
-============================================ */
 
 .player-card{
     width:80px;
@@ -355,10 +331,6 @@ body{
     flex-shrink:0;
 }
 
-/* ============================================
-   LOADING / ERROR
-============================================ */
-
 .loading-box{
     text-align:center;
     padding:40px 20px;
@@ -394,10 +366,6 @@ body{
     font-weight:800;
 }
 
-/* ============================================
-   FOOTER
-============================================ */
-
 .totw-footer{
     text-align:center;
     margin-top:30px;
@@ -412,10 +380,6 @@ body{
     color:#00ff87;
     text-decoration:none;
 }
-
-/* ============================================
-   MOBILE
-============================================ */
 
 @media(max-width:480px){
 
@@ -468,3 +432,264 @@ body{
 </head>
 
 <body>
+
+<div class="totw-header">
+    <div class="totw-title">⚽ TEAM OF THE WEEK ⚽</div>
+    <div class="totw-subtitle">General League of TeleGoat</div>
+    <div class="totw-gw" id="lastUpdate">Loading...</div>
+</div>
+
+<div class="totw-controls">
+    <select id="gwSelect" class="round-select">
+        <option value="5">Gameweek 5</option>
+        <option value="4">Gameweek 4</option>
+        <option value="3">Gameweek 3</option>
+        <option value="2">Gameweek 2</option>
+        <option value="1">Gameweek 1</option>
+    </select>
+
+    <button id="refreshBtn" class="refresh-btn" onclick="loadTOTW()">
+        🔄 Refresh
+    </button>
+</div>
+
+<div id="loadingBox" class="loading-box">
+    <div class="spinner"></div>
+    <div>Loading Team of the Week...</div>
+</div>
+
+<div id="pitchWrapper" class="pitch-wrapper" style="display:none;">
+    <div class="pitch">
+        <div class="pitch-circle"></div>
+        <div class="pitch-box-top"></div>
+        <div class="pitch-box-bottom"></div>
+
+        <div class="pitch-players" id="pitchPlayers"></div>
+    </div>
+</div>
+
+<div id="errorBox" class="error-box" style="display:none;"></div>
+
+<div class="totw-footer">
+    Made with ❤️ by <a href="https://aaa117703-hub.github.io/Telegoat/">TELEGRAM GOAT</a>
+</div>
+
+<script>
+
+/* ============================================
+   CONFIG
+============================================ */
+
+const WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
+const TOTAL_PAGES = 7;
+
+const NUMBERS = {
+    GK: 1,
+    DEF: [2, 4, 5, 12],
+    MID: [6, 8, 10],
+    FWD: [7, 9, 11]
+};
+
+
+/* ============================================
+   FETCH ALL PAGES - جلب كل الصفحات
+============================================ */
+
+async function fetchAllPages() {
+
+    const allResults = [];
+
+    for (let page = 1; page <= TOTAL_PAGES; page++) {
+
+        try {
+
+            const response = await fetch(WORKER_URL + '/?page=' + page);
+
+            const data = await response.json();
+
+            if (data && data.standings && data.standings.results) {
+
+                allResults.push(...data.standings.results);
+
+                if (data.standings.has_next === true) {
+                    continue;
+                } else {
+                    break;
+                }
+
+            } else {
+
+                break;
+            }
+
+        } catch (e) {
+
+            console.error('Page ' + page + ' failed:', e);
+            break;
+        }
+    }
+
+    return allResults;
+}
+
+
+/* ============================================
+   SORT & GET TOP 11
+============================================ */
+
+function getTop11(allResults) {
+
+    const sorted = [...allResults].sort((a, b) => {
+        return b.event_total - a.event_total;
+    });
+
+    return sorted.slice(0, 11);
+}
+
+
+/* ============================================
+   RENDER CARDS
+============================================ */
+
+function renderCards(top11) {
+
+    const pitch = document.getElementById('pitchPlayers');
+
+    if (!pitch) return;
+
+    const forwards = top11.slice(0, 3);
+    const midfielders = top11.slice(3, 6);
+    const defenders = top11.slice(6, 10);
+    const goalkeeper = top11.slice(10, 11);
+
+    let html = '';
+
+    /* Row 1 — المهاجمون (أعلى) */
+    html += '<div class="row row-1">';
+    forwards.forEach((player, i) => {
+        html += createCard(player, NUMBERS.FWD[i]);
+    });
+    html += '</div>';
+
+    /* Row 2 — الوسط */
+    html += '<div class="row row-2">';
+    midfielders.forEach((player, i) => {
+        html += createCard(player, NUMBERS.MID[i]);
+    });
+    html += '</div>';
+
+    /* Row 3 — الدفاع */
+    html += '<div class="row row-3">';
+    defenders.forEach((player, i) => {
+        html += createCard(player, NUMBERS.DEF[i]);
+    });
+    html += '</div>';
+
+    /* Row 4 — الحارس (أسفل) */
+    html += '<div class="row row-4">';
+    goalkeeper.forEach((player) => {
+        html += createCard(player, NUMBERS.GK);
+    });
+    html += '</div>';
+
+    pitch.innerHTML = html;
+}
+
+
+/* ============================================
+   CREATE CARD
+============================================ */
+
+function createCard(player, number) {
+
+    const name = player.player_name || player.entry_name || 'Unknown';
+
+    return '<div class="player-card">' +
+        '<div class="number">' + number + '</div>' +
+        '<div class="name">' + name + '</div>' +
+        '<div class="points">' + player.event_total + ' pts</div>' +
+    '</div>';
+}
+
+
+/* ============================================
+   LOAD TOTW
+============================================ */
+
+async function loadTOTW() {
+
+    const loadingBox = document.getElementById('loadingBox');
+    const pitchWrapper = document.getElementById('pitchWrapper');
+    const errorBox = document.getElementById('errorBox');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const lastUpdate = document.getElementById('lastUpdate');
+
+    loadingBox.style.display = 'block';
+    pitchWrapper.style.display = 'none';
+    errorBox.style.display = 'none';
+    refreshBtn.classList.add('loading');
+
+    try {
+
+        const allResults = await fetchAllPages();
+
+        if (!allResults || allResults.length === 0) {
+            throw new Error('No data received');
+        }
+
+        const top11 = getTop11(allResults);
+
+        renderCards(top11);
+
+        const now = new Date();
+        lastUpdate.textContent = 'Updated: ' + now.toLocaleString();
+
+        loadingBox.style.display = 'none';
+        pitchWrapper.style.display = 'flex';
+
+    } catch (e) {
+
+        console.error('TOTW Error:', e);
+
+        loadingBox.style.display = 'none';
+        errorBox.style.display = 'block';
+        errorBox.textContent = '⚠️ Error loading data: ' + e.message;
+    }
+
+    refreshBtn.classList.remove('loading');
+}
+
+
+/* ============================================
+   CHANGE GAMEWEEK
+============================================ */
+
+function changeGameweek() {
+
+    const gw = document.getElementById('gwSelect').value;
+
+    console.log('Gameweek changed to:', gw);
+
+    loadTOTW();
+}
+
+
+/* ============================================
+   INITIALIZE
+============================================ */
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    const gwSelect = document.getElementById('gwSelect');
+
+    if (gwSelect) {
+        gwSelect.addEventListener('change', changeGameweek);
+    }
+
+    loadTOTW();
+});
+
+</script>
+
+</body>
+</html>
