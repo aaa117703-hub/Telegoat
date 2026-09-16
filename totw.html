@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>TEAM OF THE WEEK - TELEGRAM GOAT</title>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <style>
 @font-face{
     font-family:'SultanCustom';
@@ -43,13 +45,13 @@ body{
 
 .totw-header{
     text-align:center;
-    margin-bottom:20px;
-    padding:20px 16px;
+    margin-bottom:16px;
+    padding:18px 14px;
     background:linear-gradient(135deg, #6b21a8 0%, #38003c 100%);
-    border-radius:20px;
+    border-radius:18px;
     border:3px solid #00ff87;
     box-shadow:
-        0 0 30px rgba(0,255,135,.5),
+        0 0 25px rgba(0,255,135,.5),
         inset 0 1px 0 rgba(255,255,255,.15);
     position:relative;
     overflow:hidden;
@@ -67,27 +69,27 @@ body{
 }
 
 @keyframes headerGlow{
-    0%,100%{transform:-sizescale(1); opacity:.5;}
+    0%,100%{transform:scale(1); opacity:.5;}
     50%{transform:scale(1.2); opacity:.8;}
 }
 
 .totw-title{
-    font-size:28px;
+    font-size:24px;
     font-weight:900;
     color:#fff;
-    letter-spacing:3px;
+    letter-spacing:2px;
     text-transform:uppercase;
     text-shadow:0 4px 15px rgba(0,0,0,.6);
-    margin-bottom:8px;
+    margin-bottom:6px;
     position:relative;
     z-index:1;
 }
 
-.totw-sub:title{
-    font14px;
+.totw-subtitle{
+    font-size:13px;
     font-weight:700;
     color:#00ff87;
-    letter-spacing:2px;
+    letter-spacing:1.5px;
     text-transform:uppercase;
     position:relative;
     z-index:1;
@@ -95,9 +97,9 @@ body{
 }
 
 .totw-gw{
-    font-size:12px;
+    font-size:11px;
     color:rgba(255,255,255,.7);
-    margin-top:8px;
+    margin-top:6px;
     font-weight:600;
     position:relative;
     z-index:1;
@@ -109,8 +111,8 @@ body{
 
 .totw-controls{
     display:flex;
-    gap:10px;
-    margin-bottom:20px;
+    gap:8px;
+    margin-bottom:16px;
     justify-content:center;
     flex-wrap:wrap;
 }
@@ -119,13 +121,13 @@ body{
     background:#38003c;
     border:2px solid #00ff87;
     border-radius:12px;
-    padding:10px 18px;
-    font-size:14px;
+    padding:10px 16px;
+    font-size:13px;
     font-weight:800;
     color:#fff;
     cursor:pointer;
     outline:none;
-    min-width:140px;
+    min-width:130px;
     text-align:center;
     box-shadow:0 0 15px rgba(0,255,135,.3);
 }
@@ -135,31 +137,42 @@ body{
     color:#fff;
 }
 
-.refresh-btn{
-    background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
+.refresh-btn,
+.save-btn{
     color:#fff;
     border:2px solid #00ff87;
     border-radius:12px;
-    padding:10px 20px;
-    font-size:14px;
+    padding:10px 18px;
+    font-size:13px;
     font-weight:900;
     cursor:pointer;
     letter-spacing:1px;
     text-transform:uppercase;
-    box-shadow:0 0 15px rgba(0,255,135,.4);
     transition:all .25s ease;
 }
 
-.refresh-btn:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 25px rgba(0,255,135,.7);
+.refresh-btn{
+    background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
+    box-shadow:0 0 15px rgba(0,255,135,.4);
 }
 
-.refresh-btn:active{
+.save-btn{
+    background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
+    box-shadow:0 0 15px rgba(50,129,255,.4);
+}
+
+.refresh-btn:hover,
+.save-btn:hover{
+    transform:scale(1.05);
+}
+
+.refresh-btn:active,
+.save-btn:active{
     transform:scale(.96);
 }
 
-.refresh-btn.loading{
+.refresh-btn.loading,
+.save-btn.loading{
     opacity:.6;
     pointer-events:none;
 }
@@ -178,17 +191,17 @@ body{
 .pitch{
     position:relative;
     width:100%;
-    max-width:640px;
+    max-width:480px;
     aspect-ratio:2/3;
     background:
         radial-gradient(ellipse at 50% 20%, rgba(50,129,255,.15) 0%, transparent 60%),
         radial-gradient(ellipse at 50% 80%, rgba(50,129,255,.15) 0%, transparent 60%),
         linear-gradient(180deg, #2e0b3d 0%, #38003c 50%, #2e0b3d 100%);
     border:3px solid #3281ff;
-    border-radius:20px;
+    border-radius:18px;
     box-shadow:
-        0 0 40px rgba(50,129,255,.5),
-        inset 0 0 80px rgba(0,0,0,.4);
+        0 0 35px rgba(50,129,255,.5),
+        inset 0 0 70px rgba(0,0,0,.4);
     overflow:hidden;
 }
 
@@ -229,7 +242,6 @@ body{
     border:3px solid rgba(50,129,255,.6);
     border-top:none;
     z-index:1;
-    box-shadow:0 0 10px rgba(50,129,255,.3);
 }
 
 .pitch-box-top::before{
@@ -242,7 +254,6 @@ body{
     height:45%;
     border:3px solid rgba(50,129,255,.6);
     border-top:none;
-    z-index:1;
 }
 
 .pitch-box-bottom{
@@ -255,7 +266,6 @@ body{
     border:3px solid rgba(50,129,255,.6);
     border-bottom:none;
     z-index:1;
-    box-shadow:0 0 10px rgba(50,129,255,.3);
 }
 
 .pitch-box-bottom::before{
@@ -268,7 +278,6 @@ body{
     height:45%;
     border:3px solid rgba(50,129,255,.6);
     border-bottom:none;
-    z-index:1;
 }
 
 .pitch-players{
@@ -316,14 +325,14 @@ body{
 }
 
 /* ============================================
-   PLAYER CARD
+   PLAYER CARD - احترافي
 ============================================ */
 
 .player-card{
-    width:84px;
-    min-height:100px;
+    width:78px;
+    height:96px;
     background-image:url('./card-bg.png');
-    background-size:100% 100%;
+    background-size:contain;
     background-position:center;
     background-repeat:no-repeat;
     background-color:transparent;
@@ -332,16 +341,16 @@ body{
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    padding:8px 6px;
+    padding:14px 8px 16px 8px;
     transition:transform .3s ease, filter .3s ease;
     position:relative;
     overflow:visible;
-    filter:drop-shadow(0 0 10px rgba(0,255,135,.6));
+    filter:drop-shadow(0 0 10px rgba(50,129,255,.7));
 }
 
 .player-card:hover{
     transform:scale(1.1) translateY(-4px);
-    filter:drop-shadow(0 0 20px rgba(0,255,135,.9));
+    filter:drop-shadow(0 0 22px rgba(50,129,255,1));
     z-index:10;
 }
 
@@ -350,24 +359,24 @@ body{
     align-items:center;
     justify-content:center;
     color:#fff;
-    font-size:26px;
+    font-size:18px;
     font-weight:900;
-    margin-bottom:4px;
+    margin-bottom:2px;
     text-shadow:
-        0 0 8px rgba(0,0,0,.9),
-        0 2px 4px rgba(0,0,0,.7);
-    letter-spacing:1px;
+        0 0 6px rgba(50,129,255,.9),
+        0 2px 4px rgba(0,0,0,.8);
+    letter-spacing:0.5px;
     flex-shrink:0;
     line-height:1;
 }
 
 .player-card .name{
     color:#fff;
-    font-size:11px;
-    font-weight:700;
+    font-size:9px;
+    font-weight:800;
     text-align:center;
-    line-height:1.15;
-    letter-spacing:0.3px;
+    line-height:1.1;
+    letter-spacing:0.2px;
     word-break:break-word;
     max-width:100%;
     overflow:hidden;
@@ -376,17 +385,26 @@ body{
     -webkit-line-clamp:2;
     -webkit-box-orient:vertical;
     text-shadow:
-        0 1px 3px rgba(0,0,0,.9),
-        0 0 4px rgba(0,0,0,.7);
-    margin-top:2px;
+        0 1px 2px rgba(0,0,0,.9),
+        0 0 8px rgba(50,129,255,.8);
+    margin-bottom:2px;
 }
 
 .player-card .points{
-    display:none;
+    color:#00ff87;
+    font-size:9px;
+    font-weight:900;
+    text-align:center;
+    letter-spacing:0.3px;
+    text-shadow:
+        0 0 6px rgba(0,255,135,.9),
+        0 1px 2px rgba(0,0,0,.8);
+    line-height:1;
+    margin-top:1px;
 }
 
 /* ============================================
-   LOADING
+   LOADING / ERROR
 ============================================ */
 
 .loading-box{
@@ -430,8 +448,8 @@ body{
 
 .totw-footer{
     text-align:center;
-    margin-top:30px;
-    padding:16px;
+    margin-top:24px;
+    padding:14px;
     color:rgba(255,255,255,.5);
     font-size:12px;
     font-weight:600;
@@ -450,42 +468,45 @@ body{
 @media(max-width:480px){
 
     .totw-title{
-        font-size:22px;
-        letter-spacing:2px;
+        font-size:20px;
     }
 
     .totw-subtitle{
-        font-size:12px;
+        font-size:11px;
     }
 
-    .totw-gw{
-        font-size:11px;
+    .pitch{
+        max-width:100%;
     }
 
     .player-card{
         width:72px;
-        min-height:86px;
-        padding:6px 4px;
+        height:88px;
+        padding:12px 6px 14px 6px;
     }
 
     .player-card .number{
-        font-size:22px;
+        font-size:16px;
     }
 
     .player-card .name{
-        font-size:10px;
+        font-size:8px;
+    }
+
+    .player-card .points{
+        font-size:8px;
     }
 
     .row-1{
-        padding:0 4%;
+        padding:0 5%;
     }
 
     .row-2{
-        padding:0 3%;
+        padding:0 4%;
     }
 
     .row-3{
-        padding:0 0%;
+        padding:0 1%;
     }
 }
 </style>
@@ -512,6 +533,10 @@ body{
     <button id="refreshBtn" class="refresh-btn" onclick="loadTOTW()">
         🔄 Refresh
     </button>
+
+    <button id="saveBtn" class="save-btn" onclick="saveImage()">
+        📥 Save
+    </button>
 </div>
 
 <div id="loadingBox" class="loading-box">
@@ -520,7 +545,7 @@ body{
 </div>
 
 <div id="pitchWrapper" class="pitch-wrapper" style="display:none;">
-    <div class="pitch">
+    <div class="pitch" id="pitchToSave">
         <div class="pitch-circle"></div>
         <div class="pitch-box-top"></div>
         <div class="pitch-box-bottom"></div>
@@ -606,21 +631,18 @@ function renderCards(top11) {
 
     let html = '';
 
-    /* الهجوم: جناح / رأس حربة / جناح */
     html += '<div class="row row-1">';
     html += createCard(forwards[1], NUMBERS.FWD[0]);
     html += createCard(forwards[0], NUMBERS.FWD[1]);
     html += createCard(forwards[2], NUMBERS.FWD[2]);
     html += '</div>';
 
-    /* الوسط */
     html += '<div class="row row-2">';
     html += createCard(midfielders[0], NUMBERS.MID[0]);
     html += createCard(midfielders[1], NUMBERS.MID[1]);
     html += createCard(midfielders[2], NUMBERS.MID[2]);
     html += '</div>';
 
-    /* الدفاع: ظهير / قلب / قلب / ظهير */
     html += '<div class="row row-3">';
     html += createCard(defenders[1], NUMBERS.DEF[3]);
     html += createCard(defenders[0], NUMBERS.DEF[1]);
@@ -628,7 +650,6 @@ function renderCards(top11) {
     html += createCard(defenders[3], NUMBERS.DEF[0]);
     html += '</div>';
 
-    /* الحارس */
     html += '<div class="row row-4">';
     html += createCard(goalkeeper[0], NUMBERS.GK);
     html += '</div>';
@@ -644,10 +665,12 @@ function createCard(player, number) {
     }
 
     const name = player.player_name || player.entry_name || 'Unknown';
+    const points = player.event_total || 0;
 
     return '<div class="player-card">' +
         '<div class="number">' + number + '</div>' +
         '<div class="name">' + name + '</div>' +
+        '<div class="points">' + points + ' pts</div>' +
     '</div>';
 }
 
@@ -693,6 +716,60 @@ async function loadTOTW() {
     }
 
     refreshBtn.classList.remove('loading');
+}
+
+
+/* ============================================
+   SAVE IMAGE
+============================================ */
+
+async function saveImage() {
+
+    const pitch = document.getElementById('pitchToSave');
+    const saveBtn = document.getElementById('saveBtn');
+
+    if (!pitch) return;
+
+    saveBtn.classList.add('loading');
+    saveBtn.textContent = '⏳ Saving...';
+
+    try {
+
+        const canvas = await html2canvas(pitch, {
+            backgroundColor: '#240024',
+            scale: 3,
+            useCORS: true,
+            allowTaint: true,
+            logging: false
+        });
+
+        canvas.toBlob(function(blob) {
+
+            if (!blob) {
+                alert('Failed to create image');
+                return;
+            }
+
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.download = 'TOTW_GW' + document.getElementById('gwSelect').value + '.png';
+            link.href = url;
+            link.click();
+
+            setTimeout(function() {
+                URL.revokeObjectURL(url);
+            }, 100);
+
+        }, 'image/png', 1.0);
+
+    } catch (e) {
+        console.error('Save error:', e);
+        alert('Error: ' + e.message);
+    }
+
+    saveBtn.classList.remove('loading');
+    saveBtn.textContent = '📥 Save';
 }
 
 
