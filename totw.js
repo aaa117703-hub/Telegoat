@@ -10,6 +10,38 @@ let currentTOTWData = [];
 
 
 /* =========================================================
+   SHORTEN PLAYER NAME
+========================================================= */
+
+function shortenPlayerName(name) {
+
+    if (!name) return name;
+
+    const result = name.trim();
+
+    /* الاسم قصير — خليه */
+    if (result.length <= 12) return result;
+
+    /* أولوية: Mohammed أو مشتقاته */
+    const mohammedRegex = /\b(Mohammed|Muhammad|Mohamed|Mohammad)\b/i;
+
+    if (mohammedRegex.test(result)) {
+        return result.replace(mohammedRegex, 'M.');
+    }
+
+    /* وإلا: اختصر الاسم الثاني (اسم الأب) */
+    const words = result.split(/\s+/);
+
+    if (words.length >= 2) {
+        words[1] = words[1][0].toUpperCase() + '.';
+        return words.join(' ');
+    }
+
+    return result;
+}
+
+
+/* =========================================================
    FETCH ALL PAGES
 ========================================================= */
 
@@ -120,12 +152,10 @@ function renderTOTWCards(top11) {
 
     let html = '';
 
-    /* حارس */
     html += '<div class="totw-row totw-row-gk">';
     html += createTOTWCard(goalkeeper);
     html += '</div>';
 
-    /* دفاع (4) */
     html += '<div class="totw-row totw-row-def">';
     html += createTOTWCard(def1);
     html += createTOTWCard(def2);
@@ -133,14 +163,12 @@ function renderTOTWCards(top11) {
     html += createTOTWCard(def4);
     html += '</div>';
 
-    /* وسط (3) */
     html += '<div class="totw-row totw-row-mid">';
     html += createTOTWCard(mid1);
     html += createTOTWCard(mid2);
     html += createTOTWCard(mid3);
     html += '</div>';
 
-    /* هجوم (3) */
     html += '<div class="totw-row totw-row-fwd">';
     html += createTOTWCard(forward1);
     html += createTOTWCard(forward2);
@@ -159,12 +187,13 @@ function createTOTWCard(player) {
 
     if (!player) return '';
 
-    const name = player.player_name || player.entry_name || 'Unknown';
+    const rawName = player.player_name || player.entry_name || 'Unknown';
+    const name = shortenPlayerName(rawName);
     const points = player.event_total || 0;
 
     let teamName = '';
     if (typeof findPlayerTeam === 'function') {
-        teamName = findPlayerTeam(name) || findPlayerTeam(player.entry_name) || '';
+        teamName = findPlayerTeam(rawName) || findPlayerTeam(player.entry_name) || '';
     }
 
     let shirtHtml = '';
@@ -203,7 +232,7 @@ function createTOTWCard(player) {
 
 
 /* =========================================================
-   RENDER LIST — جدول
+   RENDER LIST
 ========================================================= */
 
 function renderTOTWList(top11) {
@@ -222,7 +251,8 @@ function renderTOTWList(top11) {
 
     top11.forEach(function(player, index) {
 
-        const name = player.player_name || player.entry_name || 'Unknown';
+        const rawName = player.player_name || player.entry_name || 'Unknown';
+        const name = shortenPlayerName(rawName);
         const points = player.event_total || 0;
 
         html += '<div class="totw-list-item">';
