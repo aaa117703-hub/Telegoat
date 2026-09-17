@@ -1,157 +1,75 @@
-/* totw.css - ضبط أبعاد القمصان واللاعبين داخل الملعب */
+/* totw.css - تصميم شريط اسم الفانتزي الأبيض مع النقاط */
 
-.totw-header-box {
-    background: linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
-    padding: 12px;
-    border-radius: 12px;
-    text-align: center;
-    margin-bottom: 10px;
-    border: 2px solid #00ff87;
-}
-
-.totw-header-title {
-    font-size: 16px;
-    font-weight: 900;
-    color: #fff;
-    letter-spacing: 1px;
-}
-
-.totw-controls-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-    justify-content: center;
-    align-items: center;
-}
-
-.totw-gw-select {
-    background: #38003c;
-    color: #fff;
-    border: 1px solid #00ff87;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-weight: 800;
-    font-size: 13px;
-    outline: none;
-}
-
-.totw-action-btn {
-    padding: 8px 14px;
-    border-radius: 8px;
-    border: none;
-    font-weight: 800;
-    font-size: 13px;
-    color: #fff;
-    cursor: pointer;
-}
-
-.totw-refresh-btn { background: #7138f5; }
-.totw-save-btn { background: #00c853; }
-
-/* أرضية الملعب */
-.totw-pitch-wrapper {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 3px solid #00ff87;
-    box-shadow: 0 0 15px rgba(0, 255, 135, 0.3);
-}
-
-.totw-pitch {
-    background: linear-gradient(180deg, #115228 0%, #0c3b1d 100%);
-    position: relative;
-    width: 100%;
-    padding-top: 130%; /* نسبة الارتفاع للعرض لضمان شكل الملعب */
-    overflow: hidden;
-}
-
-.totw-players {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: 10px 4px;
-}
-
-/* صفوف التشكيلة */
-.totw-row {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-    z-index: 2;
-}
-
-/* بطاقة اللاعب الواحدة */
 .totw-player-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: 20%; /* حجز مساحة مناسبة لكل لاعب */
-    max-width: 75px;
+    justify-content: flex-end;
+    width: 20%;
+    height: 100%;
     text-align: center;
+    position: relative;
 }
 
-/* ضبط حجم القميص */
+/* القميص */
 .totw-shirt-img, 
 .totw-player-card img {
-    width: 42px !important;
-    height: 48px !important;
-    max-width: 42px !important;
-    max-height: 48px !important;
+    width: 46px !important;
+    height: 50px !important;
     object-fit: contain;
-    filter: drop-shadow(0 3px 5px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,0.4));
+    margin-bottom: 2px;
 }
 
-/* صندوق اسم اللاعب والنقاط */
+/* شريط الفانتزي الأبيض */
 .totw-player-info {
-    background: rgba(56, 0, 60, 0.9);
-    border: 1px solid #00ff87;
-    border-radius: 4px;
     width: 100%;
-    margin-top: 2px;
-    padding: 2px 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    max-width: 66px;
+    background: #ffffff;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+    border: none;
 }
 
+/* اسم اللاعب (أسود على خلفية بيضاء) */
 .totw-player-name {
-    color: #fff;
+    color: #000000;
     font-size: 10px !important;
     font-weight: 800;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 0 2px;
-    line-height: 1.2;
+    padding: 3px 2px 2px 2px;
+    line-height: 1;
+    background: #ffffff;
+    text-align: center;
 }
 
+/* شريط النقاط السفلية (أخضر فانتزي مع نص داكن) */
 .totw-player-pts {
-    background: #00ff87;
-    color: #38003c;
+    background: #e3fbe9; /* أخضر فاتح بنفس نمط خانة الخصم بالفانتزي */
+    color: #240024;
     font-size: 10px !important;
     font-weight: 900;
-    border-radius: 2px;
-    margin: 1px 2px 0 2px;
-    padding: 1px 0;
+    padding: 2px 0 3px 0;
     line-height: 1;
+    text-align: center;
+    border-top: 1px solid #d0f0d8;
 }
 
-/* تحسينات للشاشات الصغيرة جداً */
+/* للفرق بالشاشات الصغرى */
 @media (max-width: 380px) {
     .totw-shirt-img, 
     .totw-player-card img {
-        width: 35px !important;
-        height: 40px !important;
+        width: 38px !important;
+        height: 42px !important;
+    }
+    .totw-player-info {
+        max-width: 56px;
     }
     .totw-player-name, 
     .totw-player-pts {
-        font-size: 9px !important;
+        font-size: 8.5px !important;
     }
 }
