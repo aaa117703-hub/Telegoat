@@ -702,6 +702,10 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 .col-pts{width:14%}
 .col-form{width:21%}
 
+/* ============================================
+   TOTW TAB
+============================================ */
+
 .totw-header-box{
     text-align:center;
     margin-bottom:14px;
@@ -758,7 +762,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     cursor:pointer;
     letter-spacing:1px;
     text-transform:uppercase;
-    font-family:var(--font-en);
 }
 
 .totw-refresh-btn{
@@ -854,14 +857,14 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     justify-content:center;
     width:72px;
     height:80px;
-   -width margin-bottom:-4px;
+    margin-bottom:-4px;
     position:relative;
     z-index:3;
-    transform-origin:center center:;
+    transform-origin:center center;
 }
 
-.totw-card .tc100-shirt img{
-    max%;
+.totw-card .tc-shirt img{
+    max-width:100%;
     max-height:100%;
     width:auto;
     height:auto;
@@ -936,8 +939,13 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     border:4px solid rgba(0,255,135,.2);
     border-top-color:#00ff87;
     border-radius:50%;
-    animation:spin .8s linear infinite;
+    animation:spinTOTW .8s linear infinite;
     margin-bottom:14px;
+}
+
+@keyframes spinTOTW{
+    0%{transform:rotate(0)}
+    100%{transform:rotate(360deg)}
 }
 
 .totw-error{
@@ -1211,8 +1219,8 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script src="fixtures.js?v=14"></script>
 <script src="standings.js"></script>
 <script src="download.js"></script>
-<script src="players-teams.js?v=9"></script>
-<script src="totw.js?v=16"></script>
+<script src="players-teams.js?v=10"></script>
+<script src="totw.js?v=17"></script>
 <script src="main.js"></script>
 
 </body>
