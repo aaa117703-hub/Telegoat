@@ -2,71 +2,50 @@
    totw.css
 ========================================================= */
 
-.totw-header-box{
-    text-align:center;
-    margin-bottom:14px;
-    padding:16px 14px;
-    background:linear-gradient(135deg, #6b21a8 0%, #38003c 100%);
-    border-radius:16px;
-    border:3px solid #00ff87;
-    box-shadow:0 0 25px rgba(0,255,135,.5);
+/* =========================================================
+   الأزرار العلوية — SQUAD + LIST
+========================================================= */
+
+.totw-tabs{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:12px;
+    padding:0 4px;
 }
 
-.totw-header-title{
-    font-size:22px;
-    font-weight:900;
+.totw-tab-btn{
+    flex:1;
+    padding:12px 20px;
+    background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
     color:#fff;
+    border:2.5px solid #00ff87;
+    border-radius:50px;
+    font-size:14px;
+    font-weight:900;
     letter-spacing:2px;
     text-transform:uppercase;
-    text-shadow:0 3px 10px rgba(0,0,0,.6);
-}
-
-.totw-controls-row{
-    display:flex;
-    gap:8px;
-    margin-bottom:12px;
-    justify-content:center;
-    flex-wrap:wrap;
-}
-
-.totw-gw-select{
-    background:#38003c;
-    border:2px solid #00ff87;
-    border-radius:10px;
-    padding:8px 14px;
-    font-size:12px;
-    font-weight:800;
-    color:#fff;
     cursor:pointer;
+    transition:all .3s ease;
+    font-family:inherit;
+    box-shadow:0 4px 12px rgba(0,0,0,.3);
     outline:none;
-    min-width:120px;
-    text-align:center;
 }
 
-.totw-gw-select option{
-    background:#2d0a3d;
-    color:#fff;
-}
-
-.totw-action-btn{
-    color:#fff;
-    border:2px solid #00ff87;
-    border-radius:10px;
-    padding:8px 14px;
-    font-size:12px;
-    font-weight:900;
-    cursor:pointer;
-    letter-spacing:1px;
-    text-transform:uppercase;
-}
-
-.totw-refresh-btn{
+.totw-tab-btn.active{
     background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
+    box-shadow:0 0 20px rgba(0,255,135,.7);
 }
 
-.totw-save-btn{
-    background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
+.totw-tab-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 16px rgba(0,255,135,.5);
 }
+
+/* =========================================================
+   الملعب
+========================================================= */
 
 .totw-pitch-wrapper{
     width:100%;
@@ -74,10 +53,6 @@
     justify-content:center;
     margin-bottom:16px;
 }
-
-/* =========================================================
-   الملعب
-========================================================= */
 
 .totw-pitch{
     position:relative;
@@ -96,6 +71,23 @@
     overflow:hidden;
 }
 
+/* عنوان TEAM OF THE WEEK — جوه الملعب */
+.totw-pitch-title{
+    position:absolute;
+    top:1.5%;
+    left:50%;
+    transform:translateX(-50%);
+    color:#37003c;
+    font-size:13px;
+    font-weight:900;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    z-index:5;
+    white-space:nowrap;
+    font-family:inherit;
+    text-align:center;
+}
+
 .totw-players{
     position:absolute;
     inset:0;
@@ -103,7 +95,7 @@
 }
 
 /* =========================================================
-   الصفوف
+   الصفوف — الحارس نزل جوه الملعب
 ========================================================= */
 
 .totw-row{
@@ -117,18 +109,18 @@
 }
 
 .totw-row-gk{
-    top:13%;
+    top:22%;
     justify-content:center;
 }
 
 .totw-row-def{
-    top:30%;
+    top:38%;
     justify-content:space-evenly;
     padding:0 14%;
 }
 
 .totw-row-mid{
-    top:52%;
+    top:56%;
     justify-content:space-evenly;
     padding:0 4%;
 }
@@ -140,11 +132,11 @@
 }
 
 /* =========================================================
-   الكرت — مطابق FPL بالضبط
+   الكرت — أصغر
 ========================================================= */
 
 .totw-card{
-    width:68px;
+    width:60px;
     display:flex;
     flex-direction:column;
     align-items:stretch;
@@ -157,17 +149,16 @@
 }
 
 .totw-card:hover{
-    transform:scale(1.05);
+    transform:scale(1.08);
     z-index:100;
 }
 
-/* القميص — مربع أخضر شفاف */
 .totw-card .tc-shirt{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:68px;
-    height:64px;
+    width:60px;
+    height:54px;
     position:relative;
     z-index:3;
     flex-shrink:0;
@@ -183,7 +174,7 @@
     height:auto;
     object-fit:contain;
     display:block;
-    filter:drop-shadow(0 2px 3px rgba(0,0,0,.4));
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));
 }
 
 .totw-card .tc-shirt-fallback{
@@ -192,17 +183,16 @@
     padding:4px;
 }
 
-/* الاسم — شريط أبيض ملتصق */
 .totw-card .tc-name{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:68px;
-    height:16px;
+    width:60px;
+    height:14px;
     padding:0 3px;
     background:#ffffff;
     color:#37003c;
-    font-size:8px;
+    font-size:7px;
     font-weight:900;
     text-align:center;
     line-height:1;
@@ -215,17 +205,16 @@
     box-sizing:border-box;
 }
 
-/* النقاط — شريط بنفسجي داكن ملتصق */
 .totw-card .tc-points{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:68px;
-    height:16px;
+    width:60px;
+    height:14px;
     padding:0 6px;
     background:#37003c;
     color:#ffffff;
-    font-size:10px;
+    font-size:9px;
     font-weight:900;
     text-align:center;
     letter-spacing:0.5px;
@@ -233,6 +222,87 @@
     z-index:4;
     flex-shrink:0;
     box-sizing:border-box;
+}
+
+/* =========================================================
+   عرض القائمة
+========================================================= */
+
+.totw-list-view{
+    width:100%;
+    max-width:480px;
+    margin:0 auto 16px;
+    padding:14px 10px;
+    background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
+    border:3px solid #00ff87;
+    border-radius:16px;
+    box-shadow:0 0 25px rgba(0,255,135,.5);
+}
+
+.totw-list-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 10px;
+    border-bottom:2px solid rgba(0,255,135,.4);
+    margin-bottom:8px;
+    color:#00ff87;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+}
+
+.totw-list-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    margin-bottom:6px;
+    background:rgba(255,255,255,.95);
+    border-radius:8px;
+    color:#37003c;
+    font-size:13px;
+    font-weight:900;
+    box-shadow:0 2px 6px rgba(0,0,0,.2);
+}
+
+.totw-list-item:last-child{
+    margin-bottom:0;
+}
+
+.totw-list-rank{
+    min-width:26px;
+    height:26px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#37003c;
+    color:#fff;
+    border-radius:50%;
+    font-size:12px;
+    font-weight:900;
+    flex-shrink:0;
+}
+
+.totw-list-name{
+    flex:1;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    text-align:left;
+}
+
+.totw-list-points{
+    min-width:44px;
+    padding:3px 8px;
+    background:#37003c;
+    color:#fff;
+    border-radius:50px;
+    font-size:12px;
+    font-weight:900;
+    text-align:center;
+    flex-shrink:0;
 }
 
 /* =========================================================
@@ -280,32 +350,56 @@
 
 @media(max-width:480px){
 
-    .totw-header-title{font-size:18px;}
-    .totw-pitch{max-width:100%;}
-
-    .totw-card{
-        width:58px;
+    .totw-tab-btn{
+        padding:10px 14px;
+        font-size:12px;
+        letter-spacing:1.5px;
     }
 
+    .totw-pitch{max-width:100%;}
+
+    .totw-pitch-title{
+        font-size:11px;
+        letter-spacing:1.5px;
+    }
+
+    .totw-card{width:50px;}
+
     .totw-card .tc-shirt{
-        width:58px;
-        height:54px;
-        padding:3px 5px 0 5px;
+        width:50px;
+        height:44px;
+        padding:3px 4px 0 4px;
     }
 
     .totw-card .tc-name{
-        width:58px;
-        height:14px;
-        font-size:7px;
+        width:50px;
+        height:12px;
+        font-size:6px;
     }
 
     .totw-card .tc-points{
-        width:58px;
-        height:14px;
-        font-size:9px;
+        width:50px;
+        height:12px;
+        font-size:8px;
     }
 
     .totw-row-def{padding:0 10%;}
     .totw-row-mid{padding:0 3%;}
     .totw-row-fwd{padding:0 18%;}
+
+    .totw-list-item{
+        padding:8px 10px;
+        font-size:11px;
+    }
+
+    .totw-list-rank{
+        min-width:22px;
+        height:22px;
+        font-size:10px;
+    }
+
+    .totw-list-points{
+        min-width:38px;
+        font-size:11px;
+    }
 }
