@@ -5,6 +5,9 @@
 const TOTW_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
 const TOTW_TOTAL_PAGES = 7;
 
+let currentTOTWView = 'squad';
+let currentTOTWData = [];
+
 
 /* =========================================================
    FETCH ALL PAGES
@@ -60,7 +63,38 @@ function getTOTWTop11(allResults) {
 
 
 /* =========================================================
-   RENDER CARDS — 1 حارس → 4 دفاع → 3 وسط → 3 هجوم
+   SWITCH VIEW — SQUAD / LIST
+========================================================= */
+
+function switchTOTWView(view) {
+
+    currentTOTWView = view;
+
+    const squadBtn = document.getElementById('totwSquadBtn');
+    const listBtn = document.getElementById('totwListBtn');
+
+    if (squadBtn) {
+        squadBtn.classList.toggle('active', view === 'squad');
+    }
+    if (listBtn) {
+        listBtn.classList.toggle('active', view === 'list');
+    }
+
+    const pitchWrapper = document.getElementById('totwPitchWrapper');
+    const listWrapper = document.getElementById('totwListWrapper');
+
+    if (view === 'list') {
+        if (pitchWrapper) pitchWrapper.style.display = 'none';
+        if (listWrapper) listWrapper.style.display = 'block';
+    } else {
+        if (pitchWrapper) pitchWrapper.style.display = 'flex';
+        if (listWrapper) listWrapper.style.display = 'none';
+    }
+}
+
+
+/* =========================================================
+   RENDER SQUAD — 1-4-3-3
 ========================================================= */
 
 function renderTOTWCards(top11) {
@@ -86,12 +120,12 @@ function renderTOTWCards(top11) {
 
     let html = '';
 
-    /* صف 1: حارس */
+    /* حارس */
     html += '<div class="totw-row totw-row-gk">';
     html += createTOTWCard(goalkeeper);
     html += '</div>';
 
-    /* صف 2: دفاع (4) */
+    /* دفاع (4) */
     html += '<div class="totw-row totw-row-def">';
     html += createTOTWCard(def1);
     html += createTOTWCard(def2);
@@ -99,14 +133,14 @@ function renderTOTWCards(top11) {
     html += createTOTWCard(def4);
     html += '</div>';
 
-    /* صف 3: وسط (3) */
+    /* وسط (3) */
     html += '<div class="totw-row totw-row-mid">';
     html += createTOTWCard(mid1);
     html += createTOTWCard(mid2);
     html += createTOTWCard(mid3);
     html += '</div>';
 
-    /* صف 4: هجوم (3) */
+    /* هجوم (3) */
     html += '<div class="totw-row totw-row-fwd">';
     html += createTOTWCard(forward1);
     html += createTOTWCard(forward2);
@@ -118,7 +152,7 @@ function renderTOTWCards(top11) {
 
 
 /* =========================================================
-   CREATE CARD — الترتيب: اسم → قميص → نقاط
+   CREATE CARD
 ========================================================= */
 
 function createTOTWCard(player) {
@@ -142,10 +176,9 @@ function createTOTWCard(player) {
     ) {
 
         const shirtData = TEAMS_SHIRTS[teamName];
-        const scale = shirtData.scale || 1;
 
         shirtHtml =
-            '<div class="tc-shirt" style="transform:scale(' + scale + ');">' +
+            '<div class="tc-shirt">' +
                 '<img src="./' + shirtData.file + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
             '</div>';
 
@@ -162,10 +195,44 @@ function createTOTWCard(player) {
     }
 
     return '<div class="totw-card">' +
-        '<div class="tc-name">' + name + '</div>' +
         shirtHtml +
+        '<div class="tc-name">' + name + '</div>' +
         '<div class="tc-points">' + points + '</div>' +
     '</div>';
+}
+
+
+/* =========================================================
+   RENDER LIST — جدول
+========================================================= */
+
+function renderTOTWList(top11) {
+
+    const listWrapper = document.getElementById('totwListWrapper');
+
+    if (!listWrapper) return;
+
+    let html = '';
+
+    html += '<div class="totw-list-header">';
+    html += '<span>#</span>';
+    html += '<span>Player</span>';
+    html += '<span>Pts</span>';
+    html += '</div>';
+
+    top11.forEach(function(player, index) {
+
+        const name = player.player_name || player.entry_name || 'Unknown';
+        const points = player.event_total || 0;
+
+        html += '<div class="totw-list-item">';
+        html += '<div class="totw-list-rank">' + (index + 1) + '</div>';
+        html += '<div class="totw-list-name">' + name + '</div>';
+        html += '<div class="totw-list-points">' + points + '</div>';
+        html += '</div>';
+    });
+
+    listWrapper.innerHTML = html;
 }
 
 
@@ -177,18 +244,15 @@ async function loadTOTW() {
 
     const loadingBox = document.getElementById('totwLoadingBox');
     const pitchWrapper = document.getElementById('totwPitchWrapper');
+    const listWrapper = document.getElementById('totwListWrapper');
     const errorBox = document.getElementById('totwErrorBox');
-    const refreshBtn = document.getElementById('totwRefreshBtn');
 
     if (!loadingBox) return;
 
     loadingBox.style.display = 'block';
-    pitchWrapper.style.display = 'none';
-    errorBox.style.display = 'none';
-
-    if (refreshBtn) {
-        refreshBtn.classList.add('loading');
-    }
+    if (pitchWrapper) pitchWrapper.style.display = 'none';
+    if (listWrapper) listWrapper.style.display = 'none';
+    if (errorBox) errorBox.style.display = 'none';
 
     try {
 
@@ -198,128 +262,32 @@ async function loadTOTW() {
             throw new Error('No data received');
         }
 
-        const top11 = getTOTWTop11(allResults);
+        currentTOTWData = getTOTWTop11(allResults);
 
-        renderTOTWCards(top11);
+        renderTOTWCards(currentTOTWData);
+        renderTOTWList(currentTOTWData);
 
         loadingBox.style.display = 'none';
-        pitchWrapper.style.display = 'flex';
+
+        if (currentTOTWView === 'list') {
+            if (listWrapper) listWrapper.style.display = 'block';
+        } else {
+            if (pitchWrapper) pitchWrapper.style.display = 'flex';
+        }
 
     } catch (e) {
 
         console.error('TOTW Error:', e);
 
         loadingBox.style.display = 'none';
-        errorBox.style.display = 'block';
-        errorBox.textContent = '⚠️ Error: ' + e.message;
+        if (errorBox) {
+            errorBox.style.display = 'block';
+            errorBox.textContent = '⚠️ Error: ' + e.message;
+        }
     }
-
-    if (refreshBtn) {
-        refreshBtn.classList.remove('loading');
-    }
-}
-
-
-function changeTOTWGameweek() {
-    loadTOTW();
 }
 
 
 document.addEventListener('DOMContentLoaded', function() {
-
-    const gwSelect = document.getElementById('totwGwSelect');
-
-    if (gwSelect) {
-        gwSelect.addEventListener('change', changeTOTWGameweek);
-    }
+    loadTOTW();
 });
-
-
-/* =========================================================
-   SAVE TOTW IMAGE
-========================================================= */
-
-async function saveTOTWImage() {
-
-    const pitch = document.getElementById('totwPitchToSave');
-    const saveBtn = document.getElementById('totwSaveBtn');
-
-    if (!pitch) {
-        alert('Pitch not found');
-        return;
-    }
-
-    if (typeof html2canvas === 'undefined') {
-        alert('html2canvas not loaded');
-        return;
-    }
-
-    if (saveBtn) {
-        saveBtn.disabled = true;
-        saveBtn.textContent = '⏳ Saving...';
-    }
-
-    try {
-
-        const images = pitch.querySelectorAll('img');
-
-        await Promise.all(Array.from(images).map(function(img) {
-            if (img.complete) return Promise.resolve();
-            return new Promise(function(resolve) {
-                img.addEventListener('load', resolve, { once: true });
-                img.addEventListener('error', resolve, { once: true });
-            });
-        }));
-
-        const canvas = await html2canvas(pitch, {
-            backgroundColor: null,
-            scale: 3,
-            useCORS: true,
-            allowTaint: true,
-            logging: false,
-            imageTimeout: 0
-        });
-
-        canvas.toBlob(function(blob) {
-
-            if (!blob) {
-                alert('Failed to create image');
-                if (saveBtn) {
-                    saveBtn.disabled = false;
-                    saveBtn.textContent = '⬇️ Download';
-                }
-                return;
-            }
-
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            const gw = document.getElementById('totwGwSelect');
-            const gwValue = gw ? gw.value : '5';
-            link.download = 'TOTW_GW' + gwValue + '.png';
-            link.href = url;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            setTimeout(function() {
-                URL.revokeObjectURL(url);
-            }, 100);
-
-            if (saveBtn) {
-                saveBtn.disabled = false;
-                saveBtn.textContent = '⬇️ Download';
-            }
-
-        }, 'image/png', 1.0);
-
-    } catch (e) {
-
-        console.error('Save error:', e);
-        alert('Error: ' + e.message);
-
-        if (saveBtn) {
-            saveBtn.disabled = false;
-            saveBtn.textContent = '⬇️ Download';
-        }
-    }
-}
