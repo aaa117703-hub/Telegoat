@@ -216,7 +216,7 @@ function createTOTWCard(player) {
 
 
 /* =========================================================
-   RENDER LIST — مع شعار الفريق
+   RENDER LIST — مطابق FPL Standings
 ========================================================= */
 
 function renderTOTWList(top11) {
@@ -227,19 +227,29 @@ function renderTOTWList(top11) {
 
     let html = '';
 
+    /* الترويسة */
+    html += '<div class="totw-list-header">';
+    html += '<div class="totw-list-h-rank">#</div>';
+    html += '<div class="totw-list-h-team">Team & Manager</div>';
+    html += '<div class="totw-list-h-gw">GW</div>';
+    html += '<div class="totw-list-h-total">Total</div>';
+    html += '</div>';
+
+    /* الصفوف */
     top11.forEach(function(player, index) {
 
         const rawName = player.player_name || player.entry_name || 'Unknown';
-        const name = shortenPlayerName(rawName);
+        const entryName = player.entry_name || '';
         const points = player.event_total || 0;
+        const total = player.total || 0;
 
         let teamName = '';
         if (typeof findPlayerTeam === 'function') {
             teamName = findPlayerTeam(rawName) || findPlayerTeam(player.entry_name) || '';
         }
 
+        /* الشعار */
         let logoHtml = '';
-
         if (
             teamName &&
             typeof TEAMS_LOGOS !== 'undefined' &&
@@ -250,14 +260,32 @@ function renderTOTWList(top11) {
                     '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
                 '</div>';
         } else {
-            logoHtml = '<div class="totw-list-logo"></div>';
+            logoHtml =
+                '<div class="totw-list-logo totw-list-logo-empty">' +
+                    '<span>⚽</span>' +
+                '</div>';
         }
 
         html += '<div class="totw-list-item">';
+
+        /* الترتيب */
         html += '<div class="totw-list-rank">' + (index + 1) + '</div>';
+
+        /* الشعار */
         html += logoHtml;
-        html += '<div class="totw-list-name">' + name + '</div>';
-        html += '<div class="totw-list-points">' + points + '</div>';
+
+        /* الاسم — سطرين */
+        html += '<div class="totw-list-names">';
+        html += '<div class="totw-list-entry">' + (entryName || rawName) + '</div>';
+        html += '<div class="totw-list-player">' + rawName + '</div>';
+        html += '</div>';
+
+        /* نقاط الجولة */
+        html += '<div class="totw-list-gw">' + points + '</div>';
+
+        /* المجموع */
+        html += '<div class="totw-list-total">' + total + '</div>';
+
         html += '</div>';
     });
 
