@@ -7,7 +7,7 @@ const TOTW_TOTAL_PAGES = 7;
 
 
 /* =========================================================
-   FETCH TOTW PAGES
+   FETCH ALL PAGES
 ========================================================= */
 
 async function fetchTOTWPages() {
@@ -60,7 +60,7 @@ function getTOTWTop11(allResults) {
 
 
 /* =========================================================
-   RENDER CARDS
+   RENDER CARDS — ترتيب FPL: 1 حارس → 4 دفاع → 3 وسط → 3 هجوم
 ========================================================= */
 
 function renderTOTWCards(top11) {
@@ -69,34 +69,49 @@ function renderTOTWCards(top11) {
 
     if (!pitch) return;
 
-    const forwards = top11.slice(0, 3);
-    const midfielders = top11.slice(3, 6);
-    const defenders = top11.slice(6, 10);
-    const goalkeeper = top11.slice(10, 11);
+    /* الأعلى نقاط = هجوم، الأقل = حارس */
+    const forward1 = top11[0];
+    const forward2 = top11[1];
+    const forward3 = top11[2];
+
+    const mid1 = top11[3];
+    const mid2 = top11[4];
+    const mid3 = top11[5];
+
+    const def1 = top11[6];
+    const def2 = top11[7];
+    const def3 = top11[8];
+    const def4 = top11[9];
+
+    const goalkeeper = top11[10];
 
     let html = '';
 
-    html += '<div class="totw-row totw-row-1">';
-    html += createTOTWCard(forwards[1]);
-    html += createTOTWCard(forwards[0]);
-    html += createTOTWCard(forwards[2]);
+    /* صف 1: حارس (1) */
+    html += '<div class="totw-row totw-row-gk">';
+    html += createTOTWCard(goalkeeper);
     html += '</div>';
 
-    html += '<div class="totw-row totw-row-2">';
-    html += createTOTWCard(midfielders[0]);
-    html += createTOTWCard(midfielders[1]);
-    html += createTOTWCard(midfielders[2]);
+    /* صف 2: دفاع (4) */
+    html += '<div class="totw-row totw-row-def">';
+    html += createTOTWCard(def1);
+    html += createTOTWCard(def2);
+    html += createTOTWCard(def3);
+    html += createTOTWCard(def4);
     html += '</div>';
 
-    html += '<div class="totw-row totw-row-3">';
-    html += createTOTWCard(defenders[1]);
-    html += createTOTWCard(defenders[0]);
-    html += createTOTWCard(defenders[2]);
-    html += createTOTWCard(defenders[3]);
+    /* صف 3: وسط (3) */
+    html += '<div class="totw-row totw-row-mid">';
+    html += createTOTWCard(mid1);
+    html += createTOTWCard(mid2);
+    html += createTOTWCard(mid3);
     html += '</div>';
 
-    html += '<div class="totw-row totw-row-4">';
-    html += createTOTWCard(goalkeeper[0]);
+    /* صف 4: هجوم (3) */
+    html += '<div class="totw-row totw-row-fwd">';
+    html += createTOTWCard(forward1);
+    html += createTOTWCard(forward2);
+    html += createTOTWCard(forward3);
     html += '</div>';
 
     pitch.innerHTML = html;
@@ -122,7 +137,6 @@ function createTOTWCard(player) {
 
     /* القميص */
     let shirtHtml = '';
-    let shirtScale = 1;
 
     if (
         teamName &&
@@ -131,10 +145,10 @@ function createTOTWCard(player) {
     ) {
 
         const shirtData = TEAMS_SHIRTS[teamName];
-        shirtScale = shirtData.scale || 1;
+        const scale = shirtData.scale || 1;
 
         shirtHtml =
-            '<div class="tc-shirt" style="transform:scale(' + shirtScale + ');">' +
+            '<div class="tc-shirt" style="transform:scale(' + scale + ');">' +
                 '<img src="./' + shirtData.file + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
             '</div>';
 
