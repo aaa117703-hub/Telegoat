@@ -2,7 +2,13 @@
    totw.js — منطق وعرض تشكيلة الأسبوع (TOTW)
 ========================================================= */
 
-// 1. إنشاء كرت اللاعب (الاسم -> القميص -> النقاط)
+// 1. تنظيف اسم اللاعب (حذف الإيموجيات)
+function normalizePlayerName(name) {
+    if (!name) return 'Player';
+    return name.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '').trim();
+}
+
+// 2. إنشاء كرت اللاعب (الاسم -> القميص -> النقاط)
 function createTOTWCard(player) {
     const card = document.createElement('div');
     card.className = 'totw-card';
@@ -10,9 +16,9 @@ function createTOTWCard(player) {
     // الاسم (فوق)
     const nameEl = document.createElement('div');
     nameEl.className = 'tc-name';
-    const rawName = player.web_name || player.name || 'Player';
-    nameEl.innerText = rawName;
-    nameEl.title = rawName;
+    const cleanName = normalizePlayerName(player.web_name || player.name || player.user_name);
+    nameEl.innerText = cleanName;
+    nameEl.title = cleanName;
 
     // القميص (في الوسط)
     const shirtEl = document.createElement('div');
@@ -20,8 +26,22 @@ function createTOTWCard(player) {
     
     const shirtImg = document.createElement('img');
     const playerTeam = player.team_name || player.team || '';
-    shirtImg.src = player.shirt_url || (typeof getShirtUrl === 'function' ? getShirtUrl(playerTeam) : './default-shirt.png');
+    
+    // استخدام دالة القمصان من players-teams.js
+    let shirtData = { url: './default-shirt.png', scale: 1 };
+    if (typeof getShirtForTeam === 'function') {
+        shirtData = getShirtForTeam(playerTeam);
+    } else if (typeof getShirtUrl === 'function') {
+        shirtData.url = getShirtUrl(playerTeam);
+    }
+
+    shirtImg.src = player.shirt_url || shirtData.url;
     shirtImg.alt = playerTeam || 'Shirt';
+    
+    if (shirtData.scale && shirtData.scale !== 1) {
+        shirtImg.style.transform = `scale(${shirtData.scale})`;
+    }
+
     shirtImg.onerror = function() {
         this.onerror = null;
         this.parentElement.innerHTML = `<span class="tc-shirt-fallback">👕</span>`;
@@ -31,9 +51,8 @@ function createTOTWCard(player) {
     // النقاط (تحت)
     const pointsEl = document.createElement('div');
     pointsEl.className = 'tc-points';
-    pointsEl.innerText = `${player.points ?? 0} pts`;
+    pointsEl.innerText = `${player.event_total ?? player.points ?? 0} pts`;
 
-    // تركيب العناصر بالترتيب المطلوب
     card.appendChild(nameEl);
     card.appendChild(shirtEl);
     card.appendChild(pointsEl);
@@ -41,7 +60,22 @@ function createTOTWCard(player) {
     return card;
 }
 
-// 2. توزيع اللاعبين على خطوط الملعب
+// 3. ترتيب وأخذ أعلى 11 لاعب فقط
+function getTOTWTop11(playersList) {
+    if (!Array.isArray(playersList)) return [];
+    
+    // ترتيب تنازلي حسب نقاط الجولة
+    const sorted = [...playersList].sort((a, b) => {
+        const ptsA = a.event_total ?? a.points ?? 0;
+        const ptsB = b.event_total ?? b.points ?? 0;
+        return ptsB - ptsA;
+    });
+
+    // اقتطاع أعلى 11 مشترك
+    return sorted.slice(0, 11);
+}
+
+// 4. توزيع اللاعبين على التشكيلة (1-4-3-3)
 function renderTOTW(playersList) {
     const gkContainer = document.querySelector('.totw-row-gk');
     const defContainer = document.querySelector('.totw-row-def');
@@ -50,65 +84,80 @@ function renderTOTW(playersList) {
 
     if (!gkContainer || !defContainer || !midContainer || !fwdContainer) return;
 
-    // تفريغ الصفوف
     gkContainer.innerHTML = '';
     defContainer.innerHTML = '';
     midContainer.innerHTML = '';
     fwdContainer.innerHTML = '';
 
-    if (!Array.isArray(playersList) || playersList.length === 0) return;
+    const top11 = getTOTWTop11(playersList);
+    if (top11.length === 0) return;
 
-    playersList.forEach(player => {
+    // توزيع 1 حارس، 4 دفاع، 3 وسط، 3 هجوم حسب الترتيب أو المركز
+    top11.forEach((player, idx) => {
         const card = createTOTWCard(player);
         const pos = (player.position || player.element_type_name || '').toString().toLowerCase();
 
-        if (pos.includes('gk') || pos.includes('goalkeeper') || player.element_type === 1) {
+        if (idx === 0 || pos.includes('gk') || player.element_type === 1) {
             gkContainer.appendChild(card);
-        } else if (pos.includes('def') || player.element_type === 2) {
+        } else if (idx >= 1 && idx <= 4) {
             defContainer.appendChild(card);
-        } else if (pos.includes('mid') || player.element_type === 3) {
+        } else if (idx >= 5 && idx <= 7) {
             midContainer.appendChild(card);
-        } else if (pos.includes('fwd') || pos.includes('forward') || player.element_type === 4) {
+        } else {
             fwdContainer.appendChild(card);
         }
     });
 }
 
-// 3. جلب بيانات التشكيلة من السيرفر/API
+// 5. جلب البيانات من Supabase / Worker
 async function fetchTOTWData(gw) {
     const pitchArea = document.querySelector('.totw-players');
     if (!pitchArea) return;
 
     try {
-        // إذا كان هناك رابط API معرف في المشروع
-        const apiUrl = typeof WORKER_URL !== 'undefined' ? `${WORKER_URL}/totw?gw=${gw}` : `/api/totw?gw=${gw}`;
-        const res = await fetch(apiUrl);
-        if (!res.ok) throw new Error('Network response was not ok');
-        const data = await res.json();
-        
-        const players = data.players || data;
+        let players = [];
+
+        // إذا كان هناك اتصال مباشر مع Supabase عبر client
+        if (window.sbClient) {
+            const { data, error } = await window.sbClient
+                .from('users')
+                .select('*')
+                .eq('gw', gw);
+            
+            if (!error && data) players = data;
+        } 
+
+        // fallback لجلب البيانات عبر Worker API
+        if (players.length === 0) {
+            const baseUrl = typeof WORKER_URL !== 'undefined' ? WORKER_URL : 'https://telegoat-api.workers.dev';
+            const res = await fetch(`${baseUrl}/totw?gw=${gw}`);
+            if (res.ok) {
+                const data = await res.json();
+                players = data.players || data;
+            }
+        }
+
         renderTOTW(players);
     } catch (err) {
         console.error('Error loading TOTW:', err);
     }
 }
 
-// 4. تهيئة الأحداث والزر الخاص بالجولات
+// 6. الأحداث والتشغيل
 document.addEventListener('DOMContentLoaded', () => {
     const gwSelect = document.querySelector('.totw-gw-select');
     const refreshBtn = document.querySelector('.totw-refresh-btn');
 
     if (gwSelect) {
         gwSelect.addEventListener('change', (e) => {
-            const selectedGW = e.target.value;
-            fetchTOTWData(selectedGW);
+            fetchTOTWData(e.target.value);
         });
     }
 
     if (refreshBtn) {
         refreshBtn.addEventListener('click', () => {
-            const currentGW = gwSelect ? gwSelect.value : 1;
-            fetchTOTWData(currentGW);
+            const selectedGW = gwSelect ? gwSelect.value : 1;
+            fetchTOTWData(selectedGW);
         });
     }
 });
