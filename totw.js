@@ -6,6 +6,10 @@ const TOTW_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
 const TOTW_TOTAL_PAGES = 7;
 
 
+/* =========================================================
+   FETCH TOTW PAGES
+========================================================= */
+
 async function fetchTOTWPages() {
 
     const allResults = [];
@@ -41,6 +45,10 @@ async function fetchTOTWPages() {
 }
 
 
+/* =========================================================
+   GET TOP 11
+========================================================= */
+
 function getTOTWTop11(allResults) {
 
     const sorted = [...allResults].sort(function(a, b) {
@@ -50,6 +58,10 @@ function getTOTWTop11(allResults) {
     return sorted.slice(0, 11);
 }
 
+
+/* =========================================================
+   RENDER CARDS
+========================================================= */
 
 function renderTOTWCards(top11) {
 
@@ -91,6 +103,10 @@ function renderTOTWCards(top11) {
 }
 
 
+/* =========================================================
+   CREATE CARD
+========================================================= */
+
 function createTOTWCard(player) {
 
     if (!player) return '';
@@ -104,21 +120,48 @@ function createTOTWCard(player) {
         teamName = findPlayerTeam(name) || findPlayerTeam(player.entry_name) || '';
     }
 
-    /* شعار الفريق */
-    let logoHtml = '';
-    if (teamName && typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName]) {
-        logoHtml = '<div class="tc-logo">' +
-            '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
-        '</div>';
+    /* القميص */
+    let shirtHtml = '';
+    let shirtScale = 1;
+
+    if (
+        teamName &&
+        typeof TEAMS_SHIRTS !== 'undefined' &&
+        TEAMS_SHIRTS[teamName]
+    ) {
+
+        const shirtData = TEAMS_SHIRTS[teamName];
+        shirtScale = shirtData.scale || 1;
+
+        shirtHtml =
+            '<div class="tc-shirt" style="transform:scale(' + shirtScale + ');">' +
+                '<img src="./' + shirtData.file + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
+            '</div>';
+
+    } else if (
+        teamName &&
+        typeof TEAMS_LOGOS !== 'undefined' &&
+        TEAMS_LOGOS[teamName]
+    ) {
+
+        /* fallback: شعار الفريق */
+        shirtHtml =
+            '<div class="tc-shirt tc-shirt-fallback">' +
+                '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
+            '</div>';
     }
 
     return '<div class="totw-card">' +
+        shirtHtml +
         '<div class="tc-name">' + name + '</div>' +
-        logoHtml +
-        '<div class="tc-points">' + points + ' pts</div>' +
+        '<div class="tc-points">' + points + '</div>' +
     '</div>';
 }
 
+
+/* =========================================================
+   LOAD TOTW
+========================================================= */
 
 async function loadTOTW() {
 
@@ -182,9 +225,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-/* ============================================
+/* =========================================================
    SAVE TOTW IMAGE
-============================================ */
+========================================================= */
 
 async function saveTOTWImage() {
 
@@ -219,8 +262,8 @@ async function saveTOTWImage() {
         }));
 
         const canvas = await html2canvas(pitch, {
-            backgroundColor: '#ffffff',
-            scale: 4,
+            backgroundColor: null,
+            scale: 3,
             useCORS: true,
             allowTaint: true,
             logging: false,
