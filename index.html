@@ -209,89 +209,6 @@ body{
     100%{transform:rotate(360deg)}
 }
 
-#shareModal{
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    background:rgba(0,0,0,.75);
-    z-index:9999;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    opacity:0;
-    transition:opacity .3s ease;
-}
-
-#shareModal.show{
-    display:flex;
-    opacity:1;
-}
-
-.share-box{
-    background:linear-gradient(135deg, #2e0b3d 0%, #38003c 100%);
-    border:3px solid #00ff87;
-    border-radius:20px;
-    padding:24px 20px;
-    max-width:400px;
-    width:100%;
-    text-align:center;
-    box-shadow:0 0 40px rgba(0,255,135,.5);
-}
-
-.share-title{
-    font-size:20px;
-    font-weight:900;
-    color:#fff;
-    margin-bottom:16px;
-    letter-spacing:1px;
-}
-
-.share-score{
-    font-size:28px;
-    font-weight:900;
-    color:#00ff87;
-    margin-bottom:8px;
-    letter-spacing:2px;
-}
-
-.share-teams{
-    font-size:15px;
-    color:#fff;
-    margin-bottom:20px;
-    font-weight:700;
-}
-
-.share-btn{
-    display:inline-block;
-    padding:12px 20px;
-    border-radius:10px;
-    border:none;
-    font-weight:900;
-    font-size:14px;
-    cursor:pointer;
-    color:#fff;
-    margin:4px;
-    min-width:110px;
-}
-
-.share-copy{
-    background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
-    box-shadow:0 3px 0 #103c7a;
-}
-
-.share-twitter{
-    background:linear-gradient(135deg, #1da1f2 0%, #0d8ecf 100%);
-    box-shadow:0 3px 0 #0a6a99;
-}
-
-.share-close{
-    background:linear-gradient(135deg, #ff4081 0%, #b8003f 100%);
-    box-shadow:0 3px 0 #800028;
-}
-
 .carousel-wrapper{
     width:100%;
     margin:10px auto 0;
@@ -786,7 +703,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 .col-form{width:21%}
 
 /* ============================================
-   TOTW TAB - تصميم جديد
+   TOTW TAB
 ============================================ */
 
 .totw-header-box{
@@ -863,102 +780,25 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     margin-bottom:16px;
 }
 
-/* الملعب - أبيض */
+/* ============================================
+   الملعب - صورة pitch-bg.png
+============================================ */
+
 .totw-pitch{
     position:relative;
     width:100%;
     max-width:480px;
     aspect-ratio:2/3;
-    background:#ffffff;
-    border:4px solid #37003c;
+    background-image:url('./pitch-bg.png');
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    border:4px solid #1a5c2f;
     border-radius:18px;
     box-shadow:
-        0 10px 40px rgba(0,0,0,.3),
-        0 0 30px rgba(0,255,135,.3);
+        0 10px 40px rgba(0,0,0,.4),
+        0 0 30px rgba(0,255,135,.4);
     overflow:hidden;
-}
-
-/* خط المنتصف - تدرج PL */
-.totw-pitch::before{
-    content:'';
-    position:absolute;
-    top:50%;
-    left:0;
-    right:0;
-    height:3px;
-    background:linear-gradient(90deg, 
-        #00ff87 0%, 
-        #04f5ff 33%, 
-        #e90052 66%, 
-        #38003c 100%);
-    z-index:1;
-    box-shadow:0 0 15px rgba(233,0,82,.5);
-}
-
-/* دائرة المنتصف */
-.totw-circle{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    width:32%;
-    aspect-ratio:1/1;
-    border:3px solid #04f5ff;
-    border-radius:50%;
-    z-index:1;
-    box-shadow:0 0 20px rgba(4,245,255,.4), inset 0 0 20px rgba(0,255,135,.15);
-}
-
-/* منطقة 18 العلوية */
-.totw-box-top{
-    position:absolute;
-    top:0;
-    left:50%;
-    transform:translateX(-50%);
-    width:55%;
-    height:14%;
-    border:3px solid #38003c;
-    border-top:none;
-    z-index:1;
-    box-shadow:0 0 15px rgba(56,0,60,.3);
-}
-
-.totw-box-top::before{
-    content:'';
-    position:absolute;
-    top:0;
-    left:50%;
-    transform:translateX(-50%);
-    width:55%;
-    height:45%;
-    border:3px solid #38003c;
-    border-top:none;
-}
-
-/* منطقة 18 السفلية */
-.totw-box-bottom{
-    position:absolute;
-    bottom:0;
-    left:50%;
-    transform:translateX(-50%);
-    width:55%;
-    height:14%;
-    border:3px solid #e90052;
-    border-bottom:none;
-    z-index:1;
-    box-shadow:0 0 15px rgba(233,0,82,.3);
-}
-
-.totw-box-bottom::before{
-    content:'';
-    position:absolute;
-    bottom:0;
-    left:50%;
-    transform:translateX(-50%);
-    width:55%;
-    height:45%;
-    border:3px solid #e90052;
-    border-bottom:none;
 }
 
 .totw-players{
@@ -1001,70 +841,43 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     margin-bottom:4%;
 }
 
-/* الكرت */
+/* ============================================
+   الكرت — قميص + اسم + نقاط
+============================================ */
+
 .totw-card{
-    width:88px;
+    width:78px;
     height:auto;
-    background:transparent;
-    border:none;
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:center;
+    justify-content:flex-end;
     padding:0;
-    transition:all .35s ease;
+    transition:transform .35s ease;
     position:relative;
     overflow:visible;
-    filter:drop-shadow(0 4px 8px rgba(0,0,0,.4)) drop-shadow(0 0 8px rgba(0,255,135,.5));
 }
 
 .totw-card:hover{
-    transform:scale(1.12) translateY(-5px);
-    filter:drop-shadow(0 8px 15px rgba(0,0,0,.6)) drop-shadow(0 0 20px rgba(0,255,135,1));
+    transform:scale(1.08) translateY(-4px);
     z-index:100;
 }
 
-/* اسم اللاعب - بنفسجي PL → أزرق فاتح */
-.totw-card .tc-name{
+/* القميص */
+.totw-card .tc-shirt{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:92px;
-    min-height:38px;
-    padding:6px 8px;
-    background:linear-gradient(135deg, #38003c 0%, #04f5ff 100%);
-    border:2.5px solid #00ff87;
-    border-radius:12px;
-    color:#fff;
-    font-size:10px;
-    font-weight:900;
-    text-align:center;
-    line-height:1.15;
-    word-break:break-word;
-    overflow:hidden;
-    text-shadow:0 2px 4px rgba(0,0,0,.7);
-    box-shadow:
-        0 0 12px rgba(0,255,135,.6),
-        0 4px 8px rgba(0,0,0,.3),
-        inset 0 1px 0 rgba(255,255,255,.3);
-    margin-bottom:2px;
-    letter-spacing:0.2px;
+    width:58px;
+    height:58px;
+    margin-bottom:-2px;
     position:relative;
+    z-index:3;
+    filter:drop-shadow(0 3px 5px rgba(0,0,0,.5));
+    transform-origin:center center;
 }
 
-/* شعار الفريق */
-.totw-card .tc-logo{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    width:36px;
-    height:36px;
-    margin:2px auto;
-    position:relative;
-    filter:drop-shadow(0 0 6px rgba(0,255,135,.6));
-}
-
-.totw-card .tc-logo img{
+.totw-card .tc-shirt img{
     max-width:100%;
     max-height:100%;
     width:auto;
@@ -1073,29 +886,57 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     display:block;
 }
 
-/* النقاط - بنفسجي PL → أحمر PL */
+/* لو ما لكى القميص */
+.totw-card .tc-shirt-fallback{
+    background:rgba(255,255,255,.95);
+    border-radius:50%;
+    padding:6px;
+}
+
+/* اسم اللاعب */
+.totw-card .tc-name{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:82px;
+    min-height:28px;
+    padding:4px 6px;
+    background:#ffffff;
+    border:2px solid #37003c;
+    border-radius:8px;
+    color:#37003c;
+    font-size:9px;
+    font-weight:900;
+    text-align:center;
+    line-height:1.15;
+    word-break:break-word;
+    overflow:hidden;
+    margin-bottom:2px;
+    letter-spacing:0.2px;
+    position:relative;
+    z-index:2;
+    box-shadow:0 3px 8px rgba(0,0,0,.3);
+}
+
+/* النقاط */
 .totw-card .tc-points{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:72px;
-    min-height:26px;
-    padding:3px 8px;
-    background:linear-gradient(135deg, #38003c 0%, #e90052 100%);
-    border:2px solid #00ff87;
+    width:62px;
+    min-height:22px;
+    padding:2px 8px;
+    background:#37003c;
+    border:2px solid #ffffff;
     border-radius:50px;
     color:#ffffff;
-    font-size:12px;
+    font-size:11px;
     font-weight:900;
     text-align:center;
     letter-spacing:0.5px;
-    text-shadow:
-        0 0 8px rgba(255,255,255,.6),
-        0 1px 2px rgba(0,0,0,.9);
-    box-shadow:
-        0 0 15px rgba(233,0,82,.5),
-        inset 0 1px 0 rgba(255,255,255,.2);
     position:relative;
+    z-index:2;
+    box-shadow:0 3px 8px rgba(0,0,0,.4);
 }
 
 .totw-loading{
@@ -1142,26 +983,25 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     }
 
     .totw-card{
-        width:76px;
+        width:70px;
+    }
+
+    .totw-card .tc-shirt{
+        width:50px;
+        height:50px;
     }
 
     .totw-card .tc-name{
-        width:78px;
-        min-height:34px;
-        font-size:9px;
-        padding:5px 6px;
-        border-radius:10px;
-    }
-
-    .totw-card .tc-logo{
-        width:30px;
-        height:30px;
+        width:74px;
+        min-height:26px;
+        font-size:8px;
+        padding:4px 5px;
     }
 
     .totw-card .tc-points{
-        width:62px;
-        min-height:22px;
-        font-size:11px;
+        width:54px;
+        min-height:20px;
+        font-size:10px;
     }
 
     .totw-row-1{padding:0 5%;}
@@ -1191,17 +1031,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
 <div id="toast">
     <span id="toastContent">Saving...</span>
-</div>
-
-<div id="shareModal" onclick="closeShareModal(event)">
-    <div class="share-box" onclick="event.stopPropagation()">
-        <div class="share-title">📤 Share Result</div>
-        <div class="share-score" id="shareScore">-</div>
-        <div class="share-teams" id="shareTeams">-</div>
-        <button class="share-btn share-copy" onclick="copyShareText()">📋 Copy</button>
-        <button class="share-btn share-twitter" onclick="shareTwitter()">🐦 Tweet</button>
-        <button class="share-btn share-close" onclick="closeShareModal()">✕ Close</button>
-    </div>
 </div>
 
 <div class="carousel-wrapper">
@@ -1302,9 +1131,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
         <div id="totwPitchWrapper" class="totw-pitch-wrapper" style="display:none;">
             <div class="totw-pitch" id="totwPitchToSave">
-                <div class="totw-circle"></div>
-                <div class="totw-box-top"></div>
-                <div class="totw-box-bottom"></div>
                 <div class="totw-players" id="totwPlayers"></div>
             </div>
         </div>
@@ -1399,13 +1225,12 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=8"></script>
-<script src="fixtures.js?v=8"></script>
+<script src="carousel.js?v=9"></script>
+<script src="fixtures.js?v=9"></script>
 <script src="standings.js"></script>
 <script src="download.js"></script>
-<script src="share.js"></script>
-<script src="players-teams.js?v=2"></script>
-<script src="totw.js?v=9"></script>
+<script src="players-teams.js?v=3"></script>
+<script src="totw.js?v=10"></script>
 <script src="main.js"></script>
 
 </body>
