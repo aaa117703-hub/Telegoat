@@ -422,7 +422,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 </style>
 
 <link rel="stylesheet" href="mobile.css">
-<link rel="stylesheet" href="totw.css?v=2">
+<link rel="stylesheet" href="totw.css?v=3">
 
 </head>
 
@@ -514,26 +514,9 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
     <div id="totwTab" class="tab-content">
 
-        <div class="totw-header-box">
-            <div class="totw-header-title">⚽ TEAM OF THE WEEK ⚽</div>
-        </div>
-
-        <div class="totw-controls-row">
-            <select id="totwGwSelect" class="totw-gw-select">
-                <option value="5">Gameweek 5</option>
-                <option value="4">Gameweek 4</option>
-                <option value="3">Gameweek 3</option>
-                <option value="2">Gameweek 2</option>
-                <option value="1">Gameweek 1</option>
-            </select>
-
-            <button id="totwRefreshBtn" class="totw-action-btn totw-refresh-btn" onclick="loadTOTW()">
-                🔄 Refresh
-            </button>
-
-            <button id="totwSaveBtn" class="totw-action-btn totw-save-btn" onclick="saveTOTWImage()">
-                ⬇️ Download
-            </button>
+        <div class="totw-tabs">
+            <button id="totwSquadBtn" class="totw-tab-btn active" onclick="switchTOTWView('squad')">Squad</button>
+            <button id="totwListBtn" class="totw-tab-btn" onclick="switchTOTWView('list')">List</button>
         </div>
 
         <div id="totwLoadingBox" class="totw-loading">
@@ -543,9 +526,12 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
         <div id="totwPitchWrapper" class="totw-pitch-wrapper" style="display:none;">
             <div class="totw-pitch" id="totwPitchToSave">
+                <div class="totw-pitch-title">Team of the Week</div>
                 <div class="totw-players" id="totwPlayers"></div>
             </div>
         </div>
+
+        <div id="totwListWrapper" class="totw-list-view" style="display:none;"></div>
 
         <div id="totwErrorBox" class="totw-error" style="display:none;"></div>
 
@@ -637,12 +623,12 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=15"></script>
-<script src="fixtures.js?v=15"></script>
+<script src="carousel.js?v=16"></script>
+<script src="fixtures.js?v=16"></script>
 <script src="standings.js"></script>
 <script src="download.js"></script>
-<script src="players-teams.js?v=77"></script>
-<script src="totw.js?v=19"></script>
+<script src="players-teams.js?v=78"></script>
+<script src="totw.js?v=90"></script>
 <script src="main.js"></script>
 
 </body>
