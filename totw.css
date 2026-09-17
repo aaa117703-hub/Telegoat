@@ -83,7 +83,7 @@
     position:relative;
     width:100%;
     max-width:480px;
-    aspect-ratio:1080/1500;
+    aspect-ratio:860/1160;
     background-image:url('./pitch-bg.png');
     background-size:100% 100%;
     background-position:center;
@@ -103,7 +103,7 @@
 }
 
 /* =========================================================
-   الصفوف — مواضع المربعات في pitch-bg.png
+   الصفوف
 ========================================================= */
 
 .totw-row{
@@ -117,45 +117,49 @@
 }
 
 .totw-row-gk{
-    top:29.5%;
+    top:22%;
     justify-content:center;
-    height:11%;
+    height:12%;
 }
 
 .totw-row-def{
-    top:42.5%;
+    top:38%;
     justify-content:space-evenly;
-    padding:0 4%;
+    padding:0 3%;
     height:12%;
 }
 
 .totw-row-mid{
-    top:62%;
+    top:56%;
     justify-content:space-evenly;
-    padding:0 13%;
+    padding:0 12%;
     height:12%;
 }
 
 .totw-row-fwd{
-    top:81.5%;
+    top:74%;
     justify-content:space-evenly;
-    padding:0 13%;
+    padding:0 12%;
     height:12%;
 }
 
 /* =========================================================
-   الكرت — كامل جوه المربع
+   الكرت — مربع شفاف + قميص + اسم + نقاط
 ========================================================= */
 
 .totw-card{
-    width:82px;
-    height:80px;
+    width:80px;
+    height:92px;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:flex-end;
-    padding:0;
+    padding:4px;
     position:relative;
+    background:rgba(15, 60, 30, 0.35);
+    border:1.5px solid rgba(255, 255, 255, 0.25);
+    border-radius:6px;
+    box-shadow:inset 0 0 12px rgba(0, 0, 0, 0.25);
     transition:transform .3s ease;
 }
 
@@ -164,17 +168,18 @@
     z-index:100;
 }
 
-/* القميص — الجزء العلوي من الكرت */
+/* القميص */
 .totw-card .tc-shirt{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:60px;
-    height:44px;
+    width:56px;
+    height:42px;
     position:relative;
     z-index:3;
     transform-origin:center center;
     flex-shrink:0;
+    margin-bottom:2px;
 }
 
 .totw-card .tc-shirt img{
@@ -193,13 +198,13 @@
     padding:4px;
 }
 
-/* الاسم — شريط أبيض بعرض الكرت */
+/* الاسم */
 .totw-card .tc-name{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:82px;
-    height:18px;
+    width:100%;
+    height:16px;
     padding:0 3px;
     background:#ffffff;
     color:#37003c;
@@ -213,17 +218,16 @@
     position:relative;
     z-index:4;
     border-radius:3px 3px 0 0;
-    margin-top:2px;
     flex-shrink:0;
 }
 
-/* النقاط — شريط بنفسجي تحت الاسم */
+/* النقاط */
 .totw-card .tc-points{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:82px;
-    height:18px;
+    width:100%;
+    height:16px;
     padding:0 6px;
     background:#37003c;
     color:#ffffff;
@@ -286,28 +290,27 @@
     .totw-pitch{max-width:100%;}
 
     .totw-card{
-        width:70px;
-        height:68px;
+        width:68px;
+        height:78px;
+        padding:3px;
     }
 
     .totw-card .tc-shirt{
-        width:50px;
-        height:38px;
+        width:48px;
+        height:36px;
     }
 
     .totw-card .tc-name{
-        width:70px;
-        height:15px;
+        height:14px;
         font-size:6px;
     }
 
     .totw-card .tc-points{
-        width:70px;
-        height:15px;
+        height:14px;
         font-size:9px;
     }
 
-    .totw-row-def{padding:0 3%;}
-    .totw-row-mid{padding:0 11%;}
-    .totw-row-fwd{padding:0 11%;}
+    .totw-row-def{padding:0 2%;}
+    .totw-row-mid{padding:0 10%;}
+    .totw-row-fwd{padding:0 10%;}
 }
