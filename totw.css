@@ -117,49 +117,40 @@
 }
 
 .totw-row-gk{
-    top:22%;
+    top:6%;
     justify-content:center;
-    height:12%;
 }
 
 .totw-row-def{
-    top:38%;
+    top:24%;
     justify-content:space-evenly;
-    padding:0 3%;
-    height:12%;
+    padding:0 12%;
 }
 
 .totw-row-mid{
-    top:56%;
+    top:50%;
     justify-content:space-evenly;
-    padding:0 12%;
-    height:12%;
+    padding:0 3%;
 }
 
 .totw-row-fwd{
-    top:74%;
+    top:72%;
     justify-content:space-evenly;
-    padding:0 12%;
-    height:12%;
+    padding:0 20%;
 }
 
 /* =========================================================
-   الكرت — مربع شفاف + قميص + اسم + نقاط
+   الكرت — مطابق FPL
 ========================================================= */
 
 .totw-card{
     width:80px;
-    height:92px;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:flex-end;
-    padding:4px;
+    padding:0;
     position:relative;
-    background:rgba(15, 60, 30, 0.35);
-    border:1.5px solid rgba(255, 255, 255, 0.25);
-    border-radius:6px;
-    box-shadow:inset 0 0 12px rgba(0, 0, 0, 0.25);
     transition:transform .3s ease;
 }
 
@@ -168,18 +159,21 @@
     z-index:100;
 }
 
-/* القميص */
+/* القميص مع خلفية شفافة داكنة + إطار هلالي */
 .totw-card .tc-shirt{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:56px;
-    height:42px;
+    width:80px;
+    height:80px;
     position:relative;
     z-index:3;
-    transform-origin:center center;
     flex-shrink:0;
-    margin-bottom:2px;
+    transform-origin:center center;
+    background:rgba(30, 90, 50, 0.45);
+    border:1px solid rgba(255, 255, 255, 0.15);
+    border-radius:6px 6px 0 0;
+    padding:6px 8px 0 8px;
 }
 
 .totw-card .tc-shirt img{
@@ -189,26 +183,26 @@
     height:auto;
     object-fit:contain;
     display:block;
-    filter:drop-shadow(0 2px 3px rgba(0,0,0,.5));
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.4));
 }
 
 .totw-card .tc-shirt-fallback{
     background:rgba(255,255,255,.95);
     border-radius:50%;
-    padding:4px;
+    padding:6px;
 }
 
-/* الاسم */
+/* الاسم — شريط أبيض */
 .totw-card .tc-name{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:100%;
-    height:16px;
-    padding:0 3px;
+    width:80px;
+    height:20px;
+    padding:0 4px;
     background:#ffffff;
     color:#37003c;
-    font-size:7px;
+    font-size:10px;
     font-weight:900;
     text-align:center;
     line-height:1;
@@ -217,28 +211,29 @@
     white-space:nowrap;
     position:relative;
     z-index:4;
-    border-radius:3px 3px 0 0;
     flex-shrink:0;
+    border-left:1px solid rgba(255, 255, 255, 0.15);
+    border-right:1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* النقاط */
+/* النقاط — شريط بنفسجي داكن */
 .totw-card .tc-points{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:100%;
-    height:16px;
+    width:80px;
+    height:20px;
     padding:0 6px;
     background:#37003c;
     color:#ffffff;
-    font-size:10px;
+    font-size:11px;
     font-weight:900;
     text-align:center;
     letter-spacing:0.5px;
     position:relative;
     z-index:4;
-    border-radius:0 0 3px 3px;
     flex-shrink:0;
+    border-radius:0 0 6px 6px;
 }
 
 /* =========================================================
@@ -290,27 +285,28 @@
     .totw-pitch{max-width:100%;}
 
     .totw-card{
-        width:68px;
-        height:78px;
-        padding:3px;
+        width:66px;
     }
 
     .totw-card .tc-shirt{
-        width:48px;
-        height:36px;
+        width:66px;
+        height:66px;
+        padding:4px 6px 0 6px;
     }
 
     .totw-card .tc-name{
-        height:14px;
-        font-size:6px;
+        width:66px;
+        height:16px;
+        font-size:8px;
     }
 
     .totw-card .tc-points{
-        height:14px;
+        width:66px;
+        height:16px;
         font-size:9px;
     }
 
-    .totw-row-def{padding:0 2%;}
-    .totw-row-mid{padding:0 10%;}
-    .totw-row-fwd{padding:0 10%;}
+    .totw-row-def{padding:0 8%;}
+    .totw-row-mid{padding:0 2%;}
+    .totw-row-fwd{padding:0 15%;}
 }
