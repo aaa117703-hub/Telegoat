@@ -233,32 +233,18 @@
 }
 
 /* =========================================================
-   عرض القائمة
+   عرض القائمة — صفوف بيضاء + شعار الفريق
 ========================================================= */
 
 .totw-list-view{
     width:100%;
     max-width:480px;
     margin:0 auto 16px;
-    padding:14px 10px;
-    background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
-    border:3px solid #00ff87;
+    background:#ffffff;
+    border:3px solid #37003c;
     border-radius:16px;
-    box-shadow:0 0 25px rgba(0,255,135,.5);
-}
-
-.totw-list-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:8px 10px;
-    border-bottom:2px solid rgba(0,255,135,.4);
-    margin-bottom:8px;
-    color:#00ff87;
-    font-size:11px;
-    font-weight:900;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
+    overflow:hidden;
+    box-shadow:0 0 25px rgba(0,255,135,.4);
 }
 
 .totw-list-item{
@@ -266,51 +252,72 @@
     align-items:center;
     gap:10px;
     padding:10px 12px;
-    margin-bottom:6px;
-    background:rgba(255,255,255,.95);
-    border-radius:8px;
+    border-bottom:1px solid #f0f0f0;
+    background:#ffffff;
     color:#37003c;
-    font-size:13px;
-    font-weight:900;
-    box-shadow:0 2px 6px rgba(0,0,0,.2);
+    min-height:44px;
 }
 
 .totw-list-item:last-child{
-    margin-bottom:0;
+    border-bottom:none;
 }
 
 .totw-list-rank{
-    min-width:26px;
-    height:26px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#37003c;
-    color:#fff;
-    border-radius:50%;
-    font-size:12px;
+    min-width:22px;
+    font-size:13px;
     font-weight:900;
+    color:#37003c;
+    text-align:center;
     flex-shrink:0;
+}
+
+.totw-list-logo{
+    width:20px;
+    height:20px;
+    min-width:20px;
+    min-height:20px;
+    max-width:20px;
+    max-height:20px;
+    position:relative;
+    overflow:hidden;
+    flex-shrink:0;
+}
+
+.totw-list-logo img{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+    display:block;
 }
 
 .totw-list-name{
     flex:1;
+    font-size:13px;
+    font-weight:900;
+    color:#37003c;
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
+    text-transform:uppercase;
     text-align:left;
+    letter-spacing:0.3px;
 }
 
 .totw-list-points{
     min-width:44px;
-    padding:3px 8px;
+    padding:4px 10px;
     background:#37003c;
-    color:#fff;
+    color:#ffffff;
     border-radius:50px;
     font-size:12px;
     font-weight:900;
     text-align:center;
     flex-shrink:0;
+    letter-spacing:0.5px;
 }
 
 /* =========================================================
@@ -398,17 +405,31 @@
 
     .totw-list-item{
         padding:8px 10px;
-        font-size:11px;
+        min-height:40px;
+        gap:8px;
     }
 
     .totw-list-rank{
-        min-width:22px;
-        height:22px;
-        font-size:10px;
+        min-width:20px;
+        font-size:12px;
+    }
+
+    .totw-list-logo{
+        width:18px;
+        height:18px;
+        min-width:18px;
+        min-height:18px;
+        max-width:18px;
+        max-height:18px;
+    }
+
+    .totw-list-name{
+        font-size:11px;
     }
 
     .totw-list-points{
         min-width:38px;
+        padding:3px 8px;
         font-size:11px;
     }
 }
