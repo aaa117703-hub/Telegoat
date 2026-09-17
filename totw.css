@@ -103,7 +103,7 @@
 }
 
 /* =========================================================
-   الصفوف — داخل المربعات
+   الصفوف
 ========================================================= */
 
 .totw-row{
@@ -159,7 +159,6 @@
     z-index:100;
 }
 
-/* الاسم — فوق */
 .totw-card .tc-name{
     display:flex;
     align-items:center;
@@ -184,7 +183,6 @@
     margin-bottom:-6px;
 }
 
-/* القميص — تحت الاسم */
 .totw-card .tc-shirt{
     display:flex;
     align-items:center;
@@ -213,7 +211,6 @@
     padding:6px;
 }
 
-/* النقاط — تحت القميص */
 .totw-card .tc-points{
     display:flex;
     align-items:center;
