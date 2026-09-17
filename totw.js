@@ -69,7 +69,6 @@ function renderTOTWCards(top11) {
 
     if (!pitch) return;
 
-    /* الأعلى نقاط = هجوم */
     const forward1 = top11[0];
     const forward2 = top11[1];
     const forward3 = top11[2];
@@ -133,8 +132,6 @@ function createTOTWCard(player) {
     if (typeof findPlayerTeam === 'function') {
         teamName = findPlayerTeam(name) || findPlayerTeam(player.entry_name) || '';
     }
-
-    console.log('TOTW Player:', name, '→ Team:', teamName);
 
     let shirtHtml = '';
 
