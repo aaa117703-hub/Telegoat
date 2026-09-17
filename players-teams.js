@@ -25,9 +25,9 @@ const PLAYERS_TEAMS = {
 
     "Brighton": [
         "3bs 10","Lionel Messi","Ameer Ahmed","Apex Star","كريم الشمري",
-        "AHMED RIYADH","mohamed tariq","Alosh -56","ali adnan","anas ahmed",
-        "Mohammed sagban ali","bakr ali","عمر الصفار"
-    ],
+        "AHMED RIYADH","mohamed tariq","Alosh -56"," Alsali adnan","anas ahmed",
+       ad "Mohammed sagban ali","bakrwe ali","عمر الصفار"
+   "," ],
 
     "Chelsea": [
         "Ahmed KM","Ali Qais","زيار كركوك","محمد الاسدي","Je Ko",
@@ -38,7 +38,7 @@ const PLAYERS_TEAMS = {
     "Hull City": [
         "Maithm Kamil","كرار حيدر","Ali Qahtan","abbas falcon",
         "khalid abdullah","Haji Muammal","Mohammed Hussein","Ali Aliraqi",
-        "Wolf Rahim","Ahmed Karim","Karrar Alsadwe","Mohammed Kadham",
+        "Wolf Rahim","Ahmed Karim","KarrarMohammed Kadham",
         "Ahad Hussein"
     ],
 
@@ -221,14 +221,14 @@ const TEAMS_SHIRTS = {
     "Ipswich Town":       { file: "ipswich-town-shirt.png",    scale: 1 },
     "Liverpool":          { file: "liverpool-shirt.png",       scale: 1 },
     "Fulham":             { file: "fulham-shirt.png",          scale: 1 },
-    "Spurs":              { file: "spurs-shirt.png",           scale: 1.2 },
+    "Spurs":              { file: "spurs-shirt.png",           scale: 1 },
     "Everton":            { file: "everton-shirt.png",         scale: 1 },
     "Sunderland":         { file: "sunderland-shirt.png",      scale: 1 },
     "Arsenal":            { file: "arsenal-shirt.png",         scale: 1 },
     "Coventry City":      { file: "coventry-city-shirt.png",   scale: 1 },
     "Brentford":          { file: "brentford-shirt.png",       scale: 1 },
     "Man Utd":            { file: "man-utd-shirt.png",         scale: 1 },
-    "Man City":           { file: "man-city-shirt.png",        scale: 1.2 },
+    "Man City":           { file: "man-city-shirt.png",        scale: 1 },
     "Leeds United":       { file: "leeds-united-shirt.png",    scale: 1 },
     "Newcastle":          { file: "newcastle-shirt.png",       scale: 1 }
 };
