@@ -132,6 +132,25 @@ const PLAYERS_TEAMS = {
 
 
 /* =========================================================
+   NORMALIZE PLAYER NAME - يحذف الإيموجي والرموز
+========================================================= */
+
+function normalizePlayerName(name) {
+
+    if (!name) return '';
+
+    return name
+        .replace(/[\u{1F1E6}-\u{1F1FF}]/gu, '')
+        .replace(/[\u{1F300}-\u{1F9FF}]/gu, '')
+        .replace(/[\u{2600}-\u{27BF}]/gu, '')
+        .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
+}
+
+
+/* =========================================================
    FIND PLAYER TEAM
 ========================================================= */
 
@@ -139,7 +158,7 @@ function findPlayerTeam(playerName) {
 
     if (!playerName) return null;
 
-    const cleanName = playerName.trim().toLowerCase();
+    const cleanName = normalizePlayerName(playerName);
 
     for (const team in PLAYERS_TEAMS) {
 
@@ -147,7 +166,7 @@ function findPlayerTeam(playerName) {
 
         for (let i = 0; i < players.length; i++) {
 
-            const player = players[i].trim().toLowerCase();
+            const player = normalizePlayerName(players[i]);
 
             if (player === cleanName) {
                 return team;
@@ -202,14 +221,14 @@ const TEAMS_SHIRTS = {
     "Ipswich Town":       { file: "ipswich-town-shirt.png",    scale: 1 },
     "Liverpool":          { file: "liverpool-shirt.png",       scale: 1 },
     "Fulham":             { file: "fulham-shirt.png",          scale: 1 },
-    "Spurs":              { file: "spurs-shirt.png",           scale: 1.35 },
+    "Spurs":              { file: "spurs-shirt.png",           scale: 1.2 },
     "Everton":            { file: "everton-shirt.png",         scale: 1 },
     "Sunderland":         { file: "sunderland-shirt.png",      scale: 1 },
     "Arsenal":            { file: "arsenal-shirt.png",         scale: 1 },
     "Coventry City":      { file: "coventry-city-shirt.png",   scale: 1 },
     "Brentford":          { file: "brentford-shirt.png",       scale: 1 },
     "Man Utd":            { file: "man-utd-shirt.png",         scale: 1 },
-    "Man City":           { file: "man-city-shirt.png",        scale: 1.35 },
+    "Man City":           { file: "man-city-shirt.png",        scale: 1.2 },
     "Leeds United":       { file: "leeds-united-shirt.png",    scale: 1 },
     "Newcastle":          { file: "newcastle-shirt.png",       scale: 1 }
 };
