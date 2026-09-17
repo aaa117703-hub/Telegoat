@@ -701,7 +701,8 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 .col-gf{width:16%}
 .col-pts{width:14%}
 .col-form{width:21%}
-    /* ============================================
+
+/* ============================================
    TOTW TAB
 ============================================ */
 
@@ -805,7 +806,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 .totw-row{
     display:flex;
     justify-content:center;
-    align-items:flex-start;
+    align-items:flex-end;
     width:100%;
     position:absolute;
     left:0;
@@ -813,30 +814,30 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 }
 
 .totw-row-gk{
-    top:27%;
+    top:22%;
     justify-content:center;
 }
 
 .totw-row-def{
-    top:41%;
+    top:33.5%;
     justify-content:space-evenly;
     padding:0 4%;
 }
 
 .totw-row-mid{
-    top:61%;
+    top:52.5%;
     justify-content:space-evenly;
     padding:0 13%;
 }
 
 .totw-row-fwd{
-    top:81%;
+    top:71.5%;
     justify-content:space-evenly;
     padding:0 13%;
 }
 
 .totw-card{
-    width:80px;
+    width:78px;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -855,8 +856,8 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     display:flex;
     align-items:center;
     justify-content:center;
-    width:78px;
-    height:96px;
+    width:76px;
+    height:88px;
     margin-bottom:0;
     position:relative;
     z-index:3;
@@ -883,14 +884,14 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     display:flex;
     align-items:center;
     justify-content:center;
-    width:80px;
-    min-height:24px;
-    padding:4px 5px;
+    width:78px;
+    min-height:22px;
+    padding:3px 5px;
     background:#ffffff;
     border:2px solid #37003c;
     border-radius:6px 6px 0 0;
     color:#37003c;
-    font-size:11px;
+    font-size:10px;
     font-weight:900;
     text-align:center;
     line-height:1.1;
@@ -906,8 +907,8 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     display:flex;
     align-items:center;
     justify-content:center;
-    width:80px;
-    min-height:24px;
+    width:78px;
+    min-height:22px;
     padding:2px 8px;
     background:#37003c;
     border:2px solid #37003c;
@@ -968,24 +969,24 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     }
 
     .totw-card{
-        width:70px;
+        width:68px;
     }
 
     .totw-card .tc-shirt{
-        width:68px;
-        height:84px;
+        width:66px;
+        height:78px;
     }
 
     .totw-card .tc-name{
-        width:70px;
-        min-height:22px;
-        font-size:10px;
-        padding:3px 4px;
+        width:68px;
+        min-height:20px;
+        font-size:9px;
+        padding:2px 4px;
     }
 
     .totw-card .tc-points{
-        width:70px;
-        min-height:22px;
+        width:68px;
+        min-height:20px;
         font-size:12px;
     }
 
@@ -1180,18 +1181,17 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script>
 (function(){
     const box=document.getElementById('errorBox');
-    const content=document.getElementById('.jserrorContent');
+    const content=document.getElementById('errorContent');
 
-    function show"></Error(msg){
-        const line=document.createElementscript('div');
-        line.className='err>
--line';
+    function showError(msg){
+        const line=document.createElement('div');
+        line.className='err-line';
         line.textContent=msg;
         content.appendChild(line);
         box.classList.add('show');
     }
 
-    window.onerror=function(message,source,<scriptlineno,colno,error){
+    window.onerror=function(message,source,lineno,colno,error){
         showError('❌ '+message+' | '+(source||'')+':'+lineno);
         return false;
     };
@@ -1208,14 +1208,15 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 </script>
 
 <script src="config.js"></script>
-<script src="teams src="matchweeks.js"></script>
+<script src="teams.js"></script>
+<script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=11"></script>
-<script src="fixtures.js?v=11"></script>
+<script src="carousel.js?v=12"></script>
+<script src="fixtures.js?v=12"></script>
 <script src="standings.js"></script>
 <script src="download.js"></script>
-<script src="players-teams.js?v=6"></script>
-<script src="totw.js?v=13"></script>
+<script src="players-teams.js?v=7"></script>
+<script src="totw.js?v=14"></script>
 <script src="main.js"></script>
 
 </body>
