@@ -43,7 +43,7 @@ const PLAYERS_TEAMS = {
     ],
 
     "Crystal Palace": [
-       ou "farq fuad","Ammar Yasser","MoHaMmEd Ali","Ahmed Shamel",
+        "farouq fuad","Ammar Yasser","MoHaMmEd Ali","Ahmed Shamel",
         "momen marwan","Mohammad HA","Yasser Qais","Alfaruq Maad",
         "علي محمد","Ali Khalid","fawaz twfic","Arsenal ミ","Hussein soprano"
     ],
@@ -132,7 +132,7 @@ const PLAYERS_TEAMS = {
 
 
 /* =========================================================
-   NORMALIZE PLAYER NAME — يحذف الإيموجي والرموز
+   NORMALIZE PLAYER NAME
 ========================================================= */
 
 function normalizePlayerName(name) {
