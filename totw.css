@@ -71,21 +71,29 @@
     overflow:hidden;
 }
 
-/* عنوان TEAM OF THE WEEK — جوه الملعب */
+/* عنوان TEAM OF THE WEEK — فوق شريط Fantasy */
 .totw-pitch-title{
     position:absolute;
-    top:1.5%;
+    top:8%;
     left:50%;
     transform:translateX(-50%);
     color:#37003c;
-    font-size:13px;
+    font-size:15px;
     font-weight:900;
-    letter-spacing:2px;
+    letter-spacing:3px;
     text-transform:uppercase;
     z-index:5;
     white-space:nowrap;
     font-family:inherit;
     text-align:center;
+    text-shadow:
+        0 1px 0 rgba(255,255,255,.8),
+        0 2px 4px rgba(0,0,0,.15);
+    padding:4px 16px;
+    background:linear-gradient(135deg, #37003c 0%, #e90052 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
 }
 
 .totw-players{
@@ -95,7 +103,7 @@
 }
 
 /* =========================================================
-   الصفوف — الحارس نزل جوه الملعب
+   الصفوف
 ========================================================= */
 
 .totw-row{
@@ -132,7 +140,7 @@
 }
 
 /* =========================================================
-   الكرت — أصغر
+   الكرت
 ========================================================= */
 
 .totw-card{
@@ -359,8 +367,9 @@
     .totw-pitch{max-width:100%;}
 
     .totw-pitch-title{
-        font-size:11px;
-        letter-spacing:1.5px;
+        font-size:13px;
+        letter-spacing:2px;
+        top:8%;
     }
 
     .totw-card{width:50px;}
