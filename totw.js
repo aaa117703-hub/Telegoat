@@ -60,7 +60,7 @@ function getTOTWTop11(allResults) {
 
 
 /* =========================================================
-   RENDER CARDS — ترتيب FPL: 1 حارس → 4 دفاع → 3 وسط → 3 هجوم
+   RENDER CARDS — 1 حارس → 4 دفاع → 3 وسط → 3 هجوم
 ========================================================= */
 
 function renderTOTWCards(top11) {
@@ -69,7 +69,7 @@ function renderTOTWCards(top11) {
 
     if (!pitch) return;
 
-    /* الأعلى نقاط = هجوم، الأقل = حارس */
+    /* الأعلى نقاط = هجوم */
     const forward1 = top11[0];
     const forward2 = top11[1];
     const forward3 = top11[2];
@@ -87,7 +87,7 @@ function renderTOTWCards(top11) {
 
     let html = '';
 
-    /* صف 1: حارس (1) */
+    /* صف 1: حارس */
     html += '<div class="totw-row totw-row-gk">';
     html += createTOTWCard(goalkeeper);
     html += '</div>';
@@ -129,13 +129,13 @@ function createTOTWCard(player) {
     const name = player.player_name || player.entry_name || 'Unknown';
     const points = player.event_total || 0;
 
-    /* البحث عن الفريق */
     let teamName = '';
     if (typeof findPlayerTeam === 'function') {
         teamName = findPlayerTeam(name) || findPlayerTeam(player.entry_name) || '';
     }
 
-    /* القميص */
+    console.log('TOTW Player:', name, '→ Team:', teamName);
+
     let shirtHtml = '';
 
     if (
@@ -158,7 +158,6 @@ function createTOTWCard(player) {
         TEAMS_LOGOS[teamName]
     ) {
 
-        /* fallback: شعار الفريق */
         shirtHtml =
             '<div class="tc-shirt tc-shirt-fallback">' +
                 '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
