@@ -10,7 +10,7 @@ let currentTOTWData = [];
 
 
 /* =========================================================
-   SHORTEN PLAYER NAME
+   SHORTEN PLAYER NAME — 3 حروف بدون نقطة
 ========================================================= */
 
 function shortenPlayerName(name) {
@@ -19,25 +19,27 @@ function shortenPlayerName(name) {
 
     const result = name.trim();
 
-    /* الاسم قصير — خليه */
+    /* الاسم 12 حرف أو أقل — خليه */
     if (result.length <= 12) return result;
 
-    /* أولوية: Mohammed أو مشتقاته */
-    const mohammedRegex = /\b(Mohammed|Muhammad|Mohamed|Mohammad)\b/i;
-
-    if (mohammedRegex.test(result)) {
-        return result.replace(mohammedRegex, 'M.');
-    }
-
-    /* وإلا: اختصر الاسم الثاني (اسم الأب) */
     const words = result.split(/\s+/);
 
-    if (words.length >= 2) {
-        words[1] = words[1][0].toUpperCase() + '.';
-        return words.join(' ');
+    if (words.length < 2) return result;
+
+    /* قارن طول الكلمة الأولى والثانية */
+    const first = words[0];
+    const second = words[1];
+
+    let indexToShorten = 0;
+
+    if (second.length > first.length) {
+        indexToShorten = 1;
     }
 
-    return result;
+    /* اختصر الكلمة إلى 3 حروف */
+    words[indexToShorten] = words[indexToShorten].substring(0, 3);
+
+    return words.join(' ');
 }
 
 
@@ -232,7 +234,7 @@ function createTOTWCard(player) {
 
 
 /* =========================================================
-   RENDER LIST
+   RENDER LIST — مع شعار الفريق
 ========================================================= */
 
 function renderTOTWList(top11) {
@@ -243,20 +245,37 @@ function renderTOTWList(top11) {
 
     let html = '';
 
-    html += '<div class="totw-list-header">';
-    html += '<span>#</span>';
-    html += '<span>Player</span>';
-    html += '<span>Pts</span>';
-    html += '</div>';
-
     top11.forEach(function(player, index) {
 
         const rawName = player.player_name || player.entry_name || 'Unknown';
         const name = shortenPlayerName(rawName);
         const points = player.event_total || 0;
 
+        /* البحث عن الفريق */
+        let teamName = '';
+        if (typeof findPlayerTeam === 'function') {
+            teamName = findPlayerTeam(rawName) || findPlayerTeam(player.entry_name) || '';
+        }
+
+        /* الشعار */
+        let logoHtml = '';
+
+        if (
+            teamName &&
+            typeof TEAMS_LOGOS !== 'undefined' &&
+            TEAMS_LOGOS[teamName]
+        ) {
+            logoHtml =
+                '<div class="totw-list-logo">' +
+                    '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
+                '</div>';
+        } else {
+            logoHtml = '<div class="totw-list-logo"></div>';
+        }
+
         html += '<div class="totw-list-item">';
         html += '<div class="totw-list-rank">' + (index + 1) + '</div>';
+        html += logoHtml;
         html += '<div class="totw-list-name">' + name + '</div>';
         html += '<div class="totw-list-points">' + points + '</div>';
         html += '</div>';
