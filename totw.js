@@ -10,7 +10,7 @@ let currentTOTWData = [];
 
 
 /* =========================================================
-   SHORTEN PLAYER NAME — 3 حروف بدون نقطة
+   SHORTEN PLAYER NAME — قص إلى 12 حرف
 ========================================================= */
 
 function shortenPlayerName(name) {
@@ -19,27 +19,11 @@ function shortenPlayerName(name) {
 
     const result = name.trim();
 
-    /* الاسم 12 حرف أو أقل — خليه */
+    /* الاسم 12 حرف أو أقل — خليه كما هو */
     if (result.length <= 12) return result;
 
-    const words = result.split(/\s+/);
-
-    if (words.length < 2) return result;
-
-    /* قارن طول الكلمة الأولى والثانية */
-    const first = words[0];
-    const second = words[1];
-
-    let indexToShorten = 0;
-
-    if (second.length > first.length) {
-        indexToShorten = 1;
-    }
-
-    /* اختصر الكلمة إلى 3 حروف */
-    words[indexToShorten] = words[indexToShorten].substring(0, 3);
-
-    return words.join(' ');
+    /* أكثر من 12 حرف — قصّ إلى 12 */
+    return result.substring(0, 12);
 }
 
 
@@ -251,13 +235,11 @@ function renderTOTWList(top11) {
         const name = shortenPlayerName(rawName);
         const points = player.event_total || 0;
 
-        /* البحث عن الفريق */
         let teamName = '';
         if (typeof findPlayerTeam === 'function') {
             teamName = findPlayerTeam(rawName) || findPlayerTeam(player.entry_name) || '';
         }
 
-        /* الشعار */
         let logoHtml = '';
 
         if (
