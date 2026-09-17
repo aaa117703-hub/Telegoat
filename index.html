@@ -537,7 +537,8 @@ body{
     padding:8px;
     border-radius:10px;
 }
-    .score-display{
+
+.score-display{
     color:#fff;
     font-size:15px;
     font-weight:900;
@@ -700,8 +701,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 .col-gf{width:16%}
 .col-pts{width:14%}
 .col-form{width:21%}
-
-/* ============================================
+    /* ============================================
    TOTW TAB
 ============================================ */
 
@@ -813,30 +813,30 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 }
 
 .totw-row-gk{
-    top:16.5%;
+    top:27%;
     justify-content:center;
 }
 
 .totw-row-def{
-    top:37%;
+    top:41%;
     justify-content:space-evenly;
-    padding:0 6%;
+    padding:0 4%;
 }
 
 .totw-row-mid{
-    top:56%;
+    top:61%;
     justify-content:space-evenly;
-    padding:0 15%;
+    padding:0 13%;
 }
 
 .totw-row-fwd{
-    top:74%;
+    top:81%;
     justify-content:space-evenly;
-    padding:0 15%;
+    padding:0 13%;
 }
 
 .totw-card{
-    width:76px;
+    width:80px;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -847,7 +847,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 }
 
 .totw-card:hover{
-    transform:scale(1.06) translateY(-3px);
+    transform:scale(1.05);
     z-index:100;
 }
 
@@ -855,12 +855,11 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     display:flex;
     align-items:center;
     justify-content:center;
-    width:64px;
-    height:64px;
-    margin-bottom:-4px;
+    width:78px;
+    height:96px;
+    margin-bottom:0;
     position:relative;
     z-index:3;
-    filter:drop-shadow(0 2px 4px rgba(0,0,0,.45));
     transform-origin:center center;
 }
 
@@ -871,6 +870,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     height:auto;
     object-fit:contain;
     display:block;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.45));
 }
 
 .totw-card .tc-shirt-fallback{
@@ -883,43 +883,45 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     display:flex;
     align-items:center;
     justify-content:center;
-    width:84px;
-    min-height:30px;
-    padding:5px 6px;
+    width:80px;
+    min-height:24px;
+    padding:4px 5px;
     background:#ffffff;
     border:2px solid #37003c;
-    border-radius:8px;
+    border-radius:6px 6px 0 0;
     color:#37003c;
-    font-size:10px;
+    font-size:11px;
     font-weight:900;
     text-align:center;
     line-height:1.1;
-    word-break:break-word;
     overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
     position:relative;
     z-index:2;
-    box-shadow:0 2px 6px rgba(0,0,0,.3);
+    margin-top:-2px;
 }
 
 .totw-card .tc-points{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:56px;
-    min-height:22px;
+    width:80px;
+    min-height:24px;
     padding:2px 8px;
     background:#37003c;
-    border:2px solid #ffffff;
-    border-radius:50px;
+    border:2px solid #37003c;
+    border-top:none;
+    border-radius:0 0 6px 6px;
     color:#ffffff;
-    font-size:12px;
+    font-size:13px;
     font-weight:900;
     text-align:center;
     letter-spacing:0.5px;
     position:relative;
     z-index:2;
-    margin-top:3px;
-    box-shadow:0 2px 6px rgba(0,0,0,.4);
+    margin-top:-2px;
+    box-shadow:0 2px 4px rgba(0,0,0,.3);
 }
 
 .totw-loading{
@@ -966,30 +968,30 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     }
 
     .totw-card{
-        width:66px;
+        width:70px;
     }
 
     .totw-card .tc-shirt{
-        width:54px;
-        height:54px;
+        width:68px;
+        height:84px;
     }
 
     .totw-card .tc-name{
-        width:74px;
-        min-height:26px;
-        font-size:9px;
-        padding:4px 5px;
+        width:70px;
+        min-height:22px;
+        font-size:10px;
+        padding:3px 4px;
     }
 
     .totw-card .tc-points{
-        width:50px;
-        min-height:20px;
-        font-size:11px;
+        width:70px;
+        min-height:22px;
+        font-size:12px;
     }
 
-    .totw-row-def{padding:0 3%;}
-    .totw-row-mid{padding:0 12%;}
-    .totw-row-fwd{padding:0 12%;}
+    .totw-row-def{padding:0 2%;}
+    .totw-row-mid{padding:0 10%;}
+    .totw-row-fwd{padding:0 10%;}
 }
 </style>
 
@@ -1123,6 +1125,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     </div>
 
 </div>
+
 <script>
 (function() {
 
@@ -1177,17 +1180,18 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script>
 (function(){
     const box=document.getElementById('errorBox');
-    const content=document.getElementById('errorContent');
+    const content=document.getElementById('.jserrorContent');
 
-    function showError(msg){
-        const line=document.createElement('div');
-        line.className='err-line';
+    function show"></Error(msg){
+        const line=document.createElementscript('div');
+        line.className='err>
+-line';
         line.textContent=msg;
         content.appendChild(line);
         box.classList.add('show');
     }
 
-    window.onerror=function(message,source,lineno,colno,error){
+    window.onerror=function(message,source,<scriptlineno,colno,error){
         showError('❌ '+message+' | '+(source||'')+':'+lineno);
         return false;
     };
@@ -1204,15 +1208,14 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 </script>
 
 <script src="config.js"></script>
-<script src="teams.js"></script>
-<script src="matchweeks.js"></script>
+<script src="teams src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=10"></script>
-<script src="fixtures.js?v=10"></script>
+<script src="carousel.js?v=11"></script>
+<script src="fixtures.js?v=11"></script>
 <script src="standings.js"></script>
 <script src="download.js"></script>
-<script src="players-teams.js?v=5"></script>
-<script src="totw.js?v=12"></script>
+<script src="players-teams.js?v=6"></script>
+<script src="totw.js?v=13"></script>
 <script src="main.js"></script>
 
 </body>
