@@ -812,23 +812,28 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
                 <option value="1">Gameweek 1</option>
             </select>
 
-            <button id="totwRefreshBtn" class="totw-action-btn totw-refresh-btn" onclick="loadTOTW()">
+            <button id="totwRefreshBtn" class="totw-action-btn totw-refresh-btn">
                 🔄 Refresh
             </button>
 
-            <button id="totwSaveBtn" class="totw-action-btn totw-save-btn" onclick="saveTOTWImage()">
+            <button id="totwSaveBtn" class="totw-action-btn totw-save-btn">
                 ⬇️ Download
             </button>
         </div>
 
-        <div id="totwLoadingBox" class="totw-loading">
+        <div id="totwLoadingBox" class="totw-loading" style="display:none;">
             <div class="spinner"></div>
             <div>Loading Team of the Week...</div>
         </div>
 
-        <div id="totwPitchWrapper" class="totw-pitch-wrapper" style="display:none;">
+        <div id="totwPitchWrapper" class="totw-pitch-wrapper">
             <div class="totw-pitch" id="totwPitchToSave">
-                <div class="totw-players" id="totwPlayers"></div>
+                <div class="totw-players" id="totwPlayers">
+                    <div class="totw-row totw-row-gk"></div>
+                    <div class="totw-row totw-row-def"></div>
+                    <div class="totw-row totw-row-mid"></div>
+                    <div class="totw-row totw-row-fwd"></div>
+                </div>
             </div>
         </div>
 
