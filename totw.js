@@ -1,324 +1,447 @@
 /* =========================================================
-   totw.js
+   totw.css
 ========================================================= */
-
-const TOTW_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
-const TOTW_TOTAL_PAGES = 7;
-
-let currentTOTWView = 'squad';
-let currentTOTWData = [];
-
 
 /* =========================================================
-   SHORTEN PLAYER NAME — قص إلى 12 حرف
+   الأزرار العلوية — SQUAD + LIST
 ========================================================= */
 
-function shortenPlayerName(name) {
-
-    if (!name) return name;
-
-    const result = name.trim();
-
-    /* الاسم 12 حرف أو أقل — خليه كما هو */
-    if (result.length <= 12) return result;
-
-    /* أكثر من 12 حرف — قصّ إلى 12 */
-    return result.substring(0, 12);
+.totw-tabs{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:12px;
+    padding:0 4px;
 }
 
+.totw-tab-btn{
+    flex:1;
+    padding:12px 20px;
+    background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
+    color:#fff;
+    border:2.5px solid #00ff87;
+    border-radius:50px;
+    font-size:14px;
+    font-weight:900;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:all .3s ease;
+    font-family:inherit;
+    box-shadow:0 4px 12px rgba(0,0,0,.3);
+    outline:none;
+}
+
+.totw-tab-btn.active{
+    background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
+    box-shadow:0 0 20px rgba(0,255,135,.7);
+}
+
+.totw-tab-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 16px rgba(0,255,135,.5);
+}
 
 /* =========================================================
-   FETCH ALL PAGES
+   الملعب
 ========================================================= */
 
-async function fetchTOTWPages() {
+.totw-pitch-wrapper{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    margin-bottom:16px;
+}
 
-    const allResults = [];
+.totw-pitch{
+    position:relative;
+    width:100%;
+    max-width:480px;
+    aspect-ratio:860/1160;
+    background-image:url('./pitch-bg.png');
+    background-size:100% 100%;
+    background-position:center;
+    background-repeat:no-repeat;
+    border:3px solid #1a5c2f;
+    border-radius:18px;
+    box-shadow:
+        0 10px 40px rgba(0,0,0,.4),
+        0 0 30px rgba(0,255,135,.4);
+    overflow:hidden;
+}
 
-    for (let page = 1; page <= TOTW_TOTAL_PAGES; page++) {
+/* =========================================================
+   عنوان TEAM OF THE WEEK — شريط ملون بحواف هلالية
+========================================================= */
 
-        try {
+.totw-pitch-title{
+    position:absolute;
+    top:12.5%;
+    left:50%;
+    transform:translateX(-50%);
+    color:#ffffff;
+    font-size:13px;
+    font-weight:900;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    z-index:5;
+    white-space:nowrap;
+    font-family:inherit;
+    text-align:center;
+    padding:6px 26px;
+    border-radius:50px;
+    background:linear-gradient(90deg,
+        #04f5ff 0%,
+        #3da5f5 30%,
+        #7b3ff5 50%,
+        #3da5f5 70%,
+        #04f5ff 100%);
+    box-shadow:
+        0 4px 14px rgba(0,0,0,.4),
+        0 0 20px rgba(4,245,255,.35),
+        inset 0 1px 0 rgba(255,255,255,.5),
+        inset 0 -1px 0 rgba(0,0,0,.15);
+    text-shadow:
+        0 1px 3px rgba(0,0,0,.55),
+        0 0 10px rgba(4,245,255,.5);
+}
 
-            const response = await fetch(TOTW_WORKER_URL + '/?page=' + page);
-            const data = await response.json();
+.totw-players{
+    position:absolute;
+    inset:0;
+    z-index:2;
+}
 
-            if (data && data.standings && data.standings.results) {
+/* =========================================================
+   الصفوف
+========================================================= */
 
-                allResults.push(...data.standings.results);
+.totw-row{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    position:absolute;
+    left:0;
+    right:0;
+}
 
-                if (data.standings.has_next === true) {
-                    continue;
-                } else {
-                    break;
-                }
+.totw-row-gk{
+    top:22%;
+    justify-content:center;
+}
 
-            } else {
-                break;
-            }
+.totw-row-def{
+    top:38%;
+    justify-content:space-evenly;
+    padding:0 14%;
+}
 
-        } catch (e) {
-            console.error('TOTW Page ' + page + ' failed:', e);
-            break;
-        }
+.totw-row-mid{
+    top:56%;
+    justify-content:space-evenly;
+    padding:0 4%;
+}
+
+.totw-row-fwd{
+    top:74%;
+    justify-content:space-evenly;
+    padding:0 22%;
+}
+
+/* =========================================================
+   الكرت
+========================================================= */
+
+.totw-card{
+    width:60px;
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    justify-content:flex-start;
+    padding:0;
+    position:relative;
+    transition:transform .3s ease;
+    border-radius:4px;
+    overflow:hidden;
+}
+
+.totw-card:hover{
+    transform:scale(1.08);
+    z-index:100;
+}
+
+.totw-card .tc-shirt{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:60px;
+    height:54px;
+    position:relative;
+    z-index:3;
+    flex-shrink:0;
+    background:rgba(30, 90, 50, 0.55);
+    padding:4px 6px 0 6px;
+    box-sizing:border-box;
+}
+
+.totw-card .tc-shirt img{
+    max-width:100%;
+    max-height:100%;
+    width:auto;
+    height:auto;
+    object-fit:contain;
+    display:block;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));
+}
+
+.totw-card .tc-shirt-fallback{
+    background:rgba(255,255,255,.95);
+    border-radius:50%;
+    padding:4px;
+}
+
+.totw-card .tc-name{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:60px;
+    height:14px;
+    padding:0 3px;
+    background:#ffffff;
+    color:#37003c;
+    font-size:7px;
+    font-weight:900;
+    text-align:center;
+    line-height:1;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    position:relative;
+    z-index:4;
+    flex-shrink:0;
+    box-sizing:border-box;
+}
+
+.totw-card .tc-points{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:60px;
+    height:14px;
+    padding:0 6px;
+    background:#37003c;
+    color:#ffffff;
+    font-size:9px;
+    font-weight:900;
+    text-align:center;
+    letter-spacing:0.5px;
+    position:relative;
+    z-index:4;
+    flex-shrink:0;
+    box-sizing:border-box;
+}
+
+/* =========================================================
+   عرض القائمة — صفوف بيضاء + شعار الفريق
+========================================================= */
+
+.totw-list-view{
+    width:100%;
+    max-width:480px;
+    margin:0 auto 16px;
+    background:#ffffff;
+    border:3px solid #37003c;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 0 25px rgba(0,255,135,.4);
+}
+
+.totw-list-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    border-bottom:1px solid #f0f0f0;
+    background:#ffffff;
+    color:#37003c;
+    min-height:44px;
+}
+
+.totw-list-item:last-child{
+    border-bottom:none;
+}
+
+.totw-list-rank{
+    min-width:22px;
+    font-size:13px;
+    font-weight:900;
+    color:#37003c;
+    text-align:center;
+    flex-shrink:0;
+}
+
+.totw-list-logo{
+    width:20px;
+    height:20px;
+    min-width:20px;
+    min-height:20px;
+    max-width:20px;
+    max-height:20px;
+    position:relative;
+    overflow:hidden;
+    flex-shrink:0;
+}
+
+.totw-list-logo img{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+    display:block;
+}
+
+.totw-list-name{
+    flex:1;
+    font-size:13px;
+    font-weight:900;
+    color:#37003c;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    text-transform:uppercase;
+    text-align:left;
+    letter-spacing:0.3px;
+}
+
+.totw-list-points{
+    min-width:44px;
+    padding:4px 10px;
+    background:#37003c;
+    color:#ffffff;
+    border-radius:50px;
+    font-size:12px;
+    font-weight:900;
+    text-align:center;
+    flex-shrink:0;
+    letter-spacing:0.5px;
+}
+
+/* =========================================================
+   Loading + Error
+========================================================= */
+
+.totw-loading{
+    text-align:center;
+    padding:40px 20px;
+    color:#00ff87;
+    font-size:15px;
+    font-weight:900;
+}
+
+.totw-loading .spinner{
+    display:inline-block;
+    width:36px;
+    height:36px;
+    border:4px solid rgba(0,255,135,.2);
+    border-top-color:#00ff87;
+    border-radius:50%;
+    animation:spinTOTW .8s linear infinite;
+    margin-bottom:14px;
+}
+
+@keyframes spinTOTW{
+    0%{transform:rotate(0)}
+    100%{transform:rotate(360deg)}
+}
+
+.totw-error{
+    text-align:center;
+    padding:24px 16px;
+    background:rgba(255,0,90,.15);
+    border:2px solid #ff005a;
+    border-radius:12px;
+    color:#ff005a;
+    font-size:13px;
+    font-weight:800;
+}
+
+/* =========================================================
+   الموبايل
+========================================================= */
+
+@media(max-width:480px){
+
+    .totw-tab-btn{
+        padding:10px 14px;
+        font-size:12px;
+        letter-spacing:1.5px;
     }
 
-    return allResults;
-}
+    .totw-pitch{max-width:100%;}
 
-
-/* =========================================================
-   GET TOP 11
-========================================================= */
-
-function getTOTWTop11(allResults) {
-
-    const sorted = [...allResults].sort(function(a, b) {
-        return b.event_total - a.event_total;
-    });
-
-    return sorted.slice(0, 11);
-}
-
-
-/* =========================================================
-   SWITCH VIEW — SQUAD / LIST
-========================================================= */
-
-function switchTOTWView(view) {
-
-    currentTOTWView = view;
-
-    const squadBtn = document.getElementById('totwSquadBtn');
-    const listBtn = document.getElementById('totwListBtn');
-
-    if (squadBtn) {
-        squadBtn.classList.toggle('active', view === 'squad');
-    }
-    if (listBtn) {
-        listBtn.classList.toggle('active', view === 'list');
+    .totw-pitch-title{
+        font-size:11px;
+        letter-spacing:2px;
+        top:12.5%;
+        padding:5px 20px;
     }
 
-    const pitchWrapper = document.getElementById('totwPitchWrapper');
-    const listWrapper = document.getElementById('totwListWrapper');
+    .totw-card{width:50px;}
 
-    if (view === 'list') {
-        if (pitchWrapper) pitchWrapper.style.display = 'none';
-        if (listWrapper) listWrapper.style.display = 'block';
-    } else {
-        if (pitchWrapper) pitchWrapper.style.display = 'flex';
-        if (listWrapper) listWrapper.style.display = 'none';
-    }
-}
-
-
-/* =========================================================
-   RENDER SQUAD — 1-4-3-3
-========================================================= */
-
-function renderTOTWCards(top11) {
-
-    const pitch = document.getElementById('totwPlayers');
-
-    if (!pitch) return;
-
-    const forward1 = top11[0];
-    const forward2 = top11[1];
-    const forward3 = top11[2];
-
-    const mid1 = top11[3];
-    const mid2 = top11[4];
-    const mid3 = top11[5];
-
-    const def1 = top11[6];
-    const def2 = top11[7];
-    const def3 = top11[8];
-    const def4 = top11[9];
-
-    const goalkeeper = top11[10];
-
-    let html = '';
-
-    html += '<div class="totw-row totw-row-gk">';
-    html += createTOTWCard(goalkeeper);
-    html += '</div>';
-
-    html += '<div class="totw-row totw-row-def">';
-    html += createTOTWCard(def1);
-    html += createTOTWCard(def2);
-    html += createTOTWCard(def3);
-    html += createTOTWCard(def4);
-    html += '</div>';
-
-    html += '<div class="totw-row totw-row-mid">';
-    html += createTOTWCard(mid1);
-    html += createTOTWCard(mid2);
-    html += createTOTWCard(mid3);
-    html += '</div>';
-
-    html += '<div class="totw-row totw-row-fwd">';
-    html += createTOTWCard(forward1);
-    html += createTOTWCard(forward2);
-    html += createTOTWCard(forward3);
-    html += '</div>';
-
-    pitch.innerHTML = html;
-}
-
-
-/* =========================================================
-   CREATE CARD
-========================================================= */
-
-function createTOTWCard(player) {
-
-    if (!player) return '';
-
-    const rawName = player.player_name || player.entry_name || 'Unknown';
-    const name = shortenPlayerName(rawName);
-    const points = player.event_total || 0;
-
-    let teamName = '';
-    if (typeof findPlayerTeam === 'function') {
-        teamName = findPlayerTeam(rawName) || findPlayerTeam(player.entry_name) || '';
+    .totw-card .tc-shirt{
+        width:50px;
+        height:44px;
+        padding:3px 4px 0 4px;
     }
 
-    let shirtHtml = '';
-
-    if (
-        teamName &&
-        typeof TEAMS_SHIRTS !== 'undefined' &&
-        TEAMS_SHIRTS[teamName]
-    ) {
-
-        const shirtData = TEAMS_SHIRTS[teamName];
-
-        shirtHtml =
-            '<div class="tc-shirt">' +
-                '<img src="./' + shirtData.file + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
-            '</div>';
-
-    } else if (
-        teamName &&
-        typeof TEAMS_LOGOS !== 'undefined' &&
-        TEAMS_LOGOS[teamName]
-    ) {
-
-        shirtHtml =
-            '<div class="tc-shirt tc-shirt-fallback">' +
-                '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
-            '</div>';
+    .totw-card .tc-name{
+        width:50px;
+        height:12px;
+        font-size:6px;
     }
 
-    return '<div class="totw-card">' +
-        shirtHtml +
-        '<div class="tc-name">' + name + '</div>' +
-        '<div class="tc-points">' + points + '</div>' +
-    '</div>';
-}
+    .totw-card .tc-points{
+        width:50px;
+        height:12px;
+        font-size:8px;
+    }
 
+    .totw-row-def{padding:0 10%;}
+    .totw-row-mid{padding:0 3%;}
+    .totw-row-fwd{padding:0 18%;}
 
-/* =========================================================
-   RENDER LIST — مع شعار الفريق
-========================================================= */
+    .totw-list-item{
+        padding:8px 10px;
+        min-height:40px;
+        gap:8px;
+    }
 
-function renderTOTWList(top11) {
+    .totw-list-rank{
+        min-width:20px;
+        font-size:12px;
+    }
 
-    const listWrapper = document.getElementById('totwListWrapper');
+    .totw-list-logo{
+        width:18px;
+        height:18px;
+        min-width:18px;
+        min-height:18px;
+        max-width:18px;
+        max-height:18px;
+    }
 
-    if (!listWrapper) return;
+    .totw-list-name{
+        font-size:11px;
+    }
 
-    let html = '';
-
-    top11.forEach(function(player, index) {
-
-        const rawName = player.player_name || player.entry_name || 'Unknown';
-        const name = shortenPlayerName(rawName);
-        const points = player.event_total || 0;
-
-        let teamName = '';
-        if (typeof findPlayerTeam === 'function') {
-            teamName = findPlayerTeam(rawName) || findPlayerTeam(player.entry_name) || '';
-        }
-
-        let logoHtml = '';
-
-        if (
-            teamName &&
-            typeof TEAMS_LOGOS !== 'undefined' &&
-            TEAMS_LOGOS[teamName]
-        ) {
-            logoHtml =
-                '<div class="totw-list-logo">' +
-                    '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
-                '</div>';
-        } else {
-            logoHtml = '<div class="totw-list-logo"></div>';
-        }
-
-        html += '<div class="totw-list-item">';
-        html += '<div class="totw-list-rank">' + (index + 1) + '</div>';
-        html += logoHtml;
-        html += '<div class="totw-list-name">' + name + '</div>';
-        html += '<div class="totw-list-points">' + points + '</div>';
-        html += '</div>';
-    });
-
-    listWrapper.innerHTML = html;
-}
-
-
-/* =========================================================
-   LOAD TOTW
-========================================================= */
-
-async function loadTOTW() {
-
-    const loadingBox = document.getElementById('totwLoadingBox');
-    const pitchWrapper = document.getElementById('totwPitchWrapper');
-    const listWrapper = document.getElementById('totwListWrapper');
-    const errorBox = document.getElementById('totwErrorBox');
-
-    if (!loadingBox) return;
-
-    loadingBox.style.display = 'block';
-    if (pitchWrapper) pitchWrapper.style.display = 'none';
-    if (listWrapper) listWrapper.style.display = 'none';
-    if (errorBox) errorBox.style.display = 'none';
-
-    try {
-
-        const allResults = await fetchTOTWPages();
-
-        if (!allResults || allResults.length === 0) {
-            throw new Error('No data received');
-        }
-
-        currentTOTWData = getTOTWTop11(allResults);
-
-        renderTOTWCards(currentTOTWData);
-        renderTOTWList(currentTOTWData);
-
-        loadingBox.style.display = 'none';
-
-        if (currentTOTWView === 'list') {
-            if (listWrapper) listWrapper.style.display = 'block';
-        } else {
-            if (pitchWrapper) pitchWrapper.style.display = 'flex';
-        }
-
-    } catch (e) {
-
-        console.error('TOTW Error:', e);
-
-        loadingBox.style.display = 'none';
-        if (errorBox) {
-            errorBox.style.display = 'block';
-            errorBox.textContent = '⚠️ Error: ' + e.message;
-        }
+    .totw-list-points{
+        min-width:38px;
+        padding:3px 8px;
+        font-size:11px;
     }
 }
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    loadTOTW();
-});
