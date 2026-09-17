@@ -202,14 +202,14 @@ const TEAMS_SHIRTS = {
     "Ipswich Town":       { file: "ipswich-town-shirt.png",    scale: 1 },
     "Liverpool":          { file: "liverpool-shirt.png",       scale: 1 },
     "Fulham":             { file: "fulham-shirt.png",          scale: 1 },
-    "Spurs":              { file: "spurs-shirt.png",           scale: 1 },
+    "Spurs":              { file: "spurs-shirt.png",           scale: 1.35 },
     "Everton":            { file: "everton-shirt.png",         scale: 1 },
     "Sunderland":         { file: "sunderland-shirt.png",      scale: 1 },
     "Arsenal":            { file: "arsenal-shirt.png",         scale: 1 },
     "Coventry City":      { file: "coventry-city-shirt.png",   scale: 1 },
     "Brentford":          { file: "brentford-shirt.png",       scale: 1 },
     "Man Utd":            { file: "man-utd-shirt.png",         scale: 1 },
-    "Man City":           { file: "man-city-shirt.png",        scale: 1 },
+    "Man City":           { file: "man-city-shirt.png",        scale: 1.35 },
     "Leeds United":       { file: "leeds-united-shirt.png",    scale: 1 },
     "Newcastle":          { file: "newcastle-shirt.png",       scale: 1 }
 };
