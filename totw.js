@@ -165,8 +165,8 @@ function createTOTWCard(player) {
     }
 
     return '<div class="totw-card">' +
-        shirtHtml +
         '<div class="tc-name">' + name + '</div>' +
+        shirtHtml +
         '<div class="tc-points">' + points + '</div>' +
     '</div>';
 }
