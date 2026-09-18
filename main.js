@@ -16,19 +16,12 @@ async function init() {
     setupEruda();
 
     /* ====== نظام القفل ====== */
-
-    /* تحميل الأقفال من Supabase */
-    if (typeof loadLocks === 'function') {
+    if (typeof initLockSystem === 'function') {
         try {
-            await loadLocks();
+            await initLockSystem();
         } catch (e) {
-            console.warn('loadLocks failed:', e);
+            console.warn('initLockSystem failed:', e);
         }
-    }
-
-    /* بناء لوحة الأقفال لو admin */
-    if (typeof refreshAdminLockPanel === 'function') {
-        refreshAdminLockPanel();
     }
 
     /* ====== تحميل النتائج من Supabase ====== */
