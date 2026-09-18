@@ -21,7 +21,6 @@ let scoresStorage =
         localStorage.getItem('fpl_scores')
     ) || {};
 
-/* آخر جولة — نجيبها من localStorage أو نبدأ بـ 1 */
 let currentRound = parseInt(
     localStorage.getItem('fpl_last_round') || '1',
     10
@@ -36,6 +35,3 @@ let activeTab = 'fixtures';
 let isSaving = false;
 
 let toastTimeout = null;
-
-/* هل المستخدم admin؟ */
-let isAdmin = localStorage.getItem('tg_admin') === 'true';
