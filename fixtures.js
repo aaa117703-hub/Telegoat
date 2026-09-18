@@ -93,7 +93,11 @@ function changeRound(step) {
 
 function switchTab(tabName) {
 
-    if (typeof isLocked === 'function' && typeof isAdmin === 'function' && !isAdmin()) {
+    if (
+        typeof isLocked === 'function' &&
+        typeof isAdmin === 'function' &&
+        !isAdmin()
+    ) {
 
         if (tabName === 'fixtures' && isLocked('fixtures')) {
             showSectionMaintenance('المواجهات');
@@ -153,13 +157,14 @@ function switchTab(tabName) {
 
 
 /* =========================================================
-   UNLOCK EDIT — يخلي المستخدم admin
+   UNLOCK EDIT — رمز 1999 لتعديل الجولات فقط
 ========================================================= */
 
 function unlockEditWithPassword() {
-    const pass = prompt('Enter password to edit:');
+    const pass = prompt('Enter EDIT password:');
 
     if (pass === '1999') {
+
         editMode = true;
 
         localStorage.setItem('tg_admin', 'true');
@@ -169,11 +174,8 @@ function unlockEditWithPassword() {
             panel.style.display = 'flex';
         }
 
-        if (typeof refreshAdminLockPanel === 'function') {
-            refreshAdminLockPanel();
-        }
-
         renderFixtures();
+
         showToast('Edit mode enabled', true);
 
     } else if (pass !== null) {
