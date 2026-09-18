@@ -88,24 +88,51 @@ body{
     font-weight:900;font-size:16px;cursor:pointer;
 }
 
-#downloadFab{
-    position:fixed;
-    bottom:24px;right:24px;
-    width:56px;height:56px;
+/* =========================================================
+   زر التحميل الجديد — صغير مثل باقي الأزرار
+========================================================= */
+
+.download-icon-btn{
+    width:38px;
+    height:38px;
     border-radius:50%;
-    background:linear-gradient(135deg, #00e676 0%, #00c853 60%, #009b40 100%);
-    border:2px solid #fff;
-    box-shadow:0 4px 12px rgba(0,200,83,.5), 0 0 20px rgba(0,255,135,.3);
-    cursor:pointer;z-index:9998;
-    display:flex;align-items:center;justify-content:center;
-    transition:all .3s ease;padding:0;outline:none;
+    background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
+    border:1px solid #5a055a;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    outline:none;
+    padding:0;
+    box-shadow:0 2px 8px rgba(50,129,255,.4);
+    flex-shrink:0;
+    transition:transform .2s ease, box-shadow .2s ease;
 }
-#downloadFab svg{width:24px;height:24px;display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.3));}
-#downloadFab svg path,
-#downloadFab svg line,
-#downloadFab svg polyline{
-    stroke:#fff;stroke-width:2.5;
-    stroke-linecap:round;stroke-linejoin:round;fill:none;
+
+.download-icon-btn:hover{
+    transform:scale(1.08);
+    box-shadow:0 4px 12px rgba(50,129,255,.6);
+}
+
+.download-icon-btn:active{
+    transform:scale(0.96);
+}
+
+.download-icon-btn svg{
+    width:18px;
+    height:18px;
+    display:block;
+    filter:drop-shadow(0 1px 1px rgba(0,0,0,.2));
+}
+
+.download-icon-btn svg path,
+.download-icon-btn svg line,
+.download-icon-btn svg polyline{
+    stroke:#fff;
+    stroke-width:2.5;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    fill:none;
 }
 
 #hiddenEditBtn,
@@ -189,7 +216,9 @@ body{
 
 .round-selector-row{
     display:flex;justify-content:center;align-items:center;
-    margin:8px 0 2px;padding:0 8px;
+    gap:10px;
+    margin:8px 0 2px;
+    padding:0 8px;
 }
 
 .round-select-pill{
@@ -471,7 +500,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 </style>
 
 <link rel="stylesheet" href="mobile.css">
-<link rel="stylesheet" href="totw.css?v=5">
+<link rel="stylesheet" href="totw.css?v=6">
 
 </head>
 
@@ -481,14 +510,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     <button class="err-close" onclick="document.getElementById('errorBox').classList.remove('show')">✕</button>
     <div id="errorContent"></div>
 </div>
-
-<button id="downloadFab" onclick="downloadAsImage()" title="Download">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 3v12"/>
-        <polyline points="7 10 12 15 17 10"/>
-        <line x1="5" y1="21" x2="19" y2="21"/>
-    </svg>
-</button>
 
 <div id="toast">
     <span id="toastContent">Saving...</span>
@@ -503,6 +524,13 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
 <div class="round-selector-row">
     <select id="roundSelect" class="round-select-pill" onchange="selectRound(this.value)"></select>
+    <button class="download-icon-btn" onclick="downloadAsImage()" title="Download">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3v12"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="5" y1="21" x2="19" y2="21"/>
+        </svg>
+    </button>
 </div>
 
 <div class="header">
@@ -518,9 +546,9 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     <div id="fixturesTab" class="tab-content active">
 
         <div id="editPanel" class="edit-panel" style="display:none;">
-            <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">💾 Save</button>
-            <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">🗑️ Clear</button>
-            <button class="edit-action-btn download-action-btn" onclick="downloadAsImage()">⬇️ Download</button>
+            <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()"> Save</button>
+            <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()"> Clear</button>
+            <button class="edit-action-btn download-action-btn" onclick="downloadAsImage()"> Download</button>
         </div>
 
         <div id="captureFixtures" class="export-area">
@@ -672,12 +700,12 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=18"></script>
-<script src="fixtures.js?v=18"></script>
+<script src="carousel.js?v=19"></script>
+<script src="fixtures.js?v=19"></script>
 <script src="standings.js"></script>
 <script src="download.js"></script>
-<script src="players-teams.js?v=80"></script>
-<script src="totw.js?v=92"></script>
+<script src="players-teams.js?v=81"></script>
+<script src="totw.js?v=93"></script>
 <script src="main.js"></script>
 
 </body>
