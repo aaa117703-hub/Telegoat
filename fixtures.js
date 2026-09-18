@@ -93,8 +93,7 @@ function changeRound(step) {
 
 function switchTab(tabName) {
 
-    /* تحقق من القفل */
-    if (typeof isLocked === 'function' && !isAdmin()) {
+    if (typeof isLocked === 'function' && typeof isAdmin === 'function' && !isAdmin()) {
 
         if (tabName === 'fixtures' && isLocked('fixtures')) {
             showSectionMaintenance('المواجهات');
@@ -112,7 +111,6 @@ function switchTab(tabName) {
         }
     }
 
-    /* إخفاء شاشة الصيانة */
     if (typeof hideSectionMaintenance === 'function') {
         hideSectionMaintenance();
     }
@@ -163,7 +161,6 @@ function unlockEditWithPassword() {
 
     if (pass === '1999') {
         editMode = true;
-        isAdmin = true;
 
         localStorage.setItem('tg_admin', 'true');
 
@@ -172,7 +169,6 @@ function unlockEditWithPassword() {
             panel.style.display = 'flex';
         }
 
-        /* يبني لوحة الأقفال */
         if (typeof refreshAdminLockPanel === 'function') {
             refreshAdminLockPanel();
         }
