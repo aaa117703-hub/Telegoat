@@ -88,10 +88,34 @@ function changeRound(step) {
 
 
 /* =========================================================
-   SWITCH TAB - محدّث لدعم TOTW
+   SWITCH TAB — مع نظام القفل
 ========================================================= */
 
 function switchTab(tabName) {
+
+    /* تحقق من القفل أولاً */
+    if (typeof isLocked === 'function' && !checkAdmin()) {
+
+        if (tabName === 'fixtures' && isLocked('fixtures')) {
+            showSectionMaintenance('المواجهات');
+            return;
+        }
+
+        if (tabName === 'standings' && isLocked('standings')) {
+            showSectionMaintenance('الترتيب');
+            return;
+        }
+
+        if (tabName === 'totw' && isLocked('totw')) {
+            showSectionMaintenance('تشكيلة الأسبوع');
+            return;
+        }
+    }
+
+    /* إخفاء شاشة الصيانة لو موجودة */
+    if (typeof hideSectionMaintenance === 'function') {
+        hideSectionMaintenance();
+    }
 
     activeTab = tabName;
 
@@ -130,15 +154,27 @@ function switchTab(tabName) {
 }
 
 
+/* =========================================================
+   UNLOCK EDIT — يخلي المستخدم admin
+========================================================= */
+
 function unlockEditWithPassword() {
     const pass = prompt('Enter password to edit:');
 
     if (pass === '1999') {
         editMode = true;
+        isAdmin = true;
+
+        localStorage.setItem('tg_admin', 'true');
 
         const panel = document.getElementById('editPanel');
         if (panel) {
             panel.style.display = 'flex';
+        }
+
+        /* يبني لوحة الأقفال */
+        if (typeof refreshAdminLockPanel === 'function') {
+            refreshAdminLockPanel();
         }
 
         renderFixtures();
@@ -166,6 +202,10 @@ function updateScore(round, idx, type, val) {
     scoresStorage['r' + round + '_m' + idx + '_' + type] = val;
 }
 
+
+/* =========================================================
+   RENDER FIXTURES
+========================================================= */
 
 function renderFixtures() {
     try {
@@ -246,6 +286,10 @@ function renderFixtures() {
 }
 
 
+/* =========================================================
+   SAVE
+========================================================= */
+
 async function saveCurrentRound() {
     if (isSaving) {
         return;
@@ -303,6 +347,10 @@ async function saveCurrentRound() {
     }
 }
 
+
+/* =========================================================
+   CLEAR
+========================================================= */
 
 async function clearCurrentRound() {
     if (isSaving) {
