@@ -2,10 +2,6 @@
    totw.css
 ========================================================= */
 
-/* =========================================================
-   الأزرار العلوية — SQUAD + LIST
-========================================================= */
-
 .totw-tabs{
     display:flex;
     justify-content:center;
@@ -41,10 +37,6 @@
     box-shadow:0 4px 12px rgba(0,255,135,.5);
 }
 
-/* =========================================================
-   الملعب
-========================================================= */
-
 .totw-pitch-wrapper{
     width:100%;
     display:flex;
@@ -70,7 +62,7 @@
 }
 
 /* =========================================================
-   عنوان TEAM OF THE WEEK
+   عنوان TEAM OF THE WEEK + رقم الجولة
 ========================================================= */
 
 .totw-pitch-title{
@@ -79,7 +71,7 @@
     left:50%;
     transform:translateX(-50%);
     color:#37003c;
-    font-size:16px;
+    font-size:15px;
     font-weight:900;
     letter-spacing:5px;
     text-transform:uppercase;
@@ -92,6 +84,22 @@
     text-shadow:
         0 1px 2px rgba(255,255,255,.6),
         0 2px 4px rgba(0,0,0,.08);
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.totw-pitch-title .gw-label{
+    color:#04f5ff;
+    font-weight:900;
+    letter-spacing:2px;
+    padding:2px 10px;
+    background:linear-gradient(135deg, #37003c 0%, #6b21a8 100%);
+    border-radius:50px;
+    font-size:12px;
+    border:2px solid #04f5ff;
+    text-shadow:none;
+    box-shadow:0 2px 8px rgba(4,245,255,.4);
 }
 
 .totw-players{
@@ -99,10 +107,6 @@
     inset:0;
     z-index:2;
 }
-
-/* =========================================================
-   الصفوف
-========================================================= */
 
 .totw-row{
     display:flex;
@@ -137,10 +141,6 @@
     padding:0 22%;
 }
 
-/* =========================================================
-   الكرت — الطقم + الاسم + النقاط
-========================================================= */
-
 .totw-card{
     width:60px;
     display:flex;
@@ -162,7 +162,6 @@
     z-index:100;
 }
 
-/* الطقم — z-index أقل */
 .totw-card .tc-shirt{
     display:flex;
     align-items:center;
@@ -194,7 +193,6 @@
     padding:4px;
 }
 
-/* الاسم — فوق الطقم بـ 6px */
 .totw-card .tc-name{
     display:flex;
     align-items:center;
@@ -220,7 +218,6 @@
     border-radius:0;
 }
 
-/* النقاط */
 .totw-card .tc-points{
     display:flex;
     align-items:center;
@@ -242,10 +239,6 @@
     border:none;
     border-radius:0;
 }
-
-/* =========================================================
-   عرض القائمة — مطابق FPL Standings
-========================================================= */
 
 .totw-list-view{
     width:100%;
@@ -289,13 +282,8 @@
     transition:background .2s ease;
 }
 
-.totw-list-item:last-child{
-    border-bottom:none;
-}
-
-.totw-list-item:hover{
-    background:rgba(255,255,255,.05);
-}
+.totw-list-item:last-child{border-bottom:none;}
+.totw-list-item:hover{background:rgba(255,255,255,.05);}
 
 .totw-list-rank{
     display:flex;
@@ -392,10 +380,6 @@
     letter-spacing:0.5px;
 }
 
-/* =========================================================
-   Loading + Error
-========================================================= */
-
 .totw-loading{
     text-align:center;
     padding:40px 20px;
@@ -431,10 +415,6 @@
     font-weight:800;
 }
 
-/* =========================================================
-   الموبايل
-========================================================= */
-
 @media(max-width:480px){
 
     .totw-tab-btn{
@@ -446,11 +426,18 @@
     .totw-pitch{max-width:100%;}
 
     .totw-pitch-title{
-        font-size:13px;
-        letter-spacing:4px;
+        font-size:12px;
+        letter-spacing:3px;
         top:8%;
         padding-bottom:5px;
         border-bottom-width:2px;
+        gap:6px;
+    }
+
+    .totw-pitch-title .gw-label{
+        font-size:10px;
+        padding:1px 8px;
+        letter-spacing:1.5px;
     }
 
     .totw-card{width:50px;}
@@ -491,11 +478,7 @@
         min-height:52px;
     }
 
-    .totw-list-rank{
-        width:20px;
-        height:20px;
-        font-size:11px;
-    }
+    .totw-list-rank{width:20px;height:20px;font-size:11px;}
 
     .totw-list-logo{
         width:24px;
@@ -506,16 +489,8 @@
         max-height:24px;
     }
 
-    .totw-list-entry{
-        font-size:12px;
-    }
-
-    .totw-list-player{
-        font-size:10px;
-    }
-
+    .totw-list-entry{font-size:12px;}
+    .totw-list-player{font-size:10px;}
     .totw-list-gw,
-    .totw-list-total{
-        font-size:12px;
-    }
+    .totw-list-total{font-size:12px;}
 }
