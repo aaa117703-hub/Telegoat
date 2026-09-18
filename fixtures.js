@@ -58,6 +58,7 @@ function initRoundDropdown() {
 
 function selectRound(value) {
     currentRound = parseInt(value, 10);
+    localStorage.setItem('fpl_last_round', currentRound);
     renderFixtures();
 
     if (activeTab === 'standings') {
@@ -77,6 +78,7 @@ function changeRound(step) {
         currentRound = 38;
     }
 
+    localStorage.setItem('fpl_last_round', currentRound);
     renderFixtures();
 
     if (activeTab === 'standings') {
@@ -84,6 +86,10 @@ function changeRound(step) {
     }
 }
 
+
+/* =========================================================
+   SWITCH TAB - محدّث لدعم TOTW
+========================================================= */
 
 function switchTab(tabName) {
 
