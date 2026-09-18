@@ -64,7 +64,47 @@ function applyRoundedCorners(sourceCanvas, radius) {
 }
 
 
-function downloadAsImage() {
+/* =========================================================
+   TOGGLE DOWNLOAD MENU
+========================================================= */
+
+function toggleDownloadMenu(event) {
+    if (event) event.stopPropagation();
+
+    const menu = document.getElementById('downloadMenu');
+    if (!menu) return;
+
+    menu.classList.toggle('show');
+}
+
+
+function closeDownloadMenu() {
+    const menu = document.getElementById('downloadMenu');
+    if (menu) menu.classList.remove('show');
+}
+
+
+document.addEventListener('click', function(e) {
+    const wrapper = document.querySelector('.download-wrapper');
+    if (!wrapper) return;
+    if (!wrapper.contains(e.target)) {
+        closeDownloadMenu();
+    }
+});
+
+
+/* =========================================================
+   DOWNLOAD AS IMAGE — يدعم 3 جودات (2x, 3x, 4x)
+========================================================= */
+
+function downloadAsImage(scaleFactor) {
+
+    if (typeof scaleFactor !== 'number') {
+        scaleFactor = 3;
+    }
+
+    closeDownloadMenu();
+
     if (activeTab === 'fixtures') {
         renderFixtures();
     } else {
@@ -80,7 +120,6 @@ function downloadAsImage() {
 
     showToast('Preparing image...', false);
 
-    const scaleFactor = 4;
     const cornerRadius = 20 * scaleFactor;
 
     waitForImagesToLoad(element)
@@ -155,8 +194,8 @@ function downloadAsImage() {
                 }
 
                 const filename = activeTab === 'fixtures'
-                    ? 'Matchweek_' + currentRound + '.png'
-                    : 'League_Standings_GW' + currentRound + '.png';
+                    ? 'Matchweek_' + currentRound + '_' + scaleFactor + 'x.png'
+                    : 'League_Standings_GW' + currentRound + '_' + scaleFactor + 'x.png';
 
                 if (navigator.share && navigator.canShare) {
                     const file = new File([blob], filename, { type: 'image/png' });
@@ -175,16 +214,16 @@ function downloadAsImage() {
                             })
                             .catch(function(err) {
                                 if (err.name !== 'AbortError') {
-                                    fallbackDownload(blob);
+                                    fallbackDownload(blob, filename);
                                 } else {
                                     showToast('Cancelled', false);
                                 }
                             });
                     } else {
-                        fallbackDownload(blob);
+                        fallbackDownload(blob, filename);
                     }
                 } else {
-                    fallbackDownload(blob);
+                    fallbackDownload(blob, filename);
                 }
             }, 'image/png', 1.0);
         })
@@ -195,12 +234,12 @@ function downloadAsImage() {
 }
 
 
-function fallbackDownload(blob) {
+function fallbackDownload(blob, filename) {
     const link = document.createElement('a');
 
-    link.download = activeTab === 'fixtures'
+    link.download = filename || (activeTab === 'fixtures'
         ? 'Matchweek_' + currentRound + '.png'
-        : 'League_Standings_GW' + currentRound + '.png';
+        : 'League_Standings_GW' + currentRound + '.png');
 
     link.href = URL.createObjectURL(blob);
 
