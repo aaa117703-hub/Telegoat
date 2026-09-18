@@ -36,3 +36,6 @@ let activeTab = 'fixtures';
 let isSaving = false;
 
 let toastTimeout = null;
+
+/* هل المستخدم admin؟ */
+let isAdmin = localStorage.getItem('tg_admin') === 'true';
