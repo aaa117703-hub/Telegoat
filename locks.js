@@ -1,20 +1,42 @@
 /* =========================================================
-   locks.js — نظام قفل الأقسام
+   locks.js — نظام قفل 3 أقسام
 ========================================================= */
 
-/* حالة الأقفال — محلية */
 window.sectionLocks = {
     fixtures: false,
     standings: false,
     totw: false
 };
 
-/* هل المستخدم admin؟ */
-function checkAdmin() {
+/* حالة الانتظار لكل قسم */
+window.pendingLocks = {
+    fixtures: false,
+    standings: false,
+    totw: false
+};
+
+const LOCK_PIN = '024680';
+
+const SECTIONS = [
+    { key: 'fixtures',  label: 'Fixtures',  icon: '⚽' },
+    { key: 'standings', label: 'Standings', icon: '📊' },
+    { key: 'totw',      label: 'TOTW',      icon: '🏆' }
+];
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function isAdmin() {
     return localStorage.getItem('tg_admin') === 'true';
 }
 
-/* يجيب الأقفال من Supabase */
+
+/* =========================================================
+   LOAD / SAVE
+========================================================= */
+
 async function loadLocks() {
 
     if (!window.sbClient) {
@@ -36,7 +58,10 @@ async function loadLocks() {
         if (!data) return;
 
         data.forEach(function(row) {
-            window.sectionLocks[row.section] = row.is_locked;
+
+            if (window.sectionLocks.hasOwnProperty(row.section)) {
+                window.sectionLocks[row.section] = row.is_locked === true;
+            }
         });
 
         console.log('Locks loaded:', window.sectionLocks);
@@ -46,8 +71,8 @@ async function loadLocks() {
     }
 }
 
-/* يحفظ قفل قسم في Supabase */
-async function setLock(section, isLocked) {
+
+async function saveLock(section, isLocked) {
 
     if (!window.sbClient) {
         console.warn('Supabase not available');
@@ -58,14 +83,17 @@ async function setLock(section, isLocked) {
 
         const { error } = await window.sbClient
             .from('site_locks')
-            .update({
-                is_locked: isLocked,
-                updated_at: new Date().toISOString()
-            })
-            .eq('section', section);
+            .upsert(
+                {
+                    section: section,
+                    is_locked: isLocked,
+                    updated_at: new Date().toISOString()
+                },
+                { onConflict: 'section' }
+            );
 
         if (error) {
-            console.error('Set lock error:', error);
+            console.error('Save lock error:', error);
             return false;
         }
 
@@ -73,17 +101,21 @@ async function setLock(section, isLocked) {
         return true;
 
     } catch (e) {
-        console.error('Set lock exception:', e);
+        console.error('Save lock exception:', e);
         return false;
     }
 }
 
-/* هل القسم مقفول؟ */
+
 function isLocked(section) {
     return window.sectionLocks[section] === true;
 }
 
-/* يبني شاشة الصيانة */
+
+/* =========================================================
+   MAINTENANCE SCREEN
+========================================================= */
+
 function showSectionMaintenance(sectionName) {
 
     let overlay = document.getElementById('sectionMaintenance');
@@ -99,12 +131,13 @@ function showSectionMaintenance(sectionName) {
             '<div class="maint-icon">🔧</div>' +
             '<h2>الموقع في حالة صيانة</h2>' +
             '<p>قسم ' + sectionName + ' قيد الصيانة حالياً</p>' +
-            '<p style="font-size:12px;color:#888;margin-top:12px;">نرجع لكم قريباً</p>' +
+            '<p style="font-size:12px;color:#888;margin-top:8px;">نرجع لكم قريباً</p>' +
             '<div class="maint-team">TELEGRAM GOAT 🐐</div>' +
         '</div>';
 
     overlay.classList.add('show');
 }
+
 
 function hideSectionMaintenance() {
     const overlay = document.getElementById('sectionMaintenance');
@@ -118,58 +151,29 @@ function hideSectionMaintenance() {
 
 function buildAdminLockPanel() {
 
-    /* نشيل اللوحة القديمة إذا موجودة */
-    const oldPanel = document.getElementById('adminLockPanel');
-    if (oldPanel) oldPanel.remove();
+    const old = document.getElementById('adminLockPanel');
+    if (old) old.remove();
 
-    /* ننشئ لوحة جديدة */
+    if (!isAdmin()) return;
+
     const panel = document.createElement('div');
     panel.id = 'adminLockPanel';
     panel.className = 'admin-lock-panel';
 
-    const sections = [
-        { key: 'fixtures',  label: 'Fixtures'  },
-        { key: 'standings', label: 'Standings' },
-        { key: 'totw',      label: 'TOTW'      }
-    ];
-
-    sections.forEach(function(s) {
+    SECTIONS.forEach(function(s) {
 
         const locked = isLocked(s.key);
 
         const btn = document.createElement('button');
         btn.className = 'lock-btn' + (locked ? ' locked' : '');
-        btn.setAttribute('data-section', s.key);
         btn.type = 'button';
 
         btn.innerHTML =
             '<span class="lock-icon">' + (locked ? '🔒' : '🔓') + '</span>' +
             '<span class="lock-label">' + s.label + '</span>';
 
-        btn.addEventListener('click', async function() {
-
-            const current = isLocked(s.key);
-            const next = !current;
-
-            btn.disabled = true;
-
-            const success = await setLock(s.key, next);
-
-            btn.disabled = false;
-
-            if (success) {
-                btn.classList.toggle('locked', next);
-                btn.querySelector('.lock-icon').textContent = next ? '🔒' : '🔓';
-
-                /* لو صار قفل — نأكد للزائر */
-                if (typeof showToast === 'function') {
-                    showToast(next ? s.label + ' locked' : s.label + ' unlocked', true);
-                }
-            } else {
-                if (typeof showToast === 'function') {
-                    showToast('Failed to update lock', false);
-                }
-            }
+        btn.addEventListener('click', function() {
+            openLockPanel(s.key, s.label);
         });
 
         panel.appendChild(btn);
@@ -178,15 +182,155 @@ function buildAdminLockPanel() {
     document.body.appendChild(panel);
 }
 
+
 function removeAdminLockPanel() {
     const panel = document.getElementById('adminLockPanel');
     if (panel) panel.remove();
 }
 
+
 function refreshAdminLockPanel() {
-    if (checkAdmin()) {
+    if (isAdmin()) {
         buildAdminLockPanel();
     } else {
         removeAdminLockPanel();
     }
+}
+
+
+/* =========================================================
+   LOCK PANEL PER SECTION
+========================================================= */
+
+function openLockPanel(sectionKey, sectionLabel) {
+
+    const pass = prompt('أدخل رمز القفل:');
+
+    if (pass !== LOCK_PIN) {
+        if (pass !== null) alert('الرمز غلط!');
+        return;
+    }
+
+    closeLockPanel();
+
+    /* نبدأ من الحالة الحالية */
+    window.pendingLocks[sectionKey] = window.sectionLocks[sectionKey];
+
+    const isLockedNow = window.pendingLocks[sectionKey];
+
+    const panel = document.createElement('div');
+    panel.id = 'lockPanel';
+    panel.className = 'lock-panel';
+
+    panel.innerHTML =
+        '<div class="lock-panel-header">' +
+            '<span>🔐 ' + sectionLabel + '</span>' +
+            '<button class="lock-panel-close" onclick="closeLockPanel()">✕</button>' +
+        '</div>' +
+        '<div class="lock-panel-body">' +
+            '<div class="lock-status" id="lockStatusDisplay">' +
+                'الحالة الحالية: ' + (isLockedNow ? '🔒 مقفول' : '🔓 مفتوح') +
+            '</div>' +
+            '<button class="lock-toggle-btn" id="lockToggleBtn" onclick="togglePendingLock(\'' + sectionKey + '\')">' +
+                (isLockedNow ? '🔓 افتح القسم' : '🔒 اقفل القسم') +
+            '</button>' +
+            '<button class="lock-save-btn" id="lockSaveBtn" onclick="confirmSaveLock(\'' + sectionKey + '\',\'' + sectionLabel + '\')">' +
+                '💾 حفظ' +
+            '</button>' +
+        '</div>';
+
+    document.body.appendChild(panel);
+
+    setTimeout(function() {
+        panel.classList.add('show');
+    }, 10);
+}
+
+
+function closeLockPanel() {
+
+    const panel = document.getElementById('lockPanel');
+    if (!panel) return;
+
+    panel.classList.remove('show');
+
+    setTimeout(function() {
+        if (panel.parentNode) panel.remove();
+    }, 250);
+}
+
+
+function togglePendingLock(sectionKey) {
+
+    window.pendingLocks[sectionKey] = !window.pendingLocks[sectionKey];
+
+    const pending = window.pendingLocks[sectionKey];
+
+    const statusEl = document.getElementById('lockStatusDisplay');
+    const toggleBtn = document.getElementById('lockToggleBtn');
+
+    if (statusEl) {
+        statusEl.textContent = 'الحالة ستكون: ' + (pending ? '🔒 مقفول' : '🔓 مفتوح');
+    }
+
+    if (toggleBtn) {
+        toggleBtn.textContent = pending ? '🔓 افتح القسم' : '🔒 اقفل القسم';
+    }
+}
+
+
+async function confirmSaveLock(sectionKey, sectionLabel) {
+
+    if (window.pendingLocks[sectionKey] === window.sectionLocks[sectionKey]) {
+        alert('ما فيه تغيير للحفظ');
+        return;
+    }
+
+    const pass = prompt('أدخل رمز التأكيد للحفظ:');
+
+    if (pass !== LOCK_PIN) {
+        if (pass !== null) alert('الرمز غلط!');
+        return;
+    }
+
+    const saveBtn = document.getElementById('lockSaveBtn');
+    if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = '⏳ يحفظ...';
+    }
+
+    const ok = await saveLock(sectionKey, window.pendingLocks[sectionKey]);
+
+    if (ok) {
+
+        closeLockPanel();
+        removeAdminLockPanel();
+
+        if (typeof showToast === 'function') {
+            showToast(
+                sectionLabel + ' ' + (window.sectionLocks[sectionKey] ? 'locked' : 'unlocked'),
+                true
+            );
+        }
+
+    } else {
+
+        if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = '💾 حفظ';
+        }
+
+        alert('فشل الحفظ!');
+    }
+}
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+async function initLockSystem() {
+
+    await loadLocks();
+    refreshAdminLockPanel();
 }
