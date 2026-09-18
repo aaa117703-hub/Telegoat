@@ -15,6 +15,24 @@ async function init() {
 
     setupEruda();
 
+    /* ====== نظام القفل ====== */
+
+    /* تحميل الأقفال من Supabase */
+    if (typeof loadLocks === 'function') {
+        try {
+            await loadLocks();
+        } catch (e) {
+            console.warn('loadLocks failed:', e);
+        }
+    }
+
+    /* بناء لوحة الأقفال لو admin */
+    if (typeof refreshAdminLockPanel === 'function') {
+        refreshAdminLockPanel();
+    }
+
+    /* ====== تحميل النتائج من Supabase ====== */
+
     if (
         !window.sbClient ||
         typeof loadScoresFromSupabase !== 'function'
