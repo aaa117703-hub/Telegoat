@@ -89,7 +89,7 @@ body{
 }
 
 /* =========================================================
-   زر التحميل الجديد — كلمة + قائمة جودات
+   زر التحميل الجديد
 ========================================================= */
 
 .download-wrapper{
@@ -123,9 +123,7 @@ body{
     box-shadow:0 4px 12px rgba(50,129,255,.6);
 }
 
-.download-btn:active{
-    transform:scale(0.96);
-}
+.download-btn:active{transform:scale(0.96);}
 
 .download-btn svg{
     width:16px;
@@ -163,7 +161,6 @@ body{
     transform:rotate(180deg);
 }
 
-/* القائمة المنسدلة */
 .download-menu{
     position:absolute;
     top:calc(100% + 8px);
@@ -591,10 +588,143 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
 .tab-content{display:none}
 .tab-content.active{display:block}
+
+/* =========================================================
+   ADMIN LOCK PANEL — 3 أزرار
+========================================================= */
+
+.admin-lock-panel{
+    position:fixed;
+    top:12px;
+    left:12px;
+    z-index:99998;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    background:rgba(36, 0, 36, 0.92);
+    padding:8px;
+    border-radius:14px;
+    border:2px solid #00ff87;
+    box-shadow:
+        0 4px 15px rgba(0,0,0,.5),
+        0 0 20px rgba(0,255,135,.4);
+    backdrop-filter:blur(8px);
+}
+
+.lock-btn{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:7px 12px;
+    background:linear-gradient(135deg, #00c853 0%, #009b40 100%);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:0.5px;
+    cursor:pointer;
+    font-family:inherit;
+    transition:all .2s ease;
+    min-width:110px;
+    box-shadow:0 2px 6px rgba(0,0,0,.3);
+    text-transform:uppercase;
+}
+
+.lock-btn:hover{
+    transform:scale(1.04);
+}
+
+.lock-btn:active{
+    transform:scale(0.96);
+}
+
+.lock-btn.locked{
+    background:linear-gradient(135deg, #ff4081 0%, #b8003f 100%);
+}
+
+.lock-btn .lock-icon{
+    font-size:13px;
+    flex-shrink:0;
+}
+
+.lock-btn .lock-label{
+    flex:1;
+    text-align:left;
+}
+
+/* =========================================================
+   SECTION MAINTENANCE OVERLAY
+========================================================= */
+
+#sectionMaintenance{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.9);
+    z-index:99997;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    backdrop-filter:blur(4px);
+}
+
+#sectionMaintenance.show{
+    display:flex;
+}
+
+#sectionMaintenance .maint-box{
+    background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
+    border:3px solid #00ff87;
+    border-radius:20px;
+    padding:40px 30px;
+    text-align:center;
+    max-width:380px;
+    width:100%;
+    box-shadow:
+        0 0 50px rgba(0,255,135,.6),
+        0 20px 60px rgba(0,0,0,.6);
+}
+
+#sectionMaintenance .maint-icon{
+    font-size:64px;
+    margin-bottom:16px;
+    animation:maintBounce 2s infinite;
+}
+
+@keyframes maintBounce{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+}
+
+#sectionMaintenance h2{
+    color:#fff;
+    font-size:22px;
+    font-weight:900;
+    margin-bottom:14px;
+    letter-spacing:1px;
+}
+
+#sectionMaintenance p{
+    color:#b8b8b8;
+    font-size:14px;
+    line-height:1.6;
+    margin-bottom:8px;
+}
+
+#sectionMaintenance .maint-team{
+    color:#00ff87;
+    font-size:13px;
+    font-weight:900;
+    letter-spacing:3px;
+    padding-top:16px;
+    margin-top:16px;
+    border-top:1px solid rgba(255,255,255,.15);
+}
 </style>
 
 <link rel="stylesheet" href="mobile.css">
-<link rel="stylesheet" href="totw.css?v=7">
+<link rel="stylesheet" href="totw.css?v=8">
 
 </head>
 
@@ -636,17 +766,17 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
         <div class="download-menu" id="downloadMenu">
             <button class="download-menu-item" onclick="downloadAsImage(2)">
-                <span class="q-icon">720</span>
+                <span class="q-icon">⚡</span>
                 <span class="q-label">Standard</span>
                 <span class="q-scale">2x</span>
             </button>
             <button class="download-menu-item" onclick="downloadAsImage(3)">
-                <span class="q-icon">1080</span>
+                <span class="q-icon">⭐</span>
                 <span class="q-label">High</span>
                 <span class="q-scale">3x</span>
             </button>
             <button class="download-menu-item" onclick="downloadAsImage(4)">
-                <span class="q-icon">4K</span>
+                <span class="q-icon">💎</span>
                 <span class="q-label">Ultra</span>
                 <span class="q-scale">4x</span>
             </button>
@@ -818,16 +948,17 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 </script>
 
 <script src="config.js"></script>
+<script src="locks.js?v=1"></script>
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=20"></script>
-<script src="fixtures.js?v=20"></script>
+<script src="carousel.js?v=21"></script>
+<script src="fixtures.js?v=21"></script>
 <script src="standings.js"></script>
-<script src="download.js?v=2"></script>
-<script src="players-teams.js?v=82"></script>
-<script src="totw.js?v=94"></script>
-<script src="main.js"></script>
+<script src="download.js?v=3"></script>
+<script src="players-teams.js?v=83"></script>
+<script src="totw.js?v=95"></script>
+<script src="main.js?v=2"></script>
 
 </body>
 </html>
