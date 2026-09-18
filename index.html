@@ -89,50 +89,144 @@ body{
 }
 
 /* =========================================================
-   زر التحميل الجديد — صغير مثل باقي الأزرار
+   زر التحميل الجديد — كلمة + قائمة جودات
 ========================================================= */
 
-.download-icon-btn{
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
-    border:1px solid #5a055a;
-    cursor:pointer;
+.download-wrapper{
+    position:relative;
+    display:inline-block;
+}
+
+.download-btn{
     display:flex;
     align-items:center;
     justify-content:center;
+    gap:6px;
+    padding:8px 16px;
+    background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
+    border:1px solid #5a055a;
+    border-radius:20px;
+    color:#fff;
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:0.5px;
+    cursor:pointer;
     outline:none;
-    padding:0;
     box-shadow:0 2px 8px rgba(50,129,255,.4);
-    flex-shrink:0;
     transition:transform .2s ease, box-shadow .2s ease;
+    font-family:inherit;
+    min-width:130px;
 }
 
-.download-icon-btn:hover{
-    transform:scale(1.08);
+.download-btn:hover{
+    transform:scale(1.04);
     box-shadow:0 4px 12px rgba(50,129,255,.6);
 }
 
-.download-icon-btn:active{
+.download-btn:active{
     transform:scale(0.96);
 }
 
-.download-icon-btn svg{
-    width:18px;
-    height:18px;
+.download-btn svg{
+    width:16px;
+    height:16px;
     display:block;
-    filter:drop-shadow(0 1px 1px rgba(0,0,0,.2));
 }
 
-.download-icon-btn svg path,
-.download-icon-btn svg line,
-.download-icon-btn svg polyline{
+.download-btn svg path,
+.download-btn svg line,
+.download-btn svg polyline{
     stroke:#fff;
     stroke-width:2.5;
     stroke-linecap:round;
     stroke-linejoin:round;
     fill:none;
+}
+
+.download-btn .dl-arrow{
+    width:12px;
+    height:12px;
+    transition:transform .3s ease;
+}
+
+.download-btn .dl-arrow svg{
+    width:100%;
+    height:100%;
+}
+
+.download-btn .dl-arrow svg path{
+    fill:#fff;
+    stroke:none;
+}
+
+.download-wrapper.open .download-btn .dl-arrow{
+    transform:rotate(180deg);
+}
+
+/* القائمة المنسدلة */
+.download-menu{
+    position:absolute;
+    top:calc(100% + 8px);
+    right:0;
+    min-width:160px;
+    background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
+    border:2px solid #00ff87;
+    border-radius:12px;
+    padding:6px;
+    z-index:9999;
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(-8px);
+    transition:opacity .25s ease, transform .25s ease;
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.5),
+        0 0 20px rgba(0,255,135,.35);
+}
+
+.download-menu.show{
+    opacity:1;
+    pointer-events:auto;
+    transform:translateY(0);
+}
+
+.download-menu-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 12px;
+    color:#fff;
+    font-size:12px;
+    font-weight:800;
+    border-radius:8px;
+    cursor:pointer;
+    transition:background .2s ease;
+    font-family:inherit;
+    border:none;
+    background:transparent;
+    width:100%;
+    text-align:left;
+    letter-spacing:0.3px;
+}
+
+.download-menu-item:hover{
+    background:rgba(0, 255, 135, .18);
+}
+
+.download-menu-item .q-icon{
+    font-size:14px;
+    flex-shrink:0;
+}
+
+.download-menu-item .q-label{
+    flex:1;
+    text-align:left;
+}
+
+.download-menu-item .q-scale{
+    color:#00ff87;
+    font-weight:900;
+    font-size:11px;
+    flex-shrink:0;
 }
 
 #hiddenEditBtn,
@@ -500,7 +594,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 </style>
 
 <link rel="stylesheet" href="mobile.css">
-<link rel="stylesheet" href="totw.css?v=6">
+<link rel="stylesheet" href="totw.css?v=7">
 
 </head>
 
@@ -524,13 +618,40 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
 <div class="round-selector-row">
     <select id="roundSelect" class="round-select-pill" onchange="selectRound(this.value)"></select>
-    <button class="download-icon-btn" onclick="downloadAsImage()" title="Download">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 3v12"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="5" y1="21" x2="19" y2="21"/>
-        </svg>
-    </button>
+
+    <div class="download-wrapper" id="downloadWrapper">
+        <button class="download-btn" onclick="toggleDownloadMenu(event)">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 3v12"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="5" y1="21" x2="19" y2="21"/>
+            </svg>
+            <span>Download</span>
+            <span class="dl-arrow">
+                <svg viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 6L0 0h10z"/>
+                </svg>
+            </span>
+        </button>
+
+        <div class="download-menu" id="downloadMenu">
+            <button class="download-menu-item" onclick="downloadAsImage(2)">
+                <span class="q-icon">⚡</span>
+                <span class="q-label">Standard</span>
+                <span class="q-scale">2x</span>
+            </button>
+            <button class="download-menu-item" onclick="downloadAsImage(3)">
+                <span class="q-icon">⭐</span>
+                <span class="q-label">High</span>
+                <span class="q-scale">3x</span>
+            </button>
+            <button class="download-menu-item" onclick="downloadAsImage(4)">
+                <span class="q-icon">💎</span>
+                <span class="q-label">Ultra</span>
+                <span class="q-scale">4x</span>
+            </button>
+        </div>
+    </div>
 </div>
 
 <div class="header">
@@ -546,9 +667,9 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     <div id="fixturesTab" class="tab-content active">
 
         <div id="editPanel" class="edit-panel" style="display:none;">
-            <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()"> Save</button>
-            <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()"> Clear</button>
-            <button class="edit-action-btn download-action-btn" onclick="downloadAsImage()"> Download</button>
+            <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">💾 Save</button>
+            <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">🗑️ Clear</button>
+            <button class="edit-action-btn download-action-btn" onclick="downloadAsImage(3)">⬇️ Download</button>
         </div>
 
         <div id="captureFixtures" class="export-area">
@@ -700,12 +821,12 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=19"></script>
-<script src="fixtures.js?v=19"></script>
+<script src="carousel.js?v=20"></script>
+<script src="fixtures.js?v=20"></script>
 <script src="standings.js"></script>
-<script src="download.js"></script>
-<script src="players-teams.js?v=81"></script>
-<script src="totw.js?v=93"></script>
+<script src="download.js?v=2"></script>
+<script src="players-teams.js?v=82"></script>
+<script src="totw.js?v=94"></script>
 <script src="main.js"></script>
 
 </body>
