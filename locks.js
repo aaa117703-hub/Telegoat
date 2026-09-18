@@ -8,7 +8,6 @@ window.sectionLocks = {
     totw: false
 };
 
-/* حالة الانتظار لكل قسم */
 window.pendingLocks = {
     fixtures: false,
     standings: false,
@@ -16,20 +15,27 @@ window.pendingLocks = {
 };
 
 const LOCK_PIN = '024680';
+const EDIT_PIN = '1999';
 
 const SECTIONS = [
-    { key: 'fixtures',  label: 'Fixtures',  icon: '⚽' },
-    { key: 'standings', label: 'Standings', icon: '📊' },
-    { key: 'totw',      label: 'TOTW',      icon: '🏆' }
+    { key: 'fixtures',  label: 'Fixtures'  },
+    { key: 'standings', label: 'Standings' },
+    { key: 'totw',      label: 'TOTW'      }
 ];
 
 
 /* =========================================================
-   HELPERS
+   HELPERS — فحص الصلاحيات
 ========================================================= */
 
+/* هل المستخدم عنده صلاحية التعديل؟ */
 function isAdmin() {
     return localStorage.getItem('tg_admin') === 'true';
+}
+
+/* هل المستخدم عنده صلاحية القفل؟ */
+function isLocker() {
+    return localStorage.getItem('tg_locker') === 'true';
 }
 
 
@@ -63,8 +69,6 @@ async function loadLocks() {
                 window.sectionLocks[row.section] = row.is_locked === true;
             }
         });
-
-        console.log('Locks loaded:', window.sectionLocks);
 
     } catch (e) {
         console.error('Load locks exception:', e);
@@ -154,7 +158,7 @@ function buildAdminLockPanel() {
     const old = document.getElementById('adminLockPanel');
     if (old) old.remove();
 
-    if (!isAdmin()) return;
+    if (!isLocker()) return;
 
     const panel = document.createElement('div');
     panel.id = 'adminLockPanel';
@@ -190,10 +194,33 @@ function removeAdminLockPanel() {
 
 
 function refreshAdminLockPanel() {
-    if (isAdmin()) {
+    if (isLocker()) {
         buildAdminLockPanel();
     } else {
         removeAdminLockPanel();
+    }
+}
+
+
+/* =========================================================
+   UNLOCK LOCK PANEL — رمز 024680
+========================================================= */
+
+function unlockLockPanelWithPassword() {
+    const pass = prompt('Enter LOCK password:');
+
+    if (pass === LOCK_PIN) {
+
+        localStorage.setItem('tg_locker', 'true');
+
+        if (typeof showToast === 'function') {
+            showToast('Lock Control enabled', true);
+        }
+
+        buildAdminLockPanel();
+
+    } else if (pass !== null) {
+        alert('Incorrect lock password!');
     }
 }
 
@@ -204,16 +231,8 @@ function refreshAdminLockPanel() {
 
 function openLockPanel(sectionKey, sectionLabel) {
 
-    const pass = prompt('أدخل رمز القفل:');
-
-    if (pass !== LOCK_PIN) {
-        if (pass !== null) alert('الرمز غلط!');
-        return;
-    }
-
     closeLockPanel();
 
-    /* نبدأ من الحالة الحالية */
     window.pendingLocks[sectionKey] = window.sectionLocks[sectionKey];
 
     const isLockedNow = window.pendingLocks[sectionKey];
