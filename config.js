@@ -21,7 +21,15 @@ let scoresStorage =
         localStorage.getItem('fpl_scores')
     ) || {};
 
-let currentRound = 1;
+/* آخر جولة — نجيبها من localStorage أو نبدأ بـ 1 */
+let currentRound = parseInt(
+    localStorage.getItem('fpl_last_round') || '1',
+    10
+);
+
+if (isNaN(currentRound) || currentRound < 1 || currentRound > 38) {
+    currentRound = 1;
+}
 
 let activeTab = 'fixtures';
 
