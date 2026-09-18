@@ -223,7 +223,8 @@ body{
 }
 
 #hiddenEditBtn,
-#hiddenEditBtn2{
+#hiddenEditBtn2,
+#hiddenLockBtn{
     display:block;width:100%;
     padding:8px 10px;margin:8px 0 0 0;
     background:transparent;border:none;
@@ -634,15 +635,8 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     background:linear-gradient(135deg, #ff4081 0%, #b8003f 100%);
 }
 
-.lock-btn .lock-icon{
-    font-size:13px;
-    flex-shrink:0;
-}
-
-.lock-btn .lock-label{
-    flex:1;
-    text-align:left;
-}
+.lock-btn .lock-icon{font-size:13px;flex-shrink:0;}
+.lock-btn .lock-label{flex:1;text-align:left;}
 
 /* =========================================================
    LOCK PANEL
@@ -834,7 +828,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 </style>
 
 <link rel="stylesheet" href="mobile.css">
-<link rel="stylesheet" href="totw.css?v=9">
+<link rel="stylesheet" href="totw.css?v=10">
 
 </head>
 
@@ -920,6 +914,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
         </div>
 
         <button id="hiddenEditBtn" class="hidden-edit-btn">Aqeel Al Rowai</button>
+        <button id="hiddenLockBtn" class="hidden-edit-btn">Lock Control</button>
     </div>
 
     <div id="standingsTab" class="tab-content">
@@ -982,7 +977,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
     let pressTimer = null;
 
-    function setupButton(btn) {
+    function setupButton(btn, callback) {
 
         if (!btn) return;
 
@@ -993,7 +988,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
         btn.addEventListener('touchstart', function(event) {
             pressTimer = setTimeout(function() {
-                unlockEditWithPassword();
+                callback();
             }, 800);
         }, { passive: true });
 
@@ -1007,7 +1002,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
         btn.addEventListener('mousedown', function() {
             pressTimer = setTimeout(function() {
-                unlockEditWithPassword();
+                callback();
             }, 800);
         });
 
@@ -1021,8 +1016,27 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        setupButton(document.getElementById('hiddenEditBtn'));
-        setupButton(document.getElementById('hiddenEditBtn2'));
+
+        /* Aqeel Al Rowai → 1999 → تعديل الجولات */
+        setupButton(
+            document.getElementById('hiddenEditBtn'),
+            unlockEditWithPassword
+        );
+
+        setupButton(
+            document.getElementById('hiddenEditBtn2'),
+            unlockEditWithPassword
+        );
+
+        /* Lock Control → 024680 → قفل/فتح الأقسام */
+        setupButton(
+            document.getElementById('hiddenLockBtn'),
+            function() {
+                if (typeof unlockLockPanelWithPassword === 'function') {
+                    unlockLockPanelWithPassword();
+                }
+            }
+        );
     });
 
 })();
@@ -1058,17 +1072,17 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 </script>
 
 <script src="config.js"></script>
-<script src="locks.js?v=4"></script>
+<script src="locks.js?v=5"></script>
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=24"></script>
-<script src="fixtures.js?v=24"></script>
+<script src="carousel.js?v=25"></script>
+<script src="fixtures.js?v=25"></script>
 <script src="standings.js"></script>
-<script src="download.js?v=6"></script>
-<script src="players-teams.js?v=86"></script>
-<script src="totw.js?v=98"></script>
-<script src="main.js?v=5"></script>
+<script src="download.js?v=7"></script>
+<script src="players-teams.js?v=87"></script>
+<script src="totw.js?v=99"></script>
+<script src="main.js?v=6"></script>
 
 </body>
 </html>
