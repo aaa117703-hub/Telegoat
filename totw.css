@@ -61,10 +61,7 @@
     overflow:hidden;
 }
 
-/* =========================================================
-   عنوان TEAM OF THE WEEK + رقم الجولة
-========================================================= */
-
+/* عنوان TEAM OF THE WEEK — بدون GW */
 .totw-pitch-title{
     position:absolute;
     top:8%;
@@ -84,22 +81,11 @@
     text-shadow:
         0 1px 2px rgba(255,255,255,.6),
         0 2px 4px rgba(0,0,0,.08);
-    display:flex;
-    align-items:center;
-    gap:10px;
 }
 
+/* إخفاء GW label (في حال موجود) */
 .totw-pitch-title .gw-label{
-    color:#04f5ff;
-    font-weight:900;
-    letter-spacing:2px;
-    padding:2px 10px;
-    background:linear-gradient(135deg, #37003c 0%, #6b21a8 100%);
-    border-radius:50px;
-    font-size:12px;
-    border:2px solid #04f5ff;
-    text-shadow:none;
-    box-shadow:0 2px 8px rgba(4,245,255,.4);
+    display:none !important;
 }
 
 .totw-players{
@@ -109,7 +95,7 @@
 }
 
 /* =========================================================
-   الصفوف
+   الصفوف — الحارس رجع لفوق
 ========================================================= */
 
 .totw-row{
@@ -123,7 +109,7 @@
 }
 
 .totw-row-gk{
-    top:28%;
+    top:22%;
     justify-content:center;
 }
 
@@ -199,32 +185,6 @@
     background:rgba(255,255,255,.95);
     border-radius:50%;
     padding:4px;
-}
-
-/* =========================================================
-   FALLBACK — دائرة بحرف الاسم الأول
-========================================================= */
-
-.totw-card .tc-shirt-initial{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:rgba(30, 90, 50, 0.55);
-}
-
-.totw-card .tc-shirt-initial span{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    width:36px;
-    height:36px;
-    border-radius:50%;
-    background:#37003c;
-    color:#fff;
-    font-size:18px;
-    font-weight:900;
-    border:2px solid #00ff87;
-    box-shadow:0 2px 6px rgba(0,0,0,.4);
 }
 
 /* =========================================================
@@ -422,10 +382,6 @@
     letter-spacing:0.5px;
 }
 
-/* =========================================================
-   Loading + Error
-========================================================= */
-
 .totw-loading{
     text-align:center;
     padding:40px 20px;
@@ -461,10 +417,6 @@
     font-weight:800;
 }
 
-/* =========================================================
-   الموبايل
-========================================================= */
-
 @media(max-width:480px){
 
     .totw-tab-btn{
@@ -481,13 +433,6 @@
         top:8%;
         padding-bottom:5px;
         border-bottom-width:2px;
-        gap:6px;
-    }
-
-    .totw-pitch-title .gw-label{
-        font-size:10px;
-        padding:1px 8px;
-        letter-spacing:1.5px;
     }
 
     .totw-card{width:50px;}
@@ -496,12 +441,6 @@
         width:50px;
         height:44px;
         padding:3px 4px 0 4px;
-    }
-
-    .totw-card .tc-shirt-initial span{
-        width:30px;
-        height:30px;
-        font-size:15px;
     }
 
     .totw-card .tc-name{
