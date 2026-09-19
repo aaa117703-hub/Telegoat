@@ -184,18 +184,6 @@ function switchTOTWView(view) {
 
 
 /* =========================================================
-   UPDATE GW LABEL
-========================================================= */
-
-function updateGWLabel(round) {
-    const label = document.getElementById('totwGwLabel');
-    if (label) {
-        label.textContent = 'GW' + round;
-    }
-}
-
-
-/* =========================================================
    RENDER SQUAD
 ========================================================= */
 
@@ -250,7 +238,7 @@ function renderTOTWCards(top11) {
 
 
 /* =========================================================
-   CREATE CARD
+   CREATE CARD — بدون دائرة حرف
 ========================================================= */
 
 function createTOTWCard(player) {
@@ -290,15 +278,6 @@ function createTOTWCard(player) {
         shirtHtml =
             '<div class="tc-shirt tc-shirt-fallback">' +
                 '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
-            '</div>';
-
-    } else {
-
-        const firstLetter = (rawName.charAt(0) || '?').toUpperCase();
-
-        shirtHtml =
-            '<div class="tc-shirt tc-shirt-initial">' +
-                '<span>' + firstLetter + '</span>' +
             '</div>';
     }
 
@@ -431,7 +410,6 @@ async function loadTOTW() {
 
         currentTOTWData = top11;
 
-        updateGWLabel(viewingRound);
         renderTOTWCards(top11);
         renderTOTWList(top11);
 
