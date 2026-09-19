@@ -1,5 +1,5 @@
 /* =========================================================
-   stats.js — إحصائيات الدوري
+   stats.js — إحصائيات احترافية
 ========================================================= */
 
 const STATS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -7,6 +7,7 @@ const STATS_TOTAL_PAGES = 7;
 
 let statsAllManagers = [];
 let statsLoaded = false;
+let statsComputed = null;
 
 
 /* =========================================================
@@ -45,7 +46,7 @@ async function fetchAllManagersForStats() {
 
 
 /* =========================================================
-   COMPUTE LEAGUE STATS
+   COMPUTE STATS
 ========================================================= */
 
 function computeLeagueStats(managers) {
@@ -54,16 +55,33 @@ function computeLeagueStats(managers) {
 
     const totalManagers = managers.length;
 
-    const sumEvent = managers.reduce(function(s, m) {
-        return s + (m.event_total || 0);
-    }, 0);
+    let sumEvent = 0;
+    let sumTotal = 0;
+    let highestEvent = 0;
+    let highestTotal = 0;
+    let lowestEvent = Infinity;
 
-    const sumTotal = managers.reduce(function(s, m) {
-        return s + (m.total || 0);
-    }, 0);
+    managers.forEach(function(m) {
+        const ev = m.event_total || 0;
+        const to = m.total || 0;
+        sumEvent += ev;
+        sumTotal += to;
+        if (ev > highestEvent) highestEvent = ev;
+        if (ev < lowestEvent) lowestEvent = ev;
+        if (to > highestTotal) highestTotal = to;
+    });
 
     const avgEvent = Math.round(sumEvent / totalManagers);
     const avgTotal = Math.round(sumTotal / totalManagers);
+
+    /* أكثر من قمة الجولة */
+    const gwWinners = {};
+    managers.forEach(function(m) {
+        const ev = m.event_total || 0;
+        if (ev === highestEvent) {
+            gwWinners[m.entry] = m;
+        }
+    });
 
     const sortedByEvent = [...managers].sort(function(a, b) {
         return (b.event_total || 0) - (a.event_total || 0);
@@ -77,20 +95,23 @@ function computeLeagueStats(managers) {
         totalManagers: totalManagers,
         avgEvent: avgEvent,
         avgTotal: avgTotal,
-        highestEvent: sortedByEvent[0] ? sortedByEvent[0].event_total : 0,
-        highestTotal: sortedByTotal[0] ? sortedByTotal[0].total : 0,
+        highestEvent: highestEvent,
+        lowestEvent: lowestEvent === Infinity ? 0 : lowestEvent,
+        highestTotal: highestTotal,
         topEvent: sortedByEvent.slice(0, 10),
         topTotal: sortedByTotal.slice(0, 10),
+        gwWinner: Object.values(gwWinners)[0] || null,
+        gwWinnersCount: Object.keys(gwWinners).length,
         allManagers: managers
     };
 }
 
 
 /* =========================================================
-   CREATE STATS ROW
+   CREATE ROW
 ========================================================= */
 
-function createStatsRow(rank, manager, value) {
+function createStatsRow(rank, manager, value, valueLabel) {
 
     const rawName = manager.player_name || manager.entry_name || 'Unknown';
     const entryName = manager.entry_name || '';
@@ -115,18 +136,22 @@ function createStatsRow(rank, manager, value) {
     }
 
     let rankClass = 'stats-rank-normal';
-    if (rank === 1) rankClass = 'stats-rank-gold';
-    else if (rank === 2) rankClass = 'stats-rank-silver';
-    else if (rank === 3) rankClass = 'stats-rank-bronze';
+    let medal = '';
+    if (rank === 1) { rankClass = 'stats-rank-gold'; medal = '🥇'; }
+    else if (rank === 2) { rankClass = 'stats-rank-silver'; medal = '🥈'; }
+    else if (rank === 3) { rankClass = 'stats-rank-bronze'; medal = '🥉'; }
 
     return '<div class="stats-row">' +
-        '<div class="stats-rank ' + rankClass + '">' + rank + '</div>' +
+        '<div class="stats-rank ' + rankClass + '">' + (medal || rank) + '</div>' +
         logoHtml +
         '<div class="stats-row-names">' +
             '<div class="stats-row-entry">' + (entryName || rawName) + '</div>' +
             '<div class="stats-row-player">' + rawName + '</div>' +
         '</div>' +
-        '<div class="stats-row-value">' + value + '</div>' +
+        '<div class="stats-row-value">' +
+            '<div class="stats-row-value-num">' + value + '</div>' +
+            (valueLabel ? '<div class="stats-row-value-label">' + valueLabel + '</div>' : '') +
+        '</div>' +
     '</div>';
 }
 
@@ -139,31 +164,119 @@ function renderStatsOverview(stats) {
 
     if (!stats) return;
 
-    const kpiManagers = document.getElementById('kpiManagers');
-    const kpiAvg = document.getElementById('kpiAvg');
-    const kpiHigh = document.getElementById('kpiHigh');
-    const kpiHighestTotal = document.getElementById('kpiHighestTotal');
+    const setVal = function(id, val) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    };
 
-    if (kpiManagers) kpiManagers.textContent = stats.totalManagers;
-    if (kpiAvg) kpiAvg.textContent = stats.avgEvent;
-    if (kpiHigh) kpiHigh.textContent = stats.highestEvent;
-    if (kpiHighestTotal) kpiHighestTotal.textContent = stats.highestTotal;
+    setVal('kpiManagers', stats.totalManagers);
+    setVal('kpiAvg', stats.avgEvent);
+    setVal('kpiHigh', stats.highestEvent);
+    setVal('kpiHighestTotal', stats.highestTotal);
+    setVal('kpiLow', stats.lowestEvent);
+    setVal('kpiAvgTotal', stats.avgTotal);
 
+    /* Top GW */
     const topEventList = document.getElementById('statsTopEvent');
     if (topEventList) {
         topEventList.innerHTML = '';
         stats.topEvent.forEach(function(m, i) {
-            topEventList.innerHTML += createStatsRow(i + 1, m, m.event_total || 0);
+            topEventList.innerHTML += createStatsRow(i + 1, m, m.event_total || 0, 'GW');
         });
     }
 
+    /* Top Total */
     const topTotalList = document.getElementById('statsTopTotal');
     if (topTotalList) {
         topTotalList.innerHTML = '';
         stats.topTotal.forEach(function(m, i) {
-            topTotalList.innerHTML += createStatsRow(i + 1, m, m.total || 0);
+            topTotalList.innerHTML += createStatsRow(i + 1, m, m.total || 0, 'TOTAL');
         });
     }
+}
+
+
+/* =========================================================
+   RENDER RECORDS
+========================================================= */
+
+function renderStatsRecords(stats) {
+
+    if (!stats) return;
+
+    const container = document.getElementById('statsRecordsContent');
+    if (!container) return;
+
+    const cards = [];
+
+    /* أعلى نقاط جولة */
+    if (stats.topEvent[0]) {
+        const m = stats.topEvent[0];
+        cards.push({
+            icon: '⚡',
+            label: 'أعلى نقاط جولة',
+            value: stats.highestEvent,
+            name: m.player_name || m.entry_name,
+            color: 'gold'
+        });
+    }
+
+    /* أعلى مجموع */
+    if (stats.topTotal[0]) {
+        const m = stats.topTotal[0];
+        cards.push({
+            icon: '🏆',
+            label: 'أعلى مجموع',
+            value: stats.highestTotal,
+            name: m.player_name || m.entry_name,
+            color: 'gold'
+        });
+    }
+
+    /* أدنى نقاط جولة */
+    if (stats.lowestEvent) {
+        cards.push({
+            icon: '💀',
+            label: 'أسوأ جولة',
+            value: stats.lowestEvent,
+            name: '—',
+            color: 'red'
+        });
+    }
+
+    /* متوسط الدوري */
+    cards.push({
+        icon: '📊',
+        label: 'متوسط الجولة',
+        value: stats.avgEvent,
+        name: 'لكل مدير',
+        color: 'green'
+    });
+
+    cards.push({
+        icon: '📈',
+        label: 'متوسط المجموع',
+        value: stats.avgTotal,
+        name: 'لكل مدير',
+        color: 'green'
+    });
+
+    cards.push({
+        icon: '👥',
+        label: 'عدد المديرين',
+        value: stats.totalManagers,
+        name: 'الدوري',
+        color: 'purple'
+    });
+
+    container.innerHTML = cards.map(function(c) {
+        return '<div class="stats-record-card stats-record-' + c.color + '">' +
+            '<div class="stats-record-icon">' + c.icon + '</div>' +
+            '<div class="stats-record-label">' + c.label + '</div>' +
+            '<div class="stats-record-value">' + c.value + '</div>' +
+            '<div class="stats-record-name">' + c.name + '</div>' +
+        '</div>';
+    }).join('');
 }
 
 
@@ -181,7 +294,7 @@ function searchManager(query) {
         const pn = (m.player_name || '').toLowerCase();
         const en = (m.entry_name || '').toLowerCase();
         return pn.indexOf(q) !== -1 || en.indexOf(q) !== -1;
-    }).slice(0, 5);
+    }).slice(0, 8);
 }
 
 
@@ -201,12 +314,34 @@ function renderSearchResults(results) {
 
         const rawName = m.player_name || m.entry_name || '';
         const entryName = m.entry_name || '';
-        const idx = statsAllManagers.indexOf(m) + 1;
+
+        const sortedByTotal = [...statsAllManagers].sort(function(a, b) {
+            return (b.total || 0) - (a.total || 0);
+        });
+
+        const rank = sortedByTotal.findIndex(function(x) {
+            return x.entry === m.entry;
+        }) + 1;
+
+        let teamName = '';
+        if (typeof findPlayerTeam === 'function') {
+            teamName = findPlayerTeam(rawName) || findPlayerTeam(entryName) || '';
+        }
+
+        let logoHtml = '';
+        if (teamName && typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName]) {
+            logoHtml = '<div class="stats-search-logo">' +
+                '<img src="./' + TEAMS_LOGOS[teamName] + '" onerror="this.style.display=\'none\'">' +
+            '</div>';
+        } else {
+            logoHtml = '<div class="stats-search-logo stats-search-logo-empty">⚽</div>';
+        }
 
         const div = document.createElement('div');
         div.className = 'stats-search-item';
         div.innerHTML =
-            '<div class="stats-search-rank">#' + idx + '</div>' +
+            '<div class="stats-search-rank">#' + rank + '</div>' +
+            logoHtml +
             '<div class="stats-search-names">' +
                 '<div class="stats-search-entry">' + (entryName || rawName) + '</div>' +
                 '<div class="stats-search-player">' + rawName + '</div>' +
@@ -233,9 +368,16 @@ function renderManagerProfile(manager) {
 
     const rawName = manager.player_name || manager.entry_name || '';
     const entryName = manager.entry_name || '';
-    const rank = statsAllManagers.findIndex(function(m) {
+
+    const sortedByTotal = [...statsAllManagers].sort(function(a, b) {
+        return (b.total || 0) - (a.total || 0);
+    });
+
+    const rank = sortedByTotal.findIndex(function(m) {
         return m.entry === manager.entry;
     }) + 1;
+
+    const totalManagers = statsAllManagers.length;
 
     let teamName = '';
     if (typeof findPlayerTeam === 'function') {
@@ -254,26 +396,80 @@ function renderManagerProfile(manager) {
         shirtHtml = '<img src="./unknown-shirt.png" onerror="this.style.display=\'none\'">';
     }
 
+    /* ترتيب كنسبة مئوية */
+    const percentile = Math.round(((totalManagers - rank + 1) / totalManagers) * 100);
+
+    /* الفارق عن المتصدر */
+    const topManager = sortedByTotal[0];
+    const diff = topManager ? (topManager.total || 0) - (manager.total || 0) : 0;
+
+    /* الفارق عن اللي بعده */
+    const nextManager = sortedByTotal[rank - 2];
+    const prevManager = sortedByTotal[rank];
+    const toNext = nextManager ? (nextManager.total || 0) - (manager.total || 0) : 0;
+    const toPrev = prevManager ? (manager.total || 0) - (prevManager.total || 0) : 0;
+
     container.innerHTML =
         '<div class="stats-profile-card">' +
+
+            '<button class="stats-profile-close" onclick="document.getElementById(\'statsProfile\').style.display=\'none\'">✕</button>' +
+
+            '<div class="stats-profile-rank-badge">#' + rank + '</div>' +
+
             '<div class="stats-profile-shirt">' + shirtHtml + '</div>' +
+
             '<div class="stats-profile-entry">' + (entryName || rawName) + '</div>' +
             '<div class="stats-profile-player">' + rawName + '</div>' +
-            '<div class="stats-profile-team">' + (teamName || 'Unknown Team') + '</div>' +
+
+            (teamName ? '<div class="stats-profile-team">' + teamName + '</div>' : '') +
+
             '<div class="stats-profile-stats">' +
-                '<div class="stats-profile-stat">' +
-                    '<div class="stats-stat-label">Rank</div>' +
-                    '<div class="stats-stat-value">#' + rank + '</div>' +
-                '</div>' +
-                '<div class="stats-profile-stat">' +
-                    '<div class="stats-stat-label">Total</div>' +
+
+                '<div class="stats-profile-stat stats-stat-total">' +
+                    '<div class="stats-stat-label">المجموع</div>' +
                     '<div class="stats-stat-value">' + (manager.total || 0) + '</div>' +
                 '</div>' +
-                '<div class="stats-profile-stat">' +
-                    '<div class="stats-stat-label">This GW</div>' +
+
+                '<div class="stats-profile-stat stats-stat-gw">' +
+                    '<div class="stats-stat-label">الجولة</div>' +
                     '<div class="stats-stat-value">' + (manager.event_total || 0) + '</div>' +
                 '</div>' +
+
+                '<div class="stats-profile-stat stats-stat-rank">' +
+                    '<div class="stats-stat-label">الترتيب</div>' +
+                    '<div class="stats-stat-value">' + rank + '</div>' +
+                '</div>' +
+
             '</div>' +
+
+            '<div class="stats-profile-details">' +
+
+                '<div class="stats-detail-row">' +
+                    '<span class="stats-detail-label">المئوية</span>' +
+                    '<span class="stats-detail-value">' + percentile + '%</span>' +
+                '</div>' +
+
+                '<div class="stats-detail-row">' +
+                    '<span class="stats-detail-label">عن المتصدر</span>' +
+                    '<span class="stats-detail-value' + (diff === 0 ? ' stats-green' : '') + '">' +
+                        (diff === 0 ? '👑 أنت المتصدر' : '-' + diff) +
+                    '</span>' +
+                '</div>' +
+
+                (toNext > 0 ?
+                '<div class="stats-detail-row">' +
+                    '<span class="stats-detail-label">عن اللي فوقك</span>' +
+                    '<span class="stats-detail-value stats-yellow">-' + toNext + '</span>' +
+                '</div>' : '') +
+
+                (toPrev > 0 ?
+                '<div class="stats-detail-row">' +
+                    '<span class="stats-detail-label">عن اللي تحتك</span>' +
+                    '<span class="stats-detail-value stats-green">+' + toPrev + '</span>' +
+                '</div>' : '') +
+
+            '</div>' +
+
         '</div>';
 
     container.style.display = 'block';
@@ -309,9 +505,10 @@ async function loadStats() {
 
         statsAllManagers = managers;
         statsLoaded = true;
+        statsComputed = computeLeagueStats(managers);
 
-        const stats = computeLeagueStats(managers);
-        renderStatsOverview(stats);
+        renderStatsOverview(statsComputed);
+        renderStatsRecords(statsComputed);
 
         if (loadingEl) loadingEl.style.display = 'none';
         if (contentEl) contentEl.style.display = 'block';
@@ -321,7 +518,7 @@ async function loadStats() {
         console.error('Stats load error:', e);
 
         if (loadingEl) {
-            loadingEl.innerHTML = '⚠️ خطأ في التحميل';
+            loadingEl.innerHTML = '⚠️ خطأ في التحميل: ' + e.message;
             loadingEl.style.display = 'block';
         }
     }
