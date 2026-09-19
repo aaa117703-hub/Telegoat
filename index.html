@@ -442,6 +442,30 @@ body{
     white-space:nowrap;
 }
 
+/* =========================================================
+   MATCH SCORE CENTER — تدرج شفاف
+========================================================= */
+
+.match-score-center{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    flex:0 0 auto;
+    width:140px;
+    min-width:140px;
+    padding:8px 22px;
+    border-radius:0;
+    background:linear-gradient(
+        90deg,
+        rgba(56, 0, 60, 0) 0%,
+        rgba(56, 0, 60, 0.85) 25%,
+        rgba(56, 0, 60, 1) 50%,
+        rgba(56, 0, 60, 0.85) 75%,
+        rgba(56, 0, 60, 0) 100%
+    );
+}
+
 .logo-20{
     display:inline-block;width:20px;height:20px;
     min-width:20px;min-height:20px;max-width:20px;max-height:20px;
@@ -464,19 +488,6 @@ body{
     transform:translate(-50%,-50%);
     max-width:100%;max-height:100%;
     object-fit:contain;display:block;
-}
-
-.match-score-center{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:5px;
-    flex:0 0 auto;
-    width:106px;
-    min-width:106px;
-    background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
-    padding:8px;
-    border-radius:10px;
 }
 
 .score-display{
@@ -586,7 +597,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 .tab-content.active{display:block}
 
 /* =========================================================
-   ADMIN LOCK PANEL — 3 أزرار
+   ADMIN LOCK PANEL
 ========================================================= */
 
 .admin-lock-panel{
@@ -629,17 +640,9 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
 .lock-btn:hover{transform:scale(1.04);}
 .lock-btn:active{transform:scale(0.96);}
-
-.lock-btn.locked{
-    background:linear-gradient(135deg, #ff4081 0%, #b8003f 100%);
-}
-
+.lock-btn.locked{background:linear-gradient(135deg, #ff4081 0%, #b8003f 100%);}
 .lock-btn .lock-icon{font-size:13px;flex-shrink:0;}
 .lock-btn .lock-label{flex:1;text-align:left;}
-
-/* =========================================================
-   LOCK PANEL
-========================================================= */
 
 .lock-panel{
     position:fixed;
@@ -661,10 +664,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
     overflow:hidden;
 }
 
-.lock-panel.show{
-    opacity:1;
-    transform:translate(-50%, -50%) scale(1);
-}
+.lock-panel.show{opacity:1;transform:translate(-50%, -50%) scale(1);}
 
 .lock-panel-header{
     display:flex;
@@ -681,21 +681,12 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 }
 
 .lock-panel-close{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    background:rgba(255,255,255,.15);
-    border:none;
-    color:#fff;
-    font-size:14px;
-    font-weight:900;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition:background .2s ease;
-    padding:0;
-    outline:none;
+    width:28px;height:28px;border-radius:50%;
+    background:rgba(255,255,255,.15);border:none;
+    color:#fff;font-size:14px;font-weight:900;
+    cursor:pointer;display:flex;
+    align-items:center;justify-content:center;
+    transition:background .2s ease;padding:0;outline:none;
 }
 
 .lock-panel-close:hover{background:rgba(255,0,90,.5);}
@@ -708,27 +699,19 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 }
 
 .lock-status{
-    text-align:center;
-    padding:12px;
+    text-align:center;padding:12px;
     background:rgba(255,255,255,.06);
-    border-radius:10px;
-    color:#fff;
-    font-size:14px;
-    font-weight:800;
+    border-radius:10px;color:#fff;
+    font-size:14px;font-weight:800;
     letter-spacing:0.5px;
     border:1px solid rgba(255,255,255,.1);
 }
 
 .lock-toggle-btn{
-    padding:14px;
-    border:none;
-    border-radius:12px;
+    padding:14px;border:none;border-radius:12px;
     background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
-    color:#fff;
-    font-size:14px;
-    font-weight:900;
-    letter-spacing:1px;
-    cursor:pointer;
+    color:#fff;font-size:14px;font-weight:900;
+    letter-spacing:1px;cursor:pointer;
     transition:transform .2s ease;
     font-family:inherit;
     box-shadow:0 4px 12px rgba(50,129,255,.4);
@@ -738,15 +721,10 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 .lock-toggle-btn:active{transform:scale(0.97);}
 
 .lock-save-btn{
-    padding:14px;
-    border:none;
-    border-radius:12px;
+    padding:14px;border:none;border-radius:12px;
     background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
-    color:#fff;
-    font-size:14px;
-    font-weight:900;
-    letter-spacing:1px;
-    cursor:pointer;
+    color:#fff;font-size:14px;font-weight:900;
+    letter-spacing:1px;cursor:pointer;
     transition:transform .2s ease;
     font-family:inherit;
     box-shadow:0 4px 12px rgba(0,200,83,.4);
@@ -755,10 +733,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 .lock-save-btn:hover{transform:scale(1.03);}
 .lock-save-btn:active{transform:scale(0.97);}
 .lock-save-btn:disabled{opacity:.6;cursor:not-allowed;}
-
-/* =========================================================
-   SECTION MAINTENANCE OVERLAY
-========================================================= */
 
 #sectionMaintenance{
     display:none;
@@ -787,7 +761,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
         0 20px 60px rgba(0,0,0,.7);
 }
 
-#sectionMaintenancestylesheet .maint-icon{
+#sectionMaintenance .maint-icon{
     font-size:72px;
     margin-bottom:18px;
     animation:maintBounce 2s infinite;
@@ -799,33 +773,25 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 }
 
 #sectionMaintenance h2{
-    color:#fff;
-    font-size:24px;
-    font-weight:900;
-    margin-bottom:14px;
-    letter-spacing:1px;
+    color:#fff;font-size:24px;font-weight:900;
+    margin-bottom:14px;letter-spacing:1px;
 }
 
 #sectionMaintenance p{
-    color:#b8b8b8;
-    font-size:14px;
-    line-height:1.7;
-    margin-bottom:6px;
+    color:#b8b8b8;font-size:14px;
+    line-height:1.7;margin-bottom:6px;
 }
 
 #sectionMaintenance .maint-team{
-    color:#00ff87;
-    font-size:13px;
-    font-weight:900;
-    letter-spacing:4px;
-    padding-top:18px;
+    color:#00ff87;font-size:13px;font-weight:900;
+    letter-spacing:4px;padding-top:18px;
     margin-top:20px;
     border-top:1px solid rgba(255,255,255,.15);
 }
 </style>
 
 <link rel="stylesheet" href="mobile.css">
-<link rel="" href="totw.css?v=11">
+<link rel="stylesheet" href="totw.css?v=12">
 
 </head>
 
@@ -1016,7 +982,6 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 
     document.addEventListener('DOMContentLoaded', function() {
 
-        /* Aqeel Al Rowai → 1999 أو 024680 */
         setupButton(
             document.getElementById('hiddenEditBtn'),
             unlockSecretPanel
@@ -1061,17 +1026,17 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 </script>
 
 <script src="config.js"></script>
-<script src="locks.js?v=7"></script>
+<script src="locks.js?v=8"></script>
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=26"></script>
-<script src="fixtures.js?v=27"></script>
+<script src="carousel.js?v=27"></script>
+<script src="fixtures.js?v=28"></script>
 <script src="standings.js"></script>
-<script src="download.js?v=8"></script>
-<script src="players-teams.js?v=88"></script>
-<script src="totw.js?v=101"></script>
-<script src="main.js?v=7"></script>
+<script src="download.js?v=9"></script>
+<script src="players-teams.js?v=89"></script>
+<script src="totw.js?v=102"></script>
+<script src="main.js?v=8"></script>
 
 </body>
 </html>
