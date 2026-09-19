@@ -1,5 +1,5 @@
 /* =========================================================
-   stats.css — تصميم الإحصائيات
+   stats.css
 ========================================================= */
 
 /* =========================================================
@@ -185,6 +185,7 @@
 ========================================================= */
 
 .stats-row{
+    position:relative;
     display:grid;
     grid-template-columns:36px 34px 1fr 60px;
     gap:10px;
@@ -194,6 +195,7 @@
     border-radius:10px;
     transition:all .25s ease;
     min-height:56px;
+    overflow:hidden;
 }
 
 .stats-row:last-child{border-bottom:none;}
@@ -202,6 +204,134 @@
     background:rgba(0,255,135,.08);
     transform:translateX(-4px);
 }
+
+/* =========================================================
+   TOP 3 — خلفية + خط متدرج
+========================================================= */
+
+/* المركز 1 — ذهبي */
+.stats-row-gold{
+    background:linear-gradient(
+        90deg,
+        rgba(255, 215, 0, 0.35) 0%,
+        rgba(255, 215, 0, 0.15) 50%,
+        rgba(255, 215, 0, 0) 100%
+    );
+}
+
+.stats-row-gold::before{
+    content:'';
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:5px;
+    background:linear-gradient(
+        180deg,
+        #fff4b0 0%,
+        #ffd700 25%,
+        #ffae00 50%,
+        #b8860b 75%,
+        #8b6914 100%
+    );
+    border-radius:0 4px 4px 0;
+    box-shadow:
+        0 0 12px rgba(255,215,0,.8),
+        0 0 24px rgba(255,215,0,.4);
+}
+
+.stats-row-gold:hover{
+    background:linear-gradient(
+        90deg,
+        rgba(255, 215, 0, 0.45) 0%,
+        rgba(255, 215, 0, 0.20) 50%,
+        rgba(255, 215, 0, 0) 100%
+    );
+}
+
+/* المركز 2 — فضي */
+.stats-row-silver{
+    background:linear-gradient(
+        90deg,
+        rgba(192, 192, 192, 0.30) 0%,
+        rgba(192, 192, 192, 0.12) 50%,
+        rgba(192, 192, 192, 0) 100%
+    );
+}
+
+.stats-row-silver::before{
+    content:'';
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:5px;
+    background:linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #e8e8e8 25%,
+        #c0c0c0 50%,
+        #a8a8a8 75%,
+        #808080 100%
+    );
+    border-radius:0 4px 4px 0;
+    box-shadow:
+        0 0 12px rgba(192,192,192,.7),
+        0 0 24px rgba(192,192,192,.3);
+}
+
+.stats-row-silver:hover{
+    background:linear-gradient(
+        90deg,
+        rgba(192, 192, 192, 0.40) 0%,
+        rgba(192, 192, 192, 0.17) 50%,
+        rgba(192, 192, 192, 0) 100%
+    );
+}
+
+/* المركز 3 — برونزي */
+.stats-row-bronze{
+    background:linear-gradient(
+        90deg,
+        rgba(205, 127, 50, 0.30) 0%,
+        rgba(205, 127, 50, 0.12) 50%,
+        rgba(205, 127, 50, 0) 100%
+    );
+}
+
+.stats-row-bronze::before{
+    content:'';
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:5px;
+    background:linear-gradient(
+        180deg,
+        #e8a85c 0%,
+        #cd7f32 25%,
+        #a0522d 50%,
+        #8b4513 75%,
+        #5c2e0a 100%
+    );
+    border-radius:0 4px 4px 0;
+    box-shadow:
+        0 0 12px rgba(205,127,50,.7),
+        0 0 24px rgba(205,127,50,.3);
+}
+
+.stats-row-bronze:hover{
+    background:linear-gradient(
+        90deg,
+        rgba(205, 127, 50, 0.40) 0%,
+        rgba(205, 127, 50, 0.17) 50%,
+        rgba(205, 127, 50, 0) 100%
+    );
+}
+
+/* =========================================================
+   RANK CIRCLE
+========================================================= */
 
 .stats-rank{
     width:30px;
@@ -216,6 +346,7 @@
     flex-shrink:0;
     margin:0 auto;
     position:relative;
+    z-index:2;
 }
 
 .stats-rank-gold{
@@ -251,6 +382,10 @@
     border:1px solid rgba(255,255,255,.15);
 }
 
+/* =========================================================
+   LOGO
+========================================================= */
+
 .stats-row-logo{
     width:34px;
     height:34px;
@@ -258,28 +393,36 @@
     min-height:34px;
     max-width:34px;
     max-height:34px;
-    border-radius:50%;
-    background:linear-gradient(135deg, rgba(255,255,255,.15) 0%, rgba(255,255,255,.05) 100%);
-    border:1px solid rgba(255,255,255,.15);
     display:flex;
     align-items:center;
     justify-content:center;
     overflow:hidden;
     flex-shrink:0;
     position:relative;
+    background:transparent;
+    border:none;
+    border-radius:0;
+    z-index:2;
 }
 
 .stats-row-logo img{
-    max-width:75%;
-    max-height:75%;
+    max-width:100%;
+    max-height:100%;
+    width:auto;
+    height:auto;
     object-fit:contain;
     display:block;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
 }
 
 .stats-row-logo-empty{
-    font-size:16px;
+    font-size:20px;
     color:#fff;
 }
+
+/* =========================================================
+   NAMES + VALUE
+========================================================= */
 
 .stats-row-names{
     display:flex;
@@ -288,6 +431,8 @@
     min-width:0;
     overflow:hidden;
     text-align:right;
+    position:relative;
+    z-index:2;
 }
 
 .stats-row-entry{
@@ -316,6 +461,8 @@
     flex-direction:column;
     align-items:center;
     gap:2px;
+    position:relative;
+    z-index:2;
 }
 
 .stats-row-value-num{
@@ -360,6 +507,8 @@
     font-family:inherit;
     transition:all .3s ease;
     box-shadow:inset 0 2px 10px rgba(0,0,0,.3);
+    direction:rtl;
+    text-align:right;
 }
 
 .stats-search-input::placeholder{
@@ -414,24 +563,27 @@
     height:34px;
     min-width:34px;
     min-height:34px;
-    border-radius:50%;
-    background:rgba(255,255,255,.1);
-    border:1px solid rgba(255,255,255,.15);
     display:flex;
     align-items:center;
     justify-content:center;
     overflow:hidden;
     flex-shrink:0;
+    background:transparent;
+    border:none;
+    border-radius:0;
 }
 
 .stats-search-logo img{
-    max-width:75%;
-    max-height:75%;
+    max-width:100%;
+    max-height:100%;
+    width:auto;
+    height:auto;
     object-fit:contain;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
 }
 
 .stats-search-logo-empty{
-    font-size:14px;
+    font-size:18px;
     color:#fff;
 }
 
@@ -557,32 +709,40 @@
     letter-spacing:1px;
     box-shadow:
         0 4px 15px rgba(255,215,0,.5),
-        inset 0 1px 0 rgba(255,255 z,255,.5);
+        inset 0 1px 0 rgba(255,255,255,.5);
     z-index:5;
 }
 
 .stats-profile-shirt{
-    width:100px;
-    height:100px;
+    width:110px;
+    height:110px;
     margin:0 auto 14px;
     display:flex;
-    align-index-items:center;
+    align-items:center;
     justify-content:center;
-    background:rgba(0,0:,0,.25);
-2    border-radius:50%;
-    border:;
-3px solid #00   ff87;
     position:relative;
-    box-shadow:
-        0 0 25px rgba(0,255,135,.5),
-        inset 0 0 20px rgba(0,0,0,.3);
+    z-index:2;
 }
 
 .stats-profile-shirt img{
-    max-width:80%;
-    max-height:80%;
+    max-width:100%;
+    max-height:100%;
+    width:auto;
+    height:auto;
     object-fit:contain;
-    filter:drop-shadow(0 4px 10px rgba(0,0,0,.4));
+    filter:drop-shadow(0 6px 15px rgba(0,0,0,.5));
+}
+
+.stats-profile-no-logo{
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    background:rgba(0,0,0,.3);
+    border:2px solid rgba(0,255,135,.4);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:36px;
 }
 
 .stats-profile-entry{
@@ -693,6 +853,7 @@
     background:rgba(0,0,0,.2);
     border-radius:10px;
     font-size:12px;
+    direction:rtl;
 }
 
 .stats-detail-label{
@@ -776,12 +937,12 @@
 }
 
 .stats-record-label{
-    font-size:9px;
+    font-size:10px;
     font-weight:800;
     color:#b8b8b8;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
+    letter-spacing:1px;
     margin-bottom:6px;
+    direction:rtl;
 }
 
 .stats-record-value{
@@ -817,6 +978,7 @@
     text-overflow:ellipsis;
     white-space:nowrap;
     letter-spacing:.3px;
+    direction:rtl;
 }
 
 /* =========================================================
@@ -861,6 +1023,12 @@
         min-height:52px;
     }
 
+    .stats-row-gold::before,
+    .stats-row-silver::before,
+    .stats-row-bronze::before{
+        width:4px;
+    }
+
     .stats-rank{width:26px;height:26px;font-size:12px;}
     .stats-rank-gold,
     .stats-rank-silver,
@@ -871,8 +1039,6 @@
         height:30px;
         min-width:30px;
         min-height:30px;
-        max-width:30px;
-        max-height:30px;
     }
 
     .stats-row-entry{font-size:12px;}
@@ -886,8 +1052,8 @@
     }
 
     .stats-profile-entry{font-size:18px;}
-    .stats-profile-shirt{width:80px;height:80px;}
-    .stats-profile-shirt img{max-width:75%;max-height:75%;}
+    .stats-profile-shirt{width:90px;height:90px;}
+    .stats-profile-shirt img{max-width:100%;max-height:100%;}
     .stats-stat-value{font-size:20px;}
     .stats-profile-stat{padding:10px 4px;}
 
