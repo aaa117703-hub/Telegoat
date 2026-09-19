@@ -64,7 +64,7 @@ function changeRound(step) {
 
 
 /* =========================================================
-   SWITCH TAB
+   SWITCH TAB — مع دعم stats
 ========================================================= */
 
 function switchTab(tabName) {
@@ -108,6 +108,10 @@ function switchTab(tabName) {
         const el = document.getElementById('totwTab');
         if (el) el.classList.add('active');
         if (typeof loadTOTW === 'function') loadTOTW();
+    } else if (tabName === 'stats') {
+        const el = document.getElementById('statsTab');
+        if (el) el.classList.add('active');
+        if (typeof loadStats === 'function') loadStats();
     } else {
         const el = document.getElementById('fixturesTab');
         if (el) el.classList.add('active');
@@ -251,7 +255,7 @@ function renderFixtures() {
 
 
 /* =========================================================
-   SAVE — مع حفظ TOTW تلقائياً
+   SAVE
 ========================================================= */
 
 async function saveCurrentRound() {
@@ -280,7 +284,6 @@ async function saveCurrentRound() {
     localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
     localStorage.setItem('fpl_last_round', currentRound);
 
-    /* حفظ النتائج في Supabase */
     let result = { ok: true };
 
     try {
@@ -289,7 +292,6 @@ async function saveCurrentRound() {
         result = { ok: false, error: e };
     }
 
-    /* حفظ TOTW snapshot تلقائياً */
     if (result.ok && typeof saveManualTOTW === 'function') {
         try {
             await saveManualTOTW(currentRound);
