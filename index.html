@@ -443,7 +443,7 @@ body{
 }
 
 /* =========================================================
-   MATCH SCORE CENTER — تدرج أبيض → بنفسجي → أبيض
+   MATCH SCORE CENTER
 ========================================================= */
 
 .match-score-center{
@@ -514,6 +514,10 @@ body{
     z-index:2;
 }
 
+/* =========================================================
+   STANDINGS
+========================================================= */
+
 #captureStandings{
     background:#fff;border-radius:16px;overflow:hidden;
     border:3px solid #fff;width:100%;position:relative;
@@ -550,14 +554,80 @@ th{
 }
 
 td{
-    padding:0 4px;font-weight:800;background:#fff;
+    padding:0 4px;
+    font-weight:800;
+    background:transparent;
     border-bottom:1px solid #f0f0f0;
-    height:44px;max-height:44px;overflow:hidden;
+    height:44px;
+    max-height:44px;
+    overflow:hidden;
+}
+
+tr{
+    background:#ffffff;
 }
 
 tr:last-child td{border-bottom:none}
 tr.green-line td{border-bottom:3px solid #00ff87!important}
 tr.red-line td{border-bottom:3px solid #ff005a!important}
+
+/* =========================================================
+   تدرجات الصفوف — أخضر / أحمر
+========================================================= */
+
+tr.pos-1{
+    background:linear-gradient(
+        90deg,
+        rgba(0, 200, 83, 0.40) 0%,
+        rgba(0, 200, 83, 0.15) 50%,
+        #ffffff 100%
+    );
+}
+
+tr.pos-2{
+    background:linear-gradient(
+        90deg,
+        rgba(0, 200, 83, 0.28) 0%,
+        rgba(0, 200, 83, 0.10) 50%,
+        #ffffff 100%
+    );
+}
+
+tr.pos-3{
+    background:linear-gradient(
+        90deg,
+        rgba(0, 200, 83, 0.16) 0%,
+        rgba(0, 200, 83, 0.05) 50%,
+        #ffffff 100%
+    );
+}
+
+tr.pos-18{
+    background:linear-gradient(
+        90deg,
+        rgba(229, 57, 53, 0.16) 0%,
+        rgba(229, 57, 53, 0.05) 50%,
+        #ffffff 100%
+    );
+}
+
+tr.pos-19{
+    background:linear-gradient(
+        90deg,
+        rgba(229, 57, 53, 0.28) 0%,
+        rgba(229, 57, 53, 0.10) 50%,
+        #ffffff 100%
+    );
+}
+
+tr.pos-20{
+    background:linear-gradient(
+        90deg,
+        rgba(229, 57, 53, 0.40) 0%,
+        rgba(229, 57, 53, 0.15) 50%,
+        #ffffff 100%
+    );
+}
 
 .team-cell{
     display:flex;align-items:center;gap:6px;
@@ -795,7 +865,7 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 </style>
 
 <link rel="stylesheet" href="mobile.css">
-<link rel="stylesheet" href="totw.css?v=12">
+<link rel="stylesheet" href="totw.css?v=13">
 
 </head>
 
@@ -1030,17 +1100,17 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 </script>
 
 <script src="config.js"></script>
-<script src="locks.js?v=8"></script>
+<script src="locks.js?v=9"></script>
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=28"></script>
-<script src="fixtures.js?v=29"></script>
-<script src="standings.js"></script>
-<script src="download.js?v=10"></script>
-<script src="players-teams.js?v=90"></script>
-<script src="totw.js?v=103"></script>
-<script src="main.js?v=9"></script>
+<script src="carousel.js?v=29"></script>
+<script src="fixtures.js?v=30"></script>
+<script src="standings.js?v=2"></script>
+<script src="download.js?v=11"></script>
+<script src="players-teams.js?v=91"></script>
+<script src="totw.js?v=104"></script>
+<script src="main.js?v=10"></script>
 
 </body>
 </html>
