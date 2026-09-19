@@ -1,5 +1,5 @@
 /* =========================================================
-   totw.js — الجزء 1
+   totw.js
 ========================================================= */
 
 const TOTW_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -308,9 +308,6 @@ function createTOTWCard(player) {
         '<div class="tc-points">' + points + '</div>' +
     '</div>';
 }
-/* =========================================================
-   totw.js — الجزء 2
-========================================================= */
 
 
 /* =========================================================
@@ -403,7 +400,6 @@ async function loadTOTW() {
 
         let top11 = null;
 
-        /* لو الجولة قديمة → نجيب من snapshot */
         if (latestRound > 0 && viewingRound < latestRound) {
 
             console.log('Loading snapshot for round', viewingRound);
@@ -416,7 +412,6 @@ async function loadTOTW() {
             }
         }
 
-        /* لو ما لقينا snapshot → نجيب من FPL */
         if (!top11) {
 
             console.log('Fetching fresh from FPL');
@@ -427,18 +422,14 @@ async function loadTOTW() {
                 throw new Error('No data received');
             }
 
-            الم top11 = getTOTWTop11(allResults);
+            top11 = getTOTWTop11(allResults);
 
             if (viewingRound === latestRound && latestRound > 0) {
-                await saveTOTWSnapshot(viewingRound, topوقع11);
+                await saveTOTWSnapshot(viewingRound, top11);
             }
         }
 
-        currentT
-
----
-
-**OTWData = top11;
+        currentTOTWData = top11;
 
         updateGWLabel(viewingRound);
         renderTOTWCards(top11);
