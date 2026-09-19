@@ -72,15 +72,24 @@ function toggleDownloadMenu(event) {
     if (event) event.stopPropagation();
 
     const menu = document.getElementById('downloadMenu');
+    const wrapper = document.getElementById('downloadWrapper');
+
     if (!menu) return;
 
-    menu.classList.toggle('show');
+    const isOpen = menu.classList.toggle('show');
+
+    if (wrapper) {
+        wrapper.classList.toggle('open', isOpen);
+    }
 }
 
 
 function closeDownloadMenu() {
     const menu = document.getElementById('downloadMenu');
+    const wrapper = document.getElementById('downloadWrapper');
+
     if (menu) menu.classList.remove('show');
+    if (wrapper) wrapper.classList.remove('open');
 }
 
 
@@ -94,7 +103,7 @@ document.addEventListener('click', function(e) {
 
 
 /* =========================================================
-   DOWNLOAD AS IMAGE — يدعم 3 جودات (2x, 3x, 4x)
+   DOWNLOAD AS IMAGE — يدعم fixtures + standings + totw
 ========================================================= */
 
 function downloadAsImage(scaleFactor) {
@@ -105,27 +114,43 @@ function downloadAsImage(scaleFactor) {
 
     closeDownloadMenu();
 
-    if (activeTab === 'fixtures') {
-        renderFixtures();
+    /* ============ 1. تحديد القسم ============ */
+
+    const isTOTW = (typeof activeTab !== 'undefined' && activeTab === 'totw');
+
+    let element = null;
+    let filenamePrefix = 'Image';
+
+    if (isTOTW) {
+        element = document.getElementById('totwPitchToSave');
+        filenamePrefix = 'TOTW_GW' + (typeof currentRound !== 'undefined' ? currentRound : '');
+    } else if (activeTab === 'standings') {
+        if (typeof renderStandings === 'function') renderStandings();
+        element = document.getElementById('captureStandings');
+        filenamePrefix = 'Standings_GW' + (typeof currentRound !== 'undefined' ? currentRound : '');
     } else {
-        renderStandings();
+        if (typeof renderFixtures === 'function') renderFixtures();
+        element = document.getElementById('captureFixtures');
+        filenamePrefix = 'Matchweek_' + (typeof currentRound !== 'undefined' ? currentRound : '');
     }
 
-    const targetId = activeTab === 'fixtures' ? 'captureFixtures' : 'captureStandings';
-    const element = document.getElementById(targetId);
-
     if (!element) {
+        if (typeof showToast === 'function') {
+            showToast('العنصر غير موجود', false);
+        }
         return;
     }
 
-    showToast('Preparing image...', false);
+    if (typeof showToast === 'function') {
+        showToast('Preparing image...', false);
+    }
 
-    const cornerRadius = 20 * scaleFactor;
+    const cornerRadius = (isTOTW ? 0 : 20 * scaleFactor);
 
     waitForImagesToLoad(element)
         .then(function() {
             return html2canvas(element, {
-                backgroundColor: null,
+                backgroundColor: (isTOTW ? '#ffffff' : null),
                 scale: scaleFactor,
                 useCORS: true,
                 allowTaint: true,
@@ -136,6 +161,7 @@ function downloadAsImage(scaleFactor) {
                 windowHeight: element.scrollHeight,
                 imageTimeout: 0,
                 onclone: function(clonedDoc, clonedElement) {
+
                     const wrappers = clonedElement.querySelectorAll('.logo-20, .logo-24');
 
                     wrappers.forEach(function(wrapper) {
@@ -172,7 +198,6 @@ function downloadAsImage(scaleFactor) {
 
                     indicators.forEach(function(img) {
                         const size = '25px';
-
                         img.style.width = size;
                         img.style.height = size;
                         img.style.minWidth = size;
@@ -181,55 +206,71 @@ function downloadAsImage(scaleFactor) {
                         img.style.maxHeight = size;
                         img.style.objectFit = 'contain';
                     });
+
+                    /* إخفاء أزرار القفل من الصورة */
+                    const lockPanel = clonedElement.querySelector('#adminLockPanel');
+                    if (lockPanel) lockPanel.style.display = 'none';
                 }
             });
         })
         .then(function(canvas) {
-            const roundedCanvas = applyRoundedCorners(canvas, cornerRadius);
 
-            roundedCanvas.toBlob(function(blob) {
+            let finalCanvas = canvas;
+
+            if (!isTOTW && cornerRadius > 0) {
+                finalCanvas = applyRoundedCorners(canvas, cornerRadius);
+            }
+
+            finalCanvas.toBlob(function(blob) {
+
                 if (!blob) {
-                    showToast('Failed to create image', false);
+                    if (typeof showToast === 'function') {
+                        showToast('فشل إنشاء الصورة', false);
+                    }
                     return;
                 }
 
-                const filename = activeTab === 'fixtures'
-                    ? 'Matchweek_' + currentRound + '_' + scaleFactor + 'x.png'
-                    : 'League_Standings_GW' + currentRound + '_' + scaleFactor + 'x.png';
+                const filename = filenamePrefix + '_' + scaleFactor + 'x.png';
 
+                /* تجربة المشاركة */
                 if (navigator.share && navigator.canShare) {
-                    const file = new File([blob], filename, { type: 'image/png' });
 
-                    const shareData = {
-                        files: [file],
-                        title: activeTab === 'fixtures'
-                            ? 'Matchweek ' + currentRound
-                            : 'League Standings GW ' + currentRound
-                    };
+                    try {
+                        const file = new File([blob], filename, { type: 'image/png' });
+                        const shareData = { files: [file], title: filename };
 
-                    if (navigator.canShare(shareData)) {
-                        navigator.share(shareData)
-                            .then(function() {
-                                showToast('Image saved', true);
-                            })
-                            .catch(function(err) {
-                                if (err.name !== 'AbortError') {
-                                    fallbackDownload(blob, filename);
-                                } else {
-                                    showToast('Cancelled', false);
-                                }
-                            });
-                    } else {
-                        fallbackDownload(blob, filename);
+                        if (navigator.canShare(shareData)) {
+                            navigator.share(shareData)
+                                .then(function() {
+                                    if (typeof showToast === 'function') {
+                                        showToast('Image saved', true);
+                                    }
+                                })
+                                .catch(function(err) {
+                                    if (err.name !== 'AbortError') {
+                                        fallbackDownload(blob, filename);
+                                    } else {
+                                        if (typeof showToast === 'function') {
+                                            showToast('Cancelled', false);
+                                        }
+                                    }
+                                });
+                            return;
+                        }
+                    } catch (e) {
+                        /* نكمل للـ fallback */
                     }
-                } else {
-                    fallbackDownload(blob, filename);
                 }
+
+                fallbackDownload(blob, filename);
+
             }, 'image/png', 1.0);
         })
         .catch(function(err) {
             console.error('html2canvas error:', err);
-            showToast('Error generating image', false);
+            if (typeof showToast === 'function') {
+                showToast('Error generating image', false);
+            }
         });
 }
 
@@ -237,10 +278,7 @@ function downloadAsImage(scaleFactor) {
 function fallbackDownload(blob, filename) {
     const link = document.createElement('a');
 
-    link.download = filename || (activeTab === 'fixtures'
-        ? 'Matchweek_' + currentRound + '.png'
-        : 'League_Standings_GW' + currentRound + '.png');
-
+    link.download = filename || 'image.png';
     link.href = URL.createObjectURL(blob);
 
     document.body.appendChild(link);
@@ -249,6 +287,8 @@ function fallbackDownload(blob, filename) {
 
     setTimeout(function() {
         URL.revokeObjectURL(link.href);
-        showToast('Image downloaded', true);
+        if (typeof showToast === 'function') {
+            showToast('Image downloaded', true);
+        }
     }, 100);
 }
