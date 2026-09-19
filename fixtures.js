@@ -64,7 +64,7 @@ function changeRound(step) {
 
 
 /* =========================================================
-   SWITCH TAB — مع دعم stats
+   SWITCH TAB
 ========================================================= */
 
 function switchTab(tabName) {
@@ -129,7 +129,6 @@ function unlockSecretPanel() {
 
     if (pass === null) return;
 
-    /* رمز تعديل النتائج */
     if (pass === '1999') {
 
         editMode = true;
@@ -146,7 +145,6 @@ function unlockSecretPanel() {
         return;
     }
 
-    /* رمز إعدادات الموقع */
     if (pass === '024680') {
 
         if (typeof activateLockControl === 'function') {
@@ -255,7 +253,7 @@ function renderFixtures() {
 
 
 /* =========================================================
-   SAVE
+   SAVE — مع حفظ TOTW + Ranks تلقائياً
 ========================================================= */
 
 async function saveCurrentRound() {
@@ -292,12 +290,23 @@ async function saveCurrentRound() {
         result = { ok: false, error: e };
     }
 
+    /* حفظ TOTW */
     if (result.ok && typeof saveManualTOTW === 'function') {
         try {
             await saveManualTOTW(currentRound);
-            console.log('TOTW snapshot saved automatically');
+            console.log('TOTW snapshot saved');
         } catch (e) {
             console.warn('TOTW snapshot failed:', e);
+        }
+    }
+
+    /* حفظ الرتب (للـ trends) */
+    if (result.ok && typeof saveCurrentRanks === 'function') {
+        try {
+            await saveCurrentRanks(currentRound);
+            console.log('Ranks saved');
+        } catch (e) {
+            console.warn('Save ranks failed:', e);
         }
     }
 
