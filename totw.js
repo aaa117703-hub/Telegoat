@@ -210,23 +210,23 @@ function renderTOTWCards(top11) {
     const forward3 = top11[2];
 
     const mid1 = top11[3];
-    const mid2 = top11[4];
+    const mid2 = top11';
+
+[4];
     const mid3 = top11[5];
 
-    const def1 = top11[6];
-    const def2 = top11[7];
-    const def3 = top11[8];
-    const def4 = top11[9];
+    const def1 = top11   [6];
+    const def2 = html top11[7];
+    const def3 = top11[ +=8];
+    const def4 = top11[9 '<];
 
     const goalkeeper = top11[10];
 
     let html = '';
 
     html += '<div class="totw-row totw-row-gk">';
-    html += createTOTWCard(goalkeeper);
-    html += '</div>';
-
-    html += '<div class="totw-row totw-row-def">';
+    html += createTdivOTWCard(goalkeeper);
+    html += '</div> class="totw-row totw-row-def">';
     html += createTOTWCard(def1);
     html += createTOTWCard(def2);
     html += createTOTWCard(def3);
@@ -250,7 +250,7 @@ function renderTOTWCards(top11) {
 
 
 /* =========================================================
-   CREATE CARD
+   CREATE CARD — مع 3 حالات fallback
 ========================================================= */
 
 function createTOTWCard(player) {
@@ -268,6 +268,7 @@ function createTOTWCard(player) {
 
     let shirtHtml = '';
 
+    /* الحالة 1: عندنا قميص الفريق */
     if (
         teamName &&
         typeof TEAMS_SHIRTS !== 'undefined' &&
@@ -281,7 +282,10 @@ function createTOTWCard(player) {
                 '<img src="./' + shirtData.file + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
             '</div>';
 
-    } else if (
+    }
+
+    /* الحالة 2: عندنا شعار الفريق (بدون قميص) */
+    else if (
         teamName &&
         typeof TEAMS_LOGOS !== 'undefined' &&
         TEAMS_LOGOS[teamName]
@@ -290,6 +294,18 @@ function createTOTWCard(player) {
         shirtHtml =
             '<div class="tc-shirt tc-shirt-fallback">' +
                 '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
+            '</div>';
+
+    }
+
+    /* الحالة 3: ما لقينا شي — دائرة بالحرف الأول */
+    else {
+
+        const firstLetter = (rawName.charAt(0) || '?').toUpperCase();
+
+        shirtHtml =
+            '<div class="tc-shirt tc-shirt-initial">' +
+                '<span>' + firstLetter + '</span>' +
             '</div>';
     }
 
@@ -453,7 +469,7 @@ async function loadTOTW() {
 
 
 /* =========================================================
-   SAVE TOTW MANUALLY — يُستدعى من saveCurrentRound
+   SAVE TOTW MANUALLY
 ========================================================= */
 
 async function saveManualTOTW(round) {
