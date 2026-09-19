@@ -1,554 +1,990 @@
 /* =========================================================
-   stats.js — إحصائيات احترافية (بالعربي)
+   stats.css — تصميم الإحصائيات
 ========================================================= */
-
-const STATS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
-const STATS_TOTAL_PAGES = 7;
-
-let statsAllManagers = [];
-let statsLoaded = false;
-let statsComputed = null;
-
 
 /* =========================================================
-   FETCH ALL MANAGERS
+   TABS
 ========================================================= */
 
-async function fetchAllManagersForStats() {
-
-    const allResults = [];
-
-    for (let page = 1; page <= STATS_TOTAL_PAGES; page++) {
-
-        try {
-
-            const response = await fetch(STATS_WORKER_URL + '/?page=' + page);
-            const data = await response.json();
-
-            if (data && data.standings && data.standings.results) {
-
-                allResults.push(...data.standings.results);
-
-                if (data.standings.has_next !== true) break;
-
-            } else {
-                break;
-            }
-
-        } catch (e) {
-            console.error('Stats page ' + page + ' failed:', e);
-            break;
-        }
-    }
-
-    return allResults;
+.stats-tabs{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    margin-bottom:16px;
+    padding:0 4px;
+    flex-wrap:wrap;
 }
 
+.stats-tab-btn{
+    padding:10px 22px;
+    background:linear-gradient(135deg, #2e0b3d 0%, #38003c 100%);
+    color:#fff;
+    border:2px solid #5a055a;
+    border-radius:50px;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+    font-family:inherit;
+    outline:none;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.stats-tab-btn.active{
+    background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
+    border-color:#00ff87;
+    box-shadow:
+        0 0 20px rgba(0,255,135,.6),
+        inset 0 1px 0 rgba(255,255,255,.3);
+    transform:translateY(-2px);
+}
+
+.stats-tab-btn:hover{
+    transform:translateY(-2px);
+    border-color:#00ff87;
+    box-shadow:0 6px 16px rgba(0,255,135,.4);
+}
+
+.stats-view{display:none;animation:statsViewIn .4s ease;}
+.stats-view.active{display:block;}
+
+@keyframes statsViewIn{
+    from{opacity:0;transform:translateY(10px);}
+    to{opacity:1;transform:translateY(0);}
+}
 
 /* =========================================================
-   COMPUTE STATS
+   KPI CARDS
 ========================================================= */
 
-function computeLeagueStats(managers) {
-
-    if (!managers || managers.length === 0) return null;
-
-    const totalManagers = managers.length;
-
-    let sumEvent = 0;
-    let sumTotal = 0;
-    let highestEvent = 0;
-    let highestTotal = 0;
-    let lowestEvent = Infinity;
-
-    managers.forEach(function(m) {
-        const ev = m.event_total || 0;
-        const to = m.total || 0;
-        sumEvent += ev;
-        sumTotal += to;
-        if (ev > highestEvent) highestEvent = ev;
-        if (ev < lowestEvent) lowestEvent = ev;
-        if (to > highestTotal) highestTotal = to;
-    });
-
-    const avgEvent = Math.round(sumEvent / totalManagers);
-    const avgTotal = Math.round(sumTotal / totalManagers);
-
-    const sortedByEvent = [...managers].sort(function(a, b) {
-        return (b.event_total || 0) - (a.event_total || 0);
-    });
-
-    const sortedByTotal = [...managers].sort(function(a, b) {
-        return (b.total || 0) - (a.total || 0);
-    });
-
-    return {
-        totalManagers: totalManagers,
-        avgEvent: avgEvent,
-        avgTotal: avgTotal,
-        highestEvent: highestEvent,
-        lowestEvent: lowestEvent === Infinity ? 0 : lowestEvent,
-        highestTotal: highestTotal,
-        topEvent: sortedByEvent.slice(0, 10),
-        topTotal: sortedByTotal.slice(0, 10),
-        allManagers: managers
-    };
+.stats-kpi-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:16px;
 }
 
+.stats-kpi-card{
+    position:relative;
+    background:
+        linear-gradient(135deg, rgba(107,33,168,.25) 0%, rgba(56,0,60,.9) 100%);
+    backdrop-filter:blur(10px);
+    border:2px solid rgba(0,255,135,.25);
+    border-radius:16px;
+    padding:18px 12px 16px;
+    text-align:center;
+    transition:all .35s cubic-bezier(.4,0,.2,1);
+    overflow:hidden;
+    box-shadow:
+        0 4px 20px rgba(0,0,0,.4),
+        inset 0 1px 0 rgba(255,255,255,.1);
+}
+
+.stats-kpi-card::before{
+    content:'';
+    position:absolute;
+    top:-50%;
+    right:-50%;
+    width:100%;
+    height:100%;
+    background:radial-gradient(circle, rgba(0,255,135,.15) 0%, transparent 70%);
+    pointer-events:none;
+    transition:opacity .35s ease;
+    opacity:0;
+}
+
+.stats-kpi-card:hover{
+    border-color:#00ff87;
+    transform:translateY(-4px) scale(1.02);
+    box-shadow:
+        0 8px 30px rgba(0,255,135,.35),
+        inset 0 1px 0 rgba(255,255,255,.2);
+}
+
+.stats-kpi-card:hover::before{opacity:1;}
+
+.stats-kpi-icon{
+    font-size:28px;
+    margin-bottom:8px;
+    display:block;
+    filter:drop-shadow(0 2px 6px rgba(0,255,135,.4));
+}
+
+.stats-kpi-value{
+    font-size:30px;
+    font-weight:900;
+    color:#00ff87;
+    line-height:1;
+    margin-bottom:6px;
+    text-shadow:
+        0 0 20px rgba(0,255,135,.6),
+        0 2px 4px rgba(0,0,0,.5);
+    letter-spacing:-1px;
+    font-family:'EnglishCustom', sans-serif;
+}
+
+.stats-kpi-label{
+    font-size:10px;
+    font-weight:800;
+    color:#b8b8b8;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+}
 
 /* =========================================================
-   CREATE ROW — مع تدرج للمراكز 1-2-3
+   SECTION
 ========================================================= */
 
-function createStatsRow(rank, manager, value, valueLabel) {
-
-    const rawName = manager.player_name || manager.entry_name || 'غير معروف';
-    const entryName = manager.entry_name || '';
-
-    let teamName = '';
-    if (typeof findPlayerTeam === 'function') {
-        teamName = findPlayerTeam(rawName) || findPlayerTeam(entryName) || '';
-    }
-
-    let logoHtml = '';
-
-    if (
-        teamName &&
-        typeof TEAMS_LOGOS !== 'undefined' &&
-        TEAMS_LOGOS[teamName]
-    ) {
-        logoHtml = '<div class="stats-row-logo">' +
-            '<img src="./' + TEAMS_LOGOS[teamName] + '" onerror="this.style.display=\'none\'">' +
-        '</div>';
-    } else {
-        logoHtml = '<div class="stats-row-logo stats-row-logo-empty">⚽</div>';
-    }
-
-    let rankClass = 'stats-rank-normal';
-    let medal = '';
-    let rowExtra = '';
-
-    if (rank === 1) {
-        rankClass = 'stats-rank-gold';
-        medal = '🥇';
-        rowExtra = ' stats-row-gold';
-    } else if (rank === 2) {
-        rankClass = 'stats-rank-silver';
-        medal = '🥈';
-        rowExtra = ' stats-row-silver';
-    } else if (rank === 3) {
-        rankClass = 'stats-rank-bronze';
-        medal = '🥉';
-        rowExtra = ' stats-row-bronze';
-    }
-
-    return '<div class="stats-row' + rowExtra + '">' +
-        '<div class="stats-rank ' + rankClass + '">' + (medal || rank) + '</div>' +
-        logoHtml +
-        '<div class="stats-row-names">' +
-            '<div class="stats-row-entry">' + (entryName || rawName) + '</div>' +
-            '<div class="stats-row-player">' + rawName + '</div>' +
-        '</div>' +
-        '<div class="stats-row-value">' +
-            '<div class="stats-row-value-num">' + value + '</div>' +
-            (valueLabel ? '<div class="stats-row-value-label">' + valueLabel + '</div>' : '') +
-        '</div>' +
-    '</div>';
+.stats-section{
+    position:relative;
+    background:linear-gradient(135deg, rgba(56,0,60,.95) 0%, rgba(46,11,61,.95) 100%);
+    border:2px solid rgba(90,5,90,.8);
+    border-radius:18px;
+    padding:16px 12px;
+    margin-bottom:16px;
+    box-shadow:
+        0 6px 25px rgba(0,0,0,.4),
+        inset 0 1px 0 rgba(255,255,255,.05);
+    overflow:hidden;
 }
 
+.stats-section::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:2px;
+    background:linear-gradient(90deg, transparent, #00ff87, transparent);
+    opacity:.6;
+}
+
+.stats-section-title{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    font-size:13px;
+    font-weight:900;
+    color:#00ff87;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-bottom:14px;
+    padding-bottom:10px;
+    border-bottom:1px solid rgba(0,255,135,.2);
+    text-shadow:0 0 10px rgba(0,255,135,.5);
+}
 
 /* =========================================================
-   RENDER OVERVIEW
+   STATS ROW — بدون دائرة على الشعار
 ========================================================= */
 
-function renderStatsOverview(stats) {
-
-    if (!stats) return;
-
-    const setVal = function(id, val) {
-        const el = document.getElementById(id);
-        if (el) el.textContent = val;
-    };
-
-    setVal('kpiManagers', stats.totalManagers);
-    setVal('kpiAvg', stats.avgEvent);
-    setVal('kpiHigh', stats.highestEvent);
-    setVal('kpiHighestTotal', stats.highestTotal);
-
-    const topEventList = document.getElementById('statsTopEvent');
-    if (topEventList) {
-        topEventList.innerHTML = '';
-        stats.topEvent.forEach(function(m, i) {
-            topEventList.innerHTML += createStatsRow(i + 1, m, m.event_total || 0, 'الجولة');
-        });
-    }
-
-    const topTotalList = document.getElementById('statsTopTotal');
-    if (topTotalList) {
-        topTotalList.innerHTML = '';
-        stats.topTotal.forEach(function(m, i) {
-            topTotalList.innerHTML += createStatsRow(i + 1, m, m.total || 0, 'المجموع');
-        });
-    }
+.stats-row{
+    display:grid;
+    grid-template-columns:36px 34px 1fr 60px;
+    gap:10px;
+    align-items:center;
+    padding:11px 8px;
+    border-bottom:1px solid rgba(255,255,255,.06);
+    border-radius:10px;
+    transition:all .25s ease;
+    min-height:56px;
 }
 
+.stats-row:last-child{border-bottom:none;}
 
-/* =========================================================
-   RENDER RECORDS
-========================================================= */
-
-function renderStatsRecords(stats) {
-
-    if (!stats) return;
-
-    const container = document.getElementById('statsRecordsContent');
-    if (!container) return;
-
-    const cards = [];
-
-    if (stats.topEvent[0]) {
-        const m = stats.topEvent[0];
-        cards.push({
-            icon: '⚡',
-            label: 'أعلى نقاط جولة',
-            value: stats.highestEvent,
-            name: m.player_name || m.entry_name,
-            color: 'gold'
-        });
-    }
-
-    if (stats.topTotal[0]) {
-        const m = stats.topTotal[0];
-        cards.push({
-            icon: '🏆',
-            label: 'أعلى مجموع',
-            value: stats.highestTotal,
-            name: m.player_name || m.entry_name,
-            color: 'gold'
-        });
-    }
-
-    if (stats.lowestEvent) {
-        cards.push({
-            icon: '💀',
-            label: 'أسوأ جولة',
-            value: stats.lowestEvent,
-            name: '—',
-            color: 'red'
-        });
-    }
-
-    cards.push({
-        icon: '📊',
-        label: 'متوسط الجولة',
-        value: stats.avgEvent,
-        name: 'لكل مدير',
-        color: 'green'
-    });
-
-    cards.push({
-        icon: '📈',
-        label: 'متوسط المجموع',
-        value: stats.avgTotal,
-        name: 'لكل مدير',
-        color: 'green'
-    });
-
-    cards.push({
-        icon: '👥',
-        label: 'عدد المديرين',
-        value: stats.totalManagers,
-        name: 'الدوري',
-        color: 'purple'
-    });
-
-    container.innerHTML = cards.map(function(c) {
-        return '<div class="stats-record-card stats-record-' + c.color + '">' +
-            '<div class="stats-record-icon">' + c.icon + '</div>' +
-            '<div class="stats-record-label">' + c.label + '</div>' +
-            '<div class="stats-record-value">' + c.value + '</div>' +
-            '<div class="stats-record-name">' + c.name + '</div>' +
-        '</div>';
-    }).join('');
+.stats-row:hover{
+    background:rgba(0,255,135,.08);
+    transform:translateX(-4px);
 }
 
+/* ✅ التدرجات الذهبية/الفضية/البرونزية */
+.stats-row-gold{
+    background:linear-gradient(
+        90deg,
+        rgba(255, 215, 0, 0.35) 0%,
+        rgba(255, 215, 0, 0.15) 50%,
+        rgba(255, 215, 0, 0) 100%
+    );
+    border-right:3px solid rgba(255, 215, 0, 0.6);
+}
+
+.stats-row-gold:hover{
+    background:linear-gradient(
+        90deg,
+        rgba(255, 215, 0, 0.45) 0%,
+        rgba(255, 215, 0, 0.20) 50%,
+        rgba(255, 215, 0, 0) 100%
+    );
+}
+
+.stats-row-silver{
+    background:linear-gradient(
+        90deg,
+        rgba(192, 192, 192, 0.30) 0%,
+        rgba(192, 192, 192, 0.12) 50%,
+        rgba(192, 192, 192, 0) 100%
+    );
+    border-right:3px solid rgba(192, 192, 192, 0.5);
+}
+
+.stats-row-silver:hover{
+    background:linear-gradient(
+        90deg,
+        rgba(192, 192, 192, 0.40) 0%,
+        rgba(192, 192, 192, 0.17) 50%,
+        rgba(192, 192, 192, 0) 100%
+    );
+}
+
+.stats-row-bronze{
+    background:linear-gradient(
+        90deg,
+        rgba(205, 127, 50, 0.30) 0%,
+        rgba(205, 127, 50, 0.12) 50%,
+        rgba(205, 127, 50, 0) 100%
+    );
+    border-right:3px solid rgba(205, 127, 50, 0.5);
+}
+
+.stats-row-bronze:hover{
+    background:linear-gradient(
+        90deg,
+        rgba(205, 127, 50, 0.40) 0%,
+        rgba(205, 127, 50, 0.17) 50%,
+        rgba(205, 127, 50, 0) 100%
+    );
+}
+
+.stats-rank{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:900;
+    color:#fff;
+    flex-shrink:0;
+    margin:0 auto;
+    position:relative;
+}
+
+.stats-rank-gold{
+    background:linear-gradient(135deg, #ffd700 0%, #ff9500 100%);
+    color:#4a2a00;
+    box-shadow:
+        0 0 15px rgba(255,215,0,.7),
+        inset 0 1px 0 rgba(255,255,255,.5);
+    font-size:16px;
+}
+
+.stats-rank-silver{
+    background:linear-gradient(135deg, #e8e8e8 0%, #a8a8a8 100%);
+    color:#333;
+    box-shadow:
+        0 0 15px rgba(224,224,224,.6),
+        inset 0 1px 0 rgba(255,255,255,.6);
+    font-size:16px;
+}
+
+.stats-rank-bronze{
+    background:linear-gradient(135deg, #cd7f32 0%, #8b4513 100%);
+    color:#fff;
+    box-shadow:
+        0 0 15px rgba(205,127,50,.6),
+        inset 0 1px 0 rgba(255,255,255,.3);
+    font-size:16px;
+}
+
+.stats-rank-normal{
+    background:rgba(255,255,255,.1);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.15);
+}
+
+/* ✅ الشعار — بدون دائرة */
+.stats-row-logo{
+    width:34px;
+    height:34px;
+    min-width:34px;
+    min-height:34px;
+    max-width:34px;
+    max-height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    flex-shrink:0;
+    position:relative;
+    background:transparent;
+    border:none;
+    border-radius:0;
+}
+
+.stats-row-logo img{
+    max-width:100%;
+    max-height:100%;
+    width:auto;
+    height:auto;
+    object-fit:contain;
+    display:block;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
+}
+
+.stats-row-logo-empty{
+    font-size:20px;
+    color:#fff;
+}
+
+.stats-row-names{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0;
+    overflow:hidden;
+    text-align:right;
+}
+
+.stats-row-entry{
+    font-size:13px;
+    font-weight:900;
+    color:#fff;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    line-height:1.2;
+    letter-spacing:.3px;
+}
+
+.stats-row-player{
+    font-size:10px;
+    font-weight:600;
+    color:#b8b8b8;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    line-height:1.2;
+}
+
+.stats-row-value{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+}
+
+.stats-row-value-num{
+    font-size:18px;
+    font-weight:900;
+    color:#00ff87;
+    letter-spacing:.5px;
+    text-shadow:
+        0 0 12px rgba(0,255,135,.6),
+        0 1px 3px rgba(0,0,0,.5);
+    line-height:1;
+    font-family:'EnglishCustom', sans-serif;
+}
+
+.stats-row-value-label{
+    font-size:8px;
+    font-weight:800;
+    color:#888;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+}
 
 /* =========================================================
    SEARCH
 ========================================================= */
 
-function searchManager(query) {
-
-    if (!query || !statsAllManagers.length) return [];
-
-    const q = query.toLowerCase().trim();
-
-    return statsAllManagers.filter(function(m) {
-        const pn = (m.player_name || '').toLowerCase();
-        const en = (m.entry_name || '').toLowerCase();
-        return pn.indexOf(q) !== -1 || en.indexOf(q) !== -1;
-    }).slice(0, 8);
+.stats-search-box{
+    position:relative;
+    margin-bottom:16px;
 }
 
-
-function renderSearchResults(results) {
-
-    const container = document.getElementById('statsSearchResults');
-    if (!container) return;
-
-    if (results.length === 0) {
-        container.innerHTML = '<div class="stats-empty">لا توجد نتائج</div>';
-        return;
-    }
-
-    container.innerHTML = '';
-
-    results.forEach(function(m) {
-
-        const rawName = m.player_name || m.entry_name || '';
-        const entryName = m.entry_name || '';
-
-        const sortedByTotal = [...statsAllManagers].sort(function(a, b) {
-            return (b.total || 0) - (a.total || 0);
-        });
-
-        const rank = sortedByTotal.findIndex(function(x) {
-            return x.entry === m.entry;
-        }) + 1;
-
-        let teamName = '';
-        if (typeof findPlayerTeam === 'function') {
-            teamName = findPlayerTeam(rawName) || findPlayerTeam(entryName) || '';
-        }
-
-        let logoHtml = '';
-        if (teamName && typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName]) {
-            logoHtml = '<div class="stats-search-logo">' +
-                '<img src="./' + TEAMS_LOGOS[teamName] + '" onerror="this.style.display=\'none\'">' +
-            '</div>';
-        } else {
-            logoHtml = '<div class="stats-search-logo stats-search-logo-empty">⚽</div>';
-        }
-
-        const div = document.createElement('div');
-        div.className = 'stats-search-item';
-        div.innerHTML =
-            '<div class="stats-search-rank">#' + rank + '</div>' +
-            logoHtml +
-            '<div class="stats-search-names">' +
-                '<div class="stats-search-entry">' + (entryName || rawName) + '</div>' +
-                '<div class="stats-search-player">' + rawName + '</div>' +
-            '</div>' +
-            '<div class="stats-search-total">' + (m.total || 0) + '</div>';
-
-        div.addEventListener('click', function() {
-            renderManagerProfile(m);
-        });
-
-        container.appendChild(div);
-    });
+.stats-search-input{
+    width:100%;
+    padding:14px 20px;
+    background:linear-gradient(135deg, rgba(56,0,60,.8) 0%, rgba(46,11,61,.8) 100%);
+    border:2px solid rgba(90,5,90,.8);
+    border-radius:50px;
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    outline:none;
+    font-family:inherit;
+    transition:all .3s ease;
+    box-shadow:inset 0 2px 10px rgba(0,0,0,.3);
+    direction:rtl;
+    text-align:right;
 }
 
+.stats-search-input::placeholder{
+    color:rgba(255,255,255,.4);
+    font-weight:500;
+    letter-spacing:.5px;
+}
+
+.stats-search-input:focus{
+    border-color:#00ff87;
+    background:linear-gradient(135deg, rgba(56,0,60,.95) 0%, rgba(46,11,61,.95) 100%);
+    box-shadow:
+        0 0 25px rgba(0,255,135,.4),
+        inset 0 2px 10px rgba(0,0,0,.3);
+}
+
+.stats-search-results{
+    margin-top:10px;
+}
+
+.stats-search-item{
+    display:grid;
+    grid-template-columns:44px 34px 1fr 56px;
+    gap:10px;
+    align-items:center;
+    padding:12px 14px;
+    background:linear-gradient(135deg, rgba(56,0,60,.9) 0%, rgba(46,11,61,.9) 100%);
+    border:1px solid rgba(90,5,90,.8);
+    border-radius:12px;
+    margin-bottom:8px;
+    cursor:pointer;
+    transition:all .25s ease;
+}
+
+.stats-search-item:hover{
+    border-color:#00ff87;
+    transform:translateX(-4px);
+    box-shadow:0 6px 20px rgba(0,255,135,.3);
+    background:linear-gradient(135deg, rgba(90,5,90,.9) 0%, rgba(56,0,60,.9) 100%);
+}
+
+.stats-search-rank{
+    font-size:12px;
+    font-weight:900;
+    color:#00ff87;
+    text-align:center;
+    letter-spacing:.5px;
+}
+
+/* ✅ الشعار في البحث — بدون دائرة */
+.stats-search-logo{
+    width:34px;
+    height:34px;
+    min-width:34px;
+    min-height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    flex-shrink:0;
+    background:transparent;
+    border:none;
+    border-radius:0;
+}
+
+.stats-search-logo img{
+    max-width:100%;
+    max-height:100%;
+    width:auto;
+    height:auto;
+    object-fit:contain;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
+}
+
+.stats-search-logo-empty{
+    font-size:18px;
+    color:#fff;
+}
+
+.stats-search-names{
+    min-width:0;
+    overflow:hidden;
+    text-align:right;
+}
+
+.stats-search-entry{
+    font-size:13px;
+    font-weight:900;
+    color:#fff;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    line-height:1.2;
+}
+
+.stats-search-player{
+    font-size:10px;
+    color:#b8b8b8;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    line-height:1.2;
+    margin-top:2px;
+}
+
+.stats-search-total{
+    font-size:15px;
+    font-weight:900;
+    color:#00ff87;
+    text-align:center;
+    text-shadow:0 0 10px rgba(0,255,135,.5);
+}
+
+.stats-empty{
+    text-align:center;
+    padding:30px 20px;
+    color:#888;
+    font-size:13px;
+    font-weight:600;
+}
 
 /* =========================================================
-   MANAGER PROFILE — يستخدم شعار الفريق
+   PROFILE
 ========================================================= */
 
-function renderManagerProfile(manager) {
-
-    const container = document.getElementById('statsProfile');
-    if (!container) return;
-
-    const rawName = manager.player_name || manager.entry_name || '';
-    const entryName = manager.entry_name || '';
-
-    const sortedByTotal = [...statsAllManagers].sort(function(a, b) {
-        return (b.total || 0) - (a.total || 0);
-    });
-
-    const rank = sortedByTotal.findIndex(function(m) {
-        return m.entry === manager.entry;
-    }) + 1;
-
-    const totalManagers = statsAllManagers.length;
-
-    let teamName = '';
-    if (typeof findPlayerTeam === 'function') {
-        teamName = findPlayerTeam(rawName) || findPlayerTeam(entryName) || '';
-    }
-
-    /* ✅ شعار الفريق بدل القميص */
-    let logoHtml = '';
-
-    if (
-        teamName &&
-        typeof TEAMS_LOGOS !== 'undefined' &&
-        TEAMS_LOGOS[teamName]
-    ) {
-        logoHtml = '<img src="./' + TEAMS_LOGOS[teamName] + '" onerror="this.style.display=\'none\'">';
-    } else {
-        logoHtml = '<div class="stats-profile-no-logo">⚽</div>';
-    }
-
-    const percentile = Math.round(((totalManagers - rank + 1) / totalManagers) * 100);
-
-    const topManager = sortedByTotal[0];
-    const diff = topManager ? (topManager.total || 0) - (manager.total || 0) : 0;
-
-    const nextManager = sortedByTotal[rank - 2];
-    const prevManager = sortedByTotal[rank];
-    const toNext = nextManager ? (nextManager.total || 0) - (manager.total || 0) : 0;
-    const toPrev = prevManager ? (manager.total || 0) - (prevManager.total || 0) : 0;
-
-    container.innerHTML =
-        '<div class="stats-profile-card">' +
-
-            '<button class="stats-profile-close" onclick="document.getElementById(\'statsProfile\').style.display=\'none\'">✕</button>' +
-
-            '<div class="stats-profile-rank-badge">#' + rank + '</div>' +
-
-            '<div class="stats-profile-shirt">' + logoHtml + '</div>' +
-
-            '<div class="stats-profile-entry">' + (entryName || rawName) + '</div>' +
-            '<div class="stats-profile-player">' + rawName + '</div>' +
-
-            (teamName ? '<div class="stats-profile-team">' + teamName + '</div>' : '') +
-
-            '<div class="stats-profile-stats">' +
-
-                '<div class="stats-profile-stat stats-stat-total">' +
-                    '<div class="stats-stat-label">المجموع</div>' +
-                    '<div class="stats-stat-value">' + (manager.total || 0) + '</div>' +
-                '</div>' +
-
-                '<div class="stats-profile-stat stats-stat-gw">' +
-                    '<div class="stats-stat-label">الجولة</div>' +
-                    '<div class="stats-stat-value">' + (manager.event_total || 0) + '</div>' +
-                '</div>' +
-
-                '<div class="stats-profile-stat stats-stat-rank">' +
-                    '<div class="stats-stat-label">الترتيب</div>' +
-                    '<div class="stats-stat-value">' + rank + '</div>' +
-                '</div>' +
-
-            '</div>' +
-
-            '<div class="stats-profile-details">' +
-
-                '<div class="stats-detail-row">' +
-                    '<span class="stats-detail-label">المئوية</span>' +
-                    '<span class="stats-detail-value">' + percentile + '%</span>' +
-                '</div>' +
-
-                '<div class="stats-detail-row">' +
-                    '<span class="stats-detail-label">عن المتصدر</span>' +
-                    '<span class="stats-detail-value' + (diff === 0 ? ' stats-green' : '') + '">' +
-                        (diff === 0 ? '👑 أنت المتصدر' : '-' + diff) +
-                    '</span>' +
-                '</div>' +
-
-                (toNext > 0 ?
-                '<div class="stats-detail-row">' +
-                    '<span class="stats-detail-label">عن اللي فوقك</span>' +
-                    '<span class="stats-detail-value stats-yellow">-' + toNext + '</span>' +
-                '</div>' : '') +
-
-                (toPrev > 0 ?
-                '<div class="stats-detail-row">' +
-                    '<span class="stats-detail-label">عن اللي تحتك</span>' +
-                    '<span class="stats-detail-value stats-green">+' + toPrev + '</span>' +
-                '</div>' : '') +
-
-            '</div>' +
-
-        '</div>';
-
-    container.style.display = 'block';
-    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+.stats-profile-card{
+    position:relative;
+    background:linear-gradient(135deg, #6b21a8 0%, #38003c 50%, #2e0b3d 100%);
+    border:3px solid #00ff87;
+    border-radius:22px;
+    padding:30px 20px 24px;
+    text-align:center;
+    margin-bottom:16px;
+    box-shadow:
+        0 0 40px rgba(0,255,135,.4),
+        0 20px 60px rgba(0,0,0,.6),
+        inset 0 1px 0 rgba(255,255,255,.1);
+    animation:profileIn .5s cubic-bezier(.4,0,.2,1);
+    overflow:hidden;
 }
 
-
-/* =========================================================
-   LOAD STATS
-========================================================= */
-
-async function loadStats() {
-
-    const loadingEl = document.getElementById('statsLoading');
-    const contentEl = document.getElementById('statsContent');
-
-    if (loadingEl) loadingEl.style.display = 'block';
-    if (contentEl) contentEl.style.display = 'none';
-
-    if (statsLoaded && statsAllManagers.length > 0) {
-        if (loadingEl) loadingEl.style.display = 'none';
-        if (contentEl) contentEl.style.display = 'block';
-        return;
-    }
-
-    try {
-
-        const managers = await fetchAllManagersForStats();
-
-        if (!managers || managers.length === 0) {
-            throw new Error('لم يتم استلام بيانات');
-        }
-
-        statsAllManagers = managers;
-        statsLoaded = true;
-        statsComputed = computeLeagueStats(managers);
-
-        renderStatsOverview(statsComputed);
-        renderStatsRecords(statsComputed);
-
-        if (loadingEl) loadingEl.style.display = 'none';
-        if (contentEl) contentEl.style.display = 'block';
-
-    } catch (e) {
-
-        console.error('Stats load error:', e);
-
-        if (loadingEl) {
-            loadingEl.innerHTML = '⚠️ خطأ في التحميل: ' + e.message;
-            loadingEl.style.display = 'block';
-        }
-    }
+.stats-profile-card::before{
+    content:'';
+    position:absolute;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background:radial-gradient(circle, rgba(0,255,135,.15) 0%, transparent 60%);
+    pointer-events:none;
+    animation:profileGlow 3s ease-in-out infinite;
 }
 
-
-/* =========================================================
-   TAB SWITCHER
-========================================================= */
-
-function switchStatsTab(tabName) {
-
-    document.querySelectorAll('.stats-tab-btn').forEach(function(btn) {
-        btn.classList.toggle('active', btn.dataset.tab === tabName);
-    });
-
-    document.querySelectorAll('.stats-view').forEach(function(view) {
-        view.classList.toggle('active', view.id === 'statsView-' + tabName);
-    });
+@keyframes profileGlow{
+    0%,100%{opacity:.5;transform:scale(1);}
+    50%{opacity:.8;transform:scale(1.1);}
 }
 
+@keyframes profileIn{
+    from{opacity:0;transform:translateY(20px) scale(.95);}
+    to{opacity:1;transform:translateY(0) scale(1);}
+}
+
+.stats-profile-close{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    background:rgba(255,255,255,.15);
+    border:none;
+    color:#fff;
+    font-size:16px;
+    font-weight:900;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:all .2s ease;
+    z-index:5;
+}
+
+.stats-profile-close:hover{
+    background:rgba(255,0,90,.6);
+    transform:scale(1.1) rotate(90deg);
+}
+
+.stats-profile-rank-badge{
+    position:absolute;
+    top:14px;
+    left:14px;
+    padding:6px 14px;
+    background:linear-gradient(135deg, #ffd700 0%, #ff9500 100%);
+    color:#4a2a00;
+    border-radius:50px;
+    font-size:14px;
+    font-weight:900;
+    letter-spacing:1px;
+    box-shadow:
+        0 4px 15px rgba(255,215,0,.5),
+        inset 0 1px 0 rgba(255,255,255,.5);
+    z-index:5;
+}
+
+/* ✅ حاوية الشعار في البروفايل */
+.stats-profile-shirt{
+    width:110px;
+    height:110px;
+    margin:0 auto 14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    z-index:2;
+}
+
+.stats-profile-shirt img{
+    max-width:100%;
+    max-height:100%;
+    width:auto;
+    height:auto;
+    object-fit:contain;
+    filter:drop-shadow(0 6px 15px rgba(0,0,0,.5));
+}
+
+.stats-profile-no-logo{
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    background:rgba(0,0,0,.3);
+    border:2px solid rgba(0,255,135,.4);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:36px;
+}
+
+.stats-profile-entry{
+    font-size:22px;
+    font-weight:900;
+    color:#fff;
+    letter-spacing:1px;
+    margin-bottom:6px;
+    position:relative;
+    z-index:2;
+    text-shadow:0 2px 8px rgba(0,0,0,.5);
+}
+
+.stats-profile-player{
+    font-size:13px;
+    color:#b8b8b8;
+    margin-bottom:10px;
+    position:relative;
+    z-index:2;
+    letter-spacing:.5px;
+}
+
+.stats-profile-team{
+    display:inline-block;
+    padding:5px 16px;
+    background:rgba(0,255,135,.15);
+    border:1px solid #00ff87;
+    border-radius:50px;
+    font-size:11px;
+    font-weight:900;
+    color:#00ff87;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    margin-bottom:18px;
+    position:relative;
+    z-index:2;
+    box-shadow:0 0 15px rgba(0,255,135,.3);
+}
+
+.stats-profile-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:8px;
+    margin-top:14px;
+    position:relative;
+    z-index:2;
+}
+
+.stats-profile-stat{
+    background:rgba(0,0,0,.3);
+    border-radius:14px;
+    padding:14px 6px;
+    border:1px solid rgba(255,255,255,.1);
+    transition:all .25s ease;
+}
+
+.stats-profile-stat:hover{
+    border-color:rgba(0,255,135,.5);
+    transform:translateY(-3px);
+}
+
+.stats-stat-total{
+    background:linear-gradient(135deg, rgba(0,255,135,.15) 0%, rgba(0,0,0,.3) 100%);
+}
+
+.stats-stat-gw{
+    background:linear-gradient(135deg, rgba(4,245,255,.15) 0%, rgba(0,0,0,.3) 100%);
+}
+
+.stats-stat-rank{
+    background:linear-gradient(135deg, rgba(255,215,0,.15) 0%, rgba(0,0,0,.3) 100%);
+}
+
+.stats-stat-label{
+    font-size:9px;
+    font-weight:800;
+    color:#b8b8b8;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    margin-bottom:6px;
+}
+
+.stats-stat-value{
+    font-size:24px;
+    font-weight:900;
+    color:#00ff87;
+    text-shadow:0 0 15px rgba(0,255,135,.6);
+    line-height:1;
+    font-family:'EnglishCustom', sans-serif;
+}
+
+.stats-profile-details{
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px solid rgba(255,255,255,.1);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    position:relative;
+    z-index:2;
+}
+
+.stats-detail-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 12px;
+    background:rgba(0,0,0,.2);
+    border-radius:10px;
+    font-size:12px;
+    direction:rtl;
+}
+
+.stats-detail-label{
+    color:#b8b8b8;
+    font-weight:700;
+    letter-spacing:.5px;
+}
+
+.stats-detail-value{
+    color:#fff;
+    font-weight:900;
+    font-size:14px;
+    letter-spacing:.5px;
+}
+
+.stats-yellow{color:#ffd700;text-shadow:0 0 10px rgba(255,215,0,.5);}
+.stats-green{color:#00ff87;text-shadow:0 0 10px rgba(0,255,135,.5);}
 
 /* =========================================================
-   INIT
+   RECORDS
 ========================================================= */
 
-document.addEventListener('DOMContentLoaded', function() {
+.stats-records-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
 
-    const searchInput = document.getElementById('statsSearchInput');
+.stats-record-card{
+    position:relative;
+    background:linear-gradient(135deg, rgba(56,0,60,.95) 0%, rgba(46,11,61,.95) 100%);
+    border:2px solid rgba(90,5,90,.8);
+    border-radius:16px;
+    padding:18px 12px;
+    text-align:center;
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+    overflow:hidden;
+}
 
-    if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            const q = this.value.trim();
-            if (q.length < 2) {
-                document.getElementById('statsSearchResults').innerHTML = '';
-                return;
-            }
-            const results = searchManager(q);
-            renderSearchResults(results);
-        });
+.stats-record-card::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at top right, rgba(0,255,135,.1) 0%, transparent 60%);
+    pointer-events:none;
+    opacity:0;
+    transition:opacity .3s ease;
+}
+
+.stats-record-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 10px 25px rgba(0,0,0,.5);
+}
+
+.stats-record-card:hover::after{opacity:1;}
+
+.stats-record-gold{
+    border-color:rgba(255,215,0,.5);
+    background:linear-gradient(135deg, rgba(255,215,0,.1) 0%, rgba(56,0,60,.95) 100%);
+}
+
+.stats-record-red{
+    border-color:rgba(255,82,82,.5);
+    background:linear-gradient(135deg, rgba(255,82,82,.1) 0%, rgba(56,0,60,.95) 100%);
+}
+
+.stats-record-green{
+    border-color:rgba(0,255,135,.4);
+    background:linear-gradient(135deg, rgba(0,255,135,.08) 0%, rgba(56,0,60,.95) 100%);
+}
+
+.stats-record-purple{
+    border-color:rgba(107,33,168,.6);
+}
+
+.stats-record-icon{
+    font-size:32px;
+    margin-bottom:8px;
+    display:block;
+    filter:drop-shadow(0 3px 8px rgba(0,0,0,.4));
+}
+
+.stats-record-label{
+    font-size:10px;
+    font-weight:800;
+    color:#b8b8b8;
+    letter-spacing:1px;
+    margin-bottom:6px;
+    direction:rtl;
+}
+
+.stats-record-value{
+    font-size:26px;
+    font-weight:900;
+    color:#fff;
+    line-height:1;
+    margin-bottom:6px;
+    text-shadow:0 0 15px rgba(255,255,255,.3);
+    font-family:'EnglishCustom', sans-serif;
+}
+
+.stats-record-gold .stats-record-value{
+    color:#ffd700;
+    text-shadow:0 0 20px rgba(255,215,0,.6);
+}
+
+.stats-record-red .stats-record-value{
+    color:#ff5252;
+    text-shadow:0 0 20px rgba(255,82,82,.5);
+}
+
+.stats-record-green .stats-record-value{
+    color:#00ff87;
+    text-shadow:0 0 20px rgba(0,255,135,.5);
+}
+
+.stats-record-name{
+    font-size:10px;
+    color:#888;
+    font-weight:700;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    letter-spacing:.3px;
+    direction:rtl;
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.stats-loading{
+    text-align:center;
+    padding:60px 20px;
+    color:#00ff87;
+    font-size:15px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.stats-loading .spinner{
+    display:inline-block;
+    width:44px;
+    height:44px;
+    border:4px solid rgba(0,255,135,.2);
+    border-top-color:#00ff87;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin-bottom:16px;
+    box-shadow:0 0 20px rgba(0,255,135,.3);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:480px){
+
+    .stats-kpi-value{font-size:24px;}
+    .stats-kpi-icon{font-size:24px;}
+    .stats-kpi-card{padding:14px 10px 12px;}
+
+    .stats-row{
+        grid-template-columns:32px 30px 1fr 52px;
+        padding:10px 6px;
+        gap:8px;
+        min-height:52px;
     }
-});
+
+    .stats-rank{width:26px;height:26px;font-size:12px;}
+    .stats-rank-gold,
+    .stats-rank-silver,
+    .stats-rank-bronze{font-size:14px;}
+
+    .stats-row-logo{
+        width:30px;
+        height:30px;
+        min-width:30px;
+        min-height:30px;
+    }
+
+    .stats-row-entry{font-size:12px;}
+    .stats-row-player{font-size:9px;}
+    .stats-row-value-num{font-size:16px;}
+
+    .stats-tab-btn{
+        padding:8px 16px;
+        font-size:10px;
+        letter-spacing:1.2px;
+    }
+
+    .stats-profile-entry{font-size:18px;}
+    .stats-profile-shirt{width:90px;height:90px;}
+    .stats-profile-shirt img{max-width:100%;max-height:100%;}
+    .stats-stat-value{font-size:20px;}
+    .stats-profile-stat{padding:10px 4px;}
+
+    .stats-record-value{font-size:22px;}
+    .stats-record-icon{font-size:26px;}
+    .stats-record-card{padding:14px 8px;}
+
+    .stats-search-item{
+        grid-template-columns:36px 30px 1fr 46px;
+        padding:10px 12px;
+        gap:8px;
+    }
+
+    .stats-search-logo{
+        width:30px;
+        height:30px;
+        min-width:30px;
+        min-height:30px;
+    }
+
+    .stats-search-entry{font-size:12px;}
+    .stats-search-total{font-size:13px;}
+}
