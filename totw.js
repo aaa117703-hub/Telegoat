@@ -42,6 +42,7 @@ function getLatestRound() {
 async function saveTOTWSnapshot(round, top11) {
 
     if (!window.sbClient) return false;
+    if (!round || !top11 || top11.length === 0) return false;
 
     try {
 
@@ -61,7 +62,7 @@ async function saveTOTWSnapshot(round, top11) {
             return false;
         }
 
-        console.log('TOTW saved for round', round);
+        console.log('TOTW saved for round', round, '(', top11.length, 'players)');
         return true;
 
     } catch (e) {
@@ -238,7 +239,7 @@ function renderTOTWCards(top11) {
 
 
 /* =========================================================
-   CREATE CARD — بدون دائرة حرف
+   CREATE CARD
 ========================================================= */
 
 function createTOTWCard(player) {
@@ -355,7 +356,7 @@ function renderTOTWList(top11) {
 
 
 /* =========================================================
-   LOAD TOTW
+   LOAD TOTW — مع حماية البيانات القديمة
 ========================================================= */
 
 async function loadTOTW() {
@@ -379,21 +380,32 @@ async function loadTOTW() {
 
         let top11 = null;
 
+        /* ============ جولة قديمة ============ */
         if (latestRound > 0 && viewingRound < latestRound) {
 
-            console.log('Loading snapshot for round', viewingRound);
+            console.log('Loading snapshot for old round', viewingRound);
 
             const snapshot = await loadTOTWSnapshot(viewingRound);
 
             if (snapshot && Array.isArray(snapshot) && snapshot.length > 0) {
                 top11 = snapshot;
                 console.log('Snapshot loaded:', top11.length, 'players');
+            } else {
+                /* ما لقينا snapshot — نعرض رسالة بدل بيانات خاطئة */
+                loadingBox.style.display = 'none';
+                if (errorBox) {
+                    errorBox.style.display = 'block';
+                    errorBox.innerHTML =
+                        '⚠️ <strong>TOTW الجولة ' + viewingRound + ' غير متوفر</strong><br>' +
+                        '<span style="font-size:12px;color:#999;">لم يتم حفظ بيانات هذه الجولة</span>';
+                }
+                return;
             }
-        }
 
-        if (!top11) {
+        /* ============ جولة حالية ============ */
+        } else {
 
-            console.log('Fetching fresh from FPL');
+            console.log('Fetching fresh from FPL for round', viewingRound);
 
             const allResults = await fetchTOTWPages();
 
@@ -403,6 +415,7 @@ async function loadTOTW() {
 
             top11 = getTOTWTop11(allResults);
 
+            /* نحفظ snapshot للجولة الحالية */
             if (viewingRound === latestRound && latestRound > 0) {
                 await saveTOTWSnapshot(viewingRound, top11);
             }
@@ -435,27 +448,37 @@ async function loadTOTW() {
 
 
 /* =========================================================
-   SAVE MANUAL TOTW
+   SAVE MANUAL TOTW — يُستدعى من saveCurrentRound
 ========================================================= */
 
 async function saveManualTOTW(round) {
 
-    if (!round) return;
+    if (!round) return false;
 
     try {
 
+        console.log('Saving manual TOTW for round', round);
+
         const allResults = await fetchTOTWPages();
 
-        if (!allResults || allResults.length === 0) return;
+        if (!allResults || allResults.length === 0) {
+            console.warn('No results to save');
+            return false;
+        }
 
         const top11 = getTOTWTop11(allResults);
 
-        await saveTOTWSnapshot(round, top11);
+        const ok = await saveTOTWSnapshot(round, top11);
 
-        console.log('Manual TOTW saved for round', round);
+        if (ok) {
+            console.log('Manual TOTW saved for round', round);
+        }
+
+        return ok;
 
     } catch (e) {
         console.error('saveManualTOTW error:', e);
+        return false;
     }
 }
 
