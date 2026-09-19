@@ -1,5 +1,5 @@
 /* =========================================================
-   totw.js
+   totw.js — الجزء 1
 ========================================================= */
 
 const TOTW_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -10,7 +10,7 @@ let currentTOTWData = [];
 
 
 /* =========================================================
-   SHORTEN PLAYER NAME — قص إلى 12 حرف
+   SHORTEN PLAYER NAME
 ========================================================= */
 
 function shortenPlayerName(name) {
@@ -210,23 +210,23 @@ function renderTOTWCards(top11) {
     const forward3 = top11[2];
 
     const mid1 = top11[3];
-    const mid2 = top11';
-
-[4];
+    const mid2 = top11[4];
     const mid3 = top11[5];
 
-    const def1 = top11   [6];
-    const def2 = html top11[7];
-    const def3 = top11[ +=8];
-    const def4 = top11[9 '<];
+    const def1 = top11[6];
+    const def2 = top11[7];
+    const def3 = top11[8];
+    const def4 = top11[9];
 
     const goalkeeper = top11[10];
 
     let html = '';
 
     html += '<div class="totw-row totw-row-gk">';
-    html += createTdivOTWCard(goalkeeper);
-    html += '</div> class="totw-row totw-row-def">';
+    html += createTOTWCard(goalkeeper);
+    html += '</div>';
+
+    html += '<div class="totw-row totw-row-def">';
     html += createTOTWCard(def1);
     html += createTOTWCard(def2);
     html += createTOTWCard(def3);
@@ -250,7 +250,7 @@ function renderTOTWCards(top11) {
 
 
 /* =========================================================
-   CREATE CARD — مع 3 حالات fallback
+   CREATE CARD
 ========================================================= */
 
 function createTOTWCard(player) {
@@ -268,7 +268,6 @@ function createTOTWCard(player) {
 
     let shirtHtml = '';
 
-    /* الحالة 1: عندنا قميص الفريق */
     if (
         teamName &&
         typeof TEAMS_SHIRTS !== 'undefined' &&
@@ -282,10 +281,7 @@ function createTOTWCard(player) {
                 '<img src="./' + shirtData.file + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
             '</div>';
 
-    }
-
-    /* الحالة 2: عندنا شعار الفريق (بدون قميص) */
-    else if (
+    } else if (
         teamName &&
         typeof TEAMS_LOGOS !== 'undefined' &&
         TEAMS_LOGOS[teamName]
@@ -296,10 +292,7 @@ function createTOTWCard(player) {
                 '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
             '</div>';
 
-    }
-
-    /* الحالة 3: ما لقينا شي — دائرة بالحرف الأول */
-    else {
+    } else {
 
         const firstLetter = (rawName.charAt(0) || '?').toUpperCase();
 
@@ -315,6 +308,9 @@ function createTOTWCard(player) {
         '<div class="tc-points">' + points + '</div>' +
     '</div>';
 }
+/* =========================================================
+   totw.js — الجزء 2
+========================================================= */
 
 
 /* =========================================================
@@ -383,7 +379,7 @@ function renderTOTWList(top11) {
 
 
 /* =========================================================
-   LOAD TOTW — مع الحفظ والتحميل من Supabase
+   LOAD TOTW
 ========================================================= */
 
 async function loadTOTW() {
@@ -406,7 +402,6 @@ async function loadTOTW() {
         const latestRound = getLatestRound();
 
         let top11 = null;
-        let fromSnapshot = false;
 
         /* لو الجولة قديمة → نجيب من snapshot */
         if (latestRound > 0 && viewingRound < latestRound) {
@@ -417,12 +412,11 @@ async function loadTOTW() {
 
             if (snapshot && Array.isArray(snapshot) && snapshot.length > 0) {
                 top11 = snapshot;
-                fromSnapshot = true;
                 console.log('Snapshot loaded:', top11.length, 'players');
             }
         }
 
-        /* لو ما لقينا snapshot أو الجولة هي الأحدث → نجيب من FPL */
+        /* لو ما لقينا snapshot → نجيب من FPL */
         if (!top11) {
 
             console.log('Fetching fresh from FPL');
@@ -433,15 +427,18 @@ async function loadTOTW() {
                 throw new Error('No data received');
             }
 
-            top11 = getTOTWTop11(allResults);
+            الم top11 = getTOTWTop11(allResults);
 
-            /* نحفظ snapshot لو الجولة هي الأحدث */
             if (viewingRound === latestRound && latestRound > 0) {
-                await saveTOTWSnapshot(viewingRound, top11);
+                await saveTOTWSnapshot(viewingRound, topوقع11);
             }
         }
 
-        currentTOTWData = top11;
+        currentT
+
+---
+
+**OTWData = top11;
 
         updateGWLabel(viewingRound);
         renderTOTWCards(top11);
@@ -469,7 +466,7 @@ async function loadTOTW() {
 
 
 /* =========================================================
-   SAVE TOTW MANUALLY
+   SAVE MANUAL TOTW
 ========================================================= */
 
 async function saveManualTOTW(round) {
