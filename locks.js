@@ -25,15 +25,13 @@ const SECTIONS = [
 
 
 /* =========================================================
-   HELPERS — فحص الصلاحيات
+   HELPERS
 ========================================================= */
 
-/* هل المستخدم عنده صلاحية التعديل؟ */
 function isAdmin() {
     return localStorage.getItem('tg_admin') === 'true';
 }
 
-/* هل المستخدم عنده صلاحية القفل؟ */
 function isLocker() {
     return localStorage.getItem('tg_locker') === 'true';
 }
@@ -45,10 +43,7 @@ function isLocker() {
 
 async function loadLocks() {
 
-    if (!window.sbClient) {
-        console.warn('Supabase not available');
-        return;
-    }
+    if (!window.sbClient) return;
 
     try {
 
@@ -64,7 +59,6 @@ async function loadLocks() {
         if (!data) return;
 
         data.forEach(function(row) {
-
             if (window.sectionLocks.hasOwnProperty(row.section)) {
                 window.sectionLocks[row.section] = row.is_locked === true;
             }
@@ -78,10 +72,7 @@ async function loadLocks() {
 
 async function saveLock(section, isLocked) {
 
-    if (!window.sbClient) {
-        console.warn('Supabase not available');
-        return false;
-    }
+    if (!window.sbClient) return false;
 
     try {
 
@@ -150,7 +141,7 @@ function hideSectionMaintenance() {
 
 
 /* =========================================================
-   ADMIN LOCK PANEL — 3 أزرار
+   ADMIN LOCK PANEL
 ========================================================= */
 
 function buildAdminLockPanel() {
@@ -203,25 +194,18 @@ function refreshAdminLockPanel() {
 
 
 /* =========================================================
-   UNLOCK LOCK PANEL — رمز 024680
+   ACTIVATE LOCK CONTROL — يُستدعى من الزر الموحد
 ========================================================= */
 
-function unlockLockPanelWithPassword() {
-    const pass = prompt('Enter LOCK password:');
+function activateLockControl() {
 
-    if (pass === LOCK_PIN) {
+    localStorage.setItem('tg_locker', 'true');
 
-        localStorage.setItem('tg_locker', 'true');
-
-        if (typeof showToast === 'function') {
-            showToast('Lock Control enabled', true);
-        }
-
-        buildAdminLockPanel();
-
-    } else if (pass !== null) {
-        alert('Incorrect lock password!');
+    if (typeof showToast === 'function') {
+        showToast('Lock Control enabled', true);
     }
+
+    buildAdminLockPanel();
 }
 
 
@@ -323,6 +307,10 @@ async function confirmSaveLock(sectionKey, sectionLabel) {
     if (ok) {
 
         closeLockPanel();
+
+        /* نشيل صلاحية القفل */
+        localStorage.removeItem('tg_locker');
+
         removeAdminLockPanel();
 
         if (typeof showToast === 'function') {
