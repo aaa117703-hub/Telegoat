@@ -132,15 +132,7 @@ function renderStandings() {
         const teamInfo = teamsMap[team.key] || { name: team.key, logo: '' };
         const position = index + 1;
 
-        let rowClass = '';
-
-        if (position === 1) {
-            rowClass = 'pos-1';
-        } else if (position === 2) {
-            rowClass = 'pos-2';
-        } else if (position === 3) {
-            rowClass = 'pos-3';
-        }
+        let rowClass = 'pos-' + position;
 
         if (position === 1) {
             rowClass += ' green-line';
