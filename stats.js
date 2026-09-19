@@ -321,6 +321,15 @@ async function loadStats() {
     if (statsLoaded && statsAllManagers.length > 0) {
         if (loadingEl) loadingEl.style.display = 'none';
         if (contentEl) contentEl.style.display = 'block';
+
+        /* تحميل trends */
+        if (typeof loadTrends === 'function') {
+            try {
+                await loadTrends(currentRound);
+            } catch (e) {
+                console.warn('loadTrends failed:', e);
+            }
+        }
         return;
     }
 
@@ -336,6 +345,15 @@ async function loadStats() {
 
         renderStatsOverview(statsComputed);
         renderStatsRecords(statsComputed);
+
+        /* تحميل trends */
+        if (typeof loadTrends === 'function') {
+            try {
+                await loadTrends(currentRound);
+            } catch (e) {
+                console.warn('loadTrends failed:', e);
+            }
+        }
 
         if (loadingEl) loadingEl.style.display = 'none';
         if (contentEl) contentEl.style.display = 'block';
