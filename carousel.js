@@ -23,7 +23,7 @@ const carouselSlides = [
     },
 
     {
-        image: './banner4.png',
+        image: './banner4.png.PNG',
         tab: 'stats',
         alt: 'STATISTICS'
     }
