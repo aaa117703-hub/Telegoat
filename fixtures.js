@@ -116,14 +116,13 @@ function switchTab(tabName) {
 
 
 /* =========================================================
-   SECRET PANEL — يفتح حسب الرمز
+   SECRET PANEL
 ========================================================= */
 
 function unlockSecretPanel() {
 
     const pass = prompt('Enter password:');
 
-    /* المستخدم ألغى */
     if (pass === null) return;
 
     /* رمز تعديل النتائج */
@@ -153,12 +152,10 @@ function unlockSecretPanel() {
         return;
     }
 
-    /* رمز غلط */
     alert('Incorrect password!');
 }
 
 
-/* نُبقي الدالة القديمة للتوافق */
 function unlockEditWithPassword() {
     unlockSecretPanel();
 }
@@ -254,7 +251,7 @@ function renderFixtures() {
 
 
 /* =========================================================
-   SAVE
+   SAVE — مع حفظ TOTW تلقائياً
 ========================================================= */
 
 async function saveCurrentRound() {
@@ -281,13 +278,25 @@ async function saveCurrentRound() {
     });
 
     localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+    localStorage.setItem('fpl_last_round', currentRound);
 
+    /* حفظ النتائج في Supabase */
     let result = { ok: true };
 
     try {
         result = await saveRoundToSupabase(currentRound, matchweeks, scoresStorage);
     } catch (e) {
         result = { ok: false, error: e };
+    }
+
+    /* حفظ TOTW snapshot تلقائياً */
+    if (result.ok && typeof saveManualTOTW === 'function') {
+        try {
+            await saveManualTOTW(currentRound);
+            console.log('TOTW snapshot saved automatically');
+        } catch (e) {
+            console.warn('TOTW snapshot failed:', e);
+        }
     }
 
     isSaving = false;
