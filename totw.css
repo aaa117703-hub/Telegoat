@@ -108,6 +108,10 @@
     z-index:2;
 }
 
+/* =========================================================
+   الصفوف
+========================================================= */
+
 .totw-row{
     display:flex;
     justify-content:center;
@@ -140,6 +144,10 @@
     justify-content:space-evenly;
     padding:0 22%;
 }
+
+/* =========================================================
+   الكرت
+========================================================= */
 
 .totw-card{
     width:60px;
@@ -193,6 +201,36 @@
     padding:4px;
 }
 
+/* =========================================================
+   FALLBACK — دائرة بحرف الاسم الأول
+========================================================= */
+
+.totw-card .tc-shirt-initial{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(30, 90, 50, 0.55);
+}
+
+.totw-card .tc-shirt-initial span{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#37003c;
+    color:#fff;
+    font-size:18px;
+    font-weight:900;
+    border:2px solid #00ff87;
+    box-shadow:0 2px 6px rgba(0,0,0,.4);
+}
+
+/* =========================================================
+   الاسم + النقاط
+========================================================= */
+
 .totw-card .tc-name{
     display:flex;
     align-items:center;
@@ -239,6 +277,10 @@
     border:none;
     border-radius:0;
 }
+
+/* =========================================================
+   عرض القائمة
+========================================================= */
 
 .totw-list-view{
     width:100%;
@@ -380,6 +422,10 @@
     letter-spacing:0.5px;
 }
 
+/* =========================================================
+   Loading + Error
+========================================================= */
+
 .totw-loading{
     text-align:center;
     padding:40px 20px;
@@ -415,6 +461,10 @@
     font-weight:800;
 }
 
+/* =========================================================
+   الموبايل
+========================================================= */
+
 @media(max-width:480px){
 
     .totw-tab-btn{
@@ -446,6 +496,12 @@
         width:50px;
         height:44px;
         padding:3px 4px 0 4px;
+    }
+
+    .totw-card .tc-shirt-initial span{
+        width:30px;
+        height:30px;
+        font-size:15px;
     }
 
     .totw-card .tc-name{
