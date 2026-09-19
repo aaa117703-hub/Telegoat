@@ -443,7 +443,7 @@ body{
 }
 
 /* =========================================================
-   MATCH SCORE CENTER — تدرج شفاف
+   MATCH SCORE CENTER — تدرج أبيض → بنفسجي → أبيض
 ========================================================= */
 
 .match-score-center{
@@ -452,17 +452,15 @@ body{
     justify-content:center;
     gap:5px;
     flex:0 0 auto;
-    width:140px;
-    min-width:140px;
-    padding:8px 22px;
+    width:180px;
+    min-width:180px;
+    padding:8px 40px;
     border-radius:0;
     background:linear-gradient(
         90deg,
-        rgba(56, 0, 60, 0) 0%,
-        rgba(56, 0, 60, 0.85) 25%,
-        rgba(56, 0, 60, 1) 50%,
-        rgba(56, 0, 60, 0.85) 75%,
-        rgba(56, 0, 60, 0) 100%
+        #ffffff 0%,
+        #38003c 50%,
+        #ffffff 100%
     );
 }
 
@@ -494,6 +492,9 @@ body{
     color:#fff;
     font-size:15px;
     font-weight:900;
+    text-shadow:0 1px 3px rgba(0,0,0,.5);
+    position:relative;
+    z-index:2;
 }
 
 .score-input{
@@ -508,6 +509,9 @@ body{
     color:#fff;
     font-size:13px;
     opacity:.9;
+    text-shadow:0 1px 3px rgba(0,0,0,.5);
+    position:relative;
+    z-index:2;
 }
 
 #captureStandings{
@@ -1030,13 +1034,13 @@ tr.red-line td{border-bottom:3px solid #ff005a!important}
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=27"></script>
-<script src="fixtures.js?v=28"></script>
+<script src="carousel.js?v=28"></script>
+<script src="fixtures.js?v=29"></script>
 <script src="standings.js"></script>
-<script src="download.js?v=9"></script>
-<script src="players-teams.js?v=89"></script>
-<script src="totw.js?v=102"></script>
-<script src="main.js?v=8"></script>
+<script src="download.js?v=10"></script>
+<script src="players-teams.js?v=90"></script>
+<script src="totw.js?v=103"></script>
+<script src="main.js?v=9"></script>
 
 </body>
 </html>
