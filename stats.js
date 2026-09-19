@@ -97,7 +97,7 @@ function computeLeagueStats(managers) {
 
 
 /* =========================================================
-   CREATE ROW
+   CREATE ROW — مع تدرج للمراكز 1-2-3
 ========================================================= */
 
 function createStatsRow(rank, manager, value, valueLabel) {
@@ -126,11 +126,23 @@ function createStatsRow(rank, manager, value, valueLabel) {
 
     let rankClass = 'stats-rank-normal';
     let medal = '';
-    if (rank === 1) { rankClass = 'stats-rank-gold'; medal = '🥇'; }
-    else if (rank === 2) { rankClass = 'stats-rank-silver'; medal = '🥈'; }
-    else if (rank === 3) { rankClass = 'stats-rank-bronze'; medal = '🥉'; }
+    let rowExtra = '';
 
-    return '<div class="stats-row">' +
+    if (rank === 1) {
+        rankClass = 'stats-rank-gold';
+        medal = '🥇';
+        rowExtra = ' stats-row-gold';
+    } else if (rank === 2) {
+        rankClass = 'stats-rank-silver';
+        medal = '🥈';
+        rowExtra = ' stats-row-silver';
+    } else if (rank === 3) {
+        rankClass = 'stats-rank-bronze';
+        medal = '🥉';
+        rowExtra = ' stats-row-bronze';
+    }
+
+    return '<div class="stats-row' + rowExtra + '">' +
         '<div class="stats-rank ' + rankClass + '">' + (medal || rank) + '</div>' +
         logoHtml +
         '<div class="stats-row-names">' +
@@ -339,7 +351,7 @@ function renderSearchResults(results) {
 
 
 /* =========================================================
-   MANAGER PROFILE
+   MANAGER PROFILE — يستخدم شعار الفريق
 ========================================================= */
 
 function renderManagerProfile(manager) {
@@ -365,16 +377,17 @@ function renderManagerProfile(manager) {
         teamName = findPlayerTeam(rawName) || findPlayerTeam(entryName) || '';
     }
 
-    let shirtHtml = '';
+    /* ✅ شعار الفريق بدل القميص */
+    let logoHtml = '';
 
     if (
         teamName &&
-        typeof TEAMS_SHIRTS !== 'undefined' &&
-        TEAMS_SHIRTS[teamName]
+        typeof TEAMS_LOGOS !== 'undefined' &&
+        TEAMS_LOGOS[teamName]
     ) {
-        shirtHtml = '<img src="./' + TEAMS_SHIRTS[teamName].file + '" onerror="this.style.display=\'none\'">';
+        logoHtml = '<img src="./' + TEAMS_LOGOS[teamName] + '" onerror="this.style.display=\'none\'">';
     } else {
-        shirtHtml = '<img src="./unknown-shirt.png" onerror="this.style.display=\'none\'">';
+        logoHtml = '<div class="stats-profile-no-logo">⚽</div>';
     }
 
     const percentile = Math.round(((totalManagers - rank + 1) / totalManagers) * 100);
@@ -394,7 +407,7 @@ function renderManagerProfile(manager) {
 
             '<div class="stats-profile-rank-badge">#' + rank + '</div>' +
 
-            '<div class="stats-profile-shirt">' + shirtHtml + '</div>' +
+            '<div class="stats-profile-shirt">' + logoHtml + '</div>' +
 
             '<div class="stats-profile-entry">' + (entryName || rawName) + '</div>' +
             '<div class="stats-profile-player">' + rawName + '</div>' +
