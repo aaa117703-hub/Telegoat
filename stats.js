@@ -1,5 +1,5 @@
 /* =========================================================
-   stats.js — إحصائيات احترافية
+   stats.js — إحصائيات احترافية (بالعربي)
 ========================================================= */
 
 const STATS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -74,15 +74,6 @@ function computeLeagueStats(managers) {
     const avgEvent = Math.round(sumEvent / totalManagers);
     const avgTotal = Math.round(sumTotal / totalManagers);
 
-    /* أكثر من قمة الجولة */
-    const gwWinners = {};
-    managers.forEach(function(m) {
-        const ev = m.event_total || 0;
-        if (ev === highestEvent) {
-            gwWinners[m.entry] = m;
-        }
-    });
-
     const sortedByEvent = [...managers].sort(function(a, b) {
         return (b.event_total || 0) - (a.event_total || 0);
     });
@@ -100,8 +91,6 @@ function computeLeagueStats(managers) {
         highestTotal: highestTotal,
         topEvent: sortedByEvent.slice(0, 10),
         topTotal: sortedByTotal.slice(0, 10),
-        gwWinner: Object.values(gwWinners)[0] || null,
-        gwWinnersCount: Object.keys(gwWinners).length,
         allManagers: managers
     };
 }
@@ -113,7 +102,7 @@ function computeLeagueStats(managers) {
 
 function createStatsRow(rank, manager, value, valueLabel) {
 
-    const rawName = manager.player_name || manager.entry_name || 'Unknown';
+    const rawName = manager.player_name || manager.entry_name || 'غير معروف';
     const entryName = manager.entry_name || '';
 
     let teamName = '';
@@ -173,24 +162,20 @@ function renderStatsOverview(stats) {
     setVal('kpiAvg', stats.avgEvent);
     setVal('kpiHigh', stats.highestEvent);
     setVal('kpiHighestTotal', stats.highestTotal);
-    setVal('kpiLow', stats.lowestEvent);
-    setVal('kpiAvgTotal', stats.avgTotal);
 
-    /* Top GW */
     const topEventList = document.getElementById('statsTopEvent');
     if (topEventList) {
         topEventList.innerHTML = '';
         stats.topEvent.forEach(function(m, i) {
-            topEventList.innerHTML += createStatsRow(i + 1, m, m.event_total || 0, 'GW');
+            topEventList.innerHTML += createStatsRow(i + 1, m, m.event_total || 0, 'الجولة');
         });
     }
 
-    /* Top Total */
     const topTotalList = document.getElementById('statsTopTotal');
     if (topTotalList) {
         topTotalList.innerHTML = '';
         stats.topTotal.forEach(function(m, i) {
-            topTotalList.innerHTML += createStatsRow(i + 1, m, m.total || 0, 'TOTAL');
+            topTotalList.innerHTML += createStatsRow(i + 1, m, m.total || 0, 'المجموع');
         });
     }
 }
@@ -209,7 +194,6 @@ function renderStatsRecords(stats) {
 
     const cards = [];
 
-    /* أعلى نقاط جولة */
     if (stats.topEvent[0]) {
         const m = stats.topEvent[0];
         cards.push({
@@ -221,7 +205,6 @@ function renderStatsRecords(stats) {
         });
     }
 
-    /* أعلى مجموع */
     if (stats.topTotal[0]) {
         const m = stats.topTotal[0];
         cards.push({
@@ -233,7 +216,6 @@ function renderStatsRecords(stats) {
         });
     }
 
-    /* أدنى نقاط جولة */
     if (stats.lowestEvent) {
         cards.push({
             icon: '💀',
@@ -244,7 +226,6 @@ function renderStatsRecords(stats) {
         });
     }
 
-    /* متوسط الدوري */
     cards.push({
         icon: '📊',
         label: 'متوسط الجولة',
@@ -396,14 +377,11 @@ function renderManagerProfile(manager) {
         shirtHtml = '<img src="./unknown-shirt.png" onerror="this.style.display=\'none\'">';
     }
 
-    /* ترتيب كنسبة مئوية */
     const percentile = Math.round(((totalManagers - rank + 1) / totalManagers) * 100);
 
-    /* الفارق عن المتصدر */
     const topManager = sortedByTotal[0];
     const diff = topManager ? (topManager.total || 0) - (manager.total || 0) : 0;
 
-    /* الفارق عن اللي بعده */
     const nextManager = sortedByTotal[rank - 2];
     const prevManager = sortedByTotal[rank];
     const toNext = nextManager ? (nextManager.total || 0) - (manager.total || 0) : 0;
@@ -500,7 +478,7 @@ async function loadStats() {
         const managers = await fetchAllManagersForStats();
 
         if (!managers || managers.length === 0) {
-            throw new Error('No data received');
+            throw new Error('لم يتم استلام بيانات');
         }
 
         statsAllManagers = managers;
