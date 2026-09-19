@@ -9,13 +9,9 @@ function showToast(msg, isSuccess, duration) {
     const toast = document.getElementById('toast');
     const content = document.getElementById('toastContent');
 
-    if (!toast || !content) {
-        return;
-    }
+    if (!toast || !content) return;
 
-    if (toastTimeout) {
-        clearTimeout(toastTimeout);
-    }
+    if (toastTimeout) clearTimeout(toastTimeout);
 
     if (isSuccess) {
         content.innerHTML = 'OK ' + msg;
@@ -35,10 +31,7 @@ function showToast(msg, isSuccess, duration) {
 
 function initRoundDropdown() {
     const select = document.getElementById('roundSelect');
-
-    if (!select) {
-        return;
-    }
+    if (!select) return;
 
     select.innerHTML = '';
 
@@ -46,11 +39,7 @@ function initRoundDropdown() {
         const opt = document.createElement('option');
         opt.value = i;
         opt.innerText = 'Round ' + i;
-
-        if (i === currentRound) {
-            opt.selected = true;
-        }
-
+        if (i === currentRound) opt.selected = true;
         select.appendChild(opt);
     }
 }
@@ -60,35 +49,22 @@ function selectRound(value) {
     currentRound = parseInt(value, 10);
     localStorage.setItem('fpl_last_round', currentRound);
     renderFixtures();
-
-    if (activeTab === 'standings') {
-        renderStandings();
-    }
+    if (activeTab === 'standings') renderStandings();
 }
 
 
 function changeRound(step) {
     currentRound += step;
-
-    if (currentRound < 1) {
-        currentRound = 1;
-    }
-
-    if (currentRound > 38) {
-        currentRound = 38;
-    }
-
+    if (currentRound < 1) currentRound = 1;
+    if (currentRound > 38) currentRound = 38;
     localStorage.setItem('fpl_last_round', currentRound);
     renderFixtures();
-
-    if (activeTab === 'standings') {
-        renderStandings();
-    }
+    if (activeTab === 'standings') renderStandings();
 }
 
 
 /* =========================================================
-   SWITCH TAB — مع نظام القفل
+   SWITCH TAB
 ========================================================= */
 
 function switchTab(tabName) {
@@ -122,47 +98,35 @@ function switchTab(tabName) {
     activeTab = tabName;
 
     const tabs = document.querySelectorAll('.tab-content');
-
-    tabs.forEach(function(el) {
-        el.classList.remove('active');
-    });
+    tabs.forEach(function(el) { el.classList.remove('active'); });
 
     if (tabName === 'standings') {
-
         const el = document.getElementById('standingsTab');
-        if (el) {
-            el.classList.add('active');
-        }
+        if (el) el.classList.add('active');
         renderStandings();
-
     } else if (tabName === 'totw') {
-
         const el = document.getElementById('totwTab');
-        if (el) {
-            el.classList.add('active');
-        }
-
-        if (typeof loadTOTW === 'function') {
-            loadTOTW();
-        }
-
+        if (el) el.classList.add('active');
+        if (typeof loadTOTW === 'function') loadTOTW();
     } else {
-
         const el = document.getElementById('fixturesTab');
-        if (el) {
-            el.classList.add('active');
-        }
+        if (el) el.classList.add('active');
     }
 }
 
 
 /* =========================================================
-   UNLOCK EDIT — رمز 1999 لتعديل الجولات فقط
+   SECRET PANEL — يفتح حسب الرمز
 ========================================================= */
 
-function unlockEditWithPassword() {
-    const pass = prompt('Enter EDIT password:');
+function unlockSecretPanel() {
 
+    const pass = prompt('Enter password:');
+
+    /* المستخدم ألغى */
+    if (pass === null) return;
+
+    /* رمز تعديل النتائج */
     if (pass === '1999') {
 
         editMode = true;
@@ -170,17 +134,33 @@ function unlockEditWithPassword() {
         localStorage.setItem('tg_admin', 'true');
 
         const panel = document.getElementById('editPanel');
-        if (panel) {
-            panel.style.display = 'flex';
-        }
+        if (panel) panel.style.display = 'flex';
 
         renderFixtures();
 
         showToast('Edit mode enabled', true);
 
-    } else if (pass !== null) {
-        alert('Incorrect password!');
+        return;
     }
+
+    /* رمز إعدادات الموقع */
+    if (pass === '024680') {
+
+        if (typeof activateLockControl === 'function') {
+            activateLockControl();
+        }
+
+        return;
+    }
+
+    /* رمز غلط */
+    alert('Incorrect password!');
+}
+
+
+/* نُبقي الدالة القديمة للتوافق */
+function unlockEditWithPassword() {
+    unlockSecretPanel();
 }
 
 
@@ -188,9 +168,7 @@ function exitEditMode() {
     editMode = false;
 
     const panel = document.getElementById('editPanel');
-    if (panel) {
-        panel.style.display = 'none';
-    }
+    if (panel) panel.style.display = 'none';
 
     renderFixtures();
     renderStandings();
@@ -213,21 +191,11 @@ function renderFixtures() {
         const selectEl = document.getElementById('roundSelect');
         const fixturesTitle = document.getElementById('fixturesBannerTitle');
 
-        if (!list) {
-            return;
-        }
+        if (!list) return;
 
-        if (title) {
-            title.innerText = 'MATCHWEEK ' + currentRound;
-        }
-
-        if (selectEl) {
-            selectEl.value = currentRound;
-        }
-
-        if (fixturesTitle) {
-            fixturesTitle.innerText = 'MATCHWEEK ' + currentRound;
-        }
+        if (title) title.innerText = 'MATCHWEEK ' + currentRound;
+        if (selectEl) selectEl.value = currentRound;
+        if (fixturesTitle) fixturesTitle.innerText = 'MATCHWEEK ' + currentRound;
 
         list.innerHTML = '';
 
@@ -290,18 +258,15 @@ function renderFixtures() {
 ========================================================= */
 
 async function saveCurrentRound() {
-    if (isSaving) {
-        return;
-    }
+    if (isSaving) return;
 
     isSaving = true;
     showToast('Saving...', false);
 
     const saveBtn = document.getElementById('saveRoundBtn');
     const clearBtn = document.getElementById('clearRoundBtn');
-
-    if (saveBtn) { saveBtn.disabled = true; }
-    if (clearBtn) { clearBtn.disabled = true; }
+    if (saveBtn) saveBtn.disabled = true;
+    if (clearBtn) clearBtn.disabled = true;
 
     const matches = matchweeks[currentRound] || [];
 
@@ -326,22 +291,16 @@ async function saveCurrentRound() {
     }
 
     isSaving = false;
-
-    if (saveBtn) { saveBtn.disabled = false; }
-    if (clearBtn) { clearBtn.disabled = false; }
+    if (saveBtn) saveBtn.disabled = false;
+    if (clearBtn) clearBtn.disabled = false;
 
     if (result.ok) {
         showToast('Saved successfully', true);
         exitEditMode();
     } else {
         let errMsg = 'Unknown error';
-
-        if (result.error && result.error.message) {
-            errMsg = result.error.message;
-        } else if (result.error) {
-            errMsg = String(result.error);
-        }
-
+        if (result.error && result.error.message) errMsg = result.error.message;
+        else if (result.error) errMsg = String(result.error);
         showToast('Save failed: ' + errMsg, false, 20000);
     }
 }
@@ -352,24 +311,18 @@ async function saveCurrentRound() {
 ========================================================= */
 
 async function clearCurrentRound() {
-    if (isSaving) {
-        return;
-    }
+    if (isSaving) return;
 
     const confirmed = confirm('Clear round ' + currentRound + '?');
-
-    if (!confirmed) {
-        return;
-    }
+    if (!confirmed) return;
 
     isSaving = true;
     showToast('Clearing...', false);
 
     const saveBtn = document.getElementById('saveRoundBtn');
     const clearBtn = document.getElementById('clearRoundBtn');
-
-    if (saveBtn) { saveBtn.disabled = true; }
-    if (clearBtn) { clearBtn.disabled = true; }
+    if (saveBtn) saveBtn.disabled = true;
+    if (clearBtn) clearBtn.disabled = true;
 
     const matches = matchweeks[currentRound] || [];
 
@@ -389,22 +342,16 @@ async function clearCurrentRound() {
     }
 
     isSaving = false;
-
-    if (saveBtn) { saveBtn.disabled = false; }
-    if (clearBtn) { clearBtn.disabled = false; }
+    if (saveBtn) saveBtn.disabled = false;
+    if (clearBtn) clearBtn.disabled = false;
 
     if (result.ok) {
         showToast('Round cleared', true);
         exitEditMode();
     } else {
         let errMsg = 'Unknown error';
-
-        if (result.error && result.error.message) {
-            errMsg = result.error.message;
-        } else if (result.error) {
-            errMsg = String(result.error);
-        }
-
+        if (result.error && result.error.message) errMsg = result.error.message;
+        else if (result.error) errMsg = String(result.error);
         showToast('Clear failed: ' + errMsg, false, 20000);
     }
 }
@@ -422,10 +369,7 @@ function setupEruda() {
     let clickTimer = null;
 
     const titleEl = document.getElementById('currentRoundTitle');
-
-    if (!titleEl) {
-        return;
-    }
+    if (!titleEl) return;
 
     titleEl.addEventListener('click', function() {
         clickCount++;
@@ -433,17 +377,11 @@ function setupEruda() {
 
         if (clickCount >= 5) {
             clickCount = 0;
-
             if (typeof eruda !== 'undefined' && eruda.init) {
-                try {
-                    eruda.init();
-                    eruda.show();
-                } catch (e) {}
+                try { eruda.init(); eruda.show(); } catch (e) {}
             }
         }
 
-        clickTimer = setTimeout(function() {
-            clickCount = 0;
-        }, 2000);
+        clickTimer = setTimeout(function() { clickCount = 0; }, 2000);
     });
 }
