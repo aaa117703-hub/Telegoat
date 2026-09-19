@@ -442,10 +442,6 @@ body{
     white-space:nowrap;
 }
 
-/* =========================================================
-   MATCH SCORE CENTER
-========================================================= */
-
 .match-score-center{
     display:flex;
     align-items:center;
@@ -514,10 +510,6 @@ body{
     z-index:2;
 }
 
-/* =========================================================
-   STANDINGS
-========================================================= */
-
 #captureStandings{
     background:#fff;border-radius:16px;overflow:hidden;
     border:3px solid #fff;width:100%;position:relative;
@@ -570,10 +562,6 @@ tr{
 tr:last-child td{border-bottom:none}
 tr.green-line td{border-bottom:3px solid #00ff87!important}
 tr.red-line td{border-bottom:3px solid #ff005a!important}
-
-/* =========================================================
-   تدرجات الصفوف — أخضر / أحمر
-========================================================= */
 
 tr.pos-1{
     background:linear-gradient(
@@ -669,6 +657,79 @@ tr.pos-20{
 
 .tab-content{display:none}
 .tab-content.active{display:block}
+
+/* =========================================================
+   STATS TAB — تصميم مبدئي
+========================================================= */
+
+.stats-header-box{
+    text-align:center;
+    margin-bottom:16px;
+    padding:24px 16px;
+    background:linear-gradient(135deg, #38003c 0%, #6b21a8 100%);
+    border-radius:16px;
+    border:3px solid #00ff87;
+    box-shadow:0 0 25px rgba(0,255,135,.5);
+}
+
+.stats-header-icon{
+    font-size:48px;
+    margin-bottom:10px;
+    display:block;
+}
+
+.stats-header-title{
+    font-size:24px;
+    font-weight:900;
+    color:#fff;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    text-shadow:0 3px 10px rgba(0,0,0,.6);
+}
+
+.stats-header-subtitle{
+    font-size:13px;
+    font-weight:700;
+    color:#00ff87;
+    letter-spacing:2px;
+    margin-top:8px;
+    text-transform:uppercase;
+}
+
+.stats-coming-soon{
+    text-align:center;
+    padding:60px 20px;
+    background:linear-gradient(135deg, #2e0b3d 0%, #38003c 100%);
+    border-radius:16px;
+    border:2px dashed #00ff87;
+    color:#fff;
+}
+
+.stats-coming-soon .big-icon{
+    font-size:64px;
+    margin-bottom:16px;
+    display:block;
+    animation:statsBounce 2s infinite;
+}
+
+@keyframes statsBounce{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+}
+
+.stats-coming-soon h3{
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:2px;
+    margin-bottom:10px;
+    color:#00ff87;
+}
+
+.stats-coming-soon p{
+    font-size:13px;
+    color:#b8b8b8;
+    line-height:1.7;
+}
 
 /* =========================================================
    ADMIN LOCK PANEL
@@ -865,7 +926,7 @@ tr.pos-20{
 </style>
 
 <link rel="stylesheet" href="mobile.css">
-<link rel="stylesheet" href="totw.css?v=13">
+<link rel="stylesheet" href="totw.css?v=14">
 
 </head>
 
@@ -1009,6 +1070,27 @@ tr.pos-20{
 
     </div>
 
+    <!-- =========================================================
+         STATS TAB — جديد
+    ========================================================= -->
+
+    <div id="statsTab" class="tab-content">
+
+        <div class="stats-header-box">
+            <span class="stats-header-icon">📊</span>
+            <div class="stats-header-title">Statistics</div>
+            <div class="stats-header-subtitle">League Analytics · Season 2025/26</div>
+        </div>
+
+        <div class="stats-coming-soon">
+            <span class="big-icon">🚀</span>
+            <h3>قريباً</h3>
+            <p>نعمل على إحصائيات شاملة لكل مدير</p>
+            <p>ترقبوا التحديثات</p>
+        </div>
+
+    </div>
+
 </div>
 
 <script>
@@ -1100,17 +1182,17 @@ tr.pos-20{
 </script>
 
 <script src="config.js"></script>
-<script src="locks.js?v=9"></script>
+<script src="locks.js?v=10"></script>
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=29"></script>
-<script src="fixtures.js?v=30"></script>
-<script src="standings.js?v=2"></script>
-<script src="download.js?v=11"></script>
-<script src="players-teams.js?v=91"></script>
-<script src="totw.js?v=104"></script>
-<script src="main.js?v=10"></script>
+<script src="carousel.js?v=30"></script>
+<script src="fixtures.js?v=31"></script>
+<script src="standings.js?v=3"></script>
+<script src="download.js?v=12"></script>
+<script src="players-teams.js?v=92"></script>
+<script src="totw.js?v=105"></script>
+<script src="main.js?v=11"></script>
 
 </body>
 </html>
