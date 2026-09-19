@@ -458,7 +458,8 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 
 <link rel="stylesheet" href="mobile.css">
 <link rel="stylesheet" href="totw.css?v=14">
-<link rel="stylesheet" href="stats.css?v=1">
+<link rel="stylesheet" href="stats.css?v=2">
+<link rel="stylesheet" href="trends.css?v=1">
 
 </head>
 
@@ -606,6 +607,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 
         <div class="stats-tabs">
             <button class="stats-tab-btn active" data-tab="overview" onclick="switchStatsTab('overview')">📊 Overview</button>
+            <button class="stats-tab-btn" data-tab="trends" onclick="switchStatsTab('trends')">📈 Trends</button>
             <button class="stats-tab-btn" data-tab="search" onclick="switchStatsTab('search')">🔍 Search</button>
             <button class="stats-tab-btn" data-tab="records" onclick="switchStatsTab('records')">🏆 Records</button>
         </div>
@@ -620,7 +622,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
             <div id="statsView-overview" class="stats-view active">
 
                 <div class="stats-kpi-grid">
-                    <div0 class="stats-kpi-card">
+                    <div class="stats-kpi-card">
                         <span class="stats-kpi-icon">👥</span>
                         <div class="stats-kpi-value" id="kpiManagers">0</div>
                         <div class="stats-kpi-label">Managers</div>
@@ -632,7 +634,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
                     </div>
                     <div class="stats-kpi-card">
                         <span class="stats-kpi-icon">⚡</span>
-                        <div class="stats-kpi-value" id="kpiHigh"></div>
+                        <div class="stats-kpi-value" id="kpiHigh">0</div>
                         <div class="stats-kpi-label">Highest GW</div>
                     </div>
                     <div class="stats-kpi-card">
@@ -650,6 +652,20 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
                 <div class="stats-section">
                     <div class="stats-section-title">🏆 Top 10 — Total Points</div>
                     <div id="statsTopTotal"></div>
+                </div>
+
+            </div>
+
+            <div id="statsView-trends" class="stats-view">
+
+                <div class="stats-section">
+                    <div class="stats-section-title">🚀 Top Risers — أكبر صعود</div>
+                    <div id="statsTopRisers"></div>
+                </div>
+
+                <div class="stats-section">
+                    <div class="stats-section-title">💀 Top Fallers — أكبر هبوط</div>
+                    <div id="statsTopFallers"></div>
                 </div>
 
             </div>
@@ -776,18 +792,19 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 </script>
 
 <script src="config.js"></script>
-<script src="locks.js?v=13"></script>
+<script src="locks.js?v=14"></script>
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=34"></script>
-<script src="fixtures.js?v=35"></script>
-<script src="standings.js?v=6"></script>
-<script src="download.js?v=15"></script>
-<script src="players-teams.js?v=95"></script>
-<script src="totw.js?v=108"></script>
-<script src="stats.js?v=3"></script>
-<script src="main.js?v=15"></script>
+<script src="carousel.js?v=35"></script>
+<script src="fixtures.js?v=36"></script>
+<script src="standings.js?v=7"></script>
+<script src="download.js?v=16"></script>
+<script src="players-teams.js?v=96"></script>
+<script src="totw.js?v=109"></script>
+<script src="trends.js?v=1"></script>
+<script src="stats.js?v=5"></script>
+<script src="main.js?v=16"></script>
 
 </body>
 </html>
