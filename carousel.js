@@ -20,6 +20,12 @@ const carouselSlides = [
         image: './banner3.png',
         tab: 'totw',
         alt: 'TOTW'
+    },
+
+    {
+        image: './banner4.png',
+        tab: 'stats',
+        alt: 'STATISTICS'
     }
 
 ];
