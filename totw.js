@@ -239,7 +239,7 @@ function renderTOTWCards(top11) {
 
 
 /* =========================================================
-   CREATE CARD
+   CREATE CARD — مع قميص افتراضي للمجهول
 ========================================================= */
 
 function createTOTWCard(player) {
@@ -257,6 +257,7 @@ function createTOTWCard(player) {
 
     let shirtHtml = '';
 
+    /* عندنا قميص الفريق */
     if (
         teamName &&
         typeof TEAMS_SHIRTS !== 'undefined' &&
@@ -270,7 +271,10 @@ function createTOTWCard(player) {
                 '<img src="./' + shirtData.file + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
             '</div>';
 
-    } else if (
+    }
+
+    /* عندنا شعار الفريق فقط */
+    else if (
         teamName &&
         typeof TEAMS_LOGOS !== 'undefined' &&
         TEAMS_LOGOS[teamName]
@@ -279,6 +283,16 @@ function createTOTWCard(player) {
         shirtHtml =
             '<div class="tc-shirt tc-shirt-fallback">' +
                 '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
+            '</div>';
+
+    }
+
+    /* فريق مجهول — القميص الأسود */
+    else {
+
+        shirtHtml =
+            '<div class="tc-shirt">' +
+                '<img src="./unknown-shirt.png" alt="Unknown" onerror="this.style.display=\'none\'">' +
             '</div>';
     }
 
@@ -356,7 +370,7 @@ function renderTOTWList(top11) {
 
 
 /* =========================================================
-   LOAD TOTW — مع حماية البيانات القديمة
+   LOAD TOTW
 ========================================================= */
 
 async function loadTOTW() {
@@ -380,7 +394,6 @@ async function loadTOTW() {
 
         let top11 = null;
 
-        /* ============ جولة قديمة ============ */
         if (latestRound > 0 && viewingRound < latestRound) {
 
             console.log('Loading snapshot for old round', viewingRound);
@@ -391,7 +404,6 @@ async function loadTOTW() {
                 top11 = snapshot;
                 console.log('Snapshot loaded:', top11.length, 'players');
             } else {
-                /* ما لقينا snapshot — نعرض رسالة بدل بيانات خاطئة */
                 loadingBox.style.display = 'none';
                 if (errorBox) {
                     errorBox.style.display = 'block';
@@ -402,7 +414,6 @@ async function loadTOTW() {
                 return;
             }
 
-        /* ============ جولة حالية ============ */
         } else {
 
             console.log('Fetching fresh from FPL for round', viewingRound);
@@ -415,7 +426,6 @@ async function loadTOTW() {
 
             top11 = getTOTWTop11(allResults);
 
-            /* نحفظ snapshot للجولة الحالية */
             if (viewingRound === latestRound && latestRound > 0) {
                 await saveTOTWSnapshot(viewingRound, top11);
             }
@@ -448,7 +458,7 @@ async function loadTOTW() {
 
 
 /* =========================================================
-   SAVE MANUAL TOTW — يُستدعى من saveCurrentRound
+   SAVE MANUAL TOTW
 ========================================================= */
 
 async function saveManualTOTW(round) {
