@@ -25,15 +25,16 @@ const SECTIONS = [
 
 
 /* =========================================================
-   HELPERS
+   HELPERS — الصلاحيات
 ========================================================= */
 
 function isAdmin() {
     return localStorage.getItem('tg_admin') === 'true';
 }
 
+/* Lock Control يستخدم sessionStorage — يختفي عند إغلاق التبويب */
 function isLocker() {
-    return localStorage.getItem('tg_locker') === 'true';
+    return sessionStorage.getItem('tg_locker') === 'true';
 }
 
 
@@ -141,7 +142,7 @@ function hideSectionMaintenance() {
 
 
 /* =========================================================
-   ADMIN LOCK PANEL
+   ADMIN LOCK PANEL — 3 أزرار
 ========================================================= */
 
 function buildAdminLockPanel() {
@@ -194,12 +195,12 @@ function refreshAdminLockPanel() {
 
 
 /* =========================================================
-   ACTIVATE LOCK CONTROL — يُستدعى من الزر الموحد
+   ACTIVATE LOCK CONTROL — رمز 024680
 ========================================================= */
 
 function activateLockControl() {
 
-    localStorage.setItem('tg_locker', 'true');
+    sessionStorage.setItem('tg_locker', 'true');
 
     if (typeof showToast === 'function') {
         showToast('Lock Control enabled', true);
@@ -210,7 +211,7 @@ function activateLockControl() {
 
 
 /* =========================================================
-   LOCK PANEL PER SECTION
+   LOCK PANEL
 ========================================================= */
 
 function openLockPanel(sectionKey, sectionLabel) {
@@ -308,7 +309,8 @@ async function confirmSaveLock(sectionKey, sectionLabel) {
 
         closeLockPanel();
 
-        /* نشيل صلاحية القفل */
+        /* ⚠️ نشيل صلاحية القفل — الأزرار تختفي */
+        sessionStorage.removeItem('tg_locker');
         localStorage.removeItem('tg_locker');
 
         removeAdminLockPanel();
@@ -337,6 +339,9 @@ async function confirmSaveLock(sectionKey, sectionLabel) {
 ========================================================= */
 
 async function initLockSystem() {
+
+    /* تنظيف أي lock قديم */
+    localStorage.removeItem('tg_locker');
 
     await loadLocks();
     refreshAdminLockPanel();
