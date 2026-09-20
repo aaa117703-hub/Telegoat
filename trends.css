@@ -8,7 +8,7 @@
 
 .trend-row{
     display:grid;
-    grid-template-columns:36px 34px 1fr 60px;
+    grid-template-columns:34px 1fr 60px;
     gap:10px;
     align-items:center;
     padding:11px 8px;
@@ -21,20 +21,8 @@
 .trend-row:last-child{border-bottom:none;}
 
 .trend-row:hover{
-    background:rgba(0,255,135,.08);
+    background:rgba(0, 200, 83, 0.08);
     transform:translateX(-4px);
-}
-
-/* الأيقونة */
-.trend-row-icon{
-    width:30px;
-    height:30px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:20px;
-    margin:0 auto;
-    filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));
 }
 
 /* الشعار — بدون دائرة */
@@ -65,7 +53,7 @@
 }
 
 .trend-row-logo-empty{
-    font-size:20px;
+    font-size:18px;
     color:#fff;
 }
 
@@ -116,20 +104,22 @@
     justify-self:center;
 }
 
+/* الصعود — أخضر */
 .trend-diff-up{
-    color:#00ff87;
-    background:rgba(0,255,135,.15);
-    border:1px solid rgba(0,255,135,.4);
-    text-shadow:0 0 10px rgba(0,255,135,.6);
-    box-shadow:0 0 15px rgba(0,255,135,.2);
+    color:#002e676;
+    background:rgba;
+(0, 200,     background83, 0.20);
+    border:1px solid rgba(0, 200, 83, 0.5);
+    text-shadow:0 0 10px rgba(0, 200, 83, 0.6);
+    box-shadow:0 0 15px rgba(0, 200, 83, 0.3);
 }
 
+/* الهبوط — أحمر */
 .trend-diff-down{
-    color:#ff5252;
-    background:rgba(255,82,82,.15);
-    border:1px solid rgba(255,82,82,.4);
-    text-shadow:0 0 10px rgba(255,82,82,.5);
-    box-shadow:0 0 15px rgba(255,82,82,.2);
+    color:#ff525:rgba(229, 57, 53, 0.20);
+    border:1px solid rgba(229, 57, 53, 0.5);
+    text-shadow:0 0 10px rgba(229, 57, 53, 0.5);
+    box-shadow:0 0 15px rgba(229, 57, 53, 0.3);
 }
 
 /* =========================================================
@@ -139,19 +129,19 @@
 @media(max-width:480px){
 
     .trend-row{
-        grid-template-columns:32px 30px 1fr 52px;
+        grid-template-columns:30px 1fr 52px;
         padding:10px 6px;
         gap:8px;
         min-height:52px;
     }
-
-    .trend-row-icon{font-size:18px;width:26px;height:26px;}
 
     .trend-row-logo{
         width:30px;
         height:30px;
         min-width:30px;
         min-height:30px;
+        max-width:30px;
+        max-height:30px;
     }
 
     .trend-row-entry{font-size:12px;}
