@@ -18,6 +18,7 @@ async function loadClubsData() {
 
     if (!window.sbClient) {
         console.warn('Supabase not available');
+        seedFromLocal();
         return;
     }
 
@@ -28,6 +29,7 @@ async function loadClubsData() {
 
         if (error) {
             console.error('Load clubs error:', error);
+            seedFromLocal();
             return;
         }
 
@@ -38,20 +40,32 @@ async function loadClubsData() {
                 clubsData[row.team] = row.players || [];
             });
         } else {
-            /* ما فيه بيانات → نملأ من PLAYERS_TEAMS */
-            await seedClubsFromPlayersTeams();
+            seedFromLocal();
+            await seedClubsToSupabase();
         }
 
         clubsLoaded = true;
 
     } catch (e) {
         console.error('loadClubsData exception:', e);
+        seedFromLocal();
     }
 }
 
 
-async function seedClubsFromPlayersTeams() {
+function seedFromLocal() {
+    clubsData = {};
+    if (typeof PLAYERS_TEAMS === 'undefined') return;
 
+    for (const team in PLAYERS_TEAMS) {
+        clubsData[team] = PLAYERS_TEAMS[team].slice();
+    }
+}
+
+
+async function seedClubsToSupabase() {
+
+    if (!window.sbClient) return;
     if (typeof PLAYERS_TEAMS === 'undefined') return;
 
     const rows = [];
@@ -74,13 +88,9 @@ async function seedClubsFromPlayersTeams() {
             return;
         }
 
-        rows.forEach(function(r) {
-            clubsData[r.team] = r.players;
-        });
-
         console.log('Seeded ' + rows.length + ' clubs');
     } catch (e) {
-        console.error('seedClubsFromPlayersTeams exception:', e);
+        console.error('seedClubsToSupabase exception:', e);
     }
 }
 
@@ -126,16 +136,22 @@ async function saveClubPlayers(team, players) {
 function renderClubsList() {
 
     const container = document.getElementById('clubsList');
-    if (!container) return;
+    if (!container) {
+        console.warn('clubsList not found');
+        return;
+    }
 
     const teamKeys = Object.keys(clubsData);
 
     if (teamKeys.length === 0) {
-        container.innerHTML = '<div class="clubs-empty">لا توجد بيانات</div>';
+        container.innerHTML = '<div class="clubs-empty">لا توجد بيانات — جاري التحميل...</div>';
         return;
     }
 
-    container.innerHTML = '';
+    /* ترتيب أبجدي */
+    teamKeys.sort();
+
+    let html = '';
 
     teamKeys.forEach(function(team) {
         const players = clubsData[team] || [];
@@ -150,22 +166,19 @@ function renderClubsList() {
             logoHtml = '<div class="club-item-logo club-item-logo-empty">⚽</div>';
         }
 
-        const div = document.createElement('div');
-        div.className = 'club-item';
-        div.innerHTML =
-            logoHtml +
-            '<div class="club-item-info">' +
-                '<div class="club-item-name">' + team + '</div>' +
-                '<div class="club-item-count">' + players.length + ' لاعب</div>' +
-            '</div>' +
-            '<div class="club-item-arrow">›</div>';
-
-        div.addEventListener('click', function() {
-            openClubDetail(team);
-        });
-
-        container.appendChild(div);
+        html +=
+            '<div class="club-item" onclick="openClubDetail(\'' +
+                team.replace(/'/g, "\\'") + '\')">' +
+                logoHtml +
+                '<div class="club-item-info">' +
+                    '<div class="club-item-name">' + team + '</div>' +
+                    '<div class="club-item-count">' + players.length + ' لاعب</div>' +
+                '</div>' +
+                '<div class="club-item-arrow">›</div>' +
+            '</div>';
     });
+
+    container.innerHTML = html;
 }
 
 
@@ -255,7 +268,7 @@ function toggleClubsEditMode() {
     const btn = document.getElementById('clubsEditBtn');
     if (btn) {
         btn.classList.toggle('active', clubsEditMode);
-        btn.textContent = clubsEditMode ? '🔓 وضع التعديل' : '🔒 تعديل';
+        btn.textContent = clubsEditMode ? '🔓 وضع التعديل ✓' : '🔒 تعديل';
     }
 
     if (currentOpenClub) {
@@ -318,16 +331,17 @@ async function deletePlayer(team, index) {
 
 
 /* =========================================================
-   LOAD TAB
+   LOAD
 ========================================================= */
 
 async function loadClubs() {
 
     const loadingEl = document.getElementById('clubsLoading');
-    const contentEl = document.getElementById('clubsContent');
 
-    if (loadingEl) loadingEl.style.display = 'block';
-    if (contentEl) contentEl.style.display = 'none';
+    /* نخفي الـ loading بعد 5 ثواني كحماية */
+    const timeout = setTimeout(function() {
+        if (loadingEl) loadingEl.style.display = 'none';
+    }, 5000);
 
     if (!clubsLoaded) {
         await loadClubsData();
@@ -335,15 +349,21 @@ async function loadClubs() {
 
     renderClubsList();
 
+    clearTimeout(timeout);
+
     if (loadingEl) loadingEl.style.display = 'none';
-    if (contentEl) contentEl.style.display = 'block';
 }
 
 
 /* =========================================================
-   INIT
+   AUTO-LOAD ON INIT
 ========================================================= */
 
 document.addEventListener('DOMContentLoaded', function() {
-    /* لا نحمّل تلقائياً — ننتظر المستخدم يفتح التاب */
+    /* نحمّل البيانات مبدئياً بدون عرض */
+    setTimeout(function() {
+        if (!clubsLoaded) {
+            loadClubsData();
+        }
+    }, 2000);
 });
