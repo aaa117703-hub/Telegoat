@@ -157,7 +157,7 @@
 }
 
 .squad-player.bench{
-    opacity:.6;
+    opacity:.55;
 }
 .squad-player.bench:hover{ opacity:1; }
 
@@ -214,6 +214,7 @@
     font-size:9px;
     font-weight:900;
     flex-shrink:0;
+    padding:0 3px;
 }
 .squad-cap-C{
     background:linear-gradient(135deg, #ffd700 0%, #ff9500 100%);
@@ -263,7 +264,7 @@
     margin-bottom:12px;
 }
 
-/* زر "View Squad" في البروفايل */
+/* زر "View FPL Squad" */
 .btn-view-squad{
     display:flex;
     align-items:center;
@@ -290,6 +291,11 @@
 }
 .btn-view-squad:active{
     transform:translateY(0);
+}
+.btn-view-squad:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+    transform:none;
 }
 
 @media(max-width:480px){
