@@ -4,6 +4,7 @@
 
 const TOTW_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
 const TOTW_TOTAL_PAGES = 7;
+const TOTW_FETCH_LIMIT = 50;
 
 let currentTOTWView = 'squad';
 let currentTOTWData = [];
@@ -14,13 +15,9 @@ let currentTOTWData = [];
 ========================================================= */
 
 function shortenPlayerName(name) {
-
     if (!name) return name;
-
     const result = name.trim();
-
     if (result.length <= 12) return result;
-
     return result.substring(0, 12);
 }
 
@@ -40,12 +37,10 @@ function getLatestRound() {
 ========================================================= */
 
 async function saveTOTWSnapshot(round, top11) {
-
     if (!window.sbClient) return false;
     if (!round || !top11 || top11.length === 0) return false;
 
     try {
-
         const { error } = await window.sbClient
             .from('saved_totw')
             .upsert(
@@ -62,9 +57,8 @@ async function saveTOTWSnapshot(round, top11) {
             return false;
         }
 
-        console.log('TOTW saved for round', round, '(', top11.length, 'players)');
+        console.log('TOTW saved for round', round);
         return true;
-
     } catch (e) {
         console.error('Save TOTW exception:', e);
         return false;
@@ -73,11 +67,9 @@ async function saveTOTWSnapshot(round, top11) {
 
 
 async function loadTOTWSnapshot(round) {
-
     if (!window.sbClient) return null;
 
     try {
-
         const { data, error } = await window.sbClient
             .from('saved_totw')
             .select('data')
@@ -90,9 +82,7 @@ async function loadTOTWSnapshot(round) {
         }
 
         if (!data || !data.data) return null;
-
         return data.data;
-
     } catch (e) {
         console.error('Load TOTW exception:', e);
         return null;
@@ -105,30 +95,19 @@ async function loadTOTWSnapshot(round) {
 ========================================================= */
 
 async function fetchTOTWPages() {
-
     const allResults = [];
 
     for (let page = 1; page <= TOTW_TOTAL_PAGES; page++) {
-
         try {
-
             const response = await fetch(TOTW_WORKER_URL + '/?page=' + page);
             const data = await response.json();
 
             if (data && data.standings && data.standings.results) {
-
                 allResults.push(...data.standings.results);
-
-                if (data.standings.has_next === true) {
-                    continue;
-                } else {
-                    break;
-                }
-
+                if (data.standings.has_next !== true) break;
             } else {
                 break;
             }
-
         } catch (e) {
             console.error('TOTW Page ' + page + ' failed:', e);
             break;
@@ -140,16 +119,30 @@ async function fetchTOTWPages() {
 
 
 /* =========================================================
-   GET TOP 11
+   GET TOP 11 — فقط من عنده فريق معروف
 ========================================================= */
 
 function getTOTWTop11(allResults) {
 
+    /* ترتيب حسب نقاط الجولة */
     const sorted = [...allResults].sort(function(a, b) {
-        return b.event_total - a.event_total;
+        return (b.event_total || 0) - (a.event_total || 0);
     });
 
-    return sorted.slice(0, 11);
+    /* فلترة: فقط من عنده فريق */
+    const filtered = sorted.filter(function(m) {
+        if (typeof findPlayerTeam !== 'function') return true;
+
+        const rawName = m.player_name || m.entry_name || '';
+        const teamName = findPlayerTeam(rawName) || findPlayerTeam(m.entry_name) || '';
+
+        return teamName !== '';
+    });
+
+    console.log('TOTW Filter: ' + filtered.length + ' / ' + sorted.length + ' have known team');
+
+    /* أول 11 من المفلترين */
+    return filtered.slice(0, 11);
 }
 
 
@@ -158,18 +151,13 @@ function getTOTWTop11(allResults) {
 ========================================================= */
 
 function switchTOTWView(view) {
-
     currentTOTWView = view;
 
     const squadBtn = document.getElementById('totwSquadBtn');
     const listBtn = document.getElementById('totwListBtn');
 
-    if (squadBtn) {
-        squadBtn.classList.toggle('active', view === 'squad');
-    }
-    if (listBtn) {
-        listBtn.classList.toggle('active', view === 'list');
-    }
+    if (squadBtn) squadBtn.classList.toggle('active', view === 'squad');
+    if (listBtn) listBtn.classList.toggle('active', view === 'list');
 
     const pitchWrapper = document.getElementById('totwPitchWrapper');
     const listWrapper = document.getElementById('totwListWrapper');
@@ -191,7 +179,6 @@ function switchTOTWView(view) {
 function renderTOTWCards(top11) {
 
     const pitch = document.getElementById('totwPlayers');
-
     if (!pitch) return;
 
     const forward1 = top11[0];
@@ -239,7 +226,7 @@ function renderTOTWCards(top11) {
 
 
 /* =========================================================
-   CREATE CARD — مع قميص افتراضي للمجهول
+   CREATE CARD
 ========================================================= */
 
 function createTOTWCard(player) {
@@ -255,45 +242,31 @@ function createTOTWCard(player) {
         teamName = findPlayerTeam(rawName) || findPlayerTeam(player.entry_name) || '';
     }
 
+    /* ✅ فقط من عنده فريق */
     let shirtHtml = '';
 
-    /* عندنا قميص الفريق */
     if (
         teamName &&
         typeof TEAMS_SHIRTS !== 'undefined' &&
         TEAMS_SHIRTS[teamName]
     ) {
-
         const shirtData = TEAMS_SHIRTS[teamName];
-
         shirtHtml =
             '<div class="tc-shirt">' +
                 '<img src="./' + shirtData.file + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
             '</div>';
-
-    }
-
-    /* عندنا شعار الفريق فقط */
-    else if (
+    } else if (
         teamName &&
         typeof TEAMS_LOGOS !== 'undefined' &&
         TEAMS_LOGOS[teamName]
     ) {
-
         shirtHtml =
             '<div class="tc-shirt tc-shirt-fallback">' +
                 '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
             '</div>';
-
-    }
-
-    /* فريق مجهول — القميص الأسود */
-    else {
-
-        shirtHtml =
-            '<div class="tc-shirt">' +
-                '<img src="./unknown-shirt.png" alt="Unknown" onerror="this.style.display=\'none\'">' +
-            '</div>';
+    } else {
+        /* ما عنده فريق → لا نعرض شي (لن يصل هنا بسبب الفلترة) */
+        shirtHtml = '<div class="tc-shirt tc-shirt-empty"></div>';
     }
 
     return '<div class="totw-card">' +
@@ -311,7 +284,6 @@ function createTOTWCard(player) {
 function renderTOTWList(top11) {
 
     const listWrapper = document.getElementById('totwListWrapper');
-
     if (!listWrapper) return;
 
     let html = '';
@@ -336,21 +308,12 @@ function renderTOTWList(top11) {
         }
 
         let logoHtml = '';
-
-        if (
-            teamName &&
-            typeof TEAMS_LOGOS !== 'undefined' &&
-            TEAMS_LOGOS[teamName]
-        ) {
-            logoHtml =
-                '<div class="totw-list-logo">' +
-                    '<img src="./' + TEAMS_LOGOS[teamName] + '" alt="' + teamName + '" onerror="this.style.display=\'none\'">' +
-                '</div>';
+        if (teamName && typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName]) {
+            logoHtml = '<div class="totw-list-logo">' +
+                '<img src="./' + TEAMS_LOGOS[teamName] + '" onerror="this.style.display=\'none\'">' +
+            '</div>';
         } else {
-            logoHtml =
-                '<div class="totw-list-logo totw-list-logo-empty">' +
-                    '<span>⚽</span>' +
-                '</div>';
+            logoHtml = '<div class="totw-list-logo totw-list-logo-empty"><span>⚽</span></div>';
         }
 
         html += '<div class="totw-list-item">';
@@ -388,16 +351,13 @@ async function loadTOTW() {
     if (errorBox) errorBox.style.display = 'none';
 
     try {
-
         const viewingRound = currentRound;
         const latestRound = getLatestRound();
 
         let top11 = null;
 
         if (latestRound > 0 && viewingRound < latestRound) {
-
             console.log('Loading snapshot for old round', viewingRound);
-
             const snapshot = await loadTOTWSnapshot(viewingRound);
 
             if (snapshot && Array.isArray(snapshot) && snapshot.length > 0) {
@@ -413,11 +373,8 @@ async function loadTOTW() {
                 }
                 return;
             }
-
         } else {
-
             console.log('Fetching fresh from FPL for round', viewingRound);
-
             const allResults = await fetchTOTWPages();
 
             if (!allResults || allResults.length === 0) {
@@ -445,9 +402,7 @@ async function loadTOTW() {
         }
 
     } catch (e) {
-
         console.error('TOTW Error:', e);
-
         loadingBox.style.display = 'none';
         if (errorBox) {
             errorBox.style.display = 'block';
@@ -462,13 +417,10 @@ async function loadTOTW() {
 ========================================================= */
 
 async function saveManualTOTW(round) {
-
     if (!round) return false;
 
     try {
-
         console.log('Saving manual TOTW for round', round);
-
         const allResults = await fetchTOTWPages();
 
         if (!allResults || allResults.length === 0) {
@@ -477,13 +429,9 @@ async function saveManualTOTW(round) {
         }
 
         const top11 = getTOTWTop11(allResults);
-
         const ok = await saveTOTWSnapshot(round, top11);
 
-        if (ok) {
-            console.log('Manual TOTW saved for round', round);
-        }
-
+        if (ok) console.log('Manual TOTW saved for round', round);
         return ok;
 
     } catch (e) {
