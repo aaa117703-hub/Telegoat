@@ -29,7 +29,7 @@ const PLAYERS_TEAMS = {
         "Cxv vdc",
         "Bashar Syouf",
         "MAYU MO",
-        "zyad rajeh",
+        "محمد فائز",
         "Murtada A.K",
         "حسون العراقي",
         "Ali Khaled",
@@ -167,7 +167,7 @@ const PLAYERS_TEAMS = {
         "Haider Adnan",
         "Malak Riyad",
         "Yousef Haider",
-        "أخلاقي سعد",
+        "أخلاقي سر سعادتي",
         "Abdullah Arshad",
         "محمد صادق",
         "Mariam Aead",
@@ -189,7 +189,7 @@ const PLAYERS_TEAMS = {
         "Baraa suhaib",
         "ali fpl",
         "AHMED YAHYA",
-        "Aqeel Al Rowai",
+        "حسن طالب",
         "Mustafa Abdullah"
     ],
 
@@ -216,7 +216,7 @@ const PLAYERS_TEAMS = {
         "MALEK Khlil",
         "ABBAS Khaled",
         "Abdullah Kutaiba",
-        "ahmed hany",
+        "ahmed hany-28",
         "Aymen Nazar",
         "HUSSEN ALI",
         "كرار الجوذري",
@@ -248,12 +248,13 @@ const PLAYERS_TEAMS = {
         "iQjhNm_- Hasan",
         "Qadees Sh",
         "ali qassim",
-        "ABOODY ALHYDARI",
+        "𝔸𝔹𝕆𝕆𝔻𝕐 𝔸𝕃ℍ𝕐𝔻𝔸ℝ𝕀",
         "Mohamed Shadow",
         "saif ahmed",
         "noor Alaa",
         "MOAMAL GOAT",
-        "Mohammed king"
+        "Mohammed king",
+        "short man"
     ],
 
     "Man Utd": [
@@ -330,14 +331,57 @@ function normalizePlayerName(name) {
 
     if (!name) return '';
 
-    return name
+    let result = name;
+
+    /* تحويل الحروف المزخرفة (Double-struck 𝔸𝔹ℂ) */
+    result = result.replace(/[\u{1D538}-\u{1D56B}]/gu, function(match) {
+        const code = match.codePointAt(0);
+
+        if (code >= 0x1D538 && code <= 0x1D551) {
+            return String.fromCharCode(code - 0x1D538 + 65);
+        }
+        if (code >= 0x1D552 && code <= 0x1D56B) {
+            return String.fromCharCode(code - 0x1D552 + 97);
+        }
+
+        return match;
+    });
+
+    /* تحويل Bold 𝐀𝐁𝐂 */
+    result = result.replace(/[\u{1D400}-\u{1D433}]/gu, function(match) {
+        const code = match.codePointAt(0);
+        if (code >= 0x1D400 && code <= 0x1D419) {
+            return String.fromCharCode(code - 0x1D400 + 65);
+        }
+        if (code >= 0x1D41A && code <= 0x1D433) {
+            return String.fromCharCode(code - 0x1D41A + 97);
+        }
+        return match;
+    });
+
+    /* تحويل Italic 𝘈𝘉𝘊 */
+    result = result.replace(/[\u{1D608}-\u{1D63B}]/gu, function(match) {
+        const code = match.codePointAt(0);
+        if (code >= 0x1D608 && code <= 0x1D621) {
+            return String.fromCharCode(code - 0x1D608 + 65);
+        }
+        if (code >= 0x1D622 && code <= 0x1D63B) {
+            return String.fromCharCode(code - 0x1D622 + 97);
+        }
+        return match;
+    });
+
+    /* حذف الإيموجي */
+    result = result
         .replace(/[\u{1F1E6}-\u{1F1FF}]/gu, '')
         .replace(/[\u{1F300}-\u{1F9FF}]/gu, '')
         .replace(/[\u{2600}-\u{27BF}]/gu, '')
-        .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
-        .replace(/\s+/g, ' ')
-        .trim()
-        .toLowerCase();
+        .replace(/[\u{FE00}-\u{FE0F}]/gu, '');
+
+    /* توحيد المسافات + lowercase */
+    result = result.replace(/\s+/g, ' ').trim().toLowerCase();
+
+    return result;
 }
 
 
