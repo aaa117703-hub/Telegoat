@@ -1,7 +1,8 @@
 /* =========================================================
-   totw.css
+   totw.css — نسخة موحّدة بيضاء (مثل Standings)
 ========================================================= */
 
+/* ---------- التابات ---------- */
 .totw-tabs{
     display:flex;
     justify-content:center;
@@ -12,10 +13,10 @@
 }
 
 .totw-tab-btn{
-    padding:6px 22px;
-    background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
-    color:#fff;
-    border:2px solid #00ff87;
+    padding:8px 24px;
+    background:#ffffff;
+    color:#38003c;
+    border:2px solid #38003c;
     border-radius:50px;
     font-size:11px;
     font-weight:900;
@@ -25,18 +26,23 @@
     transition:all .3s ease;
     font-family:inherit;
     outline:none;
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
 }
 
 .totw-tab-btn.active{
-    background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
-    box-shadow:0 0 15px rgba(0,255,135,.7);
+    background:linear-gradient(135deg, #00e676 0%, #00c853 50%, #009b40 100%);
+    color:#ffffff;
+    border-color:#00c853;
+    box-shadow:0 4px 12px rgba(0,200,83,.4);
 }
 
-.totw-tab-btn:hover{
+.totw-tab-btn:hover:not(.active){
+    background:#f5f5f5;
     transform:translateY(-2px);
-    box-shadow:0 4px 12px rgba(0,255,135,.5);
+    box-shadow:0 4px 12px rgba(0,0,0,.15);
 }
 
+/* ---------- حاوية الملعب ---------- */
 .totw-pitch-wrapper{
     width:100%;
     display:flex;
@@ -53,18 +59,15 @@
     background-size:100% 100%;
     background-position:center;
     background-repeat:no-repeat;
-    border:3px solid #1a5c2f;
+    border:3px solid #38003c;
     border-radius:18px;
     box-shadow:
-        0 10px 40px rgba(0,0,0,.4),
-        0 0 30px rgba(0,255,135,.4);
+        0 10px 30px rgba(0,0,0,.15),
+        0 2px 8px rgba(0,0,0,.1);
     overflow:hidden;
 }
 
-/* =========================================================
-   عنوان TEAM OF THE WEEK — شريط ملون بحواف هلالية
-========================================================= */
-
+/* ---------- عنوان TOTW ---------- */
 .totw-pitch-title{
     position:absolute;
     top:12.5%;
@@ -81,20 +84,11 @@
     text-align:center;
     padding:6px 26px;
     border-radius:50px;
-    background:linear-gradient(90deg,
-        #04f5ff 0%,
-        #3da5f5 30%,
-        #7b3ff5 50%,
-        #3da5f5 70%,
-        #04f5ff 100%);
+    background:linear-gradient(135deg, #6b21a8 0%, #38003c 100%);
     box-shadow:
-        0 4px 14px rgba(0,0,0,.4),
-        0 0 20px rgba(4,245,255,.35),
-        inset 0 1px 0 rgba(255,255,255,.5),
-        inset 0 -1px 0 rgba(0,0,0,.15);
-    text-shadow:
-        0 1px 3px rgba(0,0,0,.55),
-        0 0 10px rgba(4,245,255,.5);
+        0 4px 14px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.2);
+    text-shadow:0 1px 3px rgba(0,0,0,.55);
 }
 
 .totw-pitch-title .gw-label{
@@ -107,10 +101,7 @@
     z-index:2;
 }
 
-/* =========================================================
-   الصفوف
-========================================================= */
-
+/* ---------- الصفوف داخل الملعب ---------- */
 .totw-row{
     display:flex;
     justify-content:center;
@@ -144,10 +135,7 @@
     padding:0 22%;
 }
 
-/* =========================================================
-   الكرت
-========================================================= */
-
+/* ---------- كروت اللاعبين ---------- */
 .totw-card{
     width:60px;
     display:flex;
@@ -252,18 +240,18 @@
 }
 
 /* =========================================================
-   عرض القائمة
+   عرض القائمة — أبيض مثل Standings
 ========================================================= */
 
 .totw-list-view{
     width:100%;
     max-width:480px;
     margin:0 auto 16px;
-    background:linear-gradient(135deg, #37003c 0%, #2e0b3d 100%);
-    border:2px solid #5a055a;
+    background:#ffffff;
+    border:2px solid #38003c;
     border-radius:14px;
     overflow:hidden;
-    box-shadow:0 0 25px rgba(0,255,135,.3);
+    box-shadow:0 4px 15px rgba(0,0,0,.12);
 }
 
 .totw-list-header{
@@ -272,10 +260,11 @@
     gap:6px;
     align-items:center;
     padding:10px 12px;
-    border-bottom:1px solid rgba(255,255,255,.15);
-    color:#a8a8a8;
+    border-bottom:2px solid #38003c;
+    color:#38003c;
+    background:#f8f8f8;
     font-size:10px;
-    font-weight:800;
+    font-weight:900;
     text-transform:uppercase;
     letter-spacing:1px;
 }
@@ -291,14 +280,14 @@
     gap:6px;
     align-items:center;
     padding:10px 12px;
-    border-bottom:1px solid rgba(255,255,255,.08);
-    color:#ffffff;
+    border-bottom:1px solid #f0f0f0;
+    color:#1a1a2e;
     min-height:56px;
     transition:background .2s ease;
 }
 
 .totw-list-item:last-child{border-bottom:none;}
-.totw-list-item:hover{background:rgba(255,255,255,.05);}
+.totw-list-item:hover{background:#f5f5f5;}
 
 .totw-list-rank{
     display:flex;
@@ -308,7 +297,7 @@
     height:22px;
     font-size:12px;
     font-weight:900;
-    color:#ffffff;
+    color:#38003c;
     text-align:center;
     flex-shrink:0;
     margin:0 auto;
@@ -327,7 +316,7 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background:rgba(255,255,255,.1);
+    background:#f0f0f0;
     border-radius:50%;
 }
 
@@ -343,8 +332,8 @@
 }
 
 .totw-list-logo-empty{
-    background:rgba(255,255,255,.15);
-    color:#ffffff;
+    background:#e0e0e0;
+    color:#666;
     font-size:14px;
 }
 
@@ -360,7 +349,7 @@
 .totw-list-entry{
     font-size:13px;
     font-weight:900;
-    color:#ffffff;
+    color:#1a1a2e;
     text-align:right;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -371,7 +360,7 @@
 .totw-list-player{
     font-size:11px;
     font-weight:600;
-    color:#b8b8b8;
+    color:#666666;
     text-align:right;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -383,7 +372,7 @@
     text-align:center;
     font-size:14px;
     font-weight:900;
-    color:#ffffff;
+    color:#6b21a8;
     letter-spacing:0.5px;
 }
 
@@ -391,7 +380,7 @@
     text-align:center;
     font-size:14px;
     font-weight:900;
-    color:#ffffff;
+    color:#38003c;
     letter-spacing:0.5px;
 }
 
@@ -402,17 +391,20 @@
 .totw-loading{
     text-align:center;
     padding:40px 20px;
-    color:#00ff87;
+    color:#38003c;
     font-size:15px;
     font-weight:900;
+    background:#ffffff;
+    border-radius:14px;
+    border:2px solid #f0f0f0;
 }
 
 .totw-loading .spinner{
     display:inline-block;
     width:36px;
     height:36px;
-    border:4px solid rgba(0,255,135,.2);
-    border-top-color:#00ff87;
+    border:4px solid rgba(0,200,83,.2);
+    border-top-color:#00c853;
     border-radius:50%;
     animation:spinTOTW .8s linear infinite;
     margin-bottom:14px;
@@ -426,10 +418,10 @@
 .totw-error{
     text-align:center;
     padding:24px 16px;
-    background:rgba(255,0,90,.15);
+    background:#ffe5ec;
     border:2px solid #ff005a;
     border-radius:12px;
-    color:#ff005a;
+    color:#b8003f;
     font-size:13px;
     font-weight:800;
 }
@@ -441,7 +433,7 @@
 @media(max-width:480px){
 
     .totw-tab-btn{
-        padding:5px 18px;
+        padding:6px 18px;
         font-size:10px;
         letter-spacing:1.2px;
     }
