@@ -114,10 +114,10 @@ body{
 .download-menu{
     position:absolute;top:calc(100% + 8px);right:0;min-width:160px;
     background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
-    border:2px solid #00ff87;border-radius:12px;padding:6px;z-index:9999;
+    border:2px solid #00c853;border-radius:12px;padding:6px;z-index:9999;
     opacity:0;pointer-events:none;transform:translateY(-8px);
     transition:opacity .25s ease, transform .25s ease;
-    box-shadow:0 10px 30px rgba(0,0,0,.5), 0 0 20px rgba(0,255,135,.35);
+    box-shadow:0 10px 30px rgba(0,0,0,.5), 0 0 20px rgba(0, 200, 83, 0.35);
 }
 .download-menu.show{opacity:1;pointer-events:auto;transform:translateY(0);}
 .download-menu-item{
@@ -126,10 +126,9 @@ body{
     transition:background .2s ease;font-family:inherit;border:none;
     background:transparent;width:100%;text-align:left;letter-spacing:0.3px;
 }
-.download-menu-item:hover{background:rgba(0, 255, 135, .18);}
-.download-menu-item .q-icon{font-size:14px;flex-shrink:0;}
+.download-menu-item:hover{background:rgba(0, 200, 83, 0.18);}
 .download-menu-item .q-label{flex:1;text-align:left;}
-.download-menu-item .q-scale{color:#00ff87;font-weight:900;font-size:11px;flex-shrink:0;}
+.download-menu-item .q-scale{color:#00e676;font-weight:900;font-size:11px;flex-shrink:0;}
 
 #hiddenEditBtn,#hiddenEditBtn2{
     display:block;width:100%;padding:8px 10px;margin:8px 0 0 0;
@@ -143,8 +142,8 @@ body{
 #toast{
     position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
     background:#1e0d33;color:#fff;padding:12px 28px;border-radius:30px;
-    font-weight:900;font-size:15px;border:2px solid #00ff87;
-    box-shadow:0 0 20px rgba(0,255,135,.8);z-index:999;opacity:0;
+    font-weight:900;font-size:15px;border:2px solid #00e676;
+    box-shadow:0 0 20px rgba(0, 200, 83, 0.8);z-index:999;opacity:0;
     transition:opacity .4s ease;pointer-events:none;
     display:flex;align-items:center;gap:10px;max-width:92%;text-align:center;
 }
@@ -161,8 +160,8 @@ body{
 .carousel-wrapper{width:100%;margin:10px auto 0;padding:0 8px;}
 .carousel{
     position:relative;width:100%;overflow:hidden;
-    border:3px solid #00ff87;border-radius:20px;background:#38003c;
-    box-shadow:0 0 15px rgba(0,255,135,.6);touch-action:pan-y;cursor:pointer;
+    border:3px solid #00e676;border-radius:20px;background:#38003c;
+    box-shadow:0 0 15px rgba(0, 200, 83, 0.6);touch-action:pan-y;cursor:pointer;
 }
 .carousel-track{position:relative;width:100%;height:auto;}
 .carousel-slide{position:relative;inset:0;width:100%;display:none;opacity:0;transition:opacity .7s ease;}
@@ -175,8 +174,8 @@ body{
     background:rgba(255,255,255,.35);cursor:pointer;padding:0;transition:.25s;
 }
 .carousel-dot.active{
-    width:22px;border-radius:10px;background:#00ff87;
-    box-shadow:0 0 8px rgba(0,255,135,.45);
+    width:22px;border-radius:10px;background:#00e676;
+    box-shadow:0 0 8px rgba(0, 200, 83, 0.45);
 }
 
 .round-selector-row{
@@ -217,7 +216,7 @@ body{
 .edit-action-btn{
     font-weight:900;font-size:14px;padding:14px 18px;border-radius:12px;
     border:none;cursor:pointer;flex:1 1 auto;min-width:110px;color:#fff;
-    display:flex;align-items:center;justifyell-content:center;gap:6px;letter-spacing:.5px;
+    display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.5px;
 }
 .save-round-btn{background:linear-gradient(135deg, #00e676 0%, #00c853 50%, #009b40 100%);box-shadow:0 4px 0 #006b2c, 0 6px 15px rgba(0,200,83,.4);}
 .clear-round-btn{background:linear-gradient(135deg, #ff4081 0%, #ff005a 50%, #b8003f 100%);box-shadow:0 4px 0 #800028, 0 6px 15px rgba(255,0,90,.4);}
@@ -242,7 +241,7 @@ body{
 .team-box{
     display:flex;align-items:center;flex:1 1 0;min-width:0;
     font-size:13px;font-weight:700;color:#1a1a2e;white-space:nowrap;
-    overflow:hidden;text-overflow:ipsis;
+    overflow:hidden;text-overflow:ellipsis;
 }
 .team-box.home{justify-content:flex-end;text-align:right;}
 .team-box.away{justify-content:flex-start;text-align:left;}
@@ -313,7 +312,7 @@ td{
 }
 tr{background:#ffffff;}
 tr:last-child td{border-bottom:none}
-tr.green-line td{border-bottom:3px solid #00ff87!important}
+tr.green-line td{border-bottom:3px solid #00e676!important}
 tr.red-line td{border-bottom:3px solid #ff005a!important}
 
 tr.pos-1{background:linear-gradient(90deg, rgba(0, 200, 83, 0.40) 0%, rgba(0, 200, 83, 0.15) 50%, #ffffff 100%);}
@@ -358,8 +357,8 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
     position:fixed;top:12px;left:12px;z-index:99998;
     display:flex;flex-direction:column;gap:6px;
     background:rgba(36, 0, 36, 0.92);padding:8px;border-radius:14px;
-    border:2px solid #00ff87;
-    box-shadow:0 4px 15px rgba(0,0,0,.5), 0 0 20px rgba(0,255,135,.4);
+    border:2px solid #00e676;
+    box-shadow:0 4px 15px rgba(0,0,0,.5), 0 0 20px rgba(0, 200, 83, 0.4);
     backdrop-filter:blur(8px);
 }
 .lock-btn{
@@ -373,17 +372,16 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 .lock-btn:hover{transform:scale(1.04);}
 .lock-btn:active{transform:scale(0.96);}
 .lock-btn.locked{background:linear-gradient(135deg, #ff4081 0%, #b8003f 100%);}
-.lock-btn .lock-icon{font-size:13px;flex-shrink:0;}
 .lock-btn .lock-label{flex:1;text-align:left;}
 
 .lock-panel{
     position:fixed;top:50%;left:50%;
     transform:translate(-50%, -50%) scale(0.9);
     background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
-    border:3px solid #00ff87;border-radius:18px;padding:0;
+    border:3px solid #00e676;border-radius:18px;padding:0;
     z-index:99999;opacity:0;
     transition:opacity .25s ease, transform .25s ease;
-    box-shadow:0 0 50px rgba(0,255,135,.5), 0 20px 60px rgba(0,0,0,.7);
+    box-shadow:0 0 50px rgba(0, 200, 83, 0.5), 0 20px 60px rgba(0,0,0,.7);
     min-width:300px;max-width:90%;overflow:hidden;
 }
 .lock-panel.show{opacity:1;transform:translate(-50%, -50%) scale(1);}
@@ -391,7 +389,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
     display:flex;align-items:center;justify-content:space-between;
     padding:14px 18px;
     background:linear-gradient(135deg, #6b21a8 0%, #38003c 100%);
-    border-bottom:2px solid #00ff87;color:#fff;
+    border-bottom:2px solid #00e676;color:#fff;
     font-size:15px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;
 }
 .lock-panel-close{
@@ -436,39 +434,31 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 #sectionMaintenance.show{display:flex;}
 #sectionMaintenance .maint-box{
     background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
-    border:3px solid #00ff87;border-radius:22px;padding:44px 32px;
+    border:3px solid #00e676;border-radius:22px;padding:44px 32px;
     text-align:center;max-width:400px;width:100%;
-    box-shadow:0 0 60px rgba(0,255,135,.6), 0 20px 60px rgba(0,0,0,.7);
-}
-#sectionMaintenance .maint-icon{
-    font-size:72px;margin-bottom:18px;animation:maintBounce 2s infinite;
-}
-@keyframes maintBounce{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-12px);}
+    box-shadow:0 0 60px rgba(0, 200, 83, 0.6), 0 20px 60px rgba(0,0,0,.7);
 }
 #sectionMaintenance h2{color:#fff;font-size:24px;font-weight:900;margin-bottom:14px;letter-spacing:1px;}
 #sectionMaintenance p{color:#b8b8b8;font-size:14px;line-height:1.7;margin-bottom:6px;}
 #sectionMaintenance .maint-team{
-    color:#00ff87;font-size:13px;font-weight:900;
+    color:#00e676;font-size:13px;font-weight:900;
     letter-spacing:4px;padding-top:18px;margin-top:20px;
     border-top:1px solid rgba(255,255,255,.15);
 }
 </style>
 
 <link rel="stylesheet" href="mobile.css">
-<link rel="stylesheet" href="totw.css?v=15">
-<link rel="stylesheet" href="stats.css?v=3">
-<link rel="stylesheet" href="trends.css?v=2">
-<link rel="stylesheet" href="clubs.css?v=3">
-<link rel="stylesheet" href="theme.css?v=1">
+<link rel="stylesheet" href="totw.css?v=16">
+<link rel="stylesheet" href="stats.css?v=4">
+<link rel="stylesheet" href="trends.css?v=3">
+<link rel="stylesheet" href="clubs.css?v=4">
 
 </head>
 
 <body>
 
 <div id="errorBox">
-    <button class="err-close" onclick="document.getElementById('errorBox').classList.remove('show')">✕</button>
+    <button class="err-close" onclick="document.getElementById('errorBox').classList.remove('show')">X</button>
     <div id="errorContent"></div>
 </div>
 
@@ -503,17 +493,14 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 
         <div class="download-menu" id="downloadMenu">
             <button class="download-menu-item" onclick="downloadAsImage(2)">
-                <span class="q-icon">⚡</span>
                 <span class="q-label">Standard</span>
                 <span class="q-scale">2x</span>
             </button>
             <button class="download-menu-item" onclick="downloadAsImage(3)">
-                <span class="q-icon">⭐</span>
                 <span class="q-label">High</span>
                 <span class="q-scale">3x</span>
             </button>
             <button class="download-menu-item" onclick="downloadAsImage(4)">
-                <span class="q-icon">💎</span>
                 <span class="q-label">Ultra</span>
                 <span class="q-scale">4x</span>
             </button>
@@ -534,9 +521,9 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
     <div id="fixturesTab" class="tab-content active">
 
         <div id="editPanel" class="edit-panel" style="display:none;">
-            <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">💾 Save</button>
-            <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">🗑️ Clear</button>
-            <button class="edit-action-btn download-action-btn" onclick="downloadAsImage(3)">⬇️ Download</button>
+            <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">Save</button>
+            <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">Clear</button>
+            <button class="edit-action-btn download-action-btn" onclick="downloadAsImage(3)">Download</button>
         </div>
 
         <div id="captureFixtures" class="export-area">
@@ -608,11 +595,11 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
     <div id="statsTab" class="tab-content">
 
         <div class="stats-tabs">
-            <button class="stats-tab-btn active" data-tab="overview" onclick="switchStatsTab('overview')">📊 Overview</button>
-            <button class="stats-tab-btn" data-tab="trends" onclick="switchStatsTab('trends')">📈 Trends</button>
-            <button class="stats-tab-btn" data-tab="search" onclick="switchStatsTab('search')">🔍 Search</button>
-            <button class="stats-tab-btn" data-tab="records" onclick="switchStatsTab('records')">🏆 Records</button>
-            <button class="stats-tab-btn" data-tab="clubs" onclick="switchStatsTab('clubs')">⚽ Clubs</button>
+            <button class="stats-tab-btn active" data-tab="overview" onclick="switchStatsTab('overview')">Overview</button>
+            <button class="stats-tab-btn" data-tab="trends" onclick="switchStatsTab('trends')">Trends</button>
+            <button class="stats-tab-btn" data-tab="search" onclick="switchStatsTab('search')">Search</button>
+            <button class="stats-tab-btn" data-tab="records" onclick="switchStatsTab('records')">Records</button>
+            <button class="stats-tab-btn" data-tab="clubs" onclick="switchStatsTab('clubs')">Clubs</button>
         </div>
 
         <div id="statsLoading" class="stats-loading">
@@ -626,34 +613,30 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 
                 <div class="stats-kpi-grid">
                     <div class="stats-kpi-card">
-                        <span class="stats-kpi-icon">👥</span>
                         <div class="stats-kpi-value" id="kpiManagers">0</div>
                         <div class="stats-kpi-label">Managers</div>
                     </div>
                     <div class="stats-kpi-card">
-                        <span class="stats-kpi-icon">📊</span>
                         <div class="stats-kpi-value" id="kpiAvg">0</div>
                         <div class="stats-kpi-label">Avg GW</div>
                     </div>
                     <div class="stats-kpi-card">
-                        <span class="stats-kpi-icon">⚡</span>
                         <div class="stats-kpi-value" id="kpiHigh">0</div>
                         <div class="stats-kpi-label">Highest GW</div>
                     </div>
                     <div class="stats-kpi-card">
-                        <span class="stats-kpi-icon">🏆</span>
                         <div class="stats-kpi-value" id="kpiHighestTotal">0</div>
                         <div class="stats-kpi-label">Top Total</div>
                     </div>
                 </div>
 
                 <div class="stats-section">
-                    <div class="stats-section-title">🔥 Top 10 — This Gameweek</div>
+                    <div class="stats-section-title">Top 10 — This Gameweek</div>
                     <div id="statsTopEvent"></div>
                 </div>
 
                 <div class="stats-section">
-                    <div class="stats-section-title">🏆 Top 10 — Total Points</div>
+                    <div class="stats-section-title">Top 10 — Total Points</div>
                     <div id="statsTopTotal"></div>
                 </div>
 
@@ -662,12 +645,12 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
             <div id="statsView-trends" class="stats-view">
 
                 <div class="stats-section">
-                    <div class="stats-section-title">🚀 Top Risers — أكبر صعود</div>
+                    <div class="stats-section-title">Top Risers — أكبر صعود</div>
                     <div id="statsTopRisers"></div>
                 </div>
 
                 <div class="stats-section">
-                    <div class="stats-section-title">💀 Top Fallers — أكبر هبوط</div>
+                    <div class="stats-section-title">Top Fallers — أكبر هبوط</div>
                     <div id="statsTopFallers"></div>
                 </div>
 
@@ -680,7 +663,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
                         type="text"
                         id="statsSearchInput"
                         class="stats-search-input"
-                        placeholder="🔍 ابحث عن مدير..."
+                        placeholder="ابحث عن مدير..."
                         autocomplete="off"
                     >
                 </div>
@@ -694,7 +677,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
             <div id="statsView-records" class="stats-view">
 
                 <div class="stats-section">
-                    <div class="stats-section-title">🏆 League Records</div>
+                    <div class="stats-section-title">League Records</div>
                     <div id="statsRecordsContent" class="stats-records-grid"></div>
                 </div>
 
@@ -704,7 +687,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 
                 <div class="clubs-controls">
                     <button class="clubs-edit-btn" id="clubsEditBtn" onclick="toggleClubsEditMode()">
-                        🔒 تعديل
+                        تعديل
                     </button>
                 </div>
 
@@ -814,20 +797,20 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 </script>
 
 <script src="config.js"></script>
-<script src="locks.js?v=15"></script>
-<script src="teams.js"></script>
+<script src="locks.js?v=16"></script>
+<script src="teams.js?v=2"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=36"></script>
-<script src="fixtures.js?v=37"></script>
-<script src="standings.js?v=8"></script>
-<script src="download.js?v=17"></script>
-<script src="players-teams.js?v=97"></script>
-<script src="totw.js?v=110"></script>
-<script src="trends.js?v=2"></script>
-<script src="stats.js?v=7"></script>
-<script src="clubs.js?v=2"></script>
-<script src="main.js?v=17"></script>
+<script src="carousel.js?v=37"></script>
+<script src="fixtures.js?v=38"></script>
+<script src="standings.js?v=9"></script>
+<script src="download.js?v=18"></script>
+<script src="players-teams.js?v=98"></script>
+<script src="totw.js?v=111"></script>
+<script src="trends.js?v=3"></script>
+<script src="stats.js?v=8"></script>
+<script src="clubs.js?v=3"></script>
+<script src="main.js?v=18"></script>
 
 </body>
 </html>
