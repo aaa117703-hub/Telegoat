@@ -18,8 +18,8 @@
 .clubs-edit-btn{
     padding:10px 22px;
     background:linear-gradient(135deg, #2e0b3d 0%, #38003c 100%);
-    color:#fff;
-    border:2px solid #5a055a;
+    color:#00e676;
+    border:2px solid rgba(0, 200, 83, 0.3);
     border-radius:50px;
     font-size:11px;
     font-weight:900;
@@ -32,15 +32,16 @@
 }
 
 .clubs-edit-btn.active{
-    background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
-    border-color:#00ff87;
-    box-shadow:0 0 20px rgba(0,255,135,.6);
+    background:linear-gradient(135deg, #00c853 0%, #009b40 100%);
+    border-color:#00e676;
+    color:#fff;
+    box-shadow:0 0 20px rgba(0, 200, 83, 0.6);
 }
 
 .clubs-edit-btn:hover{
     transform:translateY(-2px);
-    border-color:#00ff87;
-    box-shadow:0 6px 16px rgba(0,255,135,.4);
+    border-color:#00c853;
+    box-shadow:0 6px 16px rgba(0, 200, 83, 0.4);
 }
 
 /* =========================================================
@@ -59,8 +60,8 @@
     align-items:center;
     gap:12px;
     padding:14px 16px;
-    background:linear-gradient(135deg, rgba(56,0,60,.95) 0%, rgba(46,11,61,.95) 100%);
-    border:2px solid rgba(90,5,90,.8);
+    background:linear-gradient(135deg, rgba(0, 200, 83, 0.08) 0%, rgba(46, 11, 61, 0.95) 100%);
+    border:2px solid rgba(0, 200, 83, 0.25);
     border-radius:14px;
     cursor:pointer;
     transition:all .25s ease;
@@ -70,9 +71,9 @@
 }
 
 .club-item:hover{
-    border-color:#00ff87;
+    border-color:#00c853;
     transform:translateX(-4px);
-    box-shadow:0 6px 20px rgba(0,255,135,.3);
+    box-shadow:0 6px 20px rgba(0, 200, 83, 0.35);
 }
 
 .club-item-logo{
@@ -101,7 +102,8 @@
 }
 
 .club-item-logo-empty{
-    font-size:26px;
+    width:46px;
+    height:46px;
 }
 
 .club-item-info{
@@ -124,7 +126,7 @@
 
 .club-item-count{
     font-size:11px;
-    color:#b8b8b8;
+    color:#00e676;
     margin-top:2px;
     font-weight:700;
     line-height:1.2;
@@ -132,7 +134,7 @@
 
 .club-item-arrow{
     font-size:24px;
-    color:#00ff87;
+    color:#00e676;
     font-weight:900;
     flex-shrink:0;
 }
@@ -162,7 +164,7 @@
 
 .club-modal-box{
     background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
-    border:3px solid #00ff87;
+    border:3px solid #00c853;
     border-radius:20px;
     width:100%;
     max-width:420px;
@@ -171,7 +173,7 @@
     display:flex;
     flex-direction:column;
     box-shadow:
-        0 0 50px rgba(0,255,135,.5),
+        0 0 50px rgba(0, 200, 83, 0.5),
         0 20px 60px rgba(0,0,0,.7);
     animation:clubModalIn .3s cubic-bezier(.4,0,.2,1);
 }
@@ -187,7 +189,7 @@
     gap:12px;
     padding:16px 18px;
     background:linear-gradient(135deg, #6b21a8 0%, #38003c 100%);
-    border-bottom:2px solid #00ff87;
+    border-bottom:2px solid #00c853;
     position:relative;
 }
 
@@ -202,7 +204,6 @@
     align-items:center;
     justify-content:center;
     flex-shrink:0;
-    font-size:26px;
     overflow:hidden;
 }
 
@@ -266,7 +267,7 @@
 .club-add-btn{
     margin:12px 18px 0;
     padding:10px;
-    background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
+    background:linear-gradient(135deg, #00c853 0%, #009b40 100%);
     color:#fff;
     border:none;
     border-radius:10px;
@@ -302,8 +303,8 @@
 }
 
 .club-player-row:hover{
-    background:rgba(0,255,135,.08);
-    border-color:rgba(0,255,135,.3);
+    background:rgba(0, 200, 83, 0.08);
+    border-color:rgba(0, 200, 83, 0.3);
 }
 
 .club-player-row:last-child{margin-bottom:0;}
@@ -314,12 +315,12 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background:rgba(0,255,135,.15);
-    border:1px solid rgba(0,255,135,.4);
+    background:rgba(0, 200, 83, 0.15);
+    border:1px solid rgba(0, 200, 83, 0.4);
     border-radius:50%;
     font-size:11px;
     font-weight:900;
-    color:#00ff87;
+    color:#00e676;
     flex-shrink:0;
 }
 
@@ -341,7 +342,7 @@
     background:rgba(255,82,82,.15);
     border:1px solid rgba(255,82,82,.4);
     color:#ff5252;
-    font-size:13px;
+    font-size:12px;
     font-weight:900;
     cursor:pointer;
     display:flex;
@@ -386,6 +387,11 @@
         max-height:40px;
     }
 
+    .club-item-logo-empty{
+        width:40px;
+        height:40px;
+    }
+
     .club-item-name{font-size:14px;}
     .club-item-count{font-size:10px;}
     .club-item-arrow{font-size:22px;}
@@ -398,7 +404,6 @@
         min-height:38px;
         max-width:38px;
         max-height:38px;
-        font-size:22px;
     }
 
     .club-player-name{font-size:12px;}
