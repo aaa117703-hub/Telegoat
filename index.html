@@ -452,6 +452,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <link rel="stylesheet" href="stats.css?v=8">
 <link rel="stylesheet" href="trends.css?v=6">
 <link rel="stylesheet" href="clubs.css?v=5">
+<link rel="stylesheet" href="fpl-database.css?v=1">
 
 </head>
 
@@ -595,7 +596,8 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
     <div id="statsTab" class="tab-content">
 
         <div class="stats-tabs">
-            <button class="stats-tab-btn active" data-tab="overview" onclick="switchStatsTab('overview')">Overview</button>
+            <button class="stats-tab-btn active" data-tab="fpl" onclick="switchStatsTab('fpl')">FPL</button>
+            <button class="stats-tab-btn" data-tab="overview" onclick="switchStatsTab('overview')">Overview</button>
             <button class="stats-tab-btn" data-tab="trends" onclick="switchStatsTab('trends')">Trends</button>
             <button class="stats-tab-btn" data-tab="search" onclick="switchStatsTab('search')">Search</button>
             <button class="stats-tab-btn" data-tab="records" onclick="switchStatsTab('records')">Records</button>
@@ -609,7 +611,45 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 
         <div id="statsContent" style="display:none;">
 
-            <div id="statsView-overview" class="stats-view active">
+            <div id="statsView-fpl" class="stats-view active">
+
+                <div class="fpl-controls">
+                    <div class="fpl-view-toggle">
+                        <button class="fpl-view-btn active" data-view="players">Players</button>
+                        <button class="fpl-view-btn" data-view="teams">Teams</button>
+                    </div>
+
+                    <div class="fpl-search-row">
+                        <input type="text" id="fplSearch" class="fpl-search" placeholder="ابحث عن لاعب..." autocomplete="off">
+                        <select id="fplSort" class="fpl-select"></select>
+                    </div>
+
+                    <div class="fpl-filter-row">
+                        <div class="fpl-position-filters">
+                            <button class="fpl-pos-btn active" data-pos="ALL">All</button>
+                            <button class="fpl-pos-btn" data-pos="1">GK</button>
+                            <button class="fpl-pos-btn" data-pos="2">DEF</button>
+                            <button class="fpl-pos-btn" data-pos="3">MID</button>
+                            <button class="fpl-pos-btn" data-pos="4">FWD</button>
+                        </div>
+                        <select id="fplTeam" class="fpl-select"><option value="ALL">All Teams</option></select>
+                    </div>
+                </div>
+
+                <div id="fplSummary" class="fpl-summary"></div>
+
+                <div id="fplDbContent" class="fpl-content">
+                    <div class="fpl-loading">
+                        <div class="spinner"></div>
+                        <div>Loading FPL data...</div>
+                    </div>
+                </div>
+
+                <div id="fplModal"></div>
+
+            </div>
+
+            <div id="statsView-overview" class="stats-view">
 
                 <div class="stats-kpi-grid">
                     <div class="stats-kpi-card">
@@ -808,6 +848,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <script src="players-teams.js?v=98"></script>
 <script src="totw.js?v=111"></script>
 <script src="trends.js?v=3"></script>
+<script src="fpl-database.js?v=1"></script>
 <script src="stats.js?v=8"></script>
 <script src="clubs.js?v=3"></script>
 <script src="main.js?v=18"></script>
