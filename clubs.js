@@ -10,10 +10,6 @@ let clubsEditMode = false;
 let currentOpenClub = null;
 
 
-/* =========================================================
-   LOAD FROM SUPABASE
-========================================================= */
-
 async function loadClubsData() {
 
     if (!window.sbClient) {
@@ -95,10 +91,6 @@ async function seedClubsToSupabase() {
 }
 
 
-/* =========================================================
-   SAVE CLUB
-========================================================= */
-
 async function saveClubPlayers(team, players) {
 
     if (!window.sbClient) return false;
@@ -129,10 +121,6 @@ async function saveClubPlayers(team, players) {
 }
 
 
-/* =========================================================
-   RENDER CLUB LIST
-========================================================= */
-
 function renderClubsList() {
 
     const container = document.getElementById('clubsList');
@@ -144,11 +132,10 @@ function renderClubsList() {
     const teamKeys = Object.keys(clubsData);
 
     if (teamKeys.length === 0) {
-        container.innerHTML = '<div class="clubs-empty">لا توجد بيانات — جاري التحميل...</div>';
+        container.innerHTML = '<div class="clubs-empty">لا توجد بيانات</div>';
         return;
     }
 
-    /* ترتيب أبجدي */
     teamKeys.sort();
 
     let html = '';
@@ -163,7 +150,7 @@ function renderClubsList() {
                 '<img src="./' + logoFile + '" onerror="this.style.display=\'none\'">' +
             '</div>';
         } else {
-            logoHtml = '<div class="club-item-logo club-item-logo-empty">⚽</div>';
+            logoHtml = '<div class="club-item-logo club-item-logo-empty"></div>';
         }
 
         html +=
@@ -182,10 +169,6 @@ function renderClubsList() {
 }
 
 
-/* =========================================================
-   OPEN CLUB DETAIL
-========================================================= */
-
 function openClubDetail(team) {
 
     currentOpenClub = team;
@@ -199,8 +182,6 @@ function openClubDetail(team) {
     let logoHtml = '';
     if (logoFile) {
         logoHtml = '<img src="./' + logoFile + '" onerror="this.style.display=\'none\'">';
-    } else {
-        logoHtml = '⚽';
     }
 
     let playersHtml = '';
@@ -215,14 +196,14 @@ function openClubDetail(team) {
                     '<div class="club-player-name">' + player + '</div>' +
                     (clubsEditMode ?
                         '<button class="club-player-del" onclick="deletePlayer(\'' +
-                            team.replace(/'/g, "\\'") + '\',' + index + ')">✕</button>'
+                            team.replace(/'/g, "\\'") + '\',' + index + ')">X</button>'
                         : '') +
                 '</div>';
         });
     }
 
     const editBtn = clubsEditMode
-        ? '<button class="club-add-btn" onclick="addPlayerPrompt()">➕ إضافة لاعب</button>'
+        ? '<button class="club-add-btn" onclick="addPlayerPrompt()">إضافة لاعب</button>'
         : '';
 
     modal.innerHTML =
@@ -230,11 +211,11 @@ function openClubDetail(team) {
             '<div class="club-modal-header">' +
                 '<div class="club-modal-logo">' + logoHtml + '</div>' +
                 '<div class="club-modal-title">' + team + '</div>' +
-                '<button class="club-modal-close" onclick="closeClubDetail()">✕</button>' +
+                '<button class="club-modal-close" onclick="closeClubDetail()">X</button>' +
             '</div>' +
             '<div class="club-modal-sub">' +
                 players.length + ' لاعب' +
-                (clubsEditMode ? ' • <span style="color:#00ff87">وضع التعديل ✓</span>' : '') +
+                (clubsEditMode ? ' - وضع التعديل' : '') +
             '</div>' +
             editBtn +
             '<div class="club-players-list">' + playersHtml + '</div>' +
@@ -251,10 +232,6 @@ function closeClubDetail() {
 }
 
 
-/* =========================================================
-   EDIT MODE
-========================================================= */
-
 function toggleClubsEditMode() {
     const pass = prompt('أدخل رمز التعديل:');
 
@@ -268,7 +245,7 @@ function toggleClubsEditMode() {
     const btn = document.getElementById('clubsEditBtn');
     if (btn) {
         btn.classList.toggle('active', clubsEditMode);
-        btn.textContent = clubsEditMode ? '🔓 وضع التعديل ✓' : '🔒 تعديل';
+        btn.textContent = clubsEditMode ? 'وضع التعديل' : 'تعديل';
     }
 
     if (currentOpenClub) {
@@ -330,15 +307,10 @@ async function deletePlayer(team, index) {
 }
 
 
-/* =========================================================
-   LOAD
-========================================================= */
-
 async function loadClubs() {
 
     const loadingEl = document.getElementById('clubsLoading');
 
-    /* نخفي الـ loading بعد 5 ثواني كحماية */
     const timeout = setTimeout(function() {
         if (loadingEl) loadingEl.style.display = 'none';
     }, 5000);
@@ -355,12 +327,7 @@ async function loadClubs() {
 }
 
 
-/* =========================================================
-   AUTO-LOAD ON INIT
-========================================================= */
-
 document.addEventListener('DOMContentLoaded', function() {
-    /* نحمّل البيانات مبدئياً بدون عرض */
     setTimeout(function() {
         if (!clubsLoaded) {
             loadClubsData();
