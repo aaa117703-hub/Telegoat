@@ -6,22 +6,22 @@ function calculateStandingsUpToRound(targetRound) {
 
     const calculated = {};
 
-    for (const teamKey in initialBasePoints) {
-        calculated[teamKey] = {
-            key: teamKey,
-            gf: 0,
-            pts: 0,
-            form: []
-        };
+    if (typeof initialBasePoints === 'undefined') {
+        console.warn('initialBasePoints not defined — using teamsMap');
+        for (const teamKey in teamsMap) {
+            calculated[teamKey] = { key: teamKey, gf: 0, pts: 0, form: [] };
+        }
+    } else {
+        for (const teamKey in initialBasePoints) {
+            calculated[teamKey] = { key: teamKey, gf: 0, pts: 0, form: [] };
+        }
     }
 
     for (let r = 1; r <= targetRound; r++) {
 
         const roundMatches = matchweeks[r];
 
-        if (!roundMatches) {
-            continue;
-        }
+        if (!roundMatches) continue;
 
         roundMatches.forEach(function(match, idx) {
 
@@ -41,27 +41,22 @@ function calculateStandingsUpToRound(targetRound) {
                 const hScore = parseFloat(hVal);
                 const aScore = parseFloat(aVal);
 
-                if (Number.isNaN(hScore) || Number.isNaN(aScore)) {
-                    return;
-                }
+                if (Number.isNaN(hScore) || Number.isNaN(aScore)) return;
+
+                if (!calculated[hKey] || !calculated[aKey]) return;
 
                 calculated[hKey].gf += hScore;
                 calculated[aKey].gf += aScore;
 
                 if (hScore > aScore) {
-
                     calculated[hKey].pts += 3;
                     calculated[hKey].form.push('W');
                     calculated[aKey].form.push('L');
-
                 } else if (aScore > hScore) {
-
                     calculated[aKey].pts += 3;
                     calculated[aKey].form.push('W');
                     calculated[hKey].form.push('L');
-
                 } else {
-
                     calculated[hKey].pts += 1;
                     calculated[aKey].pts += 1;
                     calculated[hKey].form.push('D');
@@ -71,11 +66,9 @@ function calculateStandingsUpToRound(targetRound) {
         });
     }
 
-    return Object
-        .values(calculated)
-        .sort(function(a, b) {
-            return b.pts - a.pts || b.gf - a.gf;
-        });
+    return Object.values(calculated).sort(function(a, b) {
+        return b.pts - a.pts || b.gf - a.gf;
+    });
 }
 
 
@@ -107,10 +100,7 @@ function renderForm(formArray) {
 function renderStandings() {
 
     const tbody = document.getElementById('standingsBody');
-
-    if (!tbody) {
-        return;
-    }
+    if (!tbody) return;
 
     tbody.innerHTML = '';
 
@@ -119,9 +109,7 @@ function renderStandings() {
     const prevRanks = {};
 
     if (currentRound >= 2) {
-
         const prevSortedTeams = calculateStandingsUpToRound(currentRound - 1);
-
         prevSortedTeams.forEach(function(team, idx) {
             prevRanks[team.key] = idx + 1;
         });
