@@ -1,5 +1,5 @@
 /* =========================================================
-   totw.css — نسخة موحّدة بيضاء (مثل Standings)
+   totw.css — Cosmic Amethyst Theme
 ========================================================= */
 
 /* ---------- التابات ---------- */
@@ -13,33 +13,34 @@
 }
 
 .totw-tab-btn{
-    padding:8px 24px;
-    background:#ffffff;
-    color:#38003c;
-    border:2px solid #38003c;
+    padding:10px 26px;
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    color:#ffffff;
+    border:2px solid #3d2666;
     border-radius:50px;
     font-size:11px;
     font-weight:900;
     letter-spacing:1.5px;
     text-transform:uppercase;
     cursor:pointer;
-    transition:all .3s ease;
+    transition:all .3s cubic-bezier(.4,0,.2,1);
     font-family:inherit;
     outline:none;
-    box-shadow:0 2px 6px rgba(0,0,0,.08);
+    box-shadow:0 2px 8px rgba(0,0,0,.4);
 }
 
 .totw-tab-btn.active{
-    background:linear-gradient(135deg, #00e676 0%, #00c853 50%, #009b40 100%);
+    background:linear-gradient(135deg, #00e5ff 0%, #7c4dff 100%);
     color:#ffffff;
-    border-color:#00c853;
-    box-shadow:0 4px 12px rgba(0,200,83,.4);
+    border-color:#00e5ff;
+    box-shadow:0 4px 20px rgba(0,229,255,.35), inset 0 1px 0 rgba(255,255,255,.2);
+    transform:translateY(-2px);
 }
 
 .totw-tab-btn:hover:not(.active){
-    background:#f5f5f5;
+    border-color:#7c4dff;
     transform:translateY(-2px);
-    box-shadow:0 4px 12px rgba(0,0,0,.15);
+    box-shadow:0 4px 15px rgba(124,77,255,.35);
 }
 
 /* ---------- حاوية الملعب ---------- */
@@ -59,11 +60,11 @@
     background-size:100% 100%;
     background-position:center;
     background-repeat:no-repeat;
-    border:3px solid #38003c;
+    border:3px solid #00e5ff;
     border-radius:18px;
     box-shadow:
-        0 10px 30px rgba(0,0,0,.15),
-        0 2px 8px rgba(0,0,0,.1);
+        0 10px 40px rgba(0,0,0,.5),
+        0 0 30px rgba(0,229,255,.3);
     overflow:hidden;
 }
 
@@ -84,10 +85,11 @@
     text-align:center;
     padding:6px 26px;
     border-radius:50px;
-    background:linear-gradient(135deg, #6b21a8 0%, #38003c 100%);
+    background:linear-gradient(90deg, #7c4dff 0%, #00e5ff 50%, #7c4dff 100%);
     box-shadow:
-        0 4px 14px rgba(0,0,0,.35),
-        inset 0 1px 0 rgba(255,255,255,.2);
+        0 4px 14px rgba(0,0,0,.4),
+        0 0 20px rgba(0,229,255,.4),
+        inset 0 1px 0 rgba(255,255,255,.4);
     text-shadow:0 1px 3px rgba(0,0,0,.55);
 }
 
@@ -101,7 +103,7 @@
     z-index:2;
 }
 
-/* ---------- الصفوف داخل الملعب ---------- */
+/* ---------- الصفوف ---------- */
 .totw-row{
     display:flex;
     justify-content:center;
@@ -112,30 +114,12 @@
     right:0;
 }
 
-.totw-row-gk{
-    top:22%;
-    justify-content:center;
-}
+.totw-row-gk{top:22%;justify-content:center;}
+.totw-row-def{top:38%;justify-content:space-evenly;padding:0 14%;}
+.totw-row-mid{top:56%;justify-content:space-evenly;padding:0 4%;}
+.totw-row-fwd{top:74%;justify-content:space-evenly;padding:0 22%;}
 
-.totw-row-def{
-    top:38%;
-    justify-content:space-evenly;
-    padding:0 14%;
-}
-
-.totw-row-mid{
-    top:56%;
-    justify-content:space-evenly;
-    padding:0 4%;
-}
-
-.totw-row-fwd{
-    top:74%;
-    justify-content:space-evenly;
-    padding:0 22%;
-}
-
-/* ---------- كروت اللاعبين ---------- */
+/* ---------- الكرت ---------- */
 .totw-card{
     width:60px;
     display:flex;
@@ -201,7 +185,7 @@
     padding:0 3px;
     margin-top:-6px;
     background:#ffffff;
-    color:#37003c;
+    color:#22154a;
     font-size:7px;
     font-weight:900;
     text-align:center;
@@ -225,8 +209,8 @@
     height:14px;
     padding:0 6px;
     margin:0;
-    background:#37003c;
-    color:#ffffff;
+    background:#00e5ff;
+    color:#180e36;
     font-size:9px;
     font-weight:900;
     text-align:center;
@@ -240,18 +224,18 @@
 }
 
 /* =========================================================
-   عرض القائمة — أبيض مثل Standings
+   عرض القائمة — Cosmic
 ========================================================= */
 
 .totw-list-view{
     width:100%;
     max-width:480px;
     margin:0 auto 16px;
-    background:#ffffff;
-    border:2px solid #38003c;
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    border:2px solid #3d2666;
     border-radius:14px;
     overflow:hidden;
-    box-shadow:0 4px 15px rgba(0,0,0,.12);
+    box-shadow:0 4px 18px rgba(0,0,0,.3);
 }
 
 .totw-list-header{
@@ -260,13 +244,14 @@
     gap:6px;
     align-items:center;
     padding:10px 12px;
-    border-bottom:2px solid #38003c;
-    color:#38003c;
-    background:#f8f8f8;
+    border-bottom:2px solid #00e5ff;
+    color:#00e5ff;
+    background:rgba(0,229,255,.05);
     font-size:10px;
     font-weight:900;
     text-transform:uppercase;
     letter-spacing:1px;
+    text-shadow:0 0 8px rgba(0,229,255,.3);
 }
 
 .totw-list-h-rank{text-align:center;}
@@ -280,14 +265,14 @@
     gap:6px;
     align-items:center;
     padding:10px 12px;
-    border-bottom:1px solid #f0f0f0;
-    color:#1a1a2e;
+    border-bottom:1px solid rgba(124,77,255,.12);
+    color:#ffffff;
     min-height:56px;
     transition:background .2s ease;
 }
 
 .totw-list-item:last-child{border-bottom:none;}
-.totw-list-item:hover{background:#f5f5f5;}
+.totw-list-item:hover{background:rgba(124,77,255,.12);}
 
 .totw-list-rank{
     display:flex;
@@ -297,7 +282,7 @@
     height:22px;
     font-size:12px;
     font-weight:900;
-    color:#38003c;
+    color:#ffffff;
     text-align:center;
     flex-shrink:0;
     margin:0 auto;
@@ -316,7 +301,7 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#f0f0f0;
+    background:rgba(0,229,255,.08);
     border-radius:50%;
 }
 
@@ -332,8 +317,8 @@
 }
 
 .totw-list-logo-empty{
-    background:#e0e0e0;
-    color:#666;
+    background:rgba(0,229,255,.15);
+    color:#ffffff;
     font-size:14px;
 }
 
@@ -349,7 +334,7 @@
 .totw-list-entry{
     font-size:13px;
     font-weight:900;
-    color:#1a1a2e;
+    color:#ffffff;
     text-align:right;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -360,7 +345,7 @@
 .totw-list-player{
     font-size:11px;
     font-weight:600;
-    color:#666666;
+    color:#a89cc8;
     text-align:right;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -372,15 +357,16 @@
     text-align:center;
     font-size:14px;
     font-weight:900;
-    color:#6b21a8;
+    color:#00e5ff;
     letter-spacing:0.5px;
+    text-shadow:0 0 8px rgba(0,229,255,.3);
 }
 
 .totw-list-total{
     text-align:center;
     font-size:14px;
     font-weight:900;
-    color:#38003c;
+    color:#ffffff;
     letter-spacing:0.5px;
 }
 
@@ -391,23 +377,25 @@
 .totw-loading{
     text-align:center;
     padding:40px 20px;
-    color:#38003c;
+    color:#00e5ff;
     font-size:15px;
     font-weight:900;
-    background:#ffffff;
+    letter-spacing:1px;
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
     border-radius:14px;
-    border:2px solid #f0f0f0;
+    border:2px solid #3d2666;
 }
 
 .totw-loading .spinner{
     display:inline-block;
     width:36px;
     height:36px;
-    border:4px solid rgba(0,200,83,.2);
-    border-top-color:#00c853;
+    border:4px solid rgba(0,229,255,.15);
+    border-top-color:#00e5ff;
     border-radius:50%;
     animation:spinTOTW .8s linear infinite;
     margin-bottom:14px;
+    box-shadow:0 0 20px rgba(0,229,255,.3);
 }
 
 @keyframes spinTOTW{
@@ -418,10 +406,10 @@
 .totw-error{
     text-align:center;
     padding:24px 16px;
-    background:#ffe5ec;
-    border:2px solid #ff005a;
+    background:rgba(255,82,82,.12);
+    border:2px solid #ff5252;
     border-radius:12px;
-    color:#b8003f;
+    color:#ff5252;
     font-size:13px;
     font-weight:800;
 }
@@ -433,7 +421,7 @@
 @media(max-width:480px){
 
     .totw-tab-btn{
-        padding:6px 18px;
+        padding:8px 20px;
         font-size:10px;
         letter-spacing:1.2px;
     }
