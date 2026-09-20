@@ -1,5 +1,5 @@
 /* =========================================================
-   stats.css — نسخة موحّدة بيضاء (مثل Standings)
+   stats.css — Cosmic Amethyst Theme
 ========================================================= */
 
 /* =========================================================
@@ -18,9 +18,9 @@
 
 .stats-tab-btn{
     padding:10px 22px;
-    background:#ffffff;
-    color:#38003c;
-    border:2px solid #38003c;
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    color:#ffffff;
+    border:2px solid #3d2666;
     border-radius:50px;
     font-size:11px;
     font-weight:900;
@@ -33,21 +33,21 @@
     display:flex;
     align-items:center;
     gap:6px;
-    box-shadow:0 2px 6px rgba(0,0,0,.08);
+    box-shadow:0 2px 8px rgba(0,0,0,.4);
 }
 
 .stats-tab-btn.active{
-    background:linear-gradient(135deg, #00e676 0%, #00c853 50%, #009b40 100%);
+    background:linear-gradient(135deg, #00e5ff 0%, #7c4dff 100%);
     color:#ffffff;
-    border-color:#00c853;
-    box-shadow:0 4px 12px rgba(0,200,83,.4);
+    border-color:#00e5ff;
+    box-shadow:0 4px 20px rgba(0,229,255,.35), inset 0 1px 0 rgba(255,255,255,.2);
     transform:translateY(-2px);
 }
 
 .stats-tab-btn:hover:not(.active){
-    background:#f5f5f5;
+    border-color:#7c4dff;
     transform:translateY(-2px);
-    box-shadow:0 4px 12px rgba(0,0,0,.15);
+    box-shadow:0 4px 15px rgba(124,77,255,.35);
 }
 
 .stats-view{display:none;animation:statsViewIn .4s ease;}
@@ -59,7 +59,7 @@
 }
 
 /* =========================================================
-   KPI CARDS — بيضاء
+   KPI CARDS
 ========================================================= */
 
 .stats-kpi-grid{
@@ -71,21 +71,34 @@
 
 .stats-kpi-card{
     position:relative;
-    background:#ffffff;
-    border:2px solid #f0f0f0;
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    border:2px solid #3d2666;
     border-radius:16px;
     padding:18px 12px 16px;
     text-align:center;
     transition:all .3s ease;
     overflow:hidden;
-    box-shadow:0 2px 8px rgba(0,0,0,.06);
+    box-shadow:0 4px 15px rgba(0,0,0,.3);
+}
+
+.stats-kpi-card::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:3px;
+    background:linear-gradient(90deg, transparent, #00e5ff, #7c4dff, transparent);
+    opacity:.5;
 }
 
 .stats-kpi-card:hover{
-    border-color:#00c853;
+    border-color:#00e5ff;
     transform:translateY(-3px);
-    box-shadow:0 6px 18px rgba(0,200,83,.2);
+    box-shadow:0 8px 25px rgba(0,229,255,.25);
 }
+
+.stats-kpi-card:hover::before{opacity:1;}
 
 .stats-kpi-icon{
     font-size:28px;
@@ -96,7 +109,7 @@
 .stats-kpi-value{
     font-size:30px;
     font-weight:900;
-    color:#00c853;
+    color:#ffffff;
     line-height:1;
     margin-bottom:6px;
     letter-spacing:-1px;
@@ -106,23 +119,23 @@
 .stats-kpi-label{
     font-size:10px;
     font-weight:800;
-    color:#666666;
+    color:#a89cc8;
     letter-spacing:1.5px;
     text-transform:uppercase;
 }
 
 /* =========================================================
-   SECTION — بيضاء
+   SECTION
 ========================================================= */
 
 .stats-section{
     position:relative;
-    background:#ffffff;
-    border:2px solid #f0f0f0;
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    border:2px solid #3d2666;
     border-radius:18px;
     padding:16px 12px;
     margin-bottom:16px;
-    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    box-shadow:0 4px 18px rgba(0,0,0,.3);
     overflow:hidden;
 }
 
@@ -133,12 +146,14 @@
     gap:8px;
     font-size:13px;
     font-weight:900;
-    color:#38003c;
+    color:#00e5ff;
     letter-spacing:2px;
     text-transform:uppercase;
     margin-bottom:14px;
     padding-bottom:10px;
-    border-bottom:2px solid #38003c;
+    border-bottom:2px solid transparent;
+    border-image:linear-gradient(90deg, transparent, #00e5ff, #7c4dff, transparent) 1;
+    text-shadow:0 0 10px rgba(0,229,255,.35);
 }
 
 /* =========================================================
@@ -152,7 +167,7 @@
     gap:10px;
     align-items:center;
     padding:11px 8px;
-    border-bottom:1px solid #f0f0f0;
+    border-bottom:1px solid rgba(124,77,255,.12);
     border-radius:10px;
     transition:all .25s ease;
     min-height:56px;
@@ -162,123 +177,63 @@
 .stats-row:last-child{border-bottom:none;}
 
 .stats-row:hover{
-    background:#f5f5f5;
+    background:rgba(124,77,255,.12);
     transform:translateX(-4px);
 }
 
 /* =========================================================
-   TOP 3 — ذهبي / فضي / برونزي
+   TOP 3
 ========================================================= */
 
-/* المركز 1 — ذهبي */
 .stats-row-gold{
-    background:linear-gradient(
-        90deg,
-        rgba(255, 215, 0, 0.22) 0%,
-        rgba(255, 215, 0, 0.08) 50%,
-        #ffffff 100%
-    );
+    background:linear-gradient(90deg,
+        rgba(255, 215, 0, 0.18) 0%,
+        rgba(255, 215, 0, 0.05) 50%,
+        transparent 100%);
 }
 
 .stats-row-gold::before{
     content:'';
     position:absolute;
-    left:0;
-    top:0;
-    bottom:0;
+    left:0;top:0;bottom:0;
     width:5px;
-    background:linear-gradient(
-        180deg,
-        #fff4b0 0%,
-        #ffd700 25%,
-        #ffae00 50%,
-        #b8860b 75%,
-        #8b6914 100%
-    );
+    background:linear-gradient(180deg, #ffd700 0%, #b8860b 100%);
     border-radius:0 4px 4px 0;
+    box-shadow:0 0 12px rgba(255,215,0,.6);
 }
 
-.stats-row-gold:hover{
-    background:linear-gradient(
-        90deg,
-        rgba(255, 215, 0, 0.30) 0%,
-        rgba(255, 215, 0, 0.12) 50%,
-        #ffffff 100%
-    );
-}
-
-/* المركز 2 — فضي */
 .stats-row-silver{
-    background:linear-gradient(
-        90deg,
-        rgba(192, 192, 192, 0.20) 0%,
-        rgba(192, 192, 192, 0.07) 50%,
-        #ffffff 100%
-    );
+    background:linear-gradient(90deg,
+        rgba(192, 192, 192, 0.15) 0%,
+        rgba(192, 192, 192, 0.04) 50%,
+        transparent 100%);
 }
 
 .stats-row-silver::before{
     content:'';
     position:absolute;
-    left:0;
-    top:0;
-    bottom:0;
+    left:0;top:0;bottom:0;
     width:5px;
-    background:linear-gradient(
-        180deg,
-        #ffffff 0%,
-        #e8e8e8 25%,
-        #c0c0c0 50%,
-        #a8a8a8 75%,
-        #808080 100%
-    );
+    background:linear-gradient(180deg, #c0c0c0 0%, #808080 100%);
     border-radius:0 4px 4px 0;
+    box-shadow:0 0 12px rgba(192,192,192,.5);
 }
 
-.stats-row-silver:hover{
-    background:linear-gradient(
-        90deg,
-        rgba(192, 192, 192, 0.28) 0%,
-        rgba(192, 192, 192, 0.10) 50%,
-        #ffffff 100%
-    );
-}
-
-/* المركز 3 — برونزي */
 .stats-row-bronze{
-    background:linear-gradient(
-        90deg,
-        rgba(205, 127, 50, 0.18) 0%,
-        rgba(205, 127, 50, 0.07) 50%,
-        #ffffff 100%
-    );
+    background:linear-gradient(90deg,
+        rgba(205, 127, 50, 0.15) 0%,
+        rgba(205, 127, 50, 0.04) 50%,
+        transparent 100%);
 }
 
 .stats-row-bronze::before{
     content:'';
     position:absolute;
-    left:0;
-    top:0;
-    bottom:0;
+    left:0;top:0;bottom:0;
     width:5px;
-    background:linear-gradient(
-        180deg,
-        #e8a85c 0%,
-        #cd7f32 25%,
-        #a0522d 50%,
-        #8b4513 75%,
-        #5c2e0a 100%
-    );
+    background:linear-gradient(180deg, #cd7f32 0%, #8b4513 100%);
     border-radius:0 4px 4px 0;
-}
-
-.stats-row-bronze:hover{
-    background:linear-gradient(
-        90deg,
-        rgba(205, 127, 50, 0.26) 0%,
-        rgba(205, 127, 50, 0.10) 50%,
-        #ffffff 100%
-    );
+    box-shadow:0 0 12px rgba(205,127,50,.5);
 }
 
 /* =========================================================
@@ -294,7 +249,7 @@
     justify-content:center;
     font-size:13px;
     font-weight:900;
-    color:#38003c;
+    color:#ffffff;
     flex-shrink:0;
     margin:0 auto;
     position:relative;
@@ -305,24 +260,27 @@
     background:linear-gradient(135deg, #ffd700 0%, #ff9500 100%);
     color:#4a2a00;
     font-size:16px;
+    box-shadow:0 0 12px rgba(255,215,0,.5);
 }
 
 .stats-rank-silver{
     background:linear-gradient(135deg, #e8e8e8 0%, #a8a8a8 100%);
     color:#333;
     font-size:16px;
+    box-shadow:0 0 12px rgba(192,192,192,.4);
 }
 
 .stats-rank-bronze{
     background:linear-gradient(135deg, #cd7f32 0%, #8b4513 100%);
     color:#fff;
     font-size:16px;
+    box-shadow:0 0 12px rgba(205,127,50,.4);
 }
 
 .stats-rank-normal{
-    background:#f0f0f0;
-    color:#38003c;
-    border:1px solid #e0e0e0;
+    background:rgba(0,229,255,.12);
+    color:#ffffff;
+    border:1px solid rgba(0,229,255,.35);
 }
 
 /* =========================================================
@@ -349,17 +307,17 @@
 }
 
 .stats-row-logo img{
-    max-width:100%;
-    max-height:100%;
-    width:auto;
-    height:auto;
+    width:100%;
+    height:100%;
     object-fit:contain;
+    object-position:center;
     display:block;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));
 }
 
 .stats-row-logo-empty{
     font-size:20px;
-    color:#38003c;
+    color:#a89cc8;
 }
 
 /* =========================================================
@@ -380,7 +338,7 @@
 .stats-row-entry{
     font-size:13px;
     font-weight:900;
-    color:#1a1a2e;
+    color:#ffffff;
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
@@ -391,7 +349,7 @@
 .stats-row-player{
     font-size:10px;
     font-weight:600;
-    color:#666666;
+    color:#a89cc8;
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
@@ -410,7 +368,7 @@
 .stats-row-value-num{
     font-size:18px;
     font-weight:900;
-    color:#00c853;
+    color:#ffffff;
     letter-spacing:.5px;
     line-height:1;
     font-family:'EnglishCustom', sans-serif;
@@ -419,7 +377,7 @@
 .stats-row-value-label{
     font-size:8px;
     font-weight:800;
-    color:#999;
+    color:#7a6b9c;
     letter-spacing:1.5px;
     text-transform:uppercase;
 }
@@ -436,29 +394,29 @@
 .stats-search-input{
     width:100%;
     padding:14px 20px;
-    background:#ffffff;
-    border:2px solid #e0e0e0;
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    border:2px solid #3d2666;
     border-radius:50px;
-    color:#1a1a2e;
+    color:#ffffff;
     font-size:14px;
     font-weight:700;
     outline:none;
     font-family:inherit;
     transition:all .3s ease;
-    box-shadow:0 2px 6px rgba(0,0,0,.06);
+    box-shadow:0 2px 8px rgba(0,0,0,.3);
     direction:rtl;
     text-align:right;
 }
 
 .stats-search-input::placeholder{
-    color:#999999;
+    color:#7a6b9c;
     font-weight:500;
     letter-spacing:.5px;
 }
 
 .stats-search-input:focus{
-    border-color:#00c853;
-    box-shadow:0 0 0 3px rgba(0,200,83,.15);
+    border-color:#00e5ff;
+    box-shadow:0 0 0 3px rgba(0,229,255,.15), 0 0 20px rgba(0,229,255,.2);
 }
 
 .stats-search-results{
@@ -471,8 +429,8 @@
     gap:10px;
     align-items:center;
     padding:12px 14px;
-    background:#ffffff;
-    border:1px solid #f0f0f0;
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    border:1px solid #3d2666;
     border-radius:12px;
     margin-bottom:8px;
     cursor:pointer;
@@ -480,18 +438,19 @@
 }
 
 .stats-search-item:hover{
-    border-color:#00c853;
+    border-color:#00e5ff;
     transform:translateX(-4px);
-    box-shadow:0 6px 20px rgba(0,200,83,.2);
-    background:#f9fff9;
+    box-shadow:0 6px 20px rgba(0,229,255,.2);
+    background:linear-gradient(135deg, #2d1b5e 0%, #1f1248 100%);
 }
 
 .stats-search-rank{
     font-size:12px;
     font-weight:900;
-    color:#38003c;
+    color:#00e5ff;
     text-align:center;
     letter-spacing:.5px;
+    text-shadow:0 0 8px rgba(0,229,255,.5);
 }
 
 .stats-search-logo{
@@ -510,16 +469,16 @@
 }
 
 .stats-search-logo img{
-    max-width:100%;
-    max-height:100%;
-    width:auto;
-    height:auto;
+    width:100%;
+    height:100%;
     object-fit:contain;
+    display:block;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));
 }
 
 .stats-search-logo-empty{
     font-size:18px;
-    color:#38003c;
+    color:#a89cc8;
 }
 
 .stats-search-names{
@@ -531,7 +490,7 @@
 .stats-search-entry{
     font-size:13px;
     font-weight:900;
-    color:#1a1a2e;
+    color:#ffffff;
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
@@ -540,7 +499,7 @@
 
 .stats-search-player{
     font-size:10px;
-    color:#666666;
+    color:#a89cc8;
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
@@ -551,33 +510,41 @@
 .stats-search-total{
     font-size:15px;
     font-weight:900;
-    color:#00c853;
+    color:#ffffff;
     text-align:center;
 }
 
 .stats-empty{
     text-align:center;
     padding:30px 20px;
-    color:#999;
+    color:#7a6b9c;
     font-size:13px;
     font-weight:600;
 }
 
 /* =========================================================
-   PROFILE — بيضاء
+   PROFILE
 ========================================================= */
 
 .stats-profile-card{
     position:relative;
-    background:#ffffff;
-    border:3px solid #38003c;
+    background:linear-gradient(135deg, #2d1b5e 0%, #22154a 50%, #180e36 100%);
+    border:3px solid #00e5ff;
     border-radius:22px;
     padding:30px 20px 24px;
     text-align:center;
     margin-bottom:16px;
-    box-shadow:0 6px 20px rgba(0,0,0,.08);
+    box-shadow:0 8px 30px rgba(0,229,255,.25), 0 0 60px rgba(0,229,255,.15);
     animation:profileIn .5s cubic-bezier(.4,0,.2,1);
     overflow:hidden;
+}
+
+.stats-profile-card::before{
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;
+    height:3px;
+    background:linear-gradient(90deg, transparent, #00e5ff, #7c4dff, #00e5ff, transparent);
 }
 
 @keyframes profileIn{
@@ -592,9 +559,9 @@
     width:32px;
     height:32px;
     border-radius:50%;
-    background:#f0f0f0;
-    border:none;
-    color:#38003c;
+    background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.15);
+    color:#ffffff;
     font-size:16px;
     font-weight:900;
     cursor:pointer;
@@ -606,7 +573,7 @@
 }
 
 .stats-profile-close:hover{
-    background:#ff005a;
+    background:#ff5252;
     color:#ffffff;
     transform:scale(1.1) rotate(90deg);
 }
@@ -623,6 +590,7 @@
     font-weight:900;
     letter-spacing:1px;
     z-index:5;
+    box-shadow:0 4px 12px rgba(255,215,0,.4);
 }
 
 .stats-profile-shirt{
@@ -642,35 +610,36 @@
     width:auto;
     height:auto;
     object-fit:contain;
-    filter:drop-shadow(0 4px 10px rgba(0,0,0,.15));
+    filter:drop-shadow(0 6px 15px rgba(0,0,0,.5));
 }
 
 .stats-profile-no-logo{
     width:80px;
     height:80px;
     border-radius:50%;
-    background:#f0f0f0;
-    border:2px solid #e0e0e0;
+    background:rgba(0,229,255,.1);
+    border:2px solid rgba(0,229,255,.4);
     display:flex;
     align-items:center;
     justify-content:center;
     font-size:36px;
-    color:#38003c;
+    color:#a89cc8;
 }
 
 .stats-profile-entry{
     font-size:22px;
     font-weight:900;
-    color:#1a1a2e;
+    color:#ffffff;
     letter-spacing:1px;
     margin-bottom:6px;
     position:relative;
     z-index:2;
+    text-shadow:0 2px 8px rgba(0,0,0,.4);
 }
 
 .stats-profile-player{
     font-size:13px;
-    color:#666666;
+    color:#a89cc8;
     margin-bottom:10px;
     position:relative;
     z-index:2;
@@ -680,17 +649,18 @@
 .stats-profile-team{
     display:inline-block;
     padding:5px 16px;
-    background:rgba(0,200,83,.12);
-    border:1px solid #00c853;
+    background:rgba(0,229,255,.15);
+    border:1px solid #00e5ff;
     border-radius:50px;
     font-size:11px;
     font-weight:900;
-    color:#00a844;
+    color:#00e5ff;
     letter-spacing:1.5px;
     text-transform:uppercase;
     margin-bottom:18px;
     position:relative;
     z-index:2;
+    box-shadow:0 0 15px rgba(0,229,255,.3);
 }
 
 .stats-profile-stats{
@@ -703,35 +673,34 @@
 }
 
 .stats-profile-stat{
-    background:#f8f8f8;
+    background:rgba(0,0,0,.25);
     border-radius:14px;
     padding:14px 6px;
-    border:1px solid #f0f0f0;
+    border:1px solid rgba(124,77,255,.25);
     transition:all .25s ease;
 }
 
 .stats-profile-stat:hover{
-    border-color:#00c853;
+    border-color:#00e5ff;
     transform:translateY(-3px);
-    background:#f0fff5;
 }
 
 .stats-stat-total{
-    background:linear-gradient(135deg, rgba(0,200,83,.12) 0%, #f8f8f8 100%);
+    background:linear-gradient(135deg, rgba(0,229,255,.12) 0%, rgba(0,0,0,.25) 100%);
 }
 
 .stats-stat-gw{
-    background:linear-gradient(135deg, rgba(4,245,255,.10) 0%, #f8f8f8 100%);
+    background:linear-gradient(135deg, rgba(79,195,247,.12) 0%, rgba(0,0,0,.25) 100%);
 }
 
 .stats-stat-rank{
-    background:linear-gradient(135deg, rgba(255,215,0,.15) 0%, #f8f8f8 100%);
+    background:linear-gradient(135deg, rgba(255,215,0,.12) 0%, rgba(0,0,0,.25) 100%);
 }
 
 .stats-stat-label{
     font-size:9px;
     font-weight:800;
-    color:#666666;
+    color:#a89cc8;
     letter-spacing:1.5px;
     text-transform:uppercase;
     margin-bottom:6px;
@@ -740,7 +709,7 @@
 .stats-stat-value{
     font-size:24px;
     font-weight:900;
-    color:#00c853;
+    color:#ffffff;
     line-height:1;
     font-family:'EnglishCustom', sans-serif;
 }
@@ -748,7 +717,7 @@
 .stats-profile-details{
     margin-top:18px;
     padding-top:16px;
-    border-top:1px solid #f0f0f0;
+    border-top:1px solid rgba(124,77,255,.25);
     display:flex;
     flex-direction:column;
     gap:10px;
@@ -761,30 +730,30 @@
     align-items:center;
     justify-content:space-between;
     padding:8px 12px;
-    background:#f8f8f8;
+    background:rgba(0,0,0,.25);
     border-radius:10px;
     font-size:12px;
     direction:rtl;
 }
 
 .stats-detail-label{
-    color:#666666;
+    color:#a89cc8;
     font-weight:700;
     letter-spacing:.5px;
 }
 
 .stats-detail-value{
-    color:#1a1a2e;
+    color:#ffffff;
     font-weight:900;
     font-size:14px;
     letter-spacing:.5px;
 }
 
-.stats-yellow{color:#ff9500;}
-.stats-green{color:#00c853;}
+.stats-yellow{color:#ffd700;}
+.stats-green{color:#00e5ff;}
 
 /* =========================================================
-   RECORDS — بيضاء
+   RECORDS
 ========================================================= */
 
 .stats-records-grid{
@@ -795,8 +764,8 @@
 
 .stats-record-card{
     position:relative;
-    background:#ffffff;
-    border:2px solid #f0f0f0;
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    border:2px solid #3d2666;
     border-radius:16px;
     padding:18px 12px;
     text-align:center;
@@ -806,27 +775,27 @@
 
 .stats-record-card:hover{
     transform:translateY(-4px);
-    box-shadow:0 10px 25px rgba(0,0,0,.1);
+    box-shadow:0 10px 25px rgba(0,229,255,.15);
 }
 
 .stats-record-gold{
-    border-color:rgba(255,215,0,.5);
-    background:linear-gradient(135deg, rgba(255,215,0,.10) 0%, #ffffff 100%);
+    border-color:rgba(255,215,0,.4);
+    background:linear-gradient(135deg, rgba(255,215,0,.10) 0%, #180e36 100%);
 }
 
 .stats-record-red{
-    border-color:rgba(229,57,53,.4);
-    background:linear-gradient(135deg, rgba(229,57,53,.08) 0%, #ffffff 100%);
+    border-color:rgba(229,57,53,.35);
+    background:linear-gradient(135deg, rgba(229,57,53,.08) 0%, #180e36 100%);
 }
 
 .stats-record-green{
-    border-color:rgba(0,200,83,.4);
-    background:linear-gradient(135deg, rgba(0,200,83,.08) 0%, #ffffff 100%);
+    border-color:rgba(0,229,255,.35);
+    background:linear-gradient(135deg, rgba(0,229,255,.08) 0%, #180e36 100%);
 }
 
 .stats-record-purple{
-    border-color:rgba(107,33,168,.5);
-    background:linear-gradient(135deg, rgba(107,33,168,.06) 0%, #ffffff 100%);
+    border-color:rgba(124,77,255,.5);
+    background:linear-gradient(135deg, rgba(124,77,255,.10) 0%, #180e36 100%);
 }
 
 .stats-record-icon{
@@ -838,7 +807,7 @@
 .stats-record-label{
     font-size:10px;
     font-weight:800;
-    color:#666666;
+    color:#a89cc8;
     letter-spacing:1px;
     margin-bottom:6px;
     direction:rtl;
@@ -847,27 +816,30 @@
 .stats-record-value{
     font-size:26px;
     font-weight:900;
-    color:#38003c;
+    color:#ffffff;
     line-height:1;
     margin-bottom:6px;
     font-family:'EnglishCustom', sans-serif;
 }
 
 .stats-record-gold .stats-record-value{
-    color:#b8860b;
+    color:#ffd700;
+    text-shadow:0 0 15px rgba(255,215,0,.4);
 }
 
 .stats-record-red .stats-record-value{
-    color:#e53935;
+    color:#ff5252;
+    text-shadow:0 0 15px rgba(255,82,82,.4);
 }
 
 .stats-record-green .stats-record-value{
-    color:#00a844;
+    color:#00e5ff;
+    text-shadow:0 0 15px rgba(0,229,255,.4);
 }
 
 .stats-record-name{
     font-size:10px;
-    color:#999999;
+    color:#7a6b9c;
     font-weight:700;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -883,24 +855,25 @@
 .stats-loading{
     text-align:center;
     padding:60px 20px;
-    color:#38003c;
+    color:#00e5ff;
     font-size:15px;
     font-weight:900;
     letter-spacing:1px;
-    background:#ffffff;
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
     border-radius:14px;
-    border:2px solid #f0f0f0;
+    border:2px solid #3d2666;
 }
 
 .stats-loading .spinner{
     display:inline-block;
     width:44px;
     height:44px;
-    border:4px solid rgba(0,200,83,.2);
-    border-top-color:#00c853;
+    border:4px solid rgba(0,229,255,.15);
+    border-top-color:#00e5ff;
     border-radius:50%;
     animation:spin .8s linear infinite;
     margin-bottom:16px;
+    box-shadow:0 0 20px rgba(0,229,255,.3);
 }
 
 /* =========================================================
@@ -918,12 +891,6 @@
         padding:10px 6px;
         gap:8px;
         min-height:52px;
-    }
-
-    .stats-row-gold::before,
-    .stats-row-silver::before,
-    .stats-row-bronze::before{
-        width:4px;
     }
 
     .stats-rank{width:26px;height:26px;font-size:12px;}
@@ -950,7 +917,6 @@
 
     .stats-profile-entry{font-size:18px;}
     .stats-profile-shirt{width:90px;height:90px;}
-    .stats-profile-shirt img{max-width:100%;max-height:100%;}
     .stats-stat-value{font-size:20px;}
     .stats-profile-stat{padding:10px 4px;}
 
