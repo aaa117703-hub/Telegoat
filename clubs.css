@@ -1,5 +1,5 @@
 /* =========================================================
-   clubs.css — تصميم قسم الأندية
+   clubs.css — نسخة موحّدة بيضاء (مثل Standings)
 ========================================================= */
 
 /* =========================================================
@@ -17,9 +17,9 @@
 
 .clubs-edit-btn{
     padding:10px 22px;
-    background:linear-gradient(135deg, #2e0b3d 0%, #38003c 100%);
-    color:#00e676;
-    border:2px solid rgba(0, 200, 83, 0.3);
+    background:#ffffff;
+    color:#38003c;
+    border:2px solid #38003c;
     border-radius:50px;
     font-size:11px;
     font-weight:900;
@@ -29,19 +29,20 @@
     transition:all .3s ease;
     font-family:inherit;
     outline:none;
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
 }
 
 .clubs-edit-btn.active{
-    background:linear-gradient(135deg, #00c853 0%, #009b40 100%);
-    border-color:#00e676;
-    color:#fff;
-    box-shadow:0 0 20px rgba(0, 200, 83, 0.6);
+    background:linear-gradient(135deg, #00e676 0%, #00c853 50%, #009b40 100%);
+    border-color:#00c853;
+    color:#ffffff;
+    box-shadow:0 4px 12px rgba(0,200,83,.4);
 }
 
-.clubs-edit-btn:hover{
+.clubs-edit-btn:hover:not(.active){
+    background:#f5f5f5;
     transform:translateY(-2px);
-    border-color:#00c853;
-    box-shadow:0 6px 16px rgba(0, 200, 83, 0.4);
+    box-shadow:0 4px 12px rgba(0,0,0,.15);
 }
 
 /* =========================================================
@@ -60,12 +61,12 @@
     align-items:center;
     gap:12px;
     padding:14px 16px;
-    background:linear-gradient(135deg, rgba(0, 200, 83, 0.08) 0%, rgba(46, 11, 61, 0.95) 100%);
-    border:2px solid rgba(0, 200, 83, 0.25);
+    background:#ffffff;
+    border:2px solid #f0f0f0;
     border-radius:14px;
     cursor:pointer;
     transition:all .25s ease;
-    box-shadow:0 4px 15px rgba(0,0,0,.3);
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
     width:100%;
     box-sizing:border-box;
 }
@@ -73,7 +74,7 @@
 .club-item:hover{
     border-color:#00c853;
     transform:translateX(-4px);
-    box-shadow:0 6px 20px rgba(0, 200, 83, 0.35);
+    box-shadow:0 6px 18px rgba(0,200,83,.2);
 }
 
 .club-item-logo{
@@ -98,7 +99,6 @@
     height:auto;
     object-fit:contain;
     display:block;
-    filter:drop-shadow(0 2px 6px rgba(0,0,0,.5));
 }
 
 .club-item-logo-empty{
@@ -116,7 +116,7 @@
 .club-item-name{
     font-size:15px;
     font-weight:900;
-    color:#fff;
+    color:#1a1a2e;
     letter-spacing:0.5px;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -126,7 +126,7 @@
 
 .club-item-count{
     font-size:11px;
-    color:#00e676;
+    color:#00a844;
     margin-top:2px;
     font-weight:700;
     line-height:1.2;
@@ -134,25 +134,25 @@
 
 .club-item-arrow{
     font-size:24px;
-    color:#00e676;
+    color:#38003c;
     font-weight:900;
     flex-shrink:0;
 }
 
 /* =========================================================
-   MODAL
+   MODAL — أبيض
 ========================================================= */
 
 #clubModal{
     display:none;
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.9);
+    background:rgba(0,0,0,.5);
     z-index:99999;
     align-items:center;
     justify-content:center;
     padding:16px;
-    backdrop-filter:blur(6px);
+    backdrop-filter:blur(4px);
     opacity:0;
     transition:opacity .25s ease;
 }
@@ -163,8 +163,8 @@
 }
 
 .club-modal-box{
-    background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
-    border:3px solid #00c853;
+    background:#ffffff;
+    border:3px solid #38003c;
     border-radius:20px;
     width:100%;
     max-width:420px;
@@ -172,9 +172,7 @@
     overflow:hidden;
     display:flex;
     flex-direction:column;
-    box-shadow:
-        0 0 50px rgba(0, 200, 83, 0.5),
-        0 20px 60px rgba(0,0,0,.7);
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
     animation:clubModalIn .3s cubic-bezier(.4,0,.2,1);
 }
 
@@ -189,7 +187,7 @@
     gap:12px;
     padding:16px 18px;
     background:linear-gradient(135deg, #6b21a8 0%, #38003c 100%);
-    border-bottom:2px solid #00c853;
+    border-bottom:2px solid #38003c;
     position:relative;
 }
 
@@ -213,14 +211,13 @@
     width:auto;
     height:auto;
     object-fit:contain;
-    filter:drop-shadow(0 2px 6px rgba(0,0,0,.5));
 }
 
 .club-modal-title{
     flex:1;
     font-size:18px;
     font-weight:900;
-    color:#fff;
+    color:#ffffff;
     letter-spacing:0.5px;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -234,7 +231,7 @@
     border-radius:50%;
     background:rgba(255,255,255,.15);
     border:none;
-    color:#fff;
+    color:#ffffff;
     font-size:16px;
     font-weight:900;
     cursor:pointer;
@@ -248,7 +245,7 @@
 }
 
 .club-modal-close:hover{
-    background:rgba(255,0,90,.6);
+    background:#ff005a;
     transform:scale(1.1) rotate(90deg);
 }
 
@@ -257,18 +254,18 @@
     padding:10px 18px;
     font-size:11px;
     font-weight:800;
-    color:#b8b8b8;
+    color:#666666;
     letter-spacing:1px;
     text-transform:uppercase;
-    background:rgba(0,0,0,.2);
-    border-bottom:1px solid rgba(255,255,255,.05);
+    background:#f8f8f8;
+    border-bottom:1px solid #f0f0f0;
 }
 
 .club-add-btn{
     margin:12px 18px 0;
     padding:10px;
-    background:linear-gradient(135deg, #00c853 0%, #009b40 100%);
-    color:#fff;
+    background:linear-gradient(135deg, #00e676 0%, #00c853 50%, #009b40 100%);
+    color:#ffffff;
     border:none;
     border-radius:10px;
     font-size:12px;
@@ -277,6 +274,7 @@
     cursor:pointer;
     font-family:inherit;
     transition:transform .2s ease;
+    box-shadow:0 3px 10px rgba(0,200,83,.3);
 }
 
 .club-add-btn:hover{transform:scale(1.03);}
@@ -294,8 +292,8 @@
     align-items:center;
     gap:10px;
     padding:10px 12px;
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.08);
+    background:#f8f8f8;
+    border:1px solid #f0f0f0;
     border-radius:10px;
     margin-bottom:6px;
     transition:all .2s ease;
@@ -303,8 +301,8 @@
 }
 
 .club-player-row:hover{
-    background:rgba(0, 200, 83, 0.08);
-    border-color:rgba(0, 200, 83, 0.3);
+    background:#f0fff5;
+    border-color:rgba(0, 200, 83, 0.4);
 }
 
 .club-player-row:last-child{margin-bottom:0;}
@@ -315,12 +313,12 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background:rgba(0, 200, 83, 0.15);
-    border:1px solid rgba(0, 200, 83, 0.4);
+    background:rgba(0, 200, 83, 0.12);
+    border:1px solid rgba(0, 200, 83, 0.3);
     border-radius:50%;
     font-size:11px;
     font-weight:900;
-    color:#00e676;
+    color:#00a844;
     flex-shrink:0;
 }
 
@@ -328,7 +326,7 @@
     flex:1;
     font-size:13px;
     font-weight:800;
-    color:#fff;
+    color:#1a1a2e;
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
@@ -339,9 +337,9 @@
     width:26px;
     height:26px;
     border-radius:50%;
-    background:rgba(255,82,82,.15);
-    border:1px solid rgba(255,82,82,.4);
-    color:#ff5252;
+    background:rgba(229,57,53,.12);
+    border:1px solid rgba(229,57,53,.35);
+    color:#e53935;
     font-size:12px;
     font-weight:900;
     cursor:pointer;
@@ -355,14 +353,15 @@
 }
 
 .club-player-del:hover{
-    background:rgba(255,82,82,.4);
+    background:#e53935;
+    color:#ffffff;
     transform:scale(1.1);
 }
 
 .clubs-empty{
     text-align:center;
     padding:40px 20px;
-    color:#888;
+    color:#999;
     font-size:14px;
     font-weight:700;
 }
