@@ -322,7 +322,6 @@ async function loadStats() {
         if (loadingEl) loadingEl.style.display = 'none';
         if (contentEl) contentEl.style.display = 'block';
 
-        /* تحميل trends */
         if (typeof loadTrends === 'function') {
             try {
                 await loadTrends(currentRound);
@@ -346,7 +345,6 @@ async function loadStats() {
         renderStatsOverview(statsComputed);
         renderStatsRecords(statsComputed);
 
-        /* تحميل trends */
         if (typeof loadTrends === 'function') {
             try {
                 await loadTrends(currentRound);
@@ -374,6 +372,11 @@ function switchStatsTab(tabName) {
     document.querySelectorAll('.stats-view').forEach(function(view) {
         view.classList.toggle('active', view.id === 'statsView-' + tabName);
     });
+
+    /* ✅ Clubs tab — نحمّل عند الفتح */
+    if (tabName === 'clubs' && typeof loadClubs === 'function') {
+        loadClubs();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
