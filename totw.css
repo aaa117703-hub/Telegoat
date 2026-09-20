@@ -61,29 +61,42 @@
     overflow:hidden;
 }
 
-/* عنوان TEAM OF THE WEEK — بدون GW */
+/* =========================================================
+   عنوان TEAM OF THE WEEK — شريط ملون بحواف هلالية
+========================================================= */
+
 .totw-pitch-title{
     position:absolute;
-    top:8%;
+    top:12.5%;
     left:50%;
     transform:translateX(-50%);
-    color:#37003c;
-    font-size:15px;
+    color:#ffffff;
+    font-size:13px;
     font-weight:900;
-    letter-spacing:5px;
+    letter-spacing:3px;
     text-transform:uppercase;
     z-index:5;
     white-space:nowrap;
     font-family:inherit;
     text-align:center;
-    padding-bottom:6px;
-    border-bottom:3px solid #04f5ff;
+    padding:6px 26px;
+    border-radius:50px;
+    background:linear-gradient(90deg,
+        #04f5ff 0%,
+        #3da5f5 30%,
+        #7b3ff5 50%,
+        #3da5f5 70%,
+        #04f5ff 100%);
+    box-shadow:
+        0 4px 14px rgba(0,0,0,.4),
+        0 0 20px rgba(4,245,255,.35),
+        inset 0 1px 0 rgba(255,255,255,.5),
+        inset 0 -1px 0 rgba(0,0,0,.15);
     text-shadow:
-        0 1px 2px rgba(255,255,255,.6),
-        0 2px 4px rgba(0,0,0,.08);
+        0 1px 3px rgba(0,0,0,.55),
+        0 0 10px rgba(4,245,255,.5);
 }
 
-/* إخفاء GW label (في حال موجود) */
 .totw-pitch-title .gw-label{
     display:none !important;
 }
@@ -95,7 +108,7 @@
 }
 
 /* =========================================================
-   الصفوف — الحارس رجع لفوق
+   الصفوف
 ========================================================= */
 
 .totw-row{
@@ -187,9 +200,9 @@
     padding:4px;
 }
 
-/* =========================================================
-   الاسم + النقاط
-========================================================= */
+.totw-card .tc-shirt-empty{
+    background:transparent;
+}
 
 .totw-card .tc-name{
     display:flex;
@@ -382,6 +395,10 @@
     letter-spacing:0.5px;
 }
 
+/* =========================================================
+   Loading + Error
+========================================================= */
+
 .totw-loading{
     text-align:center;
     padding:40px 20px;
@@ -417,6 +434,10 @@
     font-weight:800;
 }
 
+/* =========================================================
+   الموبايل
+========================================================= */
+
 @media(max-width:480px){
 
     .totw-tab-btn{
@@ -428,11 +449,10 @@
     .totw-pitch{max-width:100%;}
 
     .totw-pitch-title{
-        font-size:12px;
-        letter-spacing:3px;
-        top:8%;
-        padding-bottom:5px;
-        border-bottom-width:2px;
+        font-size:11px;
+        letter-spacing:2px;
+        top:12.5%;
+        padding:5px 20px;
     }
 
     .totw-card{width:50px;}
