@@ -457,9 +457,10 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 </style>
 
 <link rel="stylesheet" href="mobile.css">
-<link rel="stylesheet" href="totw.css?v=14">
-<link rel="stylesheet" href="stats.css?v=2">
-<link rel="stylesheet" href="trends.css?v=1">
+<link rel="stylesheet" href="totw.css?v=15">
+<link rel="stylesheet" href="stats.css?v=3">
+<link rel="stylesheet" href="trends.css?v=2">
+<link rel="stylesheet" href="clubs.css?v=1">
 
 </head>
 
@@ -610,6 +611,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
             <button class="stats-tab-btn" data-tab="trends" onclick="switchStatsTab('trends')">📈 Trends</button>
             <button class="stats-tab-btn" data-tab="search" onclick="switchStatsTab('search')">🔍 Search</button>
             <button class="stats-tab-btn" data-tab="records" onclick="switchStatsTab('records')">🏆 Records</button>
+            <button class="stats-tab-btn" data-tab="clubs" onclick="switchStatsTab('clubs')">⚽ Clubs</button>
         </div>
 
         <div id="statsLoading" class="stats-loading">
@@ -694,6 +696,27 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
                     <div class="stats-section-title">🏆 League Records</div>
                     <div id="statsRecordsContent" class="stats-records-grid"></div>
                 </div>
+
+            </div>
+
+            <div id="statsView-clubs" class="stats-view">
+
+                <div class="clubs-controls">
+                    <button class="clubs-edit-btn" id="clubsEditBtn" onclick="toggleClubsEditMode()">
+                        🔒 تعديل
+                    </button>
+                </div>
+
+                <div id="clubsLoading" class="stats-loading" style="display:none;">
+                    <div class="spinner"></div>
+                    <div>Loading Clubs...</div>
+                </div>
+
+                <div id="clubsContent" style="display:none;">
+                    <div id="clubsList" class="clubs-list"></div>
+                </div>
+
+                <div id="clubModal"></div>
 
             </div>
 
@@ -792,19 +815,20 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 </script>
 
 <script src="config.js"></script>
-<script src="locks.js?v=14"></script>
+<script src="locks.js?v=15"></script>
 <script src="teams.js"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=35"></script>
-<script src="fixtures.js?v=36"></script>
-<script src="standings.js?v=7"></script>
-<script src="download.js?v=16"></script>
-<script src="players-teams.js?v=96"></script>
-<script src="totw.js?v=109"></script>
-<script src="trends.js?v=1"></script>
-<script src="stats.js?v=5"></script>
-<script src="main.js?v=16"></script>
+<script src="carousel.js?v=36"></script>
+<script src="fixtures.js?v=37"></script>
+<script src="standings.js?v=8"></script>
+<script src="download.js?v=17"></script>
+<script src="players-teams.js?v=97"></script>
+<script src="totw.js?v=110"></script>
+<script src="trends.js?v=2"></script>
+<script src="stats.js?v=6"></script>
+<script src="clubs.js?v=1"></script>
+<script src="main.js?v=17"></script>
 
 </body>
 </html>
