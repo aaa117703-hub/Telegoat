@@ -82,29 +82,25 @@ function createStatsRow(rank, manager, value, valueLabel) {
     if (teamName && typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName]) {
         logoHtml = '<div class="stats-row-logo"><img src="./' + TEAMS_LOGOS[teamName] + '" onerror="this.style.display=\'none\'"></div>';
     } else {
-        logoHtml = '<div class="stats-row-logo stats-row-logo-empty">⚽</div>';
+        logoHtml = '<div class="stats-row-logo stats-row-logo-empty"></div>';
     }
 
     let rankClass = 'stats-rank-normal';
-    let medal = '';
     let rowExtra = '';
 
     if (rank === 1) {
         rankClass = 'stats-rank-gold';
-        medal = '🥇';
         rowExtra = ' stats-row-gold';
     } else if (rank === 2) {
         rankClass = 'stats-rank-silver';
-        medal = '🥈';
         rowExtra = ' stats-row-silver';
     } else if (rank === 3) {
         rankClass = 'stats-rank-bronze';
-        medal = '🥉';
         rowExtra = ' stats-row-bronze';
     }
 
     return '<div class="stats-row' + rowExtra + '">' +
-        '<div class="stats-rank ' + rankClass + '">' + (medal || rank) + '</div>' +
+        '<div class="stats-rank ' + rankClass + '">' + rank + '</div>' +
         logoHtml +
         '<div class="stats-row-names">' +
             '<div class="stats-row-entry">' + (entryName || rawName) + '</div>' +
@@ -157,25 +153,24 @@ function renderStatsRecords(stats) {
 
     if (stats.topEvent[0]) {
         const m = stats.topEvent[0];
-        cards.push({ icon: '⚡', label: 'Highest GW', value: stats.highestEvent, name: m.player_name || m.entry_name, color: 'gold' });
+        cards.push({ label: 'Highest GW', value: stats.highestEvent, name: m.player_name || m.entry_name, color: 'gold' });
     }
 
     if (stats.topTotal[0]) {
         const m = stats.topTotal[0];
-        cards.push({ icon: '🏆', label: 'Top Total', value: stats.highestTotal, name: m.player_name || m.entry_name, color: 'gold' });
+        cards.push({ label: 'Top Total', value: stats.highestTotal, name: m.player_name || m.entry_name, color: 'gold' });
     }
 
     if (stats.lowestEvent) {
-        cards.push({ icon: '💀', label: 'Lowest GW', value: stats.lowestEvent, name: '—', color: 'red' });
+        cards.push({ label: 'Lowest GW', value: stats.lowestEvent, name: '—', color: 'red' });
     }
 
-    cards.push({ icon: '📊', label: 'Avg GW', value: stats.avgEvent, name: 'Per Manager', color: 'green' });
-    cards.push({ icon: '📈', label: 'Avg Total', value: stats.avgTotal, name: 'Per Manager', color: 'green' });
-    cards.push({ icon: '👥', label: 'Managers', value: stats.totalManagers, name: 'League', color: 'purple' });
+    cards.push({ label: 'Avg GW', value: stats.avgEvent, name: 'Per Manager', color: 'green' });
+    cards.push({ label: 'Avg Total', value: stats.avgTotal, name: 'Per Manager', color: 'green' });
+    cards.push({ label: 'Managers', value: stats.totalManagers, name: 'League', color: 'purple' });
 
     container.innerHTML = cards.map(function(c) {
         return '<div class="stats-record-card stats-record-' + c.color + '">' +
-            '<div class="stats-record-icon">' + c.icon + '</div>' +
             '<div class="stats-record-label">' + c.label + '</div>' +
             '<div class="stats-record-value">' + c.value + '</div>' +
             '<div class="stats-record-name">' + c.name + '</div>' +
@@ -225,7 +220,7 @@ function renderSearchResults(results) {
         if (teamName && typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName]) {
             logoHtml = '<div class="stats-search-logo"><img src="./' + TEAMS_LOGOS[teamName] + '" onerror="this.style.display=\'none\'"></div>';
         } else {
-            logoHtml = '<div class="stats-search-logo stats-search-logo-empty">⚽</div>';
+            logoHtml = '<div class="stats-search-logo stats-search-logo-empty"></div>';
         }
 
         const div = document.createElement('div');
@@ -273,7 +268,7 @@ function renderManagerProfile(manager) {
     if (teamName && typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName]) {
         logoHtml = '<img src="./' + TEAMS_LOGOS[teamName] + '" onerror="this.style.display=\'none\'">';
     } else {
-        logoHtml = '<div class="stats-profile-no-logo">⚽</div>';
+        logoHtml = '<div class="stats-profile-no-logo"></div>';
     }
 
     const percentile = Math.round(((totalManagers - rank + 1) / totalManagers) * 100);
@@ -288,7 +283,7 @@ function renderManagerProfile(manager) {
 
     container.innerHTML =
         '<div class="stats-profile-card">' +
-            '<button class="stats-profile-close" onclick="document.getElementById(\'statsProfile\').style.display=\'none\'">✕</button>' +
+            '<button class="stats-profile-close" onclick="document.getElementById(\'statsProfile\').style.display=\'none\'">X</button>' +
             '<div class="stats-profile-rank-badge">#' + rank + '</div>' +
             '<div class="stats-profile-shirt">' + logoHtml + '</div>' +
             '<div class="stats-profile-entry">' + (entryName || rawName) + '</div>' +
@@ -301,7 +296,7 @@ function renderManagerProfile(manager) {
             '</div>' +
             '<div class="stats-profile-details">' +
                 '<div class="stats-detail-row"><span class="stats-detail-label">Percentile</span><span class="stats-detail-value">' + percentile + '%</span></div>' +
-                '<div class="stats-detail-row"><span class="stats-detail-label">To Leader</span><span class="stats-detail-value' + (diff === 0 ? ' stats-green' : '') + '">' + (diff === 0 ? '👑 Leader' : '-' + diff) + '</span></div>' +
+                '<div class="stats-detail-row"><span class="stats-detail-label">To Leader</span><span class="stats-detail-value' + (diff === 0 ? ' stats-green' : '') + '">' + (diff === 0 ? 'Leader' : '-' + diff) + '</span></div>' +
                 (toNext > 0 ? '<div class="stats-detail-row"><span class="stats-detail-label">Behind Above</span><span class="stats-detail-value stats-yellow">-' + toNext + '</span></div>' : '') +
                 (toPrev > 0 ? '<div class="stats-detail-row"><span class="stats-detail-label">Ahead Below</span><span class="stats-detail-value stats-green">+' + toPrev + '</span></div>' : '') +
             '</div>' +
@@ -373,7 +368,6 @@ function switchStatsTab(tabName) {
         view.classList.toggle('active', view.id === 'statsView-' + tabName);
     });
 
-    /* ✅ Clubs tab — نحمّل عند الفتح */
     if (tabName === 'clubs' && typeof loadClubs === 'function') {
         loadClubs();
     }
