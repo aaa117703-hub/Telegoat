@@ -1,6 +1,6 @@
 /* =========================================================
    fpl-database.js — FPL Players & Teams Database
-   (بدون صور لاعبين)
+   (يشتغل بالخلفية بدون واجهة)
 ========================================================= */
 
 (function(){
@@ -570,19 +570,15 @@ async function init(){
     }
 }
 
+/* ====== Auto-init (يشتغل بالخلفية دايماً) ====== */
 document.addEventListener('DOMContentLoaded', function(){
-    const fplBtn = document.querySelector('[data-tab="fpl"]');
-    if(fplBtn){
-        fplBtn.addEventListener('click', function(){
-            init();
-        });
-    }
-
-    if(document.getElementById('statsView-fpl') && document.getElementById('statsView-fpl').classList.contains('active')){
-        setTimeout(init, 500);
-    }
+    setTimeout(init, 1000);
 });
 
+/* ====== Expose for other scripts ====== */
 window.fplDbInit = init;
+window.fplDbGetData = function(){ return state.data; };
+window.fplDbGetTeamsById = function(){ return state.teamsById; };
+window.fplDbGetState = function(){ return state; };
 
 })();
