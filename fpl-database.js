@@ -1,12 +1,13 @@
 /* =========================================================
    fpl-database.js — FPL Players & Teams Database
+   (بدون صور لاعبين)
 ========================================================= */
 
 (function(){
 'use strict';
 
 const WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
-const CACHE_KEY = 'fpl_bootstrap_v1';
+const CACHE_KEY = 'fpl_bootstrap_v3';
 const CACHE_TTL = 6 * 60 * 60 * 1000;
 
 const POS_MAP = {
@@ -42,49 +43,9 @@ const state = {
 };
 
 /* ====== Helpers ====== */
-function photoURL(p){
-    if(!p.photo) return '';
-    const code = p.photo.replace('.jpg','');
-    return 'https://resources.premierleague.com/premierleague/photos/players/110x140/p' + code + '.png';
-}
-
 function badgeURL(code, size){
     size = size || 70;
     return 'https://resources.premierleague.com/premierleague/badges/' + size + '/t' + code + '.png';
-}
-
-function escapeHTML(s){
-    return String(s||'').replace(/[&<>"']/g, function(c){
-        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-    });
-}
-
-/* Build photo element safely (no onerror attribute) */
-function buildPhoto(p){
-    const wrap = document.createElement('div');
-    wrap.className = 'fpl-player-photo';
-
-    const initial = (p.web_name || '?').charAt(0).toUpperCase();
-
-    const initialEl = document.createElement('div');
-    initialEl.className = 'fpl-player-photo-empty';
-    initialEl.textContent = initial;
-    wrap.appendChild(initialEl);
-
-    const url = photoURL(p);
-    if(url){
-        const img = document.createElement('img');
-        img.src = url;
-        img.alt = '';
-        img.loading = 'lazy';
-        img.onerror = function(){
-            // Hide broken image, initial shows through
-            this.style.display = 'none';
-        };
-        wrap.appendChild(img);
-    }
-
-    return wrap;
 }
 
 /* ====== Loading ====== */
@@ -142,7 +103,7 @@ function applyFilters(){
     state.filtered = arr;
 }
 
-/* ====== Render: Players ====== */
+/* ====== Render: Player Row ====== */
 function renderPlayerRow(p){
     const team = state.teamsById[p.team];
     const pos = POS_MAP[p.element_type] || {short:'?'};
@@ -152,9 +113,6 @@ function renderPlayerRow(p){
     const row = document.createElement('div');
     row.className = 'fpl-player-row';
     row.dataset.id = p.id;
-
-    // Photo
-    row.appendChild(buildPhoto(p));
 
     // Team badge
     const badgeWrap = document.createElement('div');
@@ -237,7 +195,7 @@ function renderPlayersList(){
     return wrap;
 }
 
-/* ====== Render: Teams ====== */
+/* ====== Render: Teams Grid ====== */
 function renderTeamsGrid(){
     const wrap = document.createElement('div');
     wrap.className = 'fpl-teams-grid';
@@ -359,37 +317,31 @@ function openModal(playerId){
     const formNum = parseFloat(p.form) || 0;
     const formClass = formNum >= 5 ? 'green' : (formNum < 2 ? 'red' : '');
 
-    // Build modal structure
     const box = document.createElement('div');
     box.className = 'fpl-modal-box';
 
+    // Close
     const closeBtn = document.createElement('button');
     closeBtn.className = 'fpl-modal-close';
     closeBtn.textContent = '×';
     closeBtn.onclick = function(){ modal.classList.remove('show'); };
     box.appendChild(closeBtn);
 
-    // Header
+    // Header — شعار الفريق بدل صورة اللاعب
     const header = document.createElement('div');
     header.className = 'fpl-modal-header';
 
-    const photoWrap = document.createElement('div');
-    photoWrap.className = 'fpl-modal-photo';
-    const initial = (p.web_name || '?').charAt(0).toUpperCase();
-    const initialEl = document.createElement('div');
-    initialEl.className = 'fpl-player-photo-empty';
-    initialEl.style.fontSize = '24px';
-    initialEl.textContent = initial;
-    photoWrap.appendChild(initialEl);
-    const photoUrl = photoURL(p);
-    if(photoUrl){
-        const img = document.createElement('img');
-        img.src = photoUrl;
-        img.alt = '';
-        img.onerror = function(){ this.style.display = 'none'; };
-        photoWrap.appendChild(img);
+    const badgeWrap = document.createElement('div');
+    badgeWrap.className = 'fpl-modal-photo';
+    if(badge){
+        const bimg = document.createElement('img');
+        bimg.src = badge;
+        bimg.alt = '';
+        bimg.style.objectFit = 'contain';
+        bimg.style.padding = '12px';
+        badgeWrap.appendChild(bimg);
     }
-    header.appendChild(photoWrap);
+    header.appendChild(badgeWrap);
 
     const info = document.createElement('div');
     info.className = 'fpl-modal-info';
@@ -426,7 +378,7 @@ function openModal(playerId){
     header.appendChild(info);
     box.appendChild(header);
 
-    // Stats grid
+    // Stats
     const stats = document.createElement('div');
     stats.className = 'fpl-modal-stats';
 
