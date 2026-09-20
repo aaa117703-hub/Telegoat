@@ -5,11 +5,6 @@
 const TRENDS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
 const TRENDS_TOTAL_PAGES = 7;
 
-
-/* =========================================================
-   SAVE CURRENT RANKS
-========================================================= */
-
 async function saveCurrentRanks(round) {
 
     if (!window.sbClient) return false;
@@ -37,13 +32,11 @@ async function saveCurrentRanks(round) {
             };
         });
 
-        /* حذف أي بيانات قديمة لهذه الجولة */
         await window.sbClient
             .from('weekly_ranks')
             .delete()
             .eq('round', round);
 
-        /* إدراج الجديدة */
         const { error } = await window.sbClient
             .from('weekly_ranks')
             .insert(rows);
@@ -61,11 +54,6 @@ async function saveCurrentRanks(round) {
         return false;
     }
 }
-
-
-/* =========================================================
-   FETCH MANAGERS
-========================================================= */
 
 async function fetchManagersForTrends() {
 
@@ -93,11 +81,6 @@ async function fetchManagersForTrends() {
 
     return allResults;
 }
-
-
-/* =========================================================
-   LOAD RANKS FOR ROUND
-========================================================= */
 
 async function loadRanksForRound(round) {
 
@@ -129,11 +112,6 @@ async function loadRanksForRound(round) {
         return null;
     }
 }
-
-
-/* =========================================================
-   COMPUTE TRENDS
-========================================================= */
 
 async function computeTrends(currentRound) {
 
@@ -186,11 +164,6 @@ async function computeTrends(currentRound) {
     };
 }
 
-
-/* =========================================================
-   RENDER TRENDS
-========================================================= */
-
 function createTrendRow(trend, type) {
 
     const rawName = trend.player_name || trend.entry_name || 'Unknown';
@@ -205,7 +178,7 @@ function createTrendRow(trend, type) {
     if (teamName && typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName]) {
         logoHtml = '<div class="trend-row-logo"><img src="./' + TEAMS_LOGOS[teamName] + '" onerror="this.style.display=\'none\'"></div>';
     } else {
-        logoHtml = '<div class="trend-row-logo trend-row-logo-empty">⚽</div>';
+        logoHtml = '<div class="trend-row-logo trend-row-logo-empty"></div>';
     }
 
     const isRiser = type === 'riser';
@@ -216,21 +189,17 @@ function createTrendRow(trend, type) {
 
     const diffClass = isRiser ? 'trend-diff-up' : 'trend-diff-down';
 
-    const icon = isRiser ? '🚀' : '💀';
-
     return '<div class="trend-row">' +
-        '<div class="trend-row-icon">' + icon + '</div>' +
         logoHtml +
         '<div class="trend-row-names">' +
             '<div class="trend-row-entry">' + (entryName || rawName) + '</div>' +
             '<div class="trend-row-player">' +
-                'من #' + trend.previousRank + ' → #' + trend.currentRank +
+                'من #' + trend.previousRank + ' إلى #' + trend.currentRank +
             '</div>' +
         '</div>' +
         '<div class="trend-row-diff ' + diffClass + '">' + diffText + '</div>' +
     '</div>';
 }
-
 
 function renderTrends(trends) {
 
@@ -263,11 +232,6 @@ function renderTrends(trends) {
         }
     }
 }
-
-
-/* =========================================================
-   LOAD TRENDS
-========================================================= */
 
 async function loadTrends(currentRound) {
 
