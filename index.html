@@ -453,6 +453,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <link rel="stylesheet" href="trends.css?v=6">
 <link rel="stylesheet" href="clubs.css?v=5">
 <link rel="stylesheet" href="fpl-database.css?v=1">
+<link rel="stylesheet" href="manager-squad.css?v=1">
 
 </head>
 
@@ -709,7 +710,10 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 
 </div>
 
-<!-- مخفي: بيانات FPL تُحمّل بالخلفية للاستخدام لاحقاً -->
+<!-- Modal لعرض تشكيلة المدير -->
+<div id="squadModal"></div>
+
+<!-- FPL Database (مخفي — يشتغل بالخلفية) -->
 <div id="statsView-fpl" style="display:none !important;">
     <div id="fplDbContent"></div>
     <div id="fplModal"></div>
@@ -816,6 +820,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <script src="totw.js?v=111"></script>
 <script src="trends.js?v=3"></script>
 <script src="fpl-database.js?v=5"></script>
+<script src="manager-squad.js?v=1"></script>
 <script src="stats.js?v=8"></script>
 <script src="clubs.js?v=3"></script>
 <script src="main.js?v=18"></script>
