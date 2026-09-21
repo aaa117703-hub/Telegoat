@@ -103,6 +103,30 @@ document.addEventListener('click', function(e) {
 
 
 /* =========================================================
+   Detect Active Tab — يفحص DOM بدل الاعتماد على متغير
+========================================================= */
+
+function getActiveTabName() {
+    // فحص DOM أولاً — أكثر موثوقية
+    const fixturesTab = document.getElementById('fixturesTab');
+    const standingsTab = document.getElementById('standingsTab');
+    const totwTab = document.getElementById('totwTab');
+    const statsTab = document.getElementById('statsTab');
+
+    if (totwTab && totwTab.classList.contains('active')) return 'totw';
+    if (standingsTab && standingsTab.classList.contains('active')) return 'standings';
+    if (statsTab && statsTab.classList.contains('active')) return 'stats';
+    if (fixturesTab && fixturesTab.classList.contains('active')) return 'fixtures';
+
+    // Fallback: متغير عام لو موجود
+    if (typeof window.activeTab !== 'undefined') return window.activeTab;
+
+    // Default
+    return 'fixtures';
+}
+
+
+/* =========================================================
    DOWNLOAD AS IMAGE — يدعم fixtures + standings + totw
 ========================================================= */
 
@@ -116,27 +140,51 @@ function downloadAsImage(scaleFactor) {
 
     /* ============ 1. تحديد القسم ============ */
 
-    const isTOTW = (typeof activeTab !== 'undefined' && activeTab === 'totw');
+    const activeTabName = getActiveTabName();
+
+    console.log('[DOWNLOAD] Active tab:', activeTabName);
 
     let element = null;
     let filenamePrefix = 'Image';
+    let isTOTW = false;
 
-    if (isTOTW) {
+    if (activeTabName === 'totw') {
+        isTOTW = true;
         element = document.getElementById('totwPitchToSave');
-        filenamePrefix = 'TOTW_GW' + (typeof currentRound !== 'undefined' ? currentRound : '');
-    } else if (activeTab === 'standings') {
+        const gw = (typeof window.currentRound !== 'undefined') ? window.currentRound : '';
+        filenamePrefix = 'TOTW_GW' + gw;
+
+        // لو الملعب مخفي (عرض List) — نأخذ الـ List wrapper
+        if (!element || element.offsetWidth === 0) {
+            element = document.getElementById('totwListWrapper');
+            filenamePrefix = 'TOTW_List_GW' + gw;
+        }
+    }
+    else if (activeTabName === 'standings') {
         if (typeof renderStandings === 'function') renderStandings();
         element = document.getElementById('captureStandings');
-        filenamePrefix = 'Standings_GW' + (typeof currentRound !== 'undefined' ? currentRound : '');
-    } else {
+        const gw = (typeof window.currentRound !== 'undefined') ? window.currentRound : '';
+        filenamePrefix = 'Standings_GW' + gw;
+    }
+    else if (activeTabName === 'stats') {
+        // للـ stats — نحمل محتوى التاب النشط
+        const activeView = document.querySelector('.stats-view.active');
+        element = activeView || document.getElementById('statsContent');
+        filenamePrefix = 'Stats';
+    }
+    else {
+        // fixtures
         if (typeof renderFixtures === 'function') renderFixtures();
         element = document.getElementById('captureFixtures');
-        filenamePrefix = 'Matchweek_' + (typeof currentRound !== 'undefined' ? currentRound : '');
+        const gw = (typeof window.currentRound !== 'undefined') ? window.currentRound : '';
+        filenamePrefix = 'Matchweek_' + gw;
     }
 
     if (!element) {
         if (typeof showToast === 'function') {
             showToast('العنصر غير موجود', false);
+        } else {
+            alert('Element not found');
         }
         return;
     }
