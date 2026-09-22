@@ -1,7 +1,7 @@
 /* =========================================================
    totw.js — v3
-   أفضل 20 مدير + اختيار 11 يدوياً
-   الترتيب في Squad: FWD(3) → MID(3) → DEF(4) → GK(1)
+   أفضل 20 مدير في List + اختيار 11 يدوياً
+   + إصلاح: عرض Squad من List (تحويل IDs → players)
 ========================================================= */
 
 const TOTW_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -10,8 +10,8 @@ const TOTW_TOP_COUNT = 20;
 const TOTW_SQUAD_SIZE = 11;
 
 let currentTOTWView = 'squad';
-let currentTOTWData = [];
-let currentTOTWSelected = [];
+let currentTOTWData = [];      // أفضل 20
+let currentTOTWSelected = [];  // entry IDs المختارين (max 11)
 let currentTOTWRound = 0;
 
 /* =========================================================
@@ -32,6 +32,7 @@ function getLatestRound() {
 
 /* =========================================================
    SAVE / LOAD SNAPSHOT
+   data: { players: [...20], selected: [...entry_ids] }
 ========================================================= */
 
 async function saveTOTWSnapshot(round, players, selected) {
@@ -75,6 +76,7 @@ async function loadTOTWSnapshot(round) {
         }
         if (!data || !data.data) return null;
 
+        // Format جديد: { players, selected }
         if (data.data.players && Array.isArray(data.data.players)) {
             return {
                 players: data.data.players,
@@ -82,6 +84,7 @@ async function loadTOTWSnapshot(round) {
             };
         }
 
+        // Format قديم: مصفوفة مباشرة (11 لاعب)
         if (Array.isArray(data.data)) {
             return {
                 players: data.data,
@@ -166,13 +169,18 @@ function switchTOTWView(view) {
     } else {
         if (pitchWrapper) pitchWrapper.style.display = 'flex';
         if (listWrapper) listWrapper.style.display = 'none';
-        renderTOTWCards(currentTOTWSelected);
+
+        // ✅ FIX: حوّل IDs → كائنات لاعبين قبل العرض
+        const selectedPlayers = currentTOTWData.filter(function(p) {
+            return currentTOTWSelected.indexOf(p.entry) !== -1;
+        });
+        renderTOTWCards(selectedPlayers);
     }
 }
 
 /* =========================================================
-   RENDER SQUAD
-   الترتيب: FWD(3) → MID(3) → DEF(4) → GK(1)
+   RENDER SQUAD — يعرض فقط المختارين
+   ترتيب: FWD → MID → DEF → GK (من فوق لتحت)
 ========================================================= */
 
 function renderTOTWCards(selectedPlayers) {
@@ -184,32 +192,30 @@ function renderTOTWCards(selectedPlayers) {
         return (b.event_total || 0) - (a.event_total || 0);
     });
 
-    // التوزيع:
-    // أعلى 3 → هجوم (FWD)
-    // تالي 3 → وسط (MID)
-    // تالي 4 → دفاع (DEF)
-    // الأقل (1) → حارس (GK)
-    const fwd = sorted.slice(0, 3);
-    const mid = sorted.slice(3, 6);
-    const def = sorted.slice(6, 10);
-    const gk  = sorted.slice(10, 11);
+    // توزيع اللاعبين على الصفوف
+    // GK: 1  |  DEF: 4  |  MID: 3  |  FWD: 3
+    const gk = sorted.slice(0, 1);
+    const def = sorted.slice(1, 5);
+    const mid = sorted.slice(5, 8);
+    const fwd = sorted.slice(8, 11);
 
     let html = '';
 
-    html += '<div class="totw-row totw-row-gk">';
-    html += gk.map(createTOTWCard).join('');
-    html += '</div>';
-
-    html += '<div class="totw-row totw-row-def">';
-    html += def.map(createTOTWCard).join('');
+    // ✅ الترتيب من فوق لتحت: FWD → MID → DEF → GK
+    html += '<div class="totw-row totw-row-fwd">';
+    html += fwd.map(createTOTWCard).join('');
     html += '</div>';
 
     html += '<div class="totw-row totw-row-mid">';
     html += mid.map(createTOTWCard).join('');
     html += '</div>';
 
-    html += '<div class="totw-row totw-row-fwd">';
-    html += fwd.map(createTOTWCard).join('');
+    html += '<div class="totw-row totw-row-def">';
+    html += def.map(createTOTWCard).join('');
+    html += '</div>';
+
+    html += '<div class="totw-row totw-row-gk">';
+    html += gk.map(createTOTWCard).join('');
     html += '</div>';
 
     pitch.innerHTML = html;
@@ -327,8 +333,10 @@ function toggleTOTWSelection(entryId) {
     const idx = currentTOTWSelected.indexOf(entryId);
 
     if (idx !== -1) {
+        // شيله
         currentTOTWSelected.splice(idx, 1);
     } else {
+        // ضيفه (بس لو ما وصلنا 11)
         if (currentTOTWSelected.length >= TOTW_SQUAD_SIZE) {
             if (typeof showToast === 'function') {
                 showToast('Squad full (11)', false);
@@ -340,6 +348,7 @@ function toggleTOTWSelection(entryId) {
         currentTOTWSelected.push(entryId);
     }
 
+    // Re-render
     const selectedPlayers = currentTOTWData.filter(function(p) {
         return currentTOTWSelected.indexOf(p.entry) !== -1;
     });
@@ -347,6 +356,7 @@ function toggleTOTWSelection(entryId) {
     renderTOTWList(currentTOTWData);
     renderTOTWCards(selectedPlayers);
 
+    // Auto-save لو الجولة الحالية
     const viewingRound = currentRound;
     const latestRound = getLatestRound();
     if (viewingRound === latestRound && latestRound > 0) {
@@ -355,6 +365,7 @@ function toggleTOTWSelection(entryId) {
 }
 
 function resetTOTWSelection() {
+    // أول 11 من القائمة
     currentTOTWSelected = currentTOTWData.slice(0, TOTW_SQUAD_SIZE).map(function(p) {
         return p.entry;
     });
@@ -400,6 +411,7 @@ async function loadTOTW() {
         let selected = null;
 
         if (latestRound > 0 && viewingRound < latestRound) {
+            // جولة قديمة → snapshot
             console.log('Loading snapshot for old round', viewingRound);
             const snapshot = await loadTOTWSnapshot(viewingRound);
 
@@ -420,6 +432,7 @@ async function loadTOTW() {
                 return;
             }
         } else {
+            // الجولة الحالية → fetch جديد
             console.log('Fetching fresh for round', viewingRound);
             const allResults = await fetchTOTWPages();
 
@@ -503,5 +516,6 @@ document.addEventListener('DOMContentLoaded', function() {
     loadTOTW();
 });
 
+/* Expose for external use */
 window.toggleTOTWSelection = toggleTOTWSelection;
 window.resetTOTWSelection = resetTOTWSelection;
