@@ -75,7 +75,7 @@ function createStatsRow(rank, manager, value, valueLabel) {
 
     let teamName = '';
     if (typeof findPlayerTeam === 'function') {
-        teamName = findPlayerTeam(rawName) || findPlayerTeam(entryName) || '';
+        teamName = findPlayerTeam(rawName) || '';
     }
 
     let logoHtml = '';
@@ -213,7 +213,7 @@ function renderSearchResults(results) {
 
         let teamName = '';
         if (typeof findPlayerTeam === 'function') {
-            teamName = findPlayerTeam(rawName) || findPlayerTeam(entryName) || '';
+            teamName = findPlayerTeam(rawName) || '';
         }
 
         let logoHtml = '';
@@ -261,7 +261,7 @@ function renderManagerProfile(manager) {
 
     let teamName = '';
     if (typeof findPlayerTeam === 'function') {
-        teamName = findPlayerTeam(rawName) || findPlayerTeam(entryName) || '';
+        teamName = findPlayerTeam(rawName) || '';
     }
 
     let logoHtml = '';
