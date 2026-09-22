@@ -79,31 +79,26 @@ body{
     font-family:monospace;
 }
 #errorBox.show{display:block}
-#errorBox .err-line{padding:6px 0;border-bottom:1px solid rgba(255,255);}
+#errorBox .err-line{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.3);}
+#errorBox .err-line:last-child{border-bottom:none}
+#errorBox .err-close{
+    position:absolute;top:6px;right:10px;
+    background:#fff;color:#ff0040;border:none;
+    border-radius:50%;width:26px;height:26px;
+    font-weight:900;font-size:16px;cursor:pointer;
+}
 
-.download,255,.3);}
--menu#{
-errorBox .err   -line:last-child{border position-bottom:none}
-#error:Box .err-absoluteclose{
-    position:absolute;;top:6pxtop;right:10px;
-:    background:#calcfff;color:#ff004(0;border:none;
-100% + 8    border-radius:px50%;width:26px);;height:26px;
-   right font-weight:900:;font-size:160px;;cursor:pointer;
-min}
+.download-wrapper{position:relative;display:inline-block;}
 
-.download-wrapper{position-width:relative;display:inline:-block;}
-
-.download-btn160{
-    display:flex;align-itemspx:center;justify-content:;
-center;gap:6px;
-       padding:8px  background16px;
-    background:linear:-gradient(135lineardeg, #448aff -gradient0%, #1f5(dbf 100%);
-   135 border:1px solid #deg5a055a;border,-radius:20px #;color:#fff;
-   38003 font-sizec:13px;font 0-weight:800%,;letter-spacing: #0.5px2;cursor:pointer;outeline:none;
-    box0-shadow:0 2pxb 8px rgba(503,129,255,.4d);
-    transition:transform . 2s ease, box-shadow .1002s ease;
-    font%-family:inherit;);
-   min-width:130px;
+.download-btn{
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    padding:8px 16px;
+    background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
+    border:1px solid #5a055a;border-radius:20px;color:#fff;
+    font-size:13px;font-weight:800;letter-spacing:0.5px;cursor:pointer;outline:none;
+    box-shadow:0 2px 8px rgba(50,129,255,.4);
+    transition:transform .2s ease, box-shadow .2s ease;
+    font-family:inherit;min-width:130px;
 }
 .download-btn:hover{transform:scale(1.04);box-shadow:0 4px 12px rgba(50,129,255,.6);}
 .download-btn:active{transform:scale(0.96);}
@@ -114,7 +109,12 @@ center;gap:6px;
 .download-btn .dl-arrow{width:12px;height:12px;transition:transform .3s ease;}
 .download-btn .dl-arrow svg{width:100%;height:100%;}
 .download-btn .dl-arrow svg path{fill:#fff;stroke:none;}
-.download-wrapper.open .download-btn .dl-arrow{transform:rotate(180deg border:2px solid #00c853;border-radius:12px;padding:6px;z-index:9999;
+.download-wrapper.open .download-btn .dl-arrow{transform:rotate(180deg);}
+
+.download-menu{
+    position:absolute;top:calc(100% + 8px);right:0;min-width:160px;
+    background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
+    border:2px solid #00c853;border-radius:12px;padding:6px;z-index:9999;
     opacity:0;pointer-events:none;transform:translateY(-8px);
     transition:opacity .25s ease, transform .25s ease;
     box-shadow:0 10px 30px rgba(0,0,0,.5), 0 0 20px rgba(0, 200, 83, 0.35);
@@ -453,8 +453,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <link rel="stylesheet" href="trends.css?v=6">
 <link rel="stylesheet" href="clubs.css?v=5">
 <link rel="stylesheet" href="fpl-database.css?v=1">
-<link rel="stylesheet" href="manager-squad.css?v=2">
-<link rel="stylesheet" href="manager-hub.css?v=1">
+<link rel="stylesheet" href="manager-squad.css?v=1">
 
 </head>
 
@@ -714,9 +713,6 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <!-- Modal لعرض تشكيلة المدير -->
 <div id="squadModal"></div>
 
-<!-- Modal لكلمة سر التعديل -->
-<div id="mhModal"></div>
-
 <!-- FPL Database (مخفي — يشتغل بالخلفية) -->
 <div id="statsView-fpl" style="display:none !important;">
     <div id="fplDbContent"></div>
@@ -825,7 +821,6 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <script src="trends.js?v=3"></script>
 <script src="fpl-database.js?v=5"></script>
 <script src="manager-squad.js?v=1"></script>
-<script src="manager-hub.js?v=1"></script>
 <script src="stats.js?v=8"></script>
 <script src="clubs.js?v=3"></script>
 <script src="main.js?v=18"></script>
