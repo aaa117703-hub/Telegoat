@@ -454,6 +454,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <link rel="stylesheet" href="clubs.css?v=5">
 <link rel="stylesheet" href="fpl-database.css?v=1">
 <link rel="stylesheet" href="manager-squad.css?v=1">
+<link rel="stylesheet" href="manager-hub.css?v=1">
 
 </head>
 
@@ -602,6 +603,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
             <button class="stats-tab-btn" data-tab="search" onclick="switchStatsTab('search')">Search</button>
             <button class="stats-tab-btn" data-tab="records" onclick="switchStatsTab('records')">Records</button>
             <button class="stats-tab-btn" data-tab="clubs" onclick="switchStatsTab('clubs')">Clubs</button>
+            <button class="stats-tab-btn" data-tab="managers" onclick="switchStatsTab('managers')">Managers</button>
         </div>
 
         <div id="statsLoading" class="stats-loading">
@@ -704,6 +706,17 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 
             </div>
 
+            <div id="statsView-managers" class="stats-view">
+
+                <div id="mhContent">
+                    <div class="mh-loading">
+                        <div class="spinner"></div>
+                        <div>Loading managers...</div>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
     </div>
@@ -712,6 +725,9 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 
 <!-- Modal لعرض تشكيلة المدير -->
 <div id="squadModal"></div>
+
+<!-- Modal لكلمة سر التعديل -->
+<div id="mhModal"></div>
 
 <!-- FPL Database (مخفي — يشتغل بالخلفية) -->
 <div id="statsView-fpl" style="display:none !important;">
@@ -821,6 +837,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <script src="trends.js?v=3"></script>
 <script src="fpl-database.js?v=5"></script>
 <script src="manager-squad.js?v=1"></script>
+<script src="manager-hub.js?v=2"></script>
 <script src="stats.js?v=8"></script>
 <script src="clubs.js?v=3"></script>
 <script src="main.js?v=18"></script>
