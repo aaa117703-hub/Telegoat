@@ -1,5 +1,5 @@
 /* =========================================================
-   totw.css — v18 مع نظام الاختيار اليدوي
+   totw.css — v19 مع Save Button
 ========================================================= */
 
 .totw-tabs{
@@ -127,9 +127,7 @@
 
 .totw-card:hover{ transform:scale(1.08); z-index:100; }
 
-.totw-card.empty-slot{
-    opacity:.15;
-}
+.totw-card.empty-slot{ opacity:.15; }
 
 .totw-card .tc-shirt{
     display:flex;
@@ -212,7 +210,7 @@
 }
 
 /* =========================================================
-   List View — 20 صف مع Checkbox
+   List View
 ========================================================= */
 
 .totw-list-view{
@@ -224,6 +222,90 @@
     border-radius:14px;
     overflow:hidden;
     box-shadow:0 4px 18px rgba(0,0,0,.3);
+}
+
+/* Count bar مع Save */
+.totw-count-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    padding:10px 14px;
+    background:rgba(0,229,255,.08);
+    border-bottom:1px solid rgba(0,229,255,.2);
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1px;
+    color:#00e5ff;
+    text-transform:uppercase;
+    flex-wrap:wrap;
+}
+
+.totw-count-bar .count-num{
+    color:#fff;
+    margin:0 4px;
+}
+
+.totw-count-bar .count-num.full{
+    color:#ffd700;
+}
+
+.totw-count-bar .totw-actions{
+    display:flex;
+    gap:6px;
+    align-items:center;
+}
+
+.totw-count-bar .save-btn{
+    padding:7px 16px;
+    background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
+    border:1px solid #00e676;
+    border-radius:50px;
+    color:#fff;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:1.5px;
+    cursor:pointer;
+    font-family:inherit;
+    text-transform:uppercase;
+    transition:all .2s ease;
+    box-shadow:0 2px 8px rgba(0,229,118,.3);
+}
+
+.totw-count-bar .save-btn:hover{
+    transform:scale(1.05);
+    box-shadow:0 4px 14px rgba(0,229,118,.5);
+}
+
+.totw-count-bar .save-btn:active{
+    transform:scale(.96);
+}
+
+.totw-count-bar .save-btn.saved{
+    background:linear-gradient(135deg, #00e5ff 0%, #00b4d8 100%);
+    border-color:#00e5ff;
+    box-shadow:0 2px 8px rgba(0,229,255,.4);
+}
+
+.totw-count-bar .reset-btn{
+    padding:7px 14px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:50px;
+    color:#a89cc8;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:1px;
+    cursor:pointer;
+    font-family:inherit;
+    text-transform:uppercase;
+    transition:all .2s ease;
+}
+
+.totw-count-bar .reset-btn:hover{
+    background:rgba(255,82,82,.2);
+    border-color:rgba(255,82,82,.4);
+    color:#ff5252;
 }
 
 .totw-list-header{
@@ -276,7 +358,6 @@
     background:linear-gradient(90deg, rgba(0,229,255,.18) 0%, rgba(0,229,255,.05) 100%);
 }
 
-/* Checkbox */
 .totw-list-check{
     width:24px;
     height:24px;
@@ -301,7 +382,6 @@
     box-shadow:0 0 10px rgba(0,229,255,.5);
 }
 
-/* Rank */
 .totw-list-rank{
     display:flex;
     align-items:center;
@@ -316,7 +396,6 @@
     margin:0 auto;
 }
 
-/* Logo */
 .totw-list-logo{
     width:30px;
     height:30px;
@@ -351,7 +430,6 @@
     font-size:14px;
 }
 
-/* Names */
 .totw-list-names{
     display:flex;
     flex-direction:column;
@@ -398,52 +476,6 @@
     font-weight:900;
     color:#ffffff;
     letter-spacing:0.5px;
-}
-
-/* Count bar */
-.totw-count-bar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    padding:10px 14px;
-    background:rgba(0,229,255,.08);
-    border-bottom:1px solid rgba(0,229,255,.2);
-    font-size:11px;
-    font-weight:900;
-    letter-spacing:1px;
-    color:#00e5ff;
-    text-transform:uppercase;
-}
-
-.totw-count-bar .count-num{
-    color:#fff;
-    margin:0 4px;
-}
-
-.totw-count-bar .count-num.full{
-    color:#ffd700;
-}
-
-.totw-count-bar .reset-btn{
-    padding:6px 12px;
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:50px;
-    color:#a89cc8;
-    font-size:10px;
-    font-weight:900;
-    letter-spacing:1px;
-    cursor:pointer;
-    font-family:inherit;
-    text-transform:uppercase;
-    transition:all .2s ease;
-}
-
-.totw-count-bar .reset-btn:hover{
-    background:rgba(255,82,82,.2);
-    border-color:rgba(255,82,82,.4);
-    color:#ff5252;
 }
 
 /* Loading + Error */
@@ -544,4 +576,7 @@
     .totw-list-player{ font-size:10px; }
     .totw-list-gw{ font-size:13px; }
     .totw-list-total{ font-size:12px; }
+
+    .totw-count-bar .save-btn{ padding:6px 12px; font-size:9px; }
+    .totw-count-bar .reset-btn{ padding:6px 10px; font-size:9px; }
 }
