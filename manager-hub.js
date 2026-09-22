@@ -1,6 +1,6 @@
 /* =========================================================
-   manager-hub.js — v2
-   إدارة المديرين حسب الفرق (بدون تعارض مع Clubs)
+   manager-hub.js — v3
+   قائمة مسطحة لجميع المديرين + إضافة/حذف
 ========================================================= */
 
 (function(){
@@ -8,14 +8,15 @@
 
 const SUPABASE_URL = 'https://qzsteswrannqsrnlytzl.supabase.co';
 const EDIT_PASSWORD = '024680';
+const NO_TEAM_KEY = '__NO_TEAM__';
 
-let hubData = {};
+let hubData = {};              // { teamName: [names...] }
 let hubLoading = false;
 let hubLoaded = false;
 let hubEditMode = false;
-let hubActiveTeam = null;
 let hubSb = null;
 let hubInitialized = false;
+let hubSearchQuery = '';
 
 /* ========== Supabase ========== */
 function getSb(){
@@ -34,13 +35,9 @@ function getSb(){
     return null;
 }
 
-/* ========== Teams ========== */
-function getTeamsList(){
-    if(typeof TEAMS_LOGOS === 'undefined') return [];
-    return Object.keys(TEAMS_LOGOS).sort();
-}
-
+/* ========== Helpers ========== */
 function logoURL(teamName){
+    if(!teamName || teamName === NO_TEAM_KEY) return '';
     if(typeof TEAMS_LOGOS === 'undefined') return '';
     const file = TEAMS_LOGOS[teamName];
     return file ? './' + file : '';
@@ -52,8 +49,24 @@ function escapeHTML(s){
     });
 }
 
-function getTeamCount(teamName){
-    return (hubData[teamName] || []).length;
+function getAllTeams(){
+    if(typeof TEAMS_LOGOS === 'undefined') return [];
+    return Object.keys(TEAMS_LOGOS).sort();
+}
+
+function teamLabel(team){
+    return team === NO_TEAM_KEY ? '—' : team;
+}
+
+/* ========== Flatten ========== */
+function flattenManagers(){
+    const list = [];
+    Object.keys(hubData).forEach(function(team){
+        (hubData[team] || []).forEach(function(name){
+            list.push({ name: name, team: team });
+        });
+    });
+    return list;
 }
 
 function getTotalCount(){
@@ -64,21 +77,18 @@ function getTotalCount(){
     return total;
 }
 
-/* ========== Supabase Load ========== */
+/* ========== Supabase Load/Save ========== */
 async function loadHubData(){
     const sb = getSb();
     if(!sb) return null;
-
     try {
         const { data, error } = await sb
             .from('managers_by_team')
             .select('team, managers');
-
         if(error){
             console.warn('[MH] Load error:', error.message);
             return null;
         }
-
         const map = {};
         (data || []).forEach(function(row){
             map[row.team] = Array.isArray(row.managers) ? row.managers : [];
@@ -108,7 +118,6 @@ async function seedFromPlayersTeams(){
         const { error } = await sb
             .from('managers_by_team')
             .upsert(rows, { onConflict: 'team' });
-
         if(error){
             console.warn('[MH] Seed error:', error.message);
             return false;
@@ -124,7 +133,6 @@ async function seedFromPlayersTeams(){
 async function saveTeam(teamName, managers){
     const sb = getSb();
     if(!sb) return false;
-
     try {
         const { error } = await sb
             .from('managers_by_team')
@@ -133,7 +141,6 @@ async function saveTeam(teamName, managers){
                 managers: managers,
                 updated_at: new Date().toISOString()
             }, { onConflict: 'team' });
-
         if(error){
             console.error('[MH] Save error:', error.message);
             return false;
@@ -145,7 +152,7 @@ async function saveTeam(teamName, managers){
     }
 }
 
-/* ========== Render ========== */
+/* ========== Render Main ========== */
 function render(){
     const wrap = document.getElementById('mhContent');
     if(!wrap) return;
@@ -162,13 +169,13 @@ function render(){
 
     wrap.innerHTML = '';
 
-    // Controls
+    /* --- Controls --- */
     const controls = document.createElement('div');
     controls.className = 'mh-controls';
 
     const stats = document.createElement('div');
     stats.className = 'mh-stats';
-    stats.innerHTML = '<span>' + getTotalCount() + '</span> MANAGERS · <span>' + getTeamsList().length + '</span> TEAMS';
+    stats.innerHTML = '<span>' + getTotalCount() + '</span> MANAGERS';
     controls.appendChild(stats);
 
     const editBtn = document.createElement('button');
@@ -179,131 +186,174 @@ function render(){
 
     wrap.appendChild(controls);
 
-    // Teams Grid
-    const grid = document.createElement('div');
-    grid.className = 'mh-teams-grid';
+    /* --- Add form (edit mode only) --- */
+    if(hubEditMode){
+        wrap.appendChild(buildAddForm());
+    }
 
-    getTeamsList().forEach(function(team){
-        const card = document.createElement('div');
-        card.className = 'mh-team-card' + (hubActiveTeam === team ? ' active' : '');
-        card.innerHTML =
-            '<div class="mh-team-card-badge">' +
-                '<img src="' + logoURL(team) + '" alt="" loading="lazy">' +
-            '</div>' +
-            '<div class="mh-team-card-name">' + escapeHTML(team) + '</div>' +
-            '<div class="mh-team-card-count">' + getTeamCount(team) + ' MANAGERS</div>';
+    /* --- Search --- */
+    const searchBox = document.createElement('div');
+    searchBox.className = 'mh-search-box';
 
-        card.addEventListener('click', function(){
-            hubActiveTeam = (hubActiveTeam === team) ? null : team;
-            render();
-        });
-
-        grid.appendChild(card);
+    const searchInput = document.createElement('input');
+    searchInput.className = 'mh-search-input';
+    searchInput.type = 'text';
+    searchInput.placeholder = 'ابحث عن مدير...';
+    searchInput.value = hubSearchQuery;
+    searchInput.addEventListener('input', function(){
+        hubSearchQuery = this.value;
+        renderList();
     });
 
-    wrap.appendChild(grid);
+    searchBox.appendChild(searchInput);
+    wrap.appendChild(searchBox);
 
-    // Active Team Panel
-    if(hubActiveTeam){
-        wrap.appendChild(renderPanel(hubActiveTeam));
-    }
+    /* --- List container --- */
+    const listContainer = document.createElement('div');
+    listContainer.className = 'mh-list-container' + (hubEditMode ? ' edit-mode' : '');
+    listContainer.id = 'mhListContainer';
+    wrap.appendChild(listContainer);
+
+    renderList();
 }
 
-/* ========== Panel ========== */
-function renderPanel(team){
-    const panel = document.createElement('div');
-    panel.className = 'mh-panel';
+/* ========== Add Form ========== */
+function buildAddForm(){
+    const addRow = document.createElement('div');
+    addRow.className = 'mh-add-row';
 
-    const managers = hubData[team] || [];
+    const nameInput = document.createElement('input');
+    nameInput.className = 'mh-add-input';
+    nameInput.type = 'text';
+    nameInput.placeholder = 'اسم المدير الجديد...';
 
-    const header = document.createElement('div');
-    header.className = 'mh-panel-header';
+    const teamSelect = document.createElement('select');
+    teamSelect.className = 'mh-add-select';
 
-    const title = document.createElement('div');
-    title.className = 'mh-panel-title';
-    title.innerHTML = '<img src="' + logoURL(team) + '" alt="">' + escapeHTML(team);
-    header.appendChild(title);
+    const optNone = document.createElement('option');
+    optNone.value = NO_TEAM_KEY;
+    optNone.textContent = '— بدون فريق —';
+    teamSelect.appendChild(optNone);
 
-    const count = document.createElement('div');
-    count.className = 'mh-panel-count';
-    count.textContent = managers.length + ' MANAGERS';
-    header.appendChild(count);
+    getAllTeams().forEach(function(t){
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        teamSelect.appendChild(opt);
+    });
 
-    panel.appendChild(header);
+    const addBtn = document.createElement('button');
+    addBtn.className = 'mh-add-btn';
+    addBtn.textContent = 'ADD';
 
-    const list = document.createElement('div');
-    list.className = 'mh-managers-list';
+    function doAdd(){
+        const name = nameInput.value.trim();
+        const team = teamSelect.value;
+        if(!name){
+            if(typeof showToast === 'function') showToast('اكتب اسم المدير', false);
+            else alert('اكتب اسم المدير');
+            return;
+        }
+        addManager(team, name);
+        nameInput.value = '';
+    }
 
-    if(managers.length === 0){
-        list.innerHTML = '<div class="mh-empty" style="padding:20px;font-size:12px;">No managers yet</div>';
-    } else {
-        managers.forEach(function(name, idx){
-            const row = document.createElement('div');
-            row.className = 'mh-manager-row';
+    addBtn.addEventListener('click', doAdd);
+    nameInput.addEventListener('keypress', function(e){
+        if(e.key === 'Enter') doAdd();
+    });
 
-            const num = document.createElement('div');
-            num.className = 'mh-manager-num';
-            num.textContent = idx + 1;
+    addRow.appendChild(nameInput);
+    addRow.appendChild(teamSelect);
+    addRow.appendChild(addBtn);
 
-            const nameEl = document.createElement('div');
-            nameEl.className = 'mh-manager-name';
-            nameEl.textContent = name;
-            nameEl.title = 'Click to view FPL squad';
+    return addRow;
+}
+
+/* ========== Render List ========== */
+function renderList(){
+    const container = document.getElementById('mhListContainer');
+    if(!container) return;
+
+    let list = flattenManagers();
+
+    // Filter by search
+    if(hubSearchQuery){
+        const q = hubSearchQuery.toLowerCase().trim();
+        list = list.filter(function(m){
+            return m.name.toLowerCase().indexOf(q) !== -1 ||
+                   m.team.toLowerCase().indexOf(q) !== -1;
+        });
+    }
+
+    // Sort alphabetically
+    list.sort(function(a, b){
+        return a.name.localeCompare(b.name);
+    });
+
+    if(list.length === 0){
+        container.innerHTML = '<div class="mh-empty" style="padding:30px;text-align:center;font-size:13px;">لا يوجد نتائج</div>';
+        return;
+    }
+
+    /* --- Header --- */
+    let html = '<div class="mh-list-header">';
+    html += '<div class="mh-lh-num">#</div>';
+    html += '<div class="mh-lh-logo"></div>';
+    html += '<div class="mh-lh-name">MANAGER</div>';
+    html += '<div class="mh-lh-team">TEAM</div>';
+    if(hubEditMode){
+        html += '<div class="mh-lh-action"></div>';
+    }
+    html += '</div>';
+
+    /* --- Rows --- */
+    list.forEach(function(item, idx){
+        const logo = logoURL(item.team);
+        const isNoTeam = item.team === NO_TEAM_KEY;
+
+        html += '<div class="mh-list-row" data-name="' + escapeHTML(item.name) + '" data-team="' + escapeHTML(item.team) + '">';
+        html += '<div class="mh-lr-num">' + (idx + 1) + '</div>';
+
+        if(logo){
+            html += '<div class="mh-lr-logo"><img src="' + logo + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
+        } else {
+            html += '<div class="mh-lr-logo mh-lr-logo-empty"></div>';
+        }
+
+        html += '<div class="mh-lr-name" title="' + escapeHTML(item.name) + '">' + escapeHTML(item.name) + '</div>';
+        html += '<div class="mh-lr-team' + (isNoTeam ? ' mh-lr-team-none' : '') + '">' + escapeHTML(teamLabel(item.team)) + '</div>';
+
+        if(hubEditMode){
+            html += '<button class="mh-lr-delete" title="Delete">×</button>';
+        }
+
+        html += '</div>';
+    });
+
+    container.innerHTML = html;
+
+    /* --- Attach handlers --- */
+    container.querySelectorAll('.mh-list-row').forEach(function(row){
+        const name = row.dataset.name;
+        const team = row.dataset.team;
+
+        // Click on name → open FPL squad
+        const nameEl = row.querySelector('.mh-lr-name');
+        if(nameEl){
             nameEl.addEventListener('click', function(){
                 openManagerSquadFor(name);
             });
+        }
 
-            const del = document.createElement('button');
-            del.className = 'mh-manager-delete';
-            del.textContent = '×';
-            del.disabled = !hubEditMode;
-            del.title = hubEditMode ? 'Delete' : 'Enable Edit first';
-            del.addEventListener('click', function(){
-                if(!hubEditMode) return;
-                deleteManager(team, idx);
+        // Delete button
+        const delBtn = row.querySelector('.mh-lr-delete');
+        if(delBtn){
+            delBtn.addEventListener('click', function(){
+                deleteManager(team, name);
             });
-
-            row.appendChild(num);
-            row.appendChild(nameEl);
-            row.appendChild(del);
-            list.appendChild(row);
-        });
-    }
-
-    panel.appendChild(list);
-
-    if(hubEditMode){
-        const addRow = document.createElement('div');
-        addRow.className = 'mh-add-row';
-
-        const input = document.createElement('input');
-        input.className = 'mh-add-input';
-        input.type = 'text';
-        input.placeholder = 'اسم المدير الجديد...';
-
-        const btn = document.createElement('button');
-        btn.className = 'mh-add-btn';
-        btn.textContent = 'ADD';
-        btn.addEventListener('click', function(){
-            const val = input.value.trim();
-            if(!val){
-                alert('اكتب اسم المدير');
-                return;
-            }
-            addManager(team, val);
-            input.value = '';
-        });
-
-        input.addEventListener('keypress', function(e){
-            if(e.key === 'Enter') btn.click();
-        });
-
-        addRow.appendChild(input);
-        addRow.appendChild(btn);
-        panel.appendChild(addRow);
-    }
-
-    return panel;
+        }
+    });
 }
 
 /* ========== Actions ========== */
@@ -324,32 +374,39 @@ function toggleEditMode(){
 async function addManager(team, name){
     if(!hubData[team]) hubData[team] = [];
     if(hubData[team].indexOf(name) !== -1){
-        alert('هذا المدير موجود مسبقاً في ' + team);
+        const label = team === NO_TEAM_KEY ? 'بدون فريق' : team;
+        if(typeof showToast === 'function') showToast('موجود مسبقاً في ' + label, false);
+        else alert('موجود مسبقاً');
         return;
     }
     hubData[team].push(name);
     const ok = await saveTeam(team, hubData[team]);
     if(!ok){
         hubData[team].pop();
-        alert('فشل الحفظ');
+        if(typeof showToast === 'function') showToast('فشل الحفظ', false);
+        else alert('فشل الحفظ');
         return;
     }
+    if(typeof showToast === 'function') showToast('تمت الإضافة', true);
     render();
 }
 
-async function deleteManager(team, idx){
+async function deleteManager(team, name){
     const managers = hubData[team] || [];
-    const name = managers[idx];
-    if(!name) return;
-    if(!confirm('حذف "' + name + '" من ' + team + '؟')) return;
+    const idx = managers.indexOf(name);
+    if(idx === -1) return;
+
+    if(!confirm('حذف "' + name + '"؟')) return;
 
     managers.splice(idx, 1);
     const ok = await saveTeam(team, managers);
     if(!ok){
         managers.splice(idx, 0, name);
-        alert('فشل الحذف');
+        if(typeof showToast === 'function') showToast('فشل الحذف', false);
+        else alert('فشل الحذف');
         return;
     }
+    if(typeof showToast === 'function') showToast('تم الحذف', true);
     render();
 }
 
@@ -452,15 +509,16 @@ async function initHub(){
 
         hubData = data || {};
 
-        // ensure all 20 teams exist
-        getTeamsList().forEach(function(t){
+        // ensure all teams exist
+        getAllTeams().forEach(function(t){
             if(!hubData[t]) hubData[t] = [];
         });
+        if(!hubData[NO_TEAM_KEY]) hubData[NO_TEAM_KEY] = [];
 
         hubLoading = false;
         hubLoaded = true;
         render();
-        console.log('[MH] Ready. Teams:', Object.keys(hubData).length, '· Managers:', getTotalCount());
+        console.log('[MH] Ready. Managers:', getTotalCount());
     } catch(e){
         hubLoading = false;
         console.error('[MH] Init failed:', e);
@@ -482,7 +540,6 @@ function hookManagersTab(){
         setTimeout(initHub, 100);
     });
 
-    // If tab is already active (shouldn't be by default), init
     const view = document.getElementById('statsView-managers');
     if(view && view.classList.contains('active')){
         setTimeout(initHub, 300);
