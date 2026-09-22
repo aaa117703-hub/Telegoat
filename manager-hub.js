@@ -1,5 +1,6 @@
 /* =========================================================
-   manager-hub.js — إدارة المديرين حسب الفرق
+   manager-hub.js — v2
+   إدارة المديرين حسب الفرق (بدون تعارض مع Clubs)
 ========================================================= */
 
 (function(){
@@ -14,8 +15,9 @@ let hubLoaded = false;
 let hubEditMode = false;
 let hubActiveTeam = null;
 let hubSb = null;
+let hubInitialized = false;
 
-/* ========== Get Supabase Client ========== */
+/* ========== Supabase ========== */
 function getSb(){
     if(hubSb) return hubSb;
     if(window.sbClient) return hubSb = window.sbClient;
@@ -24,7 +26,6 @@ function getSb(){
     if(window.db) return hubSb = window.db;
     if(window._supabase) return hubSb = window._supabase;
 
-    // Try to create new
     const key = window.SUPABASE_ANON_KEY || window.SUPABASE_KEY || window.ANON_KEY;
     if(window.supabase && window.supabase.createClient && key){
         hubSb = window.supabase.createClient(SUPABASE_URL, key);
@@ -33,99 +34,12 @@ function getSb(){
     return null;
 }
 
-/* ========== Get 20 Teams List ========== */
+/* ========== Teams ========== */
 function getTeamsList(){
     if(typeof TEAMS_LOGOS === 'undefined') return [];
     return Object.keys(TEAMS_LOGOS).sort();
 }
 
-/* ========== Load From Supabase ========== */
-async function loadHubData(){
-    const sb = getSb();
-    if(!sb){
-        console.error('[MH] No Supabase client');
-        return null;
-    }
-
-    try {
-        const { data, error } = await sb
-            .from('managers_by_team')
-            .select('team, managers');
-
-        if(error){
-            console.error('[MH] Load error:', error.message);
-            return null;
-        }
-
-        const map = {};
-        (data || []).forEach(function(row){
-            map[row.team] = Array.isArray(row.managers) ? row.managers : [];
-        });
-        return map;
-    } catch(e){
-        console.error('[MH] Load exception:', e);
-        return null;
-    }
-}
-
-/* ========== Seed From PLAYERS_TEAMS ========== */
-async function seedFromPlayersTeams(){
-    const sb = getSb();
-    if(!sb) return false;
-    if(typeof PLAYERS_TEAMS === 'undefined') return false;
-
-    const teams = Object.keys(PLAYERS_TEAMS);
-    const rows = teams.map(function(t){
-        return {
-            team: t,
-            managers: PLAYERS_TEAMS[t] || [],
-            updated_at: new Date().toISOString()
-        };
-    });
-
-    try {
-        const { error } = await sb
-            .from('managers_by_team')
-            .upsert(rows, { onConflict: 'team' });
-
-        if(error){
-            console.error('[MH] Seed error:', error.message);
-            return false;
-        }
-        console.log('[MH] Seeded', rows.length, 'teams');
-        return true;
-    } catch(e){
-        console.error('[MH] Seed exception:', e);
-        return false;
-    }
-}
-
-/* ========== Save Single Team ========== */
-async function saveTeam(teamName, managers){
-    const sb = getSb();
-    if(!sb) return false;
-
-    try {
-        const { error } = await sb
-            .from('managers_by_team')
-            .upsert({
-                team: teamName,
-                managers: managers,
-                updated_at: new Date().toISOString()
-            }, { onConflict: 'team' });
-
-        if(error){
-            console.error('[MH] Save error:', error.message);
-            return false;
-        }
-        return true;
-    } catch(e){
-        console.error('[MH] Save exception:', e);
-        return false;
-    }
-}
-
-/* ========== Helpers ========== */
 function logoURL(teamName){
     if(typeof TEAMS_LOGOS === 'undefined') return '';
     const file = TEAMS_LOGOS[teamName];
@@ -148,6 +62,87 @@ function getTotalCount(){
         total += (hubData[t] || []).length;
     });
     return total;
+}
+
+/* ========== Supabase Load ========== */
+async function loadHubData(){
+    const sb = getSb();
+    if(!sb) return null;
+
+    try {
+        const { data, error } = await sb
+            .from('managers_by_team')
+            .select('team, managers');
+
+        if(error){
+            console.warn('[MH] Load error:', error.message);
+            return null;
+        }
+
+        const map = {};
+        (data || []).forEach(function(row){
+            map[row.team] = Array.isArray(row.managers) ? row.managers : [];
+        });
+        return map;
+    } catch(e){
+        console.warn('[MH] Load exception:', e.message);
+        return null;
+    }
+}
+
+async function seedFromPlayersTeams(){
+    const sb = getSb();
+    if(!sb) return false;
+    if(typeof PLAYERS_TEAMS === 'undefined') return false;
+
+    const teams = Object.keys(PLAYERS_TEAMS);
+    const rows = teams.map(function(t){
+        return {
+            team: t,
+            managers: PLAYERS_TEAMS[t] || [],
+            updated_at: new Date().toISOString()
+        };
+    });
+
+    try {
+        const { error } = await sb
+            .from('managers_by_team')
+            .upsert(rows, { onConflict: 'team' });
+
+        if(error){
+            console.warn('[MH] Seed error:', error.message);
+            return false;
+        }
+        console.log('[MH] Seeded', rows.length, 'teams');
+        return true;
+    } catch(e){
+        console.warn('[MH] Seed exception:', e.message);
+        return false;
+    }
+}
+
+async function saveTeam(teamName, managers){
+    const sb = getSb();
+    if(!sb) return false;
+
+    try {
+        const { error } = await sb
+            .from('managers_by_team')
+            .upsert({
+                team: teamName,
+                managers: managers,
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'team' });
+
+        if(error){
+            console.error('[MH] Save error:', error.message);
+            return false;
+        }
+        return true;
+    } catch(e){
+        console.error('[MH] Save exception:', e.message);
+        return false;
+    }
 }
 
 /* ========== Render ========== */
@@ -199,11 +194,7 @@ function render(){
             '<div class="mh-team-card-count">' + getTeamCount(team) + ' MANAGERS</div>';
 
         card.addEventListener('click', function(){
-            if(hubActiveTeam === team){
-                hubActiveTeam = null;
-            } else {
-                hubActiveTeam = team;
-            }
+            hubActiveTeam = (hubActiveTeam === team) ? null : team;
             render();
         });
 
@@ -225,7 +216,6 @@ function renderPanel(team){
 
     const managers = hubData[team] || [];
 
-    // Header
     const header = document.createElement('div');
     header.className = 'mh-panel-header';
 
@@ -241,7 +231,6 @@ function renderPanel(team){
 
     panel.appendChild(header);
 
-    // Managers List
     const list = document.createElement('div');
     list.className = 'mh-managers-list';
 
@@ -268,7 +257,7 @@ function renderPanel(team){
             del.className = 'mh-manager-delete';
             del.textContent = '×';
             del.disabled = !hubEditMode;
-            del.title = hubEditMode ? 'Delete manager' : 'Enable Edit mode first';
+            del.title = hubEditMode ? 'Delete' : 'Enable Edit first';
             del.addEventListener('click', function(){
                 if(!hubEditMode) return;
                 deleteManager(team, idx);
@@ -283,7 +272,6 @@ function renderPanel(team){
 
     panel.appendChild(list);
 
-    // Add Manager Row
     if(hubEditMode){
         const addRow = document.createElement('div');
         addRow.className = 'mh-add-row';
@@ -292,7 +280,6 @@ function renderPanel(team){
         input.className = 'mh-add-input';
         input.type = 'text';
         input.placeholder = 'اسم المدير الجديد...';
-        input.id = 'mhAddInput';
 
         const btn = document.createElement('button');
         btn.className = 'mh-add-btn';
@@ -344,7 +331,7 @@ async function addManager(team, name){
     const ok = await saveTeam(team, hubData[team]);
     if(!ok){
         hubData[team].pop();
-        alert('فشل الحفظ — تحقق من الاتصال');
+        alert('فشل الحفظ');
         return;
     }
     render();
@@ -354,14 +341,13 @@ async function deleteManager(team, idx){
     const managers = hubData[team] || [];
     const name = managers[idx];
     if(!name) return;
-
     if(!confirm('حذف "' + name + '" من ' + team + '؟')) return;
 
     managers.splice(idx, 1);
     const ok = await saveTeam(team, managers);
     if(!ok){
         managers.splice(idx, 0, name);
-        alert('فشل الحذف — تحقق من الاتصال');
+        alert('فشل الحذف');
         return;
     }
     render();
@@ -429,11 +415,10 @@ function askPassword(callback){
 async function openManagerSquadFor(name){
     try {
         if(typeof window.findManagerEntryId !== 'function'){
-            // wait a moment for manager-squad.js to load
             await new Promise(function(r){ setTimeout(r, 800); });
         }
         if(typeof window.findManagerEntryId !== 'function'){
-            alert('Squad viewer not ready yet. Try again in a moment.');
+            alert('Squad viewer not ready. Try again.');
             return;
         }
         const entryId = await window.findManagerEntryId(name, '');
@@ -457,19 +442,17 @@ async function initHub(){
     render();
 
     try {
-        // 1) Load from Supabase
         let data = await loadHubData();
 
-        // 2) If empty, seed from PLAYERS_TEAMS
         if(!data || Object.keys(data).length === 0){
-            console.log('[MH] Empty table, seeding from PLAYERS_TEAMS...');
+            console.log('[MH] Empty, seeding...');
             await seedFromPlayersTeams();
             data = await loadHubData();
         }
 
         hubData = data || {};
 
-        // Ensure all teams exist as keys
+        // ensure all 20 teams exist
         getTeamsList().forEach(function(t){
             if(!hubData[t]) hubData[t] = [];
         });
@@ -477,7 +460,7 @@ async function initHub(){
         hubLoading = false;
         hubLoaded = true;
         render();
-        console.log('[MH] Ready. Teams:', Object.keys(hubData).length, '· Total managers:', getTotalCount());
+        console.log('[MH] Ready. Teams:', Object.keys(hubData).length, '· Managers:', getTotalCount());
     } catch(e){
         hubLoading = false;
         console.error('[MH] Init failed:', e);
@@ -485,39 +468,38 @@ async function initHub(){
     }
 }
 
-/* ========== Auto-init when Clubs tab opens ========== */
-function hookClubsTab(){
-    // Replace the clubs tab by injecting our content into statsView-clubs
-    const clubsView = document.getElementById('statsView-clubs');
-    if(!clubsView){
-        setTimeout(hookClubsTab, 500);
+/* ========== Hook Managers Tab ========== */
+function hookManagersTab(){
+    const btn = document.querySelector('[data-tab="managers"]');
+    if(!btn){
+        setTimeout(hookManagersTab, 400);
         return;
     }
-    if(clubsView.dataset.mhHooked === '1') return;
-    clubsView.dataset.mhHooked = '1';
+    if(hubInitialized) return;
+    hubInitialized = true;
 
-    // Hide old clubs content
-    const oldControls = clubsView.querySelector('.clubs-controls');
-    const oldList = document.getElementById('clubsList');
-    const oldLoad = document.getElementById('clubsLoading');
-    if(oldControls) oldControls.style.display = 'none';
-    if(oldList) oldList.style.display = 'none';
-    if(oldLoad) oldLoad.style.display = 'none';
+    btn.addEventListener('click', function(){
+        setTimeout(initHub, 100);
+    });
 
-    // Add our container
-    const container = document.createElement('div');
-    container.id = 'mhContent';
-    container.innerHTML = '<div class="mh-loading"><div class="spinner"></div><div>Loading managers...</div></div>';
-    clubsView.insertBefore(container, clubsView.firstChild);
+    // If tab is already active (shouldn't be by default), init
+    const view = document.getElementById('statsView-managers');
+    if(view && view.classList.contains('active')){
+        setTimeout(initHub, 300);
+    }
 
-    initHub();
+    console.log('[MH] Hooked Managers tab');
 }
 
 document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(hookClubsTab, 2000);
+    setTimeout(hookManagersTab, 800);
 });
 
 window.mhInit = initHub;
-window.mhReload = function(){ hubLoaded = false; initHub(); };
+window.mhReload = function(){
+    hubLoaded = false;
+    hubLoading = false;
+    initHub();
+};
 
 })();
