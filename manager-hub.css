@@ -1,0 +1,445 @@
+/* =========================================================
+   manager-hub.css — إدارة المديرين
+========================================================= */
+
+/* ---------- Controls ---------- */
+.mh-controls{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+    padding:12px;
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    border:2px solid #3d2666;
+    border-radius:14px;
+}
+
+.mh-stats{
+    font-size:12px;
+    font-weight:900;
+    color:#00e5ff;
+    letter-spacing:1px;
+}
+
+.mh-stats span{
+    color:#fff;
+    margin:0 4px;
+}
+
+.mh-edit-btn{
+    padding:9px 18px;
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    color:#fff;
+    border:2px solid #3d2666;
+    border-radius:50px;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:all .3s ease;
+    font-family:inherit;
+    outline:none;
+}
+
+.mh-edit-btn.active{
+    background:linear-gradient(135deg, #00e5ff 0%, #7c4dff 100%);
+    border-color:#00e5ff;
+    box-shadow:0 4px 15px rgba(0,229,255,.35);
+}
+
+.mh-edit-btn:hover:not(.active){
+    border-color:#00e5ff;
+    transform:translateY(-2px);
+}
+
+/* ---------- Teams Grid ---------- */
+.mh-teams-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
+    gap:10px;
+    margin-bottom:14px;
+}
+
+.mh-team-card{
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    border:2px solid #3d2666;
+    border-radius:14px;
+    padding:14px 10px;
+    text-align:center;
+    cursor:pointer;
+    transition:all .25s ease;
+    position:relative;
+}
+
+.mh-team-card:hover{
+    border-color:#00e5ff;
+    transform:translateY(-4px);
+    box-shadow:0 8px 22px rgba(0,229,255,.25);
+}
+
+.mh-team-card.active{
+    border-color:#00e5ff;
+    background:linear-gradient(135deg, #2d1b5e 0%, #1f1248 100%);
+}
+
+.mh-team-card-badge{
+    width:56px;
+    height:56px;
+    margin:0 auto 8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.mh-team-card-badge img{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+    filter:drop-shadow(0 3px 6px rgba(0,0,0,.5));
+}
+
+.mh-team-card-name{
+    font-size:12px;
+    font-weight:900;
+    color:#fff;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    margin-bottom:4px;
+}
+
+.mh-team-card-count{
+    font-size:10px;
+    font-weight:800;
+    color:#00e5ff;
+    letter-spacing:1px;
+}
+
+/* ---------- Managers Panel ---------- */
+.mh-panel{
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    border:2px solid #3d2666;
+    border-radius:16px;
+    padding:16px 14px;
+    margin-bottom:14px;
+}
+
+.mh-panel-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding-bottom:12px;
+    margin-bottom:12px;
+    border-bottom:2px solid #00e5ff;
+    flex-wrap:wrap;
+}
+
+.mh-panel-title{
+    font-size:15px;
+    font-weight:900;
+    color:#fff;
+    letter-spacing:1px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.mh-panel-title img{
+    width:28px;
+    height:28px;
+    object-fit:contain;
+}
+
+.mh-panel-count{
+    font-size:11px;
+    font-weight:800;
+    color:#00e5ff;
+    letter-spacing:1px;
+}
+
+/* ---------- Manager List ---------- */
+.mh-managers-list{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.mh-manager-row{
+    display:grid;
+    grid-template-columns:36px 1fr 36px;
+    gap:10px;
+    align-items:center;
+    padding:10px 12px;
+    background:rgba(0,0,0,.25);
+    border:1px solid rgba(124,77,255,.2);
+    border-radius:10px;
+    transition:all .2s ease;
+}
+
+.mh-manager-row:hover{
+    background:rgba(0,229,255,.08);
+    border-color:rgba(0,229,255,.35);
+}
+
+.mh-manager-num{
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:rgba(0,229,255,.12);
+    border:1px solid rgba(0,229,255,.35);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:900;
+    color:#00e5ff;
+    flex-shrink:0;
+    margin:0 auto;
+}
+
+.mh-manager-name{
+    font-size:14px;
+    font-weight:800;
+    color:#fff;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    text-align:right;
+    cursor:pointer;
+    transition:color .2s ease;
+}
+
+.mh-manager-name:hover{
+    color:#00e5ff;
+}
+
+.mh-manager-delete{
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:rgba(229,57,53,.15);
+    border:1px solid rgba(229,57,53,.4);
+    color:#ff5252;
+    font-size:12px;
+    font-weight:900;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:all .2s ease;
+    padding:0;
+    outline:none;
+    font-family:inherit;
+}
+
+.mh-manager-delete:hover{
+    background:#e53935;
+    color:#fff;
+    transform:scale(1.1);
+}
+
+.mh-manager-delete:disabled{
+    opacity:.3;
+    cursor:not-allowed;
+    transform:none;
+}
+
+/* ---------- Add Manager ---------- */
+.mh-add-row{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px solid rgba(124,77,255,.2);
+}
+
+.mh-add-input{
+    flex:1;
+    padding:10px 14px;
+    background:#180e36;
+    border:2px solid #3d2666;
+    border-radius:50px;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+    outline:none;
+    font-family:inherit;
+    transition:border-color .25s ease;
+    direction:rtl;
+    text-align:right;
+}
+
+.mh-add-input::placeholder{ color:#7a6b9c; }
+.mh-add-input:focus{
+    border-color:#00e5ff;
+    box-shadow:0 0 0 3px rgba(0,229,255,.15);
+}
+
+.mh-add-btn{
+    padding:10px 18px;
+    background:linear-gradient(135deg, #00e5ff 0%, #7c4dff 100%);
+    color:#fff;
+    border:none;
+    border-radius:50px;
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:1px;
+    cursor:pointer;
+    font-family:inherit;
+    transition:transform .2s ease;
+    white-space:nowrap;
+}
+
+.mh-add-btn:hover{ transform:scale(1.04); }
+.mh-add-btn:active{ transform:scale(.96); }
+
+/* ---------- Modal ---------- */
+#mhModal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.88);
+    z-index:99999;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    backdrop-filter:blur(6px);
+    opacity:0;
+    transition:opacity .25s ease;
+}
+
+#mhModal.show{ display:flex; opacity:1; }
+
+.mh-modal-box{
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    border:3px solid #00e5ff;
+    border-radius:20px;
+    width:100%;
+    max-width:400px;
+    padding:22px 20px;
+    position:relative;
+    animation:mhIn .3s cubic-bezier(.4,0,.2,1);
+    box-shadow:0 20px 60px rgba(0,229,255,.25);
+}
+
+@keyframes mhIn{
+    from{opacity:0;transform:translateY(20px) scale(.95);}
+    to{opacity:1;transform:translateY(0) scale(1);}
+}
+
+.mh-modal-title{
+    font-size:16px;
+    font-weight:900;
+    color:#fff;
+    text-align:center;
+    margin-bottom:16px;
+    letter-spacing:1px;
+}
+
+.mh-pass-input{
+    width:100%;
+    padding:12px 16px;
+    background:#180e36;
+    border:2px solid #3d2666;
+    border-radius:12px;
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    outline:none;
+    font-family:inherit;
+    text-align:center;
+    letter-spacing:4px;
+    transition:border-color .25s ease;
+    margin-bottom:12px;
+}
+
+.mh-pass-input:focus{
+    border-color:#00e5ff;
+    box-shadow:0 0 0 3px rgba(0,229,255,.15);
+}
+
+.mh-modal-buttons{
+    display:flex;
+    gap:8px;
+}
+
+.mh-modal-btn{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    font-size:13px;
+    font-weight:900;
+    letter-spacing:1px;
+    cursor:pointer;
+    font-family:inherit;
+    transition:transform .2s ease;
+}
+
+.mh-modal-confirm{
+    background:linear-gradient(135deg, #00e5ff 0%, #7c4dff 100%);
+    color:#fff;
+    box-shadow:0 4px 15px rgba(0,229,255,.3);
+}
+
+.mh-modal-cancel{
+    background:rgba(255,255,255,.08);
+    color:#a89cc8;
+    border:1px solid rgba(255,255,255,.15);
+}
+
+.mh-modal-btn:hover{ transform:scale(1.03); }
+.mh-modal-btn:active{ transform:scale(.97); }
+
+.mh-modal-error{
+    color:#ff5252;
+    font-size:12px;
+    font-weight:800;
+    text-align:center;
+    margin-top:10px;
+    min-height:16px;
+}
+
+/* ---------- Empty/Loading ---------- */
+.mh-loading, .mh-empty{
+    text-align:center;
+    padding:40px 20px;
+    color:#00e5ff;
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:1px;
+    background:linear-gradient(135deg, #22154a 0%, #180e36 100%);
+    border-radius:14px;
+    border:2px solid #3d2666;
+}
+
+.mh-empty{
+    color:#7a6b9c;
+}
+
+.mh-loading .spinner{
+    display:inline-block;
+    width:36px;
+    height:36px;
+    border:4px solid rgba(0,229,255,.15);
+    border-top-color:#00e5ff;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin-bottom:12px;
+}
+
+/* ---------- Responsive ---------- */
+@media(max-width:480px){
+    .mh-teams-grid{
+        grid-template-columns:repeat(auto-fill, minmax(110px, 1fr));
+        gap:8px;
+    }
+    .mh-team-card-badge{ width:44px; height:44px; }
+    .mh-team-card-name{ font-size:11px; }
+    .mh-manager-name{ font-size:13px; }
+    .mh-panel{ padding:14px 12px; }
+    .mh-modal-box{ padding:18px 16px; }
+}
