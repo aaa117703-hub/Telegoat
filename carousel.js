@@ -1,11 +1,12 @@
 /* =========================================================
-   carousel.js — v2 (محسّن)
+   carousel.js — v3
+   إصلاح: banner3.png (بدل banner3.png.png)
 ========================================================= */
 
 const carouselSlides = [
     { image: './banner1.png.png', tab: 'standings', alt: 'STANDINGS' },
     { image: './banner2.png.png', tab: 'fixtures',  alt: 'MATCHES' },
-    { image: './banner3.png.png', tab: 'totw',      alt: 'TOTW' },
+    { image: './banner3.png',     tab: 'totw',      alt: 'TOTW' },
     { image: './banner4.png.PNG', tab: 'stats',     alt: 'STATISTICS' }
 ];
 
@@ -154,7 +155,6 @@ document.addEventListener('visibilitychange', function() {
 
 /* احترام تفضيل تقليل الحركة */
 if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // لا نشغّل تلقائيًا
     window.__carouselAutoStart = false;
 } else {
     window.__carouselAutoStart = true;
