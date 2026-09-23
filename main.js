@@ -1,81 +1,82 @@
 /* =========================================================
-   main.js
+   main.js — v2 (محسّن)
 ========================================================= */
 
 async function init() {
 
+    /* ====== 1. Carousel ====== */
     buildCarousel();
     setupCarouselTouch();
-    startCarousel();
-
-    initRoundDropdown();
-
-    renderFixtures();
-    renderStandings();
-
-    setupEruda();
-
-    /* ====== نظام القفل ====== */
-    if (typeof initLockSystem === 'function') {
-        try {
-            await initLockSystem();
-        } catch (e) {
-            console.warn('initLockSystem failed:', e);
-        }
+    if (window.__carouselAutoStart !== false) {
+        startCarousel();
     }
 
-    /* ====== تحميل النتائج من Supabase ====== */
+    /* ====== 2. Round dropdown + Render ====== */
+    if (typeof initRoundDropdown === 'function') initRoundDropdown();
+    if (typeof renderFixtures === 'function')   renderFixtures();
+    if (typeof renderStandings === 'function')  renderStandings();
 
-    if (
-        !window.sbClient ||
-        typeof loadScoresFromSupabase !== 'function'
-    ) {
-        console.warn('Supabase client is not available.');
+    /* ====== 3. Eruda (اختياري) ====== */
+    if (typeof setupEruda === 'function') {
+        try { setupEruda(); } catch (e) { console.warn('[Eruda]', e); }
+    }
+
+    /* ====== 4. Lock system (لا نحجب باقي التهيئة) ====== */
+    if (typeof initLockSystem === 'function') {
+        initLockSystem().catch(function(e) {
+            console.warn('[LockSystem]', e);
+        });
+    }
+
+    /* ====== 5. Supabase ====== */
+    if (!window.sbClient || typeof loadScoresFromSupabase !== 'function') {
+        console.warn('[Main] Supabase not available — working offline');
+        return;
+    }
+
+    if (typeof matchweeks === 'undefined') {
+        console.warn('[Main] matchweeks not loaded');
         return;
     }
 
     try {
-
-        const { error: testError } =
-            await window.sbClient
-                .from('match_results')
-                .select('id')
-                .limit(1);
+        const { error: testError } = await window.sbClient
+            .from('match_results')
+            .select('id')
+            .limit(1);
 
         if (testError) {
-            console.warn('DB Connection Error:', testError.message);
+            console.warn('[Main] DB Connection:', testError.message);
             return;
         }
-
     } catch (connErr) {
-        console.warn('Network Error:', connErr.message);
+        console.warn('[Main] Network:', connErr.message);
         return;
     }
 
     try {
+        const remoteScores = await loadScoresFromSupabase(matchweeks);
 
-        const remoteScores =
-            await loadScoresFromSupabase(matchweeks);
-
-        if (
-            remoteScores &&
-            Object.keys(remoteScores).length > 0
-        ) {
-
+        if (remoteScores && Object.keys(remoteScores).length > 0) {
             scoresStorage = remoteScores;
 
-            localStorage.setItem(
-                'fpl_scores',
-                JSON.stringify(scoresStorage)
-            );
+            try {
+                localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+            } catch (lsErr) {
+                console.warn('[Main] localStorage full:', lsErr.message);
+            }
 
-            renderFixtures();
-            renderStandings();
+            if (typeof renderFixtures === 'function')  renderFixtures();
+            if (typeof renderStandings === 'function') renderStandings();
         }
-
     } catch (e) {
-        console.warn('Load from Supabase failed:', e.message);
+        console.warn('[Main] Load failed:', e.message);
     }
 }
 
-init();
+/* تشغيل آمن */
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
