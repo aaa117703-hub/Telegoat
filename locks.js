@@ -1,17 +1,19 @@
 /* =========================================================
-   locks.js — نظام قفل 3 أقسام
+   locks.js — نظام قفل 4 أقسام
 ========================================================= */
 
 window.sectionLocks = {
-    fixtures: false,
+    fixtures:  false,
     standings: false,
-    totw: false
+    totw:      false,
+    stats:     false
 };
 
 window.pendingLocks = {
-    fixtures: false,
+    fixtures:  false,
     standings: false,
-    totw: false
+    totw:      false,
+    stats:     false
 };
 
 const LOCK_PIN = '024680';
@@ -20,7 +22,8 @@ const EDIT_PIN = '1999';
 const SECTIONS = [
     { key: 'fixtures',  label: 'Fixtures'  },
     { key: 'standings', label: 'Standings' },
-    { key: 'totw',      label: 'TOTW'      }
+    { key: 'totw',      label: 'TOTW'      },
+    { key: 'stats',     label: 'Stats'     }
 ];
 
 
@@ -37,23 +40,26 @@ function isLocker() {
     return sessionStorage.getItem('tg_locker') === 'true';
 }
 
+/* هل يستطيع تجاوز الأقفال؟ */
+function canBypassLocks() {
+    return isLocker() || isAdmin();
+}
+
 
 /* =========================================================
    LOAD / SAVE
 ========================================================= */
 
 async function loadLocks() {
-
     if (!window.sbClient) return;
 
     try {
-
         const { data, error } = await window.sbClient
             .from('site_locks')
             .select('section, is_locked');
 
         if (error) {
-            console.error('Load locks error:', error);
+            console.error('[Locks] load error:', error);
             return;
         }
 
@@ -64,19 +70,16 @@ async function loadLocks() {
                 window.sectionLocks[row.section] = row.is_locked === true;
             }
         });
-
     } catch (e) {
-        console.error('Load locks exception:', e);
+        console.error('[Locks] load exception:', e);
     }
 }
 
 
 async function saveLock(section, isLocked) {
-
     if (!window.sbClient) return false;
 
     try {
-
         const { error } = await window.sbClient
             .from('site_locks')
             .upsert(
@@ -89,15 +92,14 @@ async function saveLock(section, isLocked) {
             );
 
         if (error) {
-            console.error('Save lock error:', error);
+            console.error('[Locks] save error:', error);
             return false;
         }
 
         window.sectionLocks[section] = isLocked;
         return true;
-
     } catch (e) {
-        console.error('Save lock exception:', e);
+        console.error('[Locks] save exception:', e);
         return false;
     }
 }
@@ -113,7 +115,6 @@ function isLocked(section) {
 ========================================================= */
 
 function showSectionMaintenance(sectionName) {
-
     let overlay = document.getElementById('sectionMaintenance');
 
     if (!overlay) {
@@ -142,11 +143,10 @@ function hideSectionMaintenance() {
 
 
 /* =========================================================
-   ADMIN LOCK PANEL — 3 أزرار
+   ADMIN LOCK PANEL
 ========================================================= */
 
 function buildAdminLockPanel() {
-
     const old = document.getElementById('adminLockPanel');
     if (old) old.remove();
 
@@ -157,7 +157,6 @@ function buildAdminLockPanel() {
     panel.className = 'admin-lock-panel';
 
     SECTIONS.forEach(function(s) {
-
         const locked = isLocked(s.key);
 
         const btn = document.createElement('button');
@@ -195,11 +194,10 @@ function refreshAdminLockPanel() {
 
 
 /* =========================================================
-   ACTIVATE LOCK CONTROL — رمز 024680
+   ACTIVATE LOCK CONTROL
 ========================================================= */
 
 function activateLockControl() {
-
     sessionStorage.setItem('tg_locker', 'true');
 
     if (typeof showToast === 'function') {
@@ -215,7 +213,6 @@ function activateLockControl() {
 ========================================================= */
 
 function openLockPanel(sectionKey, sectionLabel) {
-
     closeLockPanel();
 
     window.pendingLocks[sectionKey] = window.sectionLocks[sectionKey];
@@ -252,7 +249,6 @@ function openLockPanel(sectionKey, sectionLabel) {
 
 
 function closeLockPanel() {
-
     const panel = document.getElementById('lockPanel');
     if (!panel) return;
 
@@ -265,7 +261,6 @@ function closeLockPanel() {
 
 
 function togglePendingLock(sectionKey) {
-
     window.pendingLocks[sectionKey] = !window.pendingLocks[sectionKey];
 
     const pending = window.pendingLocks[sectionKey];
@@ -284,14 +279,12 @@ function togglePendingLock(sectionKey) {
 
 
 async function confirmSaveLock(sectionKey, sectionLabel) {
-
     if (window.pendingLocks[sectionKey] === window.sectionLocks[sectionKey]) {
         alert('ما فيه تغيير للحفظ');
         return;
     }
 
     const pass = prompt('أدخل رمز التأكيد للحفظ:');
-
     if (pass !== LOCK_PIN) {
         if (pass !== null) alert('الرمز غلط!');
         return;
@@ -306,10 +299,9 @@ async function confirmSaveLock(sectionKey, sectionLabel) {
     const ok = await saveLock(sectionKey, window.pendingLocks[sectionKey]);
 
     if (ok) {
-
         closeLockPanel();
 
-        /* ⚠️ نشيل صلاحية القفل — الأزرار تختفي */
+        /* نشيل صلاحية القفل — الأزرار تختفي */
         sessionStorage.removeItem('tg_locker');
         localStorage.removeItem('tg_locker');
 
@@ -321,14 +313,11 @@ async function confirmSaveLock(sectionKey, sectionLabel) {
                 true
             );
         }
-
     } else {
-
         if (saveBtn) {
             saveBtn.disabled = false;
             saveBtn.textContent = '💾 حفظ';
         }
-
         alert('فشل الحفظ!');
     }
 }
@@ -339,10 +328,7 @@ async function confirmSaveLock(sectionKey, sectionLabel) {
 ========================================================= */
 
 async function initLockSystem() {
-
-    /* تنظيف أي lock قديم */
     localStorage.removeItem('tg_locker');
-
     await loadLocks();
     refreshAdminLockPanel();
 }
