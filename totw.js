@@ -1,9 +1,8 @@
 /* =========================================================
-   totw.js — v4
+   totw.js — v5
+   - إصلاح ترتيب: GK (أعلى) → DEF → MID → FWD (أسفل)
    - إصلاح: اختفاء اللاعبين عند العودة من List → Squad
-   - إضافة: Save Button يدوي
-   - إزالة: Auto-save
-   - ترتيب: FWD → MID → DEF → GK
+   - Save Button يدوي
 ========================================================= */
 
 const TOTW_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -15,7 +14,7 @@ let currentTOTWView = 'squad';
 let currentTOTWData = [];
 let currentTOTWSelected = [];
 let currentTOTWRound = 0;
-let currentTOTWSaved = false;  // هل الحالة الحالية محفوظة؟
+let currentTOTWSaved = false;
 
 /* =========================================================
    HELPERS
@@ -60,7 +59,7 @@ async function saveTOTWSnapshot(round, players, selected) {
             console.error('Save TOTW error:', error);
             return false;
         }
-        console.log('TOTW saved for round', round, '(', players.length, 'players,', (selected||[]).length, 'selected )');
+        console.log('TOTW saved for round', round);
         return true;
     } catch (e) {
         console.error('Save TOTW exception:', e);
@@ -148,13 +147,13 @@ function getTOTWTop20(allResults) {
         return teamName !== '';
     });
 
-    console.log('TOTW Filter: ' + filtered.length + ' / ' + sorted.length + ' have known team');
+    console.log('TOTW Filter: ' + filtered.length + ' / ' + sorted.length);
 
     return filtered.slice(0, TOTW_TOP_COUNT);
 }
 
 /* =========================================================
-   SWITCH VIEW — الإصلاح هنا
+   SWITCH VIEW
 ========================================================= */
 
 function switchTOTWView(view) {
@@ -175,14 +174,14 @@ function switchTOTWView(view) {
     } else {
         if (pitchWrapper) pitchWrapper.style.display = 'flex';
         if (listWrapper) listWrapper.style.display = 'none';
-        // ✅ الإصلاح: نمرر player objects بدل IDs
         renderTOTWCards(getSelectedPlayers());
     }
 }
 
 /* =========================================================
    RENDER SQUAD
-   الترتيب: FWD(3) → MID(3) → DEF(4) → GK(1)
+   الترتيب البصري (CSS): GK أعلى → DEF → MID → FWD أسفل
+   التوزيع: GK=1, DEF=4, MID=3, FWD=3
 ========================================================= */
 
 function renderTOTWCards(selectedPlayers) {
@@ -193,10 +192,10 @@ function renderTOTWCards(selectedPlayers) {
         return (b.event_total || 0) - (a.event_total || 0);
     });
 
-    const fwd = sorted.slice(0, 3);
-    const mid = sorted.slice(3, 6);
-    const def = sorted.slice(6, 10);
-    const gk  = sorted.slice(10, 11);
+    const gk  = sorted.slice(0, 1);
+    const def = sorted.slice(1, 5);
+    const mid = sorted.slice(5, 8);
+    const fwd = sorted.slice(8, 11);
 
     let html = '';
 
@@ -268,7 +267,6 @@ function renderTOTWList(players) {
 
     let html = '';
 
-    // Count bar مع Save + Reset
     const saveClass = currentTOTWSaved ? ' saved' : '';
     const saveText = currentTOTWSaved ? 'SAVED' : 'SAVE';
 
@@ -280,7 +278,6 @@ function renderTOTWList(players) {
     html += '</div>';
     html += '</div>';
 
-    // Header
     html += '<div class="totw-list-header">';
     html += '<div class="totw-list-h-check">✓</div>';
     html += '<div class="totw-list-h-rank">#</div>';
@@ -330,7 +327,7 @@ function renderTOTWList(players) {
 }
 
 /* =========================================================
-   TOGGLE SELECTION — بدون Auto-save
+   TOGGLE SELECTION
 ========================================================= */
 
 function toggleTOTWSelection(entryId) {
@@ -343,17 +340,15 @@ function toggleTOTWSelection(entryId) {
             if (typeof showToast === 'function') {
                 showToast('Squad full (11)', false);
             } else {
-                alert('التشكيلة كاملة — شيل واحد أول');
+                alert('التشكيلة كاملة');
             }
             return;
         }
         currentTOTWSelected.push(entryId);
     }
 
-    // بعد التغيير → الحالة غير محفوظة
     currentTOTWSaved = false;
 
-    // Re-render (Squad بالخلفية + List)
     renderTOTWCards(getSelectedPlayers());
     renderTOTWList(currentTOTWData);
 }
@@ -396,7 +391,7 @@ async function saveTOTWSelection() {
 }
 
 /* =========================================================
-   LOAD TOTW — بدون Auto-save
+   LOAD TOTW
 ========================================================= */
 
 async function loadTOTW() {
@@ -422,8 +417,6 @@ async function loadTOTW() {
         let selected = null;
 
         if (latestRound > 0 && viewingRound < latestRound) {
-            // جولة قديمة → snapshot
-            console.log('Loading snapshot for old round', viewingRound);
             const snapshot = await loadTOTWSnapshot(viewingRound);
 
             if (snapshot && snapshot.players && snapshot.players.length > 0) {
@@ -431,7 +424,6 @@ async function loadTOTW() {
                 selected = snapshot.selected && snapshot.selected.length > 0
                     ? snapshot.selected
                     : players.slice(0, TOTW_SQUAD_SIZE).map(function(p){ return p.entry; });
-                console.log('Snapshot loaded:', players.length, 'players');
                 currentTOTWSaved = true;
             } else {
                 loadingBox.style.display = 'none';
@@ -444,8 +436,6 @@ async function loadTOTW() {
                 return;
             }
         } else {
-            // الجولة الحالية → fetch جديد
-            console.log('Fetching fresh for round', viewingRound);
             const allResults = await fetchTOTWPages();
 
             if (!allResults || allResults.length === 0) {
@@ -454,9 +444,8 @@ async function loadTOTW() {
 
             players = getTOTWTop20(allResults);
             selected = players.slice(0, TOTW_SQUAD_SIZE).map(function(p){ return p.entry; });
-            currentTOTWSaved = false;  // ← غير محفوظ حتى يضغط SAVE
+            currentTOTWSaved = false;
 
-            // هل فيه snapshot موجود مسبقاً لهذه الجولة؟
             const existing = await loadTOTWSnapshot(viewingRound);
             if (existing && existing.selected && existing.selected.length > 0) {
                 selected = existing.selected;
@@ -489,14 +478,13 @@ async function loadTOTW() {
 }
 
 /* =========================================================
-   SAVE MANUAL TOTW (خارجي)
+   SAVE MANUAL TOTW
 ========================================================= */
 
 async function saveManualTOTW(round) {
     if (!round) return false;
 
     try {
-        console.log('Saving manual TOTW for round', round);
         const allResults = await fetchTOTWPages();
 
         if (!allResults || allResults.length === 0) {
