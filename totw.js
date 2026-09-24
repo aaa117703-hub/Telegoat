@@ -1,8 +1,8 @@
 /* =========================================================
    totw.js — v5
-   - إصلاح ترتيب: GK (أعلى) → DEF → MID → FWD (أسفل)
-   - إصلاح: اختفاء اللاعبين عند العودة من List → Squad
-   - Save Button يدوي
+   - التوزيع: أعلى 3 = هجوم / ثم 3 وسط / ثم 4 دفاع / الأخير = حارس
+   - الترتيب البصري (CSS): GK أعلى → DEF → MID → FWD أسفل
+   - 11 لاعب كاملين
 ========================================================= */
 
 const TOTW_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -180,8 +180,10 @@ function switchTOTWView(view) {
 
 /* =========================================================
    RENDER SQUAD
-   الترتيب البصري (CSS): GK أعلى → DEF → MID → FWD أسفل
-   التوزيع: GK=1, DEF=4, MID=3, FWD=3
+   - أعلى 3 نقاط → هجوم (أسفل الصورة)
+   - التالي 3    → وسط
+   - التالي 4    → دفاع
+   - الأقل       → حارس (أعلى الصورة)
 ========================================================= */
 
 function renderTOTWCards(selectedPlayers) {
@@ -192,10 +194,10 @@ function renderTOTWCards(selectedPlayers) {
         return (b.event_total || 0) - (a.event_total || 0);
     });
 
-    const gk  = sorted.slice(0, 1);
-    const def = sorted.slice(1, 5);
-    const mid = sorted.slice(5, 8);
-    const fwd = sorted.slice(8, 11);
+    const fwd = sorted.slice(0, 3);    // أعلى 3 → هجوم
+    const mid = sorted.slice(3, 6);    // التالي 3 → وسط
+    const def = sorted.slice(6, 10);   // التالي 4 → دفاع
+    const gk  = sorted.slice(10, 11);  // الأخير → حارس
 
     let html = '';
 
