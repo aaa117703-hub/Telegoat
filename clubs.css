@@ -389,6 +389,38 @@
 }
 
 /* =========================================================
+   زر إحصائيات الفريق — جديد
+========================================================= */
+
+.club-stats-btn{
+    display:block;
+    width:calc(100% - 36px);
+    margin:12px 18px 0;
+    padding:12px;
+    background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
+    color:#ffffff;
+    border:none;
+    border-radius:12px;
+    font-size:13px;
+    font-weight:900;
+    letter-spacing:1px;
+    cursor:pointer;
+    font-family:inherit;
+    transition:transform .2s ease, box-shadow .2s ease;
+    box-shadow:0 4px 12px rgba(0,200,83,.4);
+    text-transform:uppercase;
+}
+
+.club-stats-btn:hover{
+    transform:scale(1.02);
+    box-shadow:0 6px 18px rgba(0,200,83,.6);
+}
+
+.club-stats-btn:active{
+    transform:scale(0.98);
+}
+
+/* =========================================================
    RESPONSIVE
 ========================================================= */
 
@@ -428,4 +460,9 @@
     }
 
     .club-player-name{font-size:12px;}
+
+    .club-stats-btn{
+        font-size:12px;
+        padding:10px;
+    }
 }
