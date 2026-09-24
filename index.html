@@ -445,13 +445,27 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
     letter-spacing:4px;padding-top:18px;margin-top:20px;
     border-top:1px solid rgba(255,255,255,.15);
 }
+
+#backfillDebug{
+    display:none;
+    position:fixed;
+    top:0;left:0;right:0;
+    background:#000;
+    color:#0f0;
+    padding:10px;
+    font-family:monospace;
+    font-size:11px;
+    z-index:999999;
+    text-align:center;
+    font-weight:bold;
+}
 </style>
 
 <link rel="stylesheet" href="mobile.css">
 <link rel="stylesheet" href="totw.css?v=20">
-<link rel="stylesheet" href="stats.css?v=8">
+<link rel="stylesheet" href="stats.css?v=9">
 <link rel="stylesheet" href="trends.css?v=6">
-<link rel="stylesheet" href="clubs.css?v=7">
+<link rel="stylesheet" href="clubs.css?v=6">
 <link rel="stylesheet" href="fpl-database.css?v=1">
 <link rel="stylesheet" href="manager-squad.css?v=1">
 <link rel="stylesheet" href="manager-hub.css?v2">
@@ -459,6 +473,8 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 </head>
 
 <body>
+
+<div id="backfillDebug"></div>
 
 <div id="errorBox">
     <button class="err-close" onclick="document.getElementById('errorBox').classList.remove('show')">X</button>
@@ -836,16 +852,16 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <script src="standings.js?v=9"></script>
 <script src="download.js?v=19"></script>
 <script src="players-teams.js?v=98"></script>
-<script src="totw.js?v=113"></script>
+<script src="totw.js?v=114"></script>
 <script src="trends.js?v=4"></script>
 <script src="fpl-database.js?v=5"></script>
 <script src="manager-squad.js?v=1"></script>
 <script src="manager-hub.js?v=3"></script>
 <script src="stats.js?v=9"></script>
-<script src="clubs.js?v=3"></script>
+<script src="clubs.js?v=4"></script>
 <script src="team-view.js?v=1"></script>
 <script src="main.js?v=18"></script>
-<script src="backfill-history.js?v=2"></script>
+<script src="backfill-history.js?v=3"></script>
 
 </body>
 </html>
