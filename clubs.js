@@ -206,6 +206,11 @@ function openClubDetail(team) {
         ? '<button class="club-add-btn" onclick="addPlayerPrompt()">إضافة لاعب</button>'
         : '';
 
+    // زر عرض الإحصائيات
+    const statsBtn =
+        '<button class="club-stats-btn" onclick="openTeamStats(\'' +
+            team.replace(/'/g, "\\'") + '\')">📊 إحصائيات الفريق</button>';
+
     modal.innerHTML =
         '<div class="club-modal-box">' +
             '<div class="club-modal-header">' +
@@ -217,6 +222,7 @@ function openClubDetail(team) {
                 players.length + ' لاعب' +
                 (clubsEditMode ? ' - وضع التعديل' : '') +
             '</div>' +
+            statsBtn +
             editBtn +
             '<div class="club-players-list">' + playersHtml + '</div>' +
         '</div>';
@@ -230,6 +236,23 @@ function closeClubDetail() {
     if (modal) modal.classList.remove('show');
     currentOpenClub = null;
 }
+
+
+/* =========================================================
+   عرض إحصائيات الفريق
+========================================================= */
+
+function openTeamStats(team) {
+    closeClubDetail();
+
+    if (typeof openTeamView === 'function') {
+        openTeamView(team);
+    } else {
+        alert('team-view.js غير محمّل');
+    }
+}
+
+window.openTeamStats = openTeamStats;
 
 
 function toggleClubsEditMode() {
