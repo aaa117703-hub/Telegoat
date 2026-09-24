@@ -1,148 +1,40 @@
 /* =========================================================
-   download.js
+   DEBUG helper
 ========================================================= */
 
-function waitForImagesToLoad(element) {
-    const images = Array.from(element.querySelectorAll('img'));
-
-    return Promise.all(images.map(function(img) {
-        if (img.complete && img.naturalWidth > 0) {
-            if (img.decode) {
-                return img.decode().catch(function() {});
-            }
-            return Promise.resolve();
-        }
-
-        return new Promise(function(resolve) {
-            let finished = false;
-
-            const finish = function() {
-                if (finished) {
-                    return;
-                }
-                finished = true;
-                img.removeEventListener('load', finish);
-                img.removeEventListener('error', finish);
-                resolve();
-            };
-
-            img.addEventListener('load', finish, { once: true });
-            img.addEventListener('error', finish, { once: true });
-
-            setTimeout(finish, 5000);
-        });
-    }));
-}
-
-
-function applyRoundedCorners(sourceCanvas, radius) {
-    const w = sourceCanvas.width;
-    const h = sourceCanvas.height;
-
-    const outputCanvas = document.createElement('canvas');
-    outputCanvas.width = w;
-    outputCanvas.height = h;
-
-    const ctx = outputCanvas.getContext('2d');
-
-    ctx.beginPath();
-    ctx.moveTo(radius, 0);
-    ctx.lineTo(w - radius, 0);
-    ctx.quadraticCurveTo(w, 0, w, radius);
-    ctx.lineTo(w, h - radius);
-    ctx.quadraticCurveTo(w, h, w - radius, h);
-    ctx.lineTo(radius, h);
-    ctx.quadraticCurveTo(0, h, 0, h - radius);
-    ctx.lineTo(0, radius);
-    ctx.quadraticCurveTo(0, 0, radius, 0);
-    ctx.closePath();
-    ctx.clip();
-
-    ctx.drawImage(sourceCanvas, 0, 0);
-
-    return outputCanvas;
-}
-
-
-/* =========================================================
-   TOGGLE DOWNLOAD MENU
-========================================================= */
-
-function toggleDownloadMenu(event) {
-    if (event) event.stopPropagation();
-
-    const menu = document.getElementById('downloadMenu');
-    const wrapper = document.getElementById('downloadWrapper');
-
-    if (!menu) return;
-
-    const isOpen = menu.classList.toggle('show');
-
-    if (wrapper) {
-        wrapper.classList.toggle('open', isOpen);
+function dlDebug(text, isError) {
+    let el = document.getElementById('backfillDebug');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'backfillDebug';
+        el.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#000;color:#0f0;padding:10px;font-family:monospace;font-size:11px;z-index:999999;text-align:center;font-weight:bold;';
+        document.body.appendChild(el);
     }
+    el.style.display = 'block';
+    el.textContent = 'DL: ' + text;
+    el.style.background = isError ? '#800' : '#000';
 }
 
-
-function closeDownloadMenu() {
-    const menu = document.getElementById('downloadMenu');
-    const wrapper = document.getElementById('downloadWrapper');
-
-    if (menu) menu.classList.remove('show');
-    if (wrapper) wrapper.classList.remove('open');
-}
-
-
-document.addEventListener('click', function(e) {
-    const wrapper = document.querySelector('.download-wrapper');
-    if (!wrapper) return;
-    if (!wrapper.contains(e.target)) {
-        closeDownloadMenu();
-    }
-});
-
-
-/* =========================================================
-   Detect Active Tab — يفحص DOM بدل الاعتماد على متغير
-========================================================= */
-
-function getActiveTabName() {
-    // فحص DOM أولاً — أكثر موثوقية
-    const fixturesTab = document.getElementById('fixturesTab');
-    const standingsTab = document.getElementById('standingsTab');
-    const totwTab = document.getElementById('totwTab');
-    const statsTab = document.getElementById('statsTab');
-
-    if (totwTab && totwTab.classList.contains('active')) return 'totw';
-    if (standingsTab && standingsTab.classList.contains('active')) return 'standings';
-    if (statsTab && statsTab.classList.contains('active')) return 'stats';
-    if (fixturesTab && fixturesTab.classList.contains('active')) return 'fixtures';
-
-    // Fallback: متغير عام لو موجود
-    if (typeof window.activeTab !== 'undefined') return window.activeTab;
-
-    // Default
-    return 'fixtures';
+function dlDebugHide() {
+    setTimeout(function() {
+        const el = document.getElementById('backfillDebug');
+        if (el) el.style.display = 'none';
+    }, 4000);
 }
 
 
 /* =========================================================
-   DOWNLOAD AS IMAGE — يدعم fixtures + standings + totw
+   DOWNLOAD AS IMAGE — نسخة محسّنة
 ========================================================= */
 
 function downloadAsImage(scaleFactor) {
 
-    if (typeof scaleFactor !== 'number') {
-        scaleFactor = 3;
-    }
+    if (typeof scaleFactor !== 'number') scaleFactor = 3;
 
     closeDownloadMenu();
 
-    /* ============ 1. تحديد القسم ============ */
-
     const activeTabName = getActiveTabName();
-
-    console.log('[DOWNLOAD] Active tab:', activeTabName);
+    dlDebug('tab=' + activeTabName);
 
     let element = null;
     let filenamePrefix = 'Image';
@@ -150,53 +42,59 @@ function downloadAsImage(scaleFactor) {
 
     if (activeTabName === 'totw') {
         isTOTW = true;
-        element = document.getElementById('totwPitchToSave');
-        const gw = (typeof window.currentRound !== 'undefined') ? window.currentRound : '';
-        filenamePrefix = 'TOTW_GW' + gw;
 
-        // لو الملعب مخفي (عرض List) — نأخذ الـ List wrapper
-        if (!element || element.offsetWidth === 0) {
-            element = document.getElementById('totwListWrapper');
-            filenamePrefix = 'TOTW_List_GW' + gw;
+        // ✨ إجبار عرض الملعب
+        const pitchWrapper = document.getElementById('totwPitchWrapper');
+        const listWrapper  = document.getElementById('totwListWrapper');
+
+        if (listWrapper && listWrapper.style.display !== 'none' && listWrapper.innerHTML.trim() !== '') {
+            // نحن في List view — نحملها
+            element = listWrapper;
+            filenamePrefix = 'TOTW_List';
+        } else {
+            // Squad view
+            if (pitchWrapper) pitchWrapper.style.display = 'flex';
+            element = document.getElementById('totwPitchToSave');
+            filenamePrefix = 'TOTW';
         }
     }
     else if (activeTabName === 'standings') {
         if (typeof renderStandings === 'function') renderStandings();
         element = document.getElementById('captureStandings');
-        const gw = (typeof window.currentRound !== 'undefined') ? window.currentRound : '';
-        filenamePrefix = 'Standings_GW' + gw;
+        filenamePrefix = 'Standings';
     }
     else if (activeTabName === 'stats') {
-        // للـ stats — نحمل محتوى التاب النشط
         const activeView = document.querySelector('.stats-view.active');
         element = activeView || document.getElementById('statsContent');
         filenamePrefix = 'Stats';
     }
     else {
-        // fixtures
         if (typeof renderFixtures === 'function') renderFixtures();
         element = document.getElementById('captureFixtures');
-        const gw = (typeof window.currentRound !== 'undefined') ? window.currentRound : '';
-        filenamePrefix = 'Matchweek_' + gw;
+        filenamePrefix = 'Matchweek';
     }
 
     if (!element) {
-        if (typeof showToast === 'function') {
-            showToast('العنصر غير موجود', false);
-        } else {
-            alert('Element not found');
-        }
+        dlDebug('element not found', true);
+        dlDebugHide();
         return;
     }
 
-    if (typeof showToast === 'function') {
-        showToast('Preparing image...', false);
+    dlDebug('size=' + element.offsetWidth + 'x' + element.offsetHeight);
+
+    if (element.offsetWidth === 0 || element.offsetHeight === 0) {
+        dlDebug('element has 0 size!', true);
+        dlDebugHide();
+        return;
     }
 
     const cornerRadius = (isTOTW ? 0 : 20 * scaleFactor);
 
+    dlDebug('loading images...');
+
     waitForImagesToLoad(element)
         .then(function() {
+            dlDebug('rendering...');
             return html2canvas(element, {
                 backgroundColor: (isTOTW ? '#ffffff' : null),
                 scale: scaleFactor,
@@ -207,136 +105,66 @@ function downloadAsImage(scaleFactor) {
                 height: element.offsetHeight,
                 windowWidth: element.scrollWidth,
                 windowHeight: element.scrollHeight,
-                imageTimeout: 0,
-                onclone: function(clonedDoc, clonedElement) {
-
-                    const wrappers = clonedElement.querySelectorAll('.logo-20, .logo-24');
-
-                    wrappers.forEach(function(wrapper) {
-                        const isSmall = wrapper.classList.contains('logo-20');
-                        const size = isSmall ? '20px' : '22px';
-
-                        wrapper.style.width = size;
-                        wrapper.style.height = size;
-                        wrapper.style.minWidth = size;
-                        wrapper.style.minHeight = size;
-                        wrapper.style.maxWidth = size;
-                        wrapper.style.maxHeight = size;
-                        wrapper.style.overflow = 'hidden';
-                        wrapper.style.position = 'relative';
-                        wrapper.style.display = 'inline-block';
-                    });
-
-                    const logos = clonedElement.querySelectorAll('.logo-20 img, .logo-24 img');
-
-                    logos.forEach(function(img) {
-                        img.style.position = 'absolute';
-                        img.style.top = '50%';
-                        img.style.left = '50%';
-                        img.style.transform = 'translate(-50%, -50%)';
-                        img.style.width = 'auto';
-                        img.style.height = 'auto';
-                        img.style.maxWidth = '100%';
-                        img.style.maxHeight = '100%';
-                        img.style.objectFit = 'contain';
-                        img.style.display = 'block';
-                    });
-
-                    const indicators = clonedElement.querySelectorAll('.pos-indicator-img');
-
-                    indicators.forEach(function(img) {
-                        const size = '25px';
-                        img.style.width = size;
-                        img.style.height = size;
-                        img.style.minWidth = size;
-                        img.style.minHeight = size;
-                        img.style.maxWidth = size;
-                        img.style.maxHeight = size;
-                        img.style.objectFit = 'contain';
-                    });
-
-                    /* إخفاء أزرار القفل من الصورة */
-                    const lockPanel = clonedElement.querySelector('#adminLockPanel');
-                    if (lockPanel) lockPanel.style.display = 'none';
-                }
+                imageTimeout: 0
             });
         })
         .then(function(canvas) {
+            dlDebug('canvas=' + canvas.width + 'x' + canvas.height);
 
             let finalCanvas = canvas;
-
             if (!isTOTW && cornerRadius > 0) {
                 finalCanvas = applyRoundedCorners(canvas, cornerRadius);
             }
 
-            finalCanvas.toBlob(function(blob) {
+            // ✨ على iOS: اعرض الصورة في تبويب جديد
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
+            finalCanvas.toBlob(function(blob) {
                 if (!blob) {
-                    if (typeof showToast === 'function') {
-                        showToast('فشل إنشاء الصورة', false);
-                    }
+                    dlDebug('blob is null', true);
+                    dlDebugHide();
                     return;
                 }
 
+                dlDebug('blob ready, size=' + Math.round(blob.size / 1024) + 'KB');
+
                 const filename = filenamePrefix + '_' + scaleFactor + 'x.png';
 
-                /* تجربة المشاركة */
-                if (navigator.share && navigator.canShare) {
-
-                    try {
-                        const file = new File([blob], filename, { type: 'image/png' });
-                        const shareData = { files: [file], title: filename };
-
-                        if (navigator.canShare(shareData)) {
-                            navigator.share(shareData)
-                                .then(function() {
-                                    if (typeof showToast === 'function') {
-                                        showToast('Image saved', true);
-                                    }
-                                })
-                                .catch(function(err) {
-                                    if (err.name !== 'AbortError') {
-                                        fallbackDownload(blob, filename);
-                                    } else {
-                                        if (typeof showToast === 'function') {
-                                            showToast('Cancelled', false);
-                                        }
-                                    }
-                                });
-                            return;
-                        }
-                    } catch (e) {
-                        /* نكمل للـ fallback */
+                if (isIOS) {
+                    // iOS: افتح الصورة في tab جديد — المستخدم يحفظها يدويًا (ضغط مطول)
+                    dlDebug('iOS: opening in new tab');
+                    const url = URL.createObjectURL(blob);
+                    const win = window.open(url, '_blank');
+                    if (!win) {
+                        dlDebug('popup blocked!', true);
                     }
+                    setTimeout(function() {
+                        URL.revokeObjectURL(url);
+                    }, 60000);
+                    dlDebugHide();
+                    return;
                 }
 
-                fallbackDownload(blob, filename);
+                // غير iOS: تحميل عادي
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = URL.createObjectURL(blob);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                setTimeout(function() {
+                    URL.revokeObjectURL(link.href);
+                }, 1000);
+
+                dlDebug('downloaded!');
+                dlDebugHide();
 
             }, 'image/png', 1.0);
         })
         .catch(function(err) {
-            console.error('html2canvas error:', err);
-            if (typeof showToast === 'function') {
-                showToast('Error generating image', false);
-            }
+            console.error('[DL]', err);
+            dlDebug('error: ' + err.message, true);
+            dlDebugHide();
         });
-}
-
-
-function fallbackDownload(blob, filename) {
-    const link = document.createElement('a');
-
-    link.download = filename || 'image.png';
-    link.href = URL.createObjectURL(blob);
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    setTimeout(function() {
-        URL.revokeObjectURL(link.href);
-        if (typeof showToast === 'function') {
-            showToast('Image downloaded', true);
-        }
-    }, 100);
 }
