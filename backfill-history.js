@@ -1,8 +1,6 @@
 /* =========================================================
-   backfill-history.js — v2
-   يجيب نقاط كل جولة لكل مدير من FPL API
-   ويحفظها في Supabase (manager_history)
-   + تشغيل تلقائي عند فتح الموقع
+   backfill-history.js — v3
+   مع شريط تشخيص مرئي
 ========================================================= */
 
 const BACKFILL_WORKER = 'https://fpl-api.aaa117703.workers.dev';
@@ -12,7 +10,24 @@ let backfillRunning = false;
 let backfillDone = false;
 
 /* =========================================================
-   جلب كل المديرين من الـ API
+   شريط تشخيص
+========================================================= */
+
+function showBackfillDebug(text, isError) {
+    let el = document.getElementById('backfillDebug');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'backfillDebug';
+        el.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#000;color:#0f0;padding:10px;font-family:monospace;font-size:11px;z-index:999999;text-align:center;font-weight:bold;';
+        document.body.appendChild(el);
+    }
+    el.style.display = 'block';
+    el.textContent = text;
+    el.style.background = isError ? '#800' : '#000';
+}
+
+/* =========================================================
+   جلب كل المديرين
 ========================================================= */
 
 async function fetchAllManagers() {
@@ -39,7 +54,7 @@ async function fetchAllManagers() {
 }
 
 /* =========================================================
-   جلب كل جولات مدير واحد من FPL API
+   جلب تاريخ مدير واحد
 ========================================================= */
 
 async function fetchManagerHistory(entryId) {
@@ -49,12 +64,10 @@ async function fetchManagerHistory(entryId) {
         );
 
         if (!res.ok) {
-            console.warn('[Backfill] entry ' + entryId + ' HTTP ' + res.status);
             return [];
         }
 
         const data = await res.json();
-
         if (!data || !data.current) return [];
 
         return data.current.map(function(gw) {
@@ -68,13 +81,12 @@ async function fetchManagerHistory(entryId) {
         });
 
     } catch (e) {
-        console.error('[Backfill] entry ' + entryId + ' failed:', e);
         return [];
     }
 }
 
 /* =========================================================
-   الحفظ في Supabase
+   حفظ دفعة
 ========================================================= */
 
 async function saveHistoryBatch(rows) {
@@ -101,30 +113,26 @@ async function saveHistoryBatch(rows) {
    التشغيل الرئيسي
 ========================================================= */
 
-async function runBackfill() {
+async function runBackfillWithDebug() {
     if (backfillRunning || backfillDone) return;
-
     if (!window.sbClient) {
-        console.warn('[Backfill] No Supabase client');
+        showBackfillDebug('Backfill: no Supabase client', true);
         return;
     }
 
     backfillRunning = true;
-    console.log('[Backfill] Starting...');
+    showBackfillDebug('Backfill: fetching managers...');
 
     const managers = await fetchAllManagers();
-    console.log('[Backfill] Fetched', managers.length, 'managers');
+    showBackfillDebug('Backfill: got ' + managers.length + ' managers');
 
     let done = 0;
     let saved = 0;
-
     let buffer = [];
 
     for (let i = 0; i < managers.length; i++) {
         const m = managers[i];
-        const entryId = m.entry;
-
-        const rows = await fetchManagerHistory(entryId);
+        const rows = await fetchManagerHistory(m.entry);
         buffer.push(...rows);
         done++;
 
@@ -134,49 +142,69 @@ async function runBackfill() {
             buffer = [];
         }
 
-        // تأخير بسيط لتجنب rate limit
         await new Promise(function(r) { setTimeout(r, 150); });
 
-        if (done % 20 === 0) {
-            console.log('[Backfill] Progress: ' + done + '/' + managers.length);
+        if (done % 10 === 0) {
+            showBackfillDebug('Backfill: ' + done + '/' + managers.length + ' · saved=' + saved);
         }
     }
 
-    console.log('[Backfill] Done! Saved', saved, 'rows');
+    showBackfillDebug('Backfill: DONE! saved=' + saved + ' rows');
+
     backfillRunning = false;
     backfillDone = true;
+
+    setTimeout(function() {
+        const el = document.getElementById('backfillDebug');
+        if (el) el.style.display = 'none';
+    }, 10000);
 }
 
-window.runBackfill = runBackfill;
+window.runBackfill = runBackfillWithDebug;
 
 /* =========================================================
-   تشغيل تلقائي عند فتح الموقع
+   تشغيل تلقائي
 ========================================================= */
 
-window.addEventListener('load', function() {
-    setTimeout(function() {
-        if (!window.sbClient) {
-            console.warn('[Backfill] sbClient not ready, skip');
-            return;
-        }
+function tryAutoBackfill() {
+    if (backfillRunning || backfillDone) return;
 
-        window.sbClient
-            .from('manager_history')
-            .select('*', { count: 'exact', head: true })
-            .then(function(res) {
-                const count = (res && res.count) || 0;
-                console.log('[Backfill] Current rows:', count);
+    showBackfillDebug('Backfill: checking...');
 
-                if (count < 100) {
-                    console.log('[Backfill] Table empty, running...');
-                    runBackfill();
-                } else {
-                    console.log('[Backfill] Already populated, skipping.');
-                    backfillDone = true;
-                }
-            })
-            .catch(function(e) {
-                console.warn('[Backfill] Check failed:', e);
-            });
-    }, 5000); // انتظر 5 ثواني حتى يجهز كل شي
-});
+    if (!window.sbClient) {
+        showBackfillDebug('Backfill: waiting for sbClient...');
+        setTimeout(tryAutoBackfill, 3000);
+        return;
+    }
+
+    window.sbClient
+        .from('manager_history')
+        .select('*', { count: 'exact', head: true })
+        .then(function(res) {
+            const count = (res && res.count) || 0;
+            showBackfillDebug('Backfill: current rows=' + count);
+
+            if (count < 100) {
+                showBackfillDebug('Backfill: table empty, starting...');
+                runBackfillWithDebug();
+            } else {
+                showBackfillDebug('Backfill: already populated (' + count + ' rows)');
+                backfillDone = true;
+                setTimeout(function() {
+                    const el = document.getElementById('backfillDebug');
+                    if (el) el.style.display = 'none';
+                }, 3000);
+            }
+        })
+        .catch(function(e) {
+            showBackfillDebug('Backfill check failed: ' + e.message, true);
+        });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(tryAutoBackfill, 5000);
+    });
+} else {
+    setTimeout(tryAutoBackfill, 5000);
+}
