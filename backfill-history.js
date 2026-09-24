@@ -1,7 +1,8 @@
 /* =========================================================
-   backfill-history.js
+   backfill-history.js — v2
    يجيب نقاط كل جولة لكل مدير من FPL API
    ويحفظها في Supabase (manager_history)
+   + تشغيل تلقائي عند فتح الموقع
 ========================================================= */
 
 const BACKFILL_WORKER = 'https://fpl-api.aaa117703.workers.dev';
@@ -116,7 +117,6 @@ async function runBackfill() {
 
     let done = 0;
     let saved = 0;
-    const BATCH_SIZE = 10; // نحفظ كل 10 مديرين
 
     let buffer = [];
 
@@ -148,3 +148,35 @@ async function runBackfill() {
 }
 
 window.runBackfill = runBackfill;
+
+/* =========================================================
+   تشغيل تلقائي عند فتح الموقع
+========================================================= */
+
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        if (!window.sbClient) {
+            console.warn('[Backfill] sbClient not ready, skip');
+            return;
+        }
+
+        window.sbClient
+            .from('manager_history')
+            .select('*', { count: 'exact', head: true })
+            .then(function(res) {
+                const count = (res && res.count) || 0;
+                console.log('[Backfill] Current rows:', count);
+
+                if (count < 100) {
+                    console.log('[Backfill] Table empty, running...');
+                    runBackfill();
+                } else {
+                    console.log('[Backfill] Already populated, skipping.');
+                    backfillDone = true;
+                }
+            })
+            .catch(function(e) {
+                console.warn('[Backfill] Check failed:', e);
+            });
+    }, 5000); // انتظر 5 ثواني حتى يجهز كل شي
+});
