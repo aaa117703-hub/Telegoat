@@ -1,8 +1,8 @@
 /* =========================================================
-   locks.js — v17
-   - نظام الإعدادات الجديد (Settings Modal)
-   - زر ⚙️ يطلب PIN 024680 قبل الفتح
-   - 4 أقسام: المديرين، الأندية، قفل الأقسام، الصيانة
+   locks.js — v18
+   - إصلاح: إدارة المديرين والأندية في الإعدادات
+   - إضافة: restoreSettingsContent() ترجع العناصر
+   - إضافة: استدعاء مباشر لـ mhInit و loadClubs
 ========================================================= */
 
 window.sectionLocks = {
@@ -169,8 +169,64 @@ function openSettingsModal() {
 
 
 function closeSettingsModal() {
+    // ⭐ رجّع العناصر المنقولة قبل الإغلاق
+    restoreSettingsContent();
+
     const modal = document.getElementById('settingsModal');
     if (modal) modal.classList.remove('show');
+}
+
+
+/* =========================================================
+   إرجاع العناصر المنقولة لمكانها الأصلي
+========================================================= */
+
+function restoreSettingsContent() {
+
+    // --- mhContent ---
+    const mhContent = document.getElementById('mhContent');
+    if (mhContent) {
+        const originalParent = document.getElementById('statsView-managers');
+        const settingsContainer = document.getElementById('settings-managers-content');
+
+        // إذا هو داخل الإعدادات → رجّعه
+        if (settingsContainer && settingsContainer.contains(mhContent)) {
+            if (originalParent) {
+                originalParent.appendChild(mhContent);
+            }
+        }
+    }
+
+    // --- clubsList ---
+    const clubsList = document.getElementById('clubsList');
+    if (clubsList) {
+        const originalParent = document.getElementById('statsView-clubs');
+        const settingsContainer = document.getElementById('settings-clubs-content');
+
+        if (settingsContainer && settingsContainer.contains(clubsList)) {
+            if (originalParent) {
+                originalParent.appendChild(clubsList);
+            }
+        }
+    }
+
+    // --- clubs-controls (زر التعديل) ---
+    const clubsControls = document.querySelector('.clubs-controls');
+    if (clubsControls) {
+        const originalParent = document.getElementById('statsView-clubs');
+        const settingsContainer = document.getElementById('settings-clubs-content');
+
+        if (settingsContainer && settingsContainer.contains(clubsControls)) {
+            if (originalParent) {
+                const list = document.getElementById('clubsList');
+                if (list && list.parentNode === originalParent) {
+                    originalParent.insertBefore(clubsControls, list);
+                } else {
+                    originalParent.appendChild(clubsControls);
+                }
+            }
+        }
+    }
 }
 
 
@@ -179,6 +235,9 @@ function closeSettingsModal() {
 ========================================================= */
 
 function openSettingsMain() {
+    // ⭐ رجّع أي عنصر منقول قبل عرض القائمة
+    restoreSettingsContent();
+
     const body = document.getElementById('settingsBody');
     if (!body) return;
 
@@ -210,6 +269,8 @@ function openSettingsMain() {
 ========================================================= */
 
 function openSettingsManagers() {
+    restoreSettingsContent();
+
     const body = document.getElementById('settingsBody');
     if (!body) return;
 
@@ -218,23 +279,39 @@ function openSettingsManagers() {
             '<span class="si-icon">←</span>' +
             '<span class="si-label">رجوع</span>' +
         '</button>' +
-        '<div id="settings-managers-content" style="padding:8px 0;"></div>';
+        '<div id="settings-managers-content" class="settings-embed"></div>';
 
-    // استخدم switchStatsTab لفتح Managers tab
-    if (typeof switchStatsTab === 'function') {
-        switchStatsTab('managers');
+    // ⭐ شغّل manager-hub
+    if (typeof window.mhInit === 'function') {
+        try { window.mhInit(); } catch (e) { console.warn('[Settings] mhInit error:', e); }
     }
 
-    // ننتظر ثانية ثم ننسخ محتوى mhContent داخل الإعدادات
-    setTimeout(function() {
+    // ⭐ انتظر ثم انقل
+    let attempts = 0;
+    const tryMove = function() {
+        attempts++;
         const mhContent = document.getElementById('mhContent');
         const container = document.getElementById('settings-managers-content');
-        if (mhContent && container) {
-            container.innerHTML = '';
-            // ننقل (move) العنصر مؤقتاً
-            container.appendChild(mhContent);
+
+        if (!container) return; // المستخدم رجع للقائمة الرئيسية
+
+        if (mhContent && container && !container.contains(mhContent)) {
+
+            // تأكد أن UI جاهز (مو Loading فقط)
+            const isLoading = mhContent.querySelector('.mh-loading') !== null;
+            const hasContent = mhContent.innerHTML.trim() !== '';
+
+            if (hasContent && !isLoading) {
+                container.appendChild(mhContent);
+                return;
+            }
         }
-    }, 400);
+
+        if (attempts < 20) {
+            setTimeout(tryMove, 250);
+        }
+    };
+    tryMove();
 }
 
 
@@ -243,6 +320,8 @@ function openSettingsManagers() {
 ========================================================= */
 
 function openSettingsClubs() {
+    restoreSettingsContent();
+
     const body = document.getElementById('settingsBody');
     if (!body) return;
 
@@ -251,26 +330,40 @@ function openSettingsClubs() {
             '<span class="si-icon">←</span>' +
             '<span class="si-label">رجوع</span>' +
         '</button>' +
-        '<div id="settings-clubs-content" style="padding:8px 0;"></div>';
+        '<div id="settings-clubs-content" class="settings-embed"></div>';
 
-    if (typeof switchStatsTab === 'function') {
-        switchStatsTab('clubs');
+    // ⭐ شغّل clubs
+    if (typeof loadClubs === 'function') {
+        try { loadClubs(); } catch (e) { console.warn('[Settings] loadClubs error:', e); }
     }
 
-    setTimeout(function() {
+    // ⭐ انتظر ثم انقل
+    let attempts = 0;
+    const tryMove = function() {
+        attempts++;
         const clubsList = document.getElementById('clubsList');
+        const clubsControls = document.querySelector('.clubs-controls');
         const container = document.getElementById('settings-clubs-content');
-        if (clubsList && container) {
-            container.innerHTML = '';
-            container.appendChild(clubsList);
 
-            // ننقل زر التعديل أيضاً
-            const clubsControls = document.querySelector('.clubs-controls');
-            if (clubsControls) {
-                container.insertBefore(clubsControls, clubsList);
+        if (!container) return; // المستخدم رجع
+
+        if (clubsList && container && !container.contains(clubsList)) {
+
+            const hasContent = clubsList.innerHTML.trim() !== '';
+            const hasEmpty = clubsList.querySelector('.clubs-empty') !== null;
+
+            if (hasContent && !hasEmpty) {
+                if (clubsControls) container.appendChild(clubsControls);
+                container.appendChild(clubsList);
+                return;
             }
         }
-    }, 400);
+
+        if (attempts < 20) {
+            setTimeout(tryMove, 250);
+        }
+    };
+    tryMove();
 }
 
 
@@ -279,6 +372,8 @@ function openSettingsClubs() {
 ========================================================= */
 
 function openSettingsLocks() {
+    restoreSettingsContent();
+
     const body = document.getElementById('settingsBody');
     if (!body) return;
 
@@ -319,7 +414,6 @@ async function toggleLockFromSettings(sectionKey) {
     const current = isLocked(sectionKey);
     const newState = !current;
 
-    // تأكيد بالـ PIN
     const pass = prompt('أدخل رمز التأكيد:');
     if (pass !== LOCK_PIN) {
         if (pass !== null && typeof showToast === 'function') {
@@ -338,7 +432,6 @@ async function toggleLockFromSettings(sectionKey) {
             showToast(labelText + ' ' + (newState ? 'مقفول' : 'مفتوح'), true, 2500);
         }
 
-        // أعد رسم القائمة
         openSettingsLocks();
     } else {
         if (typeof showToast === 'function') showToast('فشل الحفظ', false, 3000);
@@ -351,6 +444,8 @@ async function toggleLockFromSettings(sectionKey) {
 ========================================================= */
 
 function openSettingsMaintenance() {
+    restoreSettingsContent();
+
     const body = document.getElementById('settingsBody');
     if (!body) return;
 
@@ -438,6 +533,7 @@ async function initLockSystem() {
     await loadLocks();
 }
 
+
 window.openSettingsWithPin = openSettingsWithPin;
 window.openSettingsModal = openSettingsModal;
 window.closeSettingsModal = closeSettingsModal;
@@ -449,3 +545,4 @@ window.openSettingsMaintenance = openSettingsMaintenance;
 window.toggleLockFromSettings = toggleLockFromSettings;
 window.activateMaintenance = activateMaintenance;
 window.deactivateMaintenance = deactivateMaintenance;
+window.restoreSettingsContent = restoreSettingsContent;
