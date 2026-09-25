@@ -1,6 +1,7 @@
 /* =========================================================
-   fixtures.js — v39
-   - showToast انتقلت إلى config.js
+   fixtures.js — v40
+   - unlockSecretPanel: فقط editMode (PIN 1999)
+   - نظام القفل انتقل للإعدادات
 ========================================================= */
 
 function initRoundDropdown() {
@@ -94,7 +95,7 @@ function switchTab(tabName) {
 
 
 /* =========================================================
-   SECRET PANEL
+   SECRET PANEL — Edit Mode فقط
 ========================================================= */
 
 function unlockSecretPanel() {
@@ -115,15 +116,6 @@ function unlockSecretPanel() {
         renderFixtures();
 
         showToast('Edit mode enabled', true);
-
-        return;
-    }
-
-    if (pass === '024680') {
-
-        if (typeof activateLockControl === 'function') {
-            activateLockControl();
-        }
 
         return;
     }
@@ -227,7 +219,7 @@ function renderFixtures() {
 
 
 /* =========================================================
-   SAVE — مع حفظ TOTW + Ranks تلقائياً
+   SAVE
 ========================================================= */
 
 async function saveCurrentRound() {
@@ -264,21 +256,17 @@ async function saveCurrentRound() {
         result = { ok: false, error: e };
     }
 
-    /* حفظ TOTW */
     if (result.ok && typeof saveManualTOTW === 'function') {
         try {
             await saveManualTOTW(currentRound);
-            console.log('TOTW snapshot saved');
         } catch (e) {
             console.warn('TOTW snapshot failed:', e);
         }
     }
 
-    /* حفظ الرتب (للـ trends) */
     if (result.ok && typeof saveCurrentRanks === 'function') {
         try {
             await saveCurrentRanks(currentRound);
-            console.log('Ranks saved');
         } catch (e) {
             console.warn('Save ranks failed:', e);
         }
