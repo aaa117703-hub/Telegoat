@@ -1,16 +1,11 @@
 /* =========================================================
-   manager-squad.js — عرض تشكيلة أي مدير من FPL
+   manager-squad.js — v2
+   - يستخدم getAllManagersCached (بدل cache محلي)
+   - fetchWithTimeout محمي
 ========================================================= */
 
 (function(){
 'use strict';
-
-const WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
-const STANDINGS_CACHE_KEY = 'fpl_standings_v1';
-const STANDINGS_TTL = 6 * 60 * 60 * 1000;
-
-let standingsCache = null;
-let standingsLoading = null;
 
 /* ========== Helpers ========== */
 function badgeURL(code, size){
@@ -24,49 +19,9 @@ function escapeHTML(s){
     });
 }
 
-/* ========== Load All Managers ========== */
-async function loadAllManagers(){
-    if(standingsCache) return standingsCache;
-    if(standingsLoading) return standingsLoading;
-
-    try {
-        const cached = localStorage.getItem(STANDINGS_CACHE_KEY);
-        if(cached){
-            const parsed = JSON.parse(cached);
-            if(Date.now() - parsed.ts < STANDINGS_TTL){
-                standingsCache = parsed.data;
-                console.log('[SQUAD] Standings from cache:', standingsCache.length);
-                return standingsCache;
-            }
-        }
-    } catch(e){}
-
-    standingsLoading = (async function(){
-        const all = [];
-        for(let p = 1; p <= 7; p++){
-            try {
-                const res = await fetch(WORKER_URL + '?page=' + p);
-                const data = await res.json();
-                const results = (data && data.standings && data.standings.results) ? data.standings.results : [];
-                all.push.apply(all, results);
-            } catch(e){
-                console.warn('[SQUAD] Failed page ' + p, e.message);
-            }
-        }
-        standingsCache = all;
-        try {
-            localStorage.setItem(STANDINGS_CACHE_KEY, JSON.stringify({ts: Date.now(), data: all}));
-        } catch(e){}
-        console.log('[SQUAD] Standings loaded:', all.length);
-        return all;
-    })();
-
-    return standingsLoading;
-}
-
 /* ========== Find entry_id by name ========== */
 async function findEntryId(managerName, teamName){
-    const all = await loadAllManagers();
+    const all = await getAllManagersCached();
     if(!all || all.length === 0) return null;
 
     const clean = function(s){
@@ -97,13 +52,13 @@ async function findEntryId(managerName, teamName){
 
 /* ========== Fetch Squad ========== */
 async function fetchSquad(entryId, gw){
-    const res = await fetch(WORKER_URL + '?type=picks&entry=' + entryId + '&gw=' + gw);
+    const res = await fetchWithTimeout('https://fpl-api.aaa117703.workers.dev/?type=picks&entry=' + entryId + '&gw=' + gw);
     if(!res.ok) throw new Error('HTTP ' + res.status);
     return await res.json();
 }
 
 async function fetchLive(gw){
-    const res = await fetch(WORKER_URL + '?type=live&gw=' + gw);
+    const res = await fetchWithTimeout('https://fpl-api.aaa117703.workers.dev/?type=live&gw=' + gw);
     if(!res.ok) throw new Error('HTTP ' + res.status);
     return await res.json();
 }
@@ -291,7 +246,6 @@ async function openSquadModal(entryId, managerName){
                 content +
             '</div>';
 
-        // Re-bind click to close
         modal.onclick = function(e){
             if(e.target === modal) modal.classList.remove('show');
         };
@@ -316,7 +270,6 @@ function attachSquadButton(){
     if(profile.style.display === 'none') return;
     if(!profile.querySelector('.stats-profile-card')) return;
 
-    // Already bound?
     if(profile.querySelector('.btn-view-squad')) return;
 
     const playerEl = profile.querySelector('.stats-profile-player');
@@ -367,6 +320,8 @@ function attachSquadButton(){
 }
 
 /* ========== Watch Profile ========== */
+let _profileObserver = null;
+
 function setupProfileWatcher(){
     const profile = document.getElementById('statsProfile');
     if(!profile){
@@ -374,8 +329,9 @@ function setupProfileWatcher(){
         return;
     }
 
-    const observer = new MutationObserver(function(){
-        // When profile hidden → cleanup button
+    if(_profileObserver) _profileObserver.disconnect();
+
+    _profileObserver = new MutationObserver(function(){
         if(profile.style.display === 'none'){
             const btn = profile.querySelector('.btn-view-squad');
             if(btn) btn.remove();
@@ -383,7 +339,7 @@ function setupProfileWatcher(){
         attachSquadButton();
     });
 
-    observer.observe(profile, {
+    _profileObserver.observe(profile, {
         attributes: true,
         attributeFilter: ['style'],
         childList: true,
@@ -402,7 +358,7 @@ window.findManagerEntryId = findEntryId;
 /* ========== Init ========== */
 document.addEventListener('DOMContentLoaded', function(){
     setTimeout(setupProfileWatcher, 1500);
-    setTimeout(loadAllManagers, 2500); // Prefetch standings
+    setTimeout(function(){ getAllManagersCached(); }, 2500); // Prefetch
 });
 
 })();
