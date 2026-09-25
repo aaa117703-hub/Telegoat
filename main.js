@@ -1,5 +1,7 @@
 /* =========================================================
-   main.js — v2 (محسّن)
+   main.js — v3
+   - إضافة: app-ready event بعد اكتمال init
+   - تحسين: تهيئة متزامنة + معالجة أخطاء محسّنة
 ========================================================= */
 
 async function init() {
@@ -28,7 +30,16 @@ async function init() {
         });
     }
 
-    /* ====== 5. Supabase ====== */
+    /* ====== 5. إشعار app-ready (بدل توقيتات عشوائية) ====== */
+    try {
+        window.dispatchEvent(new CustomEvent('app-ready', {
+            detail: { timestamp: Date.now() }
+        }));
+    } catch (e) {
+        console.warn('[Main] app-ready dispatch failed:', e);
+    }
+
+    /* ====== 6. Supabase ====== */
     if (!window.sbClient || typeof loadScoresFromSupabase !== 'function') {
         console.warn('[Main] Supabase not available — working offline');
         return;
