@@ -1,5 +1,7 @@
 /* =========================================================
-   clubs.js — عرض وإدارة لاعبي الأندية
+   clubs.js — v5
+   - عرض وإدارة لاعبي الأندية
+   - يستخدم fetchWithTimeout (من config.js)
 ========================================================= */
 
 const CLUBS_PIN = '024680';
@@ -206,7 +208,6 @@ function openClubDetail(team) {
         ? '<button class="club-add-btn" onclick="addPlayerPrompt()">إضافة لاعب</button>'
         : '';
 
-    // زر عرض الإحصائيات
     const statsBtn =
         '<button class="club-stats-btn" onclick="openTeamStats(\'' +
             team.replace(/'/g, "\\'") + '\')">📊 إحصائيات الفريق</button>';
