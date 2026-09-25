@@ -1,33 +1,7 @@
 /* =========================================================
-   fixtures.js
+   fixtures.js — v39
+   - showToast انتقلت إلى config.js
 ========================================================= */
-
-function showToast(msg, isSuccess, duration) {
-    isSuccess = isSuccess || false;
-    duration = duration || 3000;
-
-    const toast = document.getElementById('toast');
-    const content = document.getElementById('toastContent');
-
-    if (!toast || !content) return;
-
-    if (toastTimeout) clearTimeout(toastTimeout);
-
-    if (isSuccess) {
-        content.innerHTML = 'OK ' + msg;
-        toast.classList.remove('error');
-    } else {
-        content.innerHTML = '<span class="toast-spinner"></span> ' + msg;
-        toast.classList.add('error');
-    }
-
-    toast.classList.add('show');
-
-    toastTimeout = setTimeout(function() {
-        toast.classList.remove('show');
-    }, duration);
-}
-
 
 function initRoundDropdown() {
     const select = document.getElementById('roundSelect');
