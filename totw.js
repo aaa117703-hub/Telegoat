@@ -1,11 +1,9 @@
 /* =========================================================
-   totw.js — v5
+   totw.js — v115
+   - يستخدم getAllManagersCached (cache موحّد من config.js)
    - التوزيع: أعلى 3 = هجوم / ثم 3 وسط / ثم 4 دفاع / الأخير = حارس
-   - الترتيب البصري (CSS): GK أعلى → DEF → MID → FWD أسفل
-   - 11 لاعب كاملين
 ========================================================= */
 
-const TOTW_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
 const TOTW_TOTAL_PAGES = 7;
 const TOTW_TOP_COUNT = 20;
 const TOTW_SQUAD_SIZE = 11;
@@ -105,33 +103,6 @@ async function loadTOTWSnapshot(round) {
 }
 
 /* =========================================================
-   FETCH ALL PAGES
-========================================================= */
-
-async function fetchTOTWPages() {
-    const allResults = [];
-
-    for (let page = 1; page <= TOTW_TOTAL_PAGES; page++) {
-        try {
-            const response = await fetch(TOTW_WORKER_URL + '/?page=' + page);
-            const data = await response.json();
-
-            if (data && data.standings && data.standings.results) {
-                allResults.push(...data.standings.results);
-                if (data.standings.has_next !== true) break;
-            } else {
-                break;
-            }
-        } catch (e) {
-            console.error('TOTW Page ' + page + ' failed:', e);
-            break;
-        }
-    }
-
-    return allResults;
-}
-
-/* =========================================================
    GET TOP 20
 ========================================================= */
 
@@ -180,10 +151,6 @@ function switchTOTWView(view) {
 
 /* =========================================================
    RENDER SQUAD
-   - أعلى 3 نقاط → هجوم (أسفل الصورة)
-   - التالي 3    → وسط
-   - التالي 4    → دفاع
-   - الأقل       → حارس (أعلى الصورة)
 ========================================================= */
 
 function renderTOTWCards(selectedPlayers) {
@@ -194,10 +161,10 @@ function renderTOTWCards(selectedPlayers) {
         return (b.event_total || 0) - (a.event_total || 0);
     });
 
-    const fwd = sorted.slice(0, 3);    // أعلى 3 → هجوم
-    const mid = sorted.slice(3, 6);    // التالي 3 → وسط
-    const def = sorted.slice(6, 10);   // التالي 4 → دفاع
-    const gk  = sorted.slice(10, 11);  // الأخير → حارس
+    const fwd = sorted.slice(0, 3);
+    const mid = sorted.slice(3, 6);
+    const def = sorted.slice(6, 10);
+    const gk  = sorted.slice(10, 11);
 
     let html = '';
 
@@ -438,7 +405,7 @@ async function loadTOTW() {
                 return;
             }
         } else {
-            const allResults = await fetchTOTWPages();
+            const allResults = await getAllManagersCached();
 
             if (!allResults || allResults.length === 0) {
                 throw new Error('No data received');
@@ -487,7 +454,7 @@ async function saveManualTOTW(round) {
     if (!round) return false;
 
     try {
-        const allResults = await fetchTOTWPages();
+        const allResults = await getAllManagersCached();
 
         if (!allResults || allResults.length === 0) {
             console.warn('No results to save');
