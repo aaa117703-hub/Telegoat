@@ -614,16 +614,16 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
     <div id="statsTab" class="tab-content">
 
         <div class="stats-tabs">
-            <button class="stats-tab-btn active" data-tab="overview" onclick="statsswitchStatsTab('overview')-load">Overview</button>
-           ing <button class="stats-tab-btn" data">
--tab="trends"            onclick="switchStatsTab('trends')">Trends</button>
+            <button class="stats-tab-btn active" data-tab="overview" onclick="switchStatsTab('overview')">Overview</button>
+            <button class="stats-tab-btn" data-tab="trends" onclick="switchStatsTab('trends')">Trends</button>
             <button class="stats-tab-btn" data-tab="search" onclick="switchStatsTab('search')">Search</button>
             <button class="stats-tab-btn" data-tab="records" onclick="switchStatsTab('records')">Records</button>
             <button class="stats-tab-btn" data-tab="clubs" onclick="switchStatsTab('clubs')">Clubs</button>
             <button class="stats-tab-btn" data-tab="managers" onclick="switchStatsTab('managers')">Managers</button>
         </div>
 
-        <div id="statsLoading" class=" <div class="spinner"></div>
+        <div id="statsLoading" class="stats-loading">
+            <div class="spinner"></div>
             <div>Loading Statistics...</div>
         </div>
 
@@ -861,7 +861,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <script src="clubs.js?v=5"></script>
 <script src="team-view.js?v=2"></script>
 <script src="main.js?v=19"></script>
-<script src="backfill-history.js?v=4"></script>
+<script src="backfill-history.js?v=5"></script>
 
 </body>
 </html>
