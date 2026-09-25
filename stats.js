@@ -1,7 +1,8 @@
 /* =========================================================
-   stats.js — v10
-   - إصلاح: rank lookup بـ O(1) بدل sort كامل لكل نتيجة
-   - إضافة: debounce على البحث (150ms)
+   stats.js — v11
+   - إضافة: مستمع managers-updated (يعيد حساب البيانات عند
+     إضافة/حذف Manual Entry)
+   - إصلاح: Rank Map + Debounce (من v10)
 ========================================================= */
 
 const STATS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -14,6 +15,12 @@ let statsLoaded = false;
 let statsComputed = null;
 
 async function fetchAllManagersForStats() {
+    // ⭐ استخدم الكاش الموحّد بدل fetch مستقل
+    if (typeof getAllManagersCached === 'function') {
+        return await getAllManagersCached();
+    }
+
+    // Fallback
     const allResults = [];
     for (let page = 1; page <= STATS_TOTAL_PAGES; page++) {
         try {
@@ -385,6 +392,19 @@ function switchStatsTab(tabName) {
         loadClubs();
     }
 }
+
+/* ⭐ جديد: أعد حساب Stats عند إضافة/حذف Manual Entry */
+window.addEventListener('managers-updated', function() {
+    if (!statsLoaded) return;
+
+    statsLoaded = false;
+
+    // لو المستخدم حالياً في stats tab → أعد التحميل تلقائياً
+    const statsTab = document.getElementById('statsTab');
+    if (statsTab && statsTab.classList.contains('active')) {
+        loadStats();
+    }
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('statsSearchInput');
