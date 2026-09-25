@@ -1,6 +1,7 @@
 /* =========================================================
-   team-view.js
-   عرض تفاصيل الفريق عند الضغط عليه
+   team-view.js — v2
+   - يستخدم getAllManagersCached (cache موحّد)
+   - fetchWithTimeout محمي
 ========================================================= */
 
 async function openTeamView(teamName) {
@@ -13,7 +14,7 @@ async function openTeamView(teamName) {
     modal.innerHTML = '<div class="team-modal-box"><div class="team-modal-loading">Loading...</div></div>';
 
     try {
-        // 1) جلب كل المديرين من API
+        // 1) جلب كل المديرين (من الكاش الموحّد)
         const managers = await fetchTeamManagers(teamName);
 
         if (!managers || managers.length === 0) {
@@ -52,20 +53,11 @@ async function openTeamView(teamName) {
 }
 
 /* =========================================================
-   جلب مديري الفريق من API
+   جلب مديري الفريق من الكاش الموحّد
 ========================================================= */
 
 async function fetchTeamManagers(teamName) {
-    const all = [];
-
-    for (let page = 1; page <= 7; page++) {
-        const res = await fetch('https://fpl-api.aaa117703.workers.dev/?page=' + page);
-        const data = await res.json();
-        if (data && data.standings && data.standings.results) {
-            all.push(...data.standings.results);
-            if (data.standings.has_next !== true) break;
-        } else break;
-    }
+    const all = await getAllManagersCached();
 
     // فلترة حسب الفريق
     return all.filter(function(m) {
@@ -132,8 +124,6 @@ function renderTeamModal(teamName, players) {
 
     const total = players.reduce(function(s, p) { return s + p.total; }, 0);
     const avg = Math.round(total / players.length);
-    const best = players[0];
-    const worst = players[players.length - 1];
 
     let html = '<div class="team-modal-box">';
     html += '<button class="team-modal-close" onclick="closeTeamView()">✕</button>';
