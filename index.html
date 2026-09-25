@@ -88,28 +88,43 @@ body{
     font-weight:900;font-size:16px;cursor:pointer;
 }
 
+/* ========== DOWNLOAD BUTTON (أيقونة فقط) ========== */
+
 .download-wrapper{position:relative;display:inline-block;}
 
 .download-btn{
-    display:flex;align-items:center;justify-content:center;gap:6px;
-    padding:8px 16px;
+    display:flex;align-items:center;justify-content:center;
+    width:44px;height:38px;
+    padding:0;
     background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
-    border:1px solid #5a055a;border-radius:20px;color:#fff;
-    font-size:13px;font-weight:800;letter-spacing:0.5px;cursor:pointer;outline:none;
+    border:1px solid #5a055a;border-radius:12px;color:#fff;
+    cursor:pointer;outline:none;
     box-shadow:0 2px 8px rgba(50,129,255,.4);
     transition:transform .2s ease, box-shadow .2s ease;
-    font-family:inherit;min-width:130px;
+    font-family:inherit;
 }
-.download-btn:hover{transform:scale(1.04);box-shadow:0 4px 12px rgba(50,129,255,.6);}
-.download-btn:active{transform:scale(0.96);}
-.download-btn svg{width:16px;height:16px;display:block;}
+.download-btn:hover{transform:scale(1.06);box-shadow:0 4px 12px rgba(50,129,255,.6);}
+.download-btn:active{transform:scale(0.94);}
+.download-btn svg{width:18px;height:18px;display:block;}
 .download-btn svg path,
 .download-btn svg line,
 .download-btn svg polyline{stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none;}
-.download-btn .dl-arrow{width:12px;height:12px;transition:transform .3s ease;}
-.download-btn .dl-arrow svg{width:100%;height:100%;}
-.download-btn .dl-arrow svg path{fill:#fff;stroke:none;}
-.download-wrapper.open .download-btn .dl-arrow{transform:rotate(180deg);}
+
+/* ========== SETTINGS BUTTON ========== */
+
+.settings-btn-inline{
+    display:flex;align-items:center;justify-content:center;
+    width:44px;height:38px;
+    padding:0;
+    background:linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+    border:1px solid #5a055a;border-radius:12px;color:#fff;
+    font-size:20px;line-height:1;cursor:pointer;outline:none;
+    box-shadow:0 2px 8px rgba(124,58,237,.5);
+    transition:transform .2s ease, box-shadow .2s ease;
+    font-family:inherit;
+}
+.settings-btn-inline:hover{transform:scale(1.06) rotate(20deg);box-shadow:0 4px 12px rgba(124,58,237,.7);}
+.settings-btn-inline:active{transform:scale(0.94) rotate(0deg);}
 
 .download-menu{
     position:absolute;top:calc(100% + 8px);right:0;min-width:160px;
@@ -179,14 +194,14 @@ body{
 }
 
 .round-selector-row{
-    display:flex;justify-content:center;align-items:center;gap:10px;
+    display:flex;justify-content:center;align-items:center;gap:8px;
     margin:8px 0 2px;padding:0 8px;
 }
 .round-select-pill{
     background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);
     border-radius:20px;padding:8px 32px 8px 16px;font-size:13px;font-weight:800;
-    min-width:140px;color:#fff;text-align:center;outline:none;cursor:pointer;
-    appearance:none;-webkit-appearance:none;
+    min-width:130px;color:#fff;text-align:center;outline:none;cursor:pointer;
+    appearance:none;-webkit-appearance:none;height:38px;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='white' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
     background-repeat:no-repeat;background-position:right 12px center;
 }
@@ -350,81 +365,271 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 .tab-content.active{display:block}
 
 /* =========================================================
-   ADMIN LOCK PANEL
+   SETTINGS MODAL
 ========================================================= */
 
-.admin-lock-panel{
-    position:fixed;top:12px;left:12px;z-index:99998;
-    display:flex;flex-direction:column;gap:6px;
-    background:rgba(36, 0, 36, 0.92);padding:8px;border-radius:14px;
-    border:2px solid #00e676;
-    box-shadow:0 4px 15px rgba(0,0,0,.5), 0 0 20px rgba(0, 200, 83, 0.4);
-    backdrop-filter:blur(8px);
+.settings-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    z-index: 99998;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
-.lock-btn{
-    display:flex;align-items:center;gap:6px;padding:7px 12px;
-    background:linear-gradient(135deg, #00c853 0%, #009b40 100%);
-    color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:900;
-    letter-spacing:0.5px;cursor:pointer;font-family:inherit;
-    transition:all .2s ease;min-width:110px;
-    box-shadow:0 2px 6px rgba(0,0,0,.3);text-transform:uppercase;
-}
-.lock-btn:hover{transform:scale(1.04);}
-.lock-btn:active{transform:scale(0.96);}
-.lock-btn.locked{background:linear-gradient(135deg, #ff4081 0%, #b8003f 100%);}
-.lock-btn .lock-label{flex:1;text-align:left;}
 
-.lock-panel{
-    position:fixed;top:50%;left:50%;
-    transform:translate(-50%, -50%) scale(0.9);
-    background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
-    border:3px solid #00e676;border-radius:18px;padding:0;
-    z-index:99999;opacity:0;
-    transition:opacity .25s ease, transform .25s ease;
-    box-shadow:0 0 50px rgba(0, 200, 83, 0.5), 0 20px 60px rgba(0,0,0,.7);
-    min-width:300px;max-width:90%;overflow:hidden;
+.settings-modal.show {
+    display: flex;
 }
-.lock-panel.show{opacity:1;transform:translate(-50%, -50%) scale(1);}
-.lock-panel-header{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:14px 18px;
-    background:linear-gradient(135deg, #6b21a8 0%, #38003c 100%);
-    border-bottom:2px solid #00e676;color:#fff;
-    font-size:15px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;
+
+.settings-modal-box {
+    width: 100%;
+    max-width: 440px;
+    background: linear-gradient(135deg, #1a0f2e 0%, #0f0a1e 100%);
+    border: 2px solid rgba(124, 58, 237, 0.5);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow:
+        0 0 50px rgba(124, 58, 237, 0.4),
+        0 20px 60px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    animation: settingsIn 0.25s ease;
+    direction: rtl;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
 }
-.lock-panel-close{
-    width:28px;height:28px;border-radius:50%;
-    background:rgba(255,255,255,.15);border:none;color:#fff;
-    font-size:14px;font-weight:900;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-    transition:background .2s ease;padding:0;outline:none;
+
+@keyframes settingsIn {
+    from { opacity: 0; transform: scale(0.92) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
-.lock-panel-close:hover{background:rgba(255,0,90,.5);}
-.lock-panel-body{padding:20px;display:flex;flex-direction:column;gap:12px;}
-.lock-status{
-    text-align:center;padding:12px;background:rgba(255,255,255,.06);
-    border-radius:10px;color:#fff;font-size:14px;font-weight:800;
-    letter-spacing:0.5px;border:1px solid rgba(255,255,255,.1);
+
+.settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #7c3aed 0%, #00d4ff 100%);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    flex-shrink: 0;
 }
-.lock-toggle-btn{
-    padding:14px;border:none;border-radius:12px;
-    background:linear-gradient(135deg, #448aff 0%, #1f5dbf 100%);
-    color:#fff;font-size:14px;font-weight:900;letter-spacing:1px;
-    cursor:pointer;transition:transform .2s ease;font-family:inherit;
-    box-shadow:0 4px 12px rgba(50,129,255,.4);
+
+.settings-close {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.2s ease;
+    font-family: inherit;
 }
-.lock-toggle-btn:hover{transform:scale(1.03);}
-.lock-toggle-btn:active{transform:scale(0.97);}
-.lock-save-btn{
-    padding:14px;border:none;border-radius:12px;
-    background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
-    color:#fff;font-size:14px;font-weight:900;letter-spacing:1px;
-    cursor:pointer;transition:transform .2s ease;font-family:inherit;
-    box-shadow:0 4px 12px rgba(0,200,83,.4);
+
+.settings-close:hover {
+    background: rgba(255, 0, 90, 0.6);
 }
-.lock-save-btn:hover{transform:scale(1.03);}
-.lock-save-btn:active{transform:scale(0.97);}
-.lock-save-btn:disabled{opacity:.6;cursor:not-allowed;}
+
+.settings-body {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.settings-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    border-radius: 12px;
+    color: #e8e8f5;
+    font-size: 14px;
+    font-weight: 800;
+    font-family: inherit;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    text-align: right;
+    transition: all 0.2s ease;
+}
+
+.settings-item:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: rgba(0, 212, 255, 0.4);
+    color: #fff;
+    transform: translateX(-3px);
+}
+
+.settings-item:active {
+    transform: translateX(-3px) scale(0.98);
+}
+
+.settings-item .si-icon {
+    font-size: 20px;
+    width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.settings-item .si-label {
+    flex: 1;
+    text-align: right;
+}
+
+.settings-back {
+    background: linear-gradient(135deg, #4b5563 0%, #1f2937 100%) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    color: #e8e8f5 !important;
+}
+
+.settings-hint {
+    color: #8a90a8;
+    font-size: 11px;
+    text-align: center;
+    padding: 8px 4px;
+    letter-spacing: 0.3px;
+    line-height: 1.6;
+}
+
+.locks-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lock-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(124, 58, 237, 0.25);
+    border-radius: 10px;
+    color: #e8e8f5;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.lock-item-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.lock-item-icon {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+}
+
+.lock-item-btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-transform: uppercase;
+    min-width: 90px;
+}
+
+.lock-item-btn.unlocked {
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+}
+
+.lock-item-btn.locked {
+    background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+}
+
+.lock-item-btn:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.lock-item-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.maint-all-btn {
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 3px 12px rgba(245, 158, 11, 0.4);
+    transition: transform 0.2s ease;
+    text-transform: uppercase;
+    margin-top: 6px;
+}
+
+.maint-all-btn:hover {
+    transform: translateY(-1px);
+}
+
+.maint-all-btn:active {
+    transform: scale(0.97);
+}
+
+.maint-open-btn {
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 3px 12px rgba(16, 185, 129, 0.4);
+    transition: transform 0.2s ease;
+    text-transform: uppercase;
+    margin-top: 6px;
+}
+
+.maint-open-btn:hover {
+    transform: translateY(-1px);
+}
+
+.maint-open-btn:active {
+    transform: scale(0.97);
+}
+
+/* =========================================================
+   MAINTENANCE SCREEN
+========================================================= */
 
 #sectionMaintenance{
     display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);
@@ -485,6 +690,17 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
     <span id="toastContent">Saving...</span>
 </div>
 
+<!-- Settings Modal -->
+<div id="settingsModal" class="settings-modal">
+    <div class="settings-modal-box">
+        <div class="settings-header">
+            <span>⚙️ الإعدادات</span>
+            <button class="settings-close" onclick="closeSettingsModal()">✕</button>
+        </div>
+        <div class="settings-body" id="settingsBody"></div>
+    </div>
+</div>
+
 <div class="carousel-wrapper">
     <div class="carousel" id="carousel">
         <div class="carousel-track" id="carouselTrack"></div>
@@ -496,18 +712,12 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
     <select id="roundSelect" class="round-select-pill" onchange="selectRound(this.value)"></select>
 
     <div class="download-wrapper" id="downloadWrapper">
-        <button class="download-btn" onclick="toggleDownloadMenu(event)">
+        <button class="download-btn" onclick="toggleDownloadMenu(event)" title="تحميل">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 3v12"/>
                 <polyline points="7 10 12 15 17 10"/>
                 <line x1="5" y1="21" x2="19" y2="21"/>
             </svg>
-            <span>Download</span>
-            <span class="dl-arrow">
-                <svg viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 6L0 0h10z"/>
-                </svg>
-            </span>
         </button>
 
         <div class="download-menu" id="downloadMenu">
@@ -525,6 +735,8 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
             </button>
         </div>
     </div>
+
+    <button id="settingsBtn" class="settings-btn-inline" onclick="openSettingsWithPin()" title="الإعدادات">⚙️</button>
 </div>
 
 <div class="header">
@@ -618,8 +830,8 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
             <button class="stats-tab-btn" data-tab="trends" onclick="switchStatsTab('trends')">Trends</button>
             <button class="stats-tab-btn" data-tab="search" onclick="switchStatsTab('search')">Search</button>
             <button class="stats-tab-btn" data-tab="records" onclick="switchStatsTab('records')">Records</button>
-            <button class="stats-tab-btn" data-tab="clubs" onclick="switchStatsTab('clubs')">Clubs</button>
-            <button class="stats-tab-btn" data-tab="managers" onclick="switchStatsTab('managers')">Managers</button>
+            <button class="stats-tab-btn" data-tab="clubs" style="display:none;" onclick="switchStatsTab('clubs')">Clubs</button>
+            <button class="stats-tab-btn" data-tab="managers" style="display:none;" onclick="switchStatsTab('managers')">Managers</button>
         </div>
 
         <div id="statsLoading" class="stats-loading">
@@ -843,12 +1055,12 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 </script>
 
 <script src="config.js?v=3"></script>
-<script src="locks.js?v=16"></script>
+<script src="locks.js?v=17"></script>
 <script src="teams.js?v=2"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
 <script src="carousel.js?v=38"></script>
-<script src="fixtures.js?v=39"></script>
+<script src="fixtures.js?v=40"></script>
 <script src="standings.js?v=9"></script>
 <script src="download.js?v=23"></script>
 <script src="players-teams.js?v=98"></script>
@@ -857,7 +1069,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <script src="fpl-database.js?v=5"></script>
 <script src="manager-squad.js?v=2"></script>
 <script src="manager-hub.js?v=6"></script>
-<script src="stats.js?v=10"></script>
+<script src="stats.js?v=11"></script>
 <script src="clubs.js?v=6"></script>
 <script src="team-view.js?v=2"></script>
 <script src="main.js?v=19"></script>
