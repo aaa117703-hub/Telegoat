@@ -1,5 +1,8 @@
 /* =========================================================
-   locks.js — نظام قفل 4 أقسام
+   locks.js — v17
+   - نظام الإعدادات الجديد (Settings Modal)
+   - زر ⚙️ يطلب PIN 024680 قبل الفتح
+   - 4 أقسام: المديرين، الأندية، قفل الأقسام، الصيانة
 ========================================================= */
 
 window.sectionLocks = {
@@ -18,36 +21,35 @@ window.pendingLocks = {
 
 const LOCK_PIN = '024680';
 const EDIT_PIN = '1999';
+const SETTINGS_PIN = '024680';
 
 const SECTIONS = [
-    { key: 'fixtures',  label: 'Fixtures'  },
-    { key: 'standings', label: 'Standings' },
-    { key: 'totw',      label: 'TOTW'      },
-    { key: 'stats',     label: 'Stats'     }
+    { key: 'fixtures',  label: 'المواجهات',  icon: '⚽' },
+    { key: 'standings', label: 'الترتيب',    icon: '🏆' },
+    { key: 'totw',      label: 'TOTW',       icon: '⭐' },
+    { key: 'stats',     label: 'الإحصائيات', icon: '📊' }
 ];
 
 
 /* =========================================================
-   HELPERS — الصلاحيات
+   HELPERS
 ========================================================= */
 
 function isAdmin() {
     return localStorage.getItem('tg_admin') === 'true';
 }
 
-/* Lock Control يستخدم sessionStorage — يختفي عند إغلاق التبويب */
 function isLocker() {
     return sessionStorage.getItem('tg_locker') === 'true';
 }
 
-/* هل يستطيع تجاوز الأقفال؟ */
 function canBypassLocks() {
     return isLocker() || isAdmin();
 }
 
 
 /* =========================================================
-   LOAD / SAVE
+   LOAD / SAVE LOCKS
 ========================================================= */
 
 async function loadLocks() {
@@ -143,183 +145,287 @@ function hideSectionMaintenance() {
 
 
 /* =========================================================
-   ADMIN LOCK PANEL
+   SETTINGS — فتح مع PIN
 ========================================================= */
 
-function buildAdminLockPanel() {
-    const old = document.getElementById('adminLockPanel');
-    if (old) old.remove();
+function openSettingsWithPin() {
+    const pass = prompt('أدخل رمز الإعدادات:');
 
-    if (!isLocker()) return;
+    if (pass === null) return;
 
-    const panel = document.createElement('div');
-    panel.id = 'adminLockPanel';
-    panel.className = 'admin-lock-panel';
+    if (pass !== SETTINGS_PIN) {
+        if (typeof showToast === 'function') showToast('الرمز غلط', false, 2500);
+        return;
+    }
+
+    openSettingsMain();
+}
+
+
+function openSettingsModal() {
+    const modal = document.getElementById('settingsModal');
+    if (modal) modal.classList.add('show');
+}
+
+
+function closeSettingsModal() {
+    const modal = document.getElementById('settingsModal');
+    if (modal) modal.classList.remove('show');
+}
+
+
+/* =========================================================
+   SETTINGS — القائمة الرئيسية
+========================================================= */
+
+function openSettingsMain() {
+    const body = document.getElementById('settingsBody');
+    if (!body) return;
+
+    body.innerHTML =
+        '<button class="settings-item" onclick="openSettingsManagers()">' +
+            '<span class="si-icon">👥</span>' +
+            '<span class="si-label">إدارة المديرين</span>' +
+        '</button>' +
+        '<button class="settings-item" onclick="openSettingsClubs()">' +
+            '<span class="si-icon">🏟️</span>' +
+            '<span class="si-label">إدارة الأندية</span>' +
+        '</button>' +
+        '<button class="settings-item" onclick="openSettingsLocks()">' +
+            '<span class="si-icon">🔐</span>' +
+            '<span class="si-label">قفل الأقسام</span>' +
+        '</button>' +
+        '<button class="settings-item" onclick="openSettingsMaintenance()">' +
+            '<span class="si-icon">🔧</span>' +
+            '<span class="si-label">وضع الصيانة</span>' +
+        '</button>' +
+        '<div class="settings-hint">TELEGRAM GOAT 🐐</div>';
+
+    openSettingsModal();
+}
+
+
+/* =========================================================
+   SETTINGS — إدارة المديرين
+========================================================= */
+
+function openSettingsManagers() {
+    const body = document.getElementById('settingsBody');
+    if (!body) return;
+
+    body.innerHTML =
+        '<button class="settings-item settings-back" onclick="openSettingsMain()">' +
+            '<span class="si-icon">←</span>' +
+            '<span class="si-label">رجوع</span>' +
+        '</button>' +
+        '<div id="settings-managers-content" style="padding:8px 0;"></div>';
+
+    // استخدم switchStatsTab لفتح Managers tab
+    if (typeof switchStatsTab === 'function') {
+        switchStatsTab('managers');
+    }
+
+    // ننتظر ثانية ثم ننسخ محتوى mhContent داخل الإعدادات
+    setTimeout(function() {
+        const mhContent = document.getElementById('mhContent');
+        const container = document.getElementById('settings-managers-content');
+        if (mhContent && container) {
+            container.innerHTML = '';
+            // ننقل (move) العنصر مؤقتاً
+            container.appendChild(mhContent);
+        }
+    }, 400);
+}
+
+
+/* =========================================================
+   SETTINGS — إدارة الأندية
+========================================================= */
+
+function openSettingsClubs() {
+    const body = document.getElementById('settingsBody');
+    if (!body) return;
+
+    body.innerHTML =
+        '<button class="settings-item settings-back" onclick="openSettingsMain()">' +
+            '<span class="si-icon">←</span>' +
+            '<span class="si-label">رجوع</span>' +
+        '</button>' +
+        '<div id="settings-clubs-content" style="padding:8px 0;"></div>';
+
+    if (typeof switchStatsTab === 'function') {
+        switchStatsTab('clubs');
+    }
+
+    setTimeout(function() {
+        const clubsList = document.getElementById('clubsList');
+        const container = document.getElementById('settings-clubs-content');
+        if (clubsList && container) {
+            container.innerHTML = '';
+            container.appendChild(clubsList);
+
+            // ننقل زر التعديل أيضاً
+            const clubsControls = document.querySelector('.clubs-controls');
+            if (clubsControls) {
+                container.insertBefore(clubsControls, clubsList);
+            }
+        }
+    }, 400);
+}
+
+
+/* =========================================================
+   SETTINGS — قفل الأقسام
+========================================================= */
+
+function openSettingsLocks() {
+    const body = document.getElementById('settingsBody');
+    if (!body) return;
+
+    let itemsHtml = '<div class="locks-grid">';
 
     SECTIONS.forEach(function(s) {
         const locked = isLocked(s.key);
+        const btnClass = locked ? 'locked' : 'unlocked';
+        const btnText = locked ? '🔒 مقفول' : '🔓 مفتوح';
 
-        const btn = document.createElement('button');
-        btn.className = 'lock-btn' + (locked ? ' locked' : '');
-        btn.type = 'button';
-
-        btn.innerHTML =
-            '<span class="lock-icon">' + (locked ? '🔒' : '🔓') + '</span>' +
-            '<span class="lock-label">' + s.label + '</span>';
-
-        btn.addEventListener('click', function() {
-            openLockPanel(s.key, s.label);
-        });
-
-        panel.appendChild(btn);
+        itemsHtml +=
+            '<div class="lock-item">' +
+                '<div class="lock-item-label">' +
+                    '<span class="lock-item-icon">' + s.icon + '</span>' +
+                    '<span>' + s.label + '</span>' +
+                '</div>' +
+                '<button class="lock-item-btn ' + btnClass + '" onclick="toggleLockFromSettings(\'' + s.key + '\')">' +
+                    btnText +
+                '</button>' +
+            '</div>';
     });
 
-    document.body.appendChild(panel);
-}
+    itemsHtml += '</div>';
 
-
-function removeAdminLockPanel() {
-    const panel = document.getElementById('adminLockPanel');
-    if (panel) panel.remove();
-}
-
-
-function refreshAdminLockPanel() {
-    if (isLocker()) {
-        buildAdminLockPanel();
-    } else {
-        removeAdminLockPanel();
-    }
-}
-
-
-/* =========================================================
-   ACTIVATE LOCK CONTROL
-========================================================= */
-
-function activateLockControl() {
-    sessionStorage.setItem('tg_locker', 'true');
-
-    if (typeof showToast === 'function') {
-        showToast('Lock Control enabled', true);
-    }
-
-    buildAdminLockPanel();
-}
-
-
-/* =========================================================
-   LOCK PANEL
-========================================================= */
-
-function openLockPanel(sectionKey, sectionLabel) {
-    closeLockPanel();
-
-    window.pendingLocks[sectionKey] = window.sectionLocks[sectionKey];
-
-    const isLockedNow = window.pendingLocks[sectionKey];
-
-    const panel = document.createElement('div');
-    panel.id = 'lockPanel';
-    panel.className = 'lock-panel';
-
-    panel.innerHTML =
-        '<div class="lock-panel-header">' +
-            '<span>🔐 ' + sectionLabel + '</span>' +
-            '<button class="lock-panel-close" onclick="closeLockPanel()">✕</button>' +
+    body.innerHTML =
+        '<button class="settings-item settings-back" onclick="openSettingsMain()">' +
+            '<span class="si-icon">←</span>' +
+            '<span class="si-label">رجوع</span>' +
+        '</button>' +
+        '<div class="settings-hint" style="padding:4px 0 12px 0;">' +
+            'اضغط على الزر لتبديل حالة القفل' +
         '</div>' +
-        '<div class="lock-panel-body">' +
-            '<div class="lock-status" id="lockStatusDisplay">' +
-                'الحالة الحالية: ' + (isLockedNow ? '🔒 مقفول' : '🔓 مفتوح') +
-            '</div>' +
-            '<button class="lock-toggle-btn" id="lockToggleBtn" onclick="togglePendingLock(\'' + sectionKey + '\')">' +
-                (isLockedNow ? '🔓 افتح القسم' : '🔒 اقفل القسم') +
-            '</button>' +
-            '<button class="lock-save-btn" id="lockSaveBtn" onclick="confirmSaveLock(\'' + sectionKey + '\',\'' + sectionLabel + '\')">' +
-                '💾 حفظ' +
-            '</button>' +
-        '</div>';
-
-    document.body.appendChild(panel);
-
-    setTimeout(function() {
-        panel.classList.add('show');
-    }, 10);
+        itemsHtml;
 }
 
 
-function closeLockPanel() {
-    const panel = document.getElementById('lockPanel');
-    if (!panel) return;
+async function toggleLockFromSettings(sectionKey) {
+    const current = isLocked(sectionKey);
+    const newState = !current;
 
-    panel.classList.remove('show');
-
-    setTimeout(function() {
-        if (panel.parentNode) panel.remove();
-    }, 250);
-}
-
-
-function togglePendingLock(sectionKey) {
-    window.pendingLocks[sectionKey] = !window.pendingLocks[sectionKey];
-
-    const pending = window.pendingLocks[sectionKey];
-
-    const statusEl = document.getElementById('lockStatusDisplay');
-    const toggleBtn = document.getElementById('lockToggleBtn');
-
-    if (statusEl) {
-        statusEl.textContent = 'الحالة ستكون: ' + (pending ? '🔒 مقفول' : '🔓 مفتوح');
-    }
-
-    if (toggleBtn) {
-        toggleBtn.textContent = pending ? '🔓 افتح القسم' : '🔒 اقفل القسم';
-    }
-}
-
-
-async function confirmSaveLock(sectionKey, sectionLabel) {
-    if (window.pendingLocks[sectionKey] === window.sectionLocks[sectionKey]) {
-        alert('ما فيه تغيير للحفظ');
-        return;
-    }
-
-    const pass = prompt('أدخل رمز التأكيد للحفظ:');
+    // تأكيد بالـ PIN
+    const pass = prompt('أدخل رمز التأكيد:');
     if (pass !== LOCK_PIN) {
-        if (pass !== null) alert('الرمز غلط!');
+        if (pass !== null && typeof showToast === 'function') {
+            showToast('الرمز غلط', false, 2500);
+        }
         return;
     }
 
-    const saveBtn = document.getElementById('lockSaveBtn');
-    if (saveBtn) {
-        saveBtn.disabled = true;
-        saveBtn.textContent = '⏳ يحفظ...';
-    }
-
-    const ok = await saveLock(sectionKey, window.pendingLocks[sectionKey]);
+    const ok = await saveLock(sectionKey, newState);
 
     if (ok) {
-        closeLockPanel();
-
-        /* نشيل صلاحية القفل — الأزرار تختفي */
-        sessionStorage.removeItem('tg_locker');
-        localStorage.removeItem('tg_locker');
-
-        removeAdminLockPanel();
+        const label = SECTIONS.find(function(s){ return s.key === sectionKey; });
+        const labelText = label ? label.label : sectionKey;
 
         if (typeof showToast === 'function') {
-            showToast(
-                sectionLabel + ' ' + (window.sectionLocks[sectionKey] ? 'locked' : 'unlocked'),
-                true
-            );
+            showToast(labelText + ' ' + (newState ? 'مقفول' : 'مفتوح'), true, 2500);
         }
+
+        // أعد رسم القائمة
+        openSettingsLocks();
     } else {
-        if (saveBtn) {
-            saveBtn.disabled = false;
-            saveBtn.textContent = '💾 حفظ';
-        }
-        alert('فشل الحفظ!');
+        if (typeof showToast === 'function') showToast('فشل الحفظ', false, 3000);
     }
+}
+
+
+/* =========================================================
+   SETTINGS — الصيانة
+========================================================= */
+
+function openSettingsMaintenance() {
+    const body = document.getElementById('settingsBody');
+    if (!body) return;
+
+    const allLocked = SECTIONS.every(function(s) { return isLocked(s.key); });
+
+    body.innerHTML =
+        '<button class="settings-item settings-back" onclick="openSettingsMain()">' +
+            '<span class="si-icon">←</span>' +
+            '<span class="si-label">رجوع</span>' +
+        '</button>' +
+        '<div class="settings-hint" style="padding:4px 0 8px 0;">' +
+            'عند تفعيل الصيانة، جميع الأقسام تُقفل للزوار' +
+        '</div>' +
+        '<button class="maint-all-btn" onclick="activateMaintenance()">' +
+            '🔧 ' + (allLocked ? 'إلغاء الصيانة' : 'تفعيل الصيانة') +
+        '</button>' +
+        '<button class="maint-open-btn" onclick="deactivateMaintenance()">' +
+            '🔓 فتح كل الأقسام' +
+        '</button>';
+}
+
+
+async function activateMaintenance() {
+    const pass = prompt('أدخل رمز التأكيد:');
+    if (pass !== LOCK_PIN) {
+        if (pass !== null && typeof showToast === 'function') {
+            showToast('الرمز غلط', false, 2500);
+        }
+        return;
+    }
+
+    if (typeof showToast === 'function') showToast('جاري التفعيل...', false, 30000);
+
+    let allOk = true;
+
+    for (let i = 0; i < SECTIONS.length; i++) {
+        const ok = await saveLock(SECTIONS[i].key, true);
+        if (!ok) allOk = false;
+    }
+
+    if (allOk) {
+        if (typeof showToast === 'function') showToast('تم تفعيل الصيانة', true, 3000);
+    } else {
+        if (typeof showToast === 'function') showToast('فشل جزئي', false, 4000);
+    }
+
+    openSettingsMaintenance();
+}
+
+
+async function deactivateMaintenance() {
+    const pass = prompt('أدخل رمز التأكيد:');
+    if (pass !== LOCK_PIN) {
+        if (pass !== null && typeof showToast === 'function') {
+            showToast('الرمز غلط', false, 2500);
+        }
+        return;
+    }
+
+    if (typeof showToast === 'function') showToast('جاري الإلغاء...', false, 30000);
+
+    let allOk = true;
+
+    for (let i = 0; i < SECTIONS.length; i++) {
+        const ok = await saveLock(SECTIONS[i].key, false);
+        if (!ok) allOk = false;
+    }
+
+    if (allOk) {
+        if (typeof showToast === 'function') showToast('تم فتح كل الأقسام', true, 3000);
+    } else {
+        if (typeof showToast === 'function') showToast('فشل جزئي', false, 4000);
+    }
+
+    openSettingsMaintenance();
 }
 
 
@@ -330,5 +436,16 @@ async function confirmSaveLock(sectionKey, sectionLabel) {
 async function initLockSystem() {
     localStorage.removeItem('tg_locker');
     await loadLocks();
-    refreshAdminLockPanel();
 }
+
+window.openSettingsWithPin = openSettingsWithPin;
+window.openSettingsModal = openSettingsModal;
+window.closeSettingsModal = closeSettingsModal;
+window.openSettingsMain = openSettingsMain;
+window.openSettingsManagers = openSettingsManagers;
+window.openSettingsClubs = openSettingsClubs;
+window.openSettingsLocks = openSettingsLocks;
+window.openSettingsMaintenance = openSettingsMaintenance;
+window.toggleLockFromSettings = toggleLockFromSettings;
+window.activateMaintenance = activateMaintenance;
+window.deactivateMaintenance = deactivateMaintenance;
