@@ -1,12 +1,12 @@
 /* =========================================================
-   manager-hub.js — v3
-   قائمة مسطحة لجميع المديرين + إضافة/حذف
+   manager-hub.js — v4
+   - اعتماد مباشر على window.sbClient من config.js
+   - قائمة مسطحة لجميع المديرين + إضافة/حذف
 ========================================================= */
 
 (function(){
 'use strict';
 
-const SUPABASE_URL = 'https://qzsteswrannqsrnlytzl.supabase.co';
 const EDIT_PASSWORD = '024680';
 const NO_TEAM_KEY = '__NO_TEAM__';
 
@@ -14,25 +14,12 @@ let hubData = {};              // { teamName: [names...] }
 let hubLoading = false;
 let hubLoaded = false;
 let hubEditMode = false;
-let hubSb = null;
 let hubInitialized = false;
 let hubSearchQuery = '';
 
 /* ========== Supabase ========== */
 function getSb(){
-    if(hubSb) return hubSb;
-    if(window.sbClient) return hubSb = window.sbClient;
-    if(window.supabaseClient) return hubSb = window.supabaseClient;
-    if(window.sb) return hubSb = window.sb;
-    if(window.db) return hubSb = window.db;
-    if(window._supabase) return hubSb = window._supabase;
-
-    const key = window.SUPABASE_ANON_KEY || window.SUPABASE_KEY || window.ANON_KEY;
-    if(window.supabase && window.supabase.createClient && key){
-        hubSb = window.supabase.createClient(SUPABASE_URL, key);
-        return hubSb;
-    }
-    return null;
+    return window.sbClient || null;
 }
 
 /* ========== Helpers ========== */
@@ -277,7 +264,6 @@ function renderList(){
 
     let list = flattenManagers();
 
-    // Filter by search
     if(hubSearchQuery){
         const q = hubSearchQuery.toLowerCase().trim();
         list = list.filter(function(m){
@@ -286,7 +272,6 @@ function renderList(){
         });
     }
 
-    // Sort alphabetically
     list.sort(function(a, b){
         return a.name.localeCompare(b.name);
     });
@@ -296,7 +281,6 @@ function renderList(){
         return;
     }
 
-    /* --- Header --- */
     let html = '<div class="mh-list-header">';
     html += '<div class="mh-lh-num">#</div>';
     html += '<div class="mh-lh-logo"></div>';
@@ -307,7 +291,6 @@ function renderList(){
     }
     html += '</div>';
 
-    /* --- Rows --- */
     list.forEach(function(item, idx){
         const logo = logoURL(item.team);
         const isNoTeam = item.team === NO_TEAM_KEY;
@@ -333,12 +316,10 @@ function renderList(){
 
     container.innerHTML = html;
 
-    /* --- Attach handlers --- */
     container.querySelectorAll('.mh-list-row').forEach(function(row){
         const name = row.dataset.name;
         const team = row.dataset.team;
 
-        // Click on name → open FPL squad
         const nameEl = row.querySelector('.mh-lr-name');
         if(nameEl){
             nameEl.addEventListener('click', function(){
@@ -346,7 +327,6 @@ function renderList(){
             });
         }
 
-        // Delete button
         const delBtn = row.querySelector('.mh-lr-delete');
         if(delBtn){
             delBtn.addEventListener('click', function(){
@@ -509,7 +489,6 @@ async function initHub(){
 
         hubData = data || {};
 
-        // ensure all teams exist
         getAllTeams().forEach(function(t){
             if(!hubData[t]) hubData[t] = [];
         });
