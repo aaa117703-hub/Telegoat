@@ -1,9 +1,7 @@
 /* =========================================================
-   trends.js — تحليل الصعود والهبوط
+   trends.js — v5
+   - يستخدم getAllManagersCached (cache موحّد من config.js)
 ========================================================= */
-
-const TRENDS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
-const TRENDS_TOTAL_PAGES = 7;
 
 async function saveCurrentRanks(round) {
 
@@ -12,7 +10,7 @@ async function saveCurrentRanks(round) {
 
     try {
 
-        const allResults = await fetchManagersForTrends();
+        const allResults = await getAllManagersCached();
 
         if (!allResults || allResults.length === 0) return false;
 
@@ -53,33 +51,6 @@ async function saveCurrentRanks(round) {
         console.error('saveCurrentRanks exception:', e);
         return false;
     }
-}
-
-async function fetchManagersForTrends() {
-
-    const allResults = [];
-
-    for (let page = 1; page <= TRENDS_TOTAL_PAGES; page++) {
-
-        try {
-
-            const response = await fetch(TRENDS_WORKER_URL + '/?page=' + page);
-            const data = await response.json();
-
-            if (data && data.standings && data.standings.results) {
-                allResults.push(...data.standings.results);
-                if (data.standings.has_next !== true) break;
-            } else {
-                break;
-            }
-
-        } catch (e) {
-            console.error('Trends page ' + page + ' failed:', e);
-            break;
-        }
-    }
-
-    return allResults;
 }
 
 async function loadRanksForRound(round) {
