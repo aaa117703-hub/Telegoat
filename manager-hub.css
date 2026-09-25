@@ -760,3 +760,179 @@
         padding: 20px 16px;
     }
 }
+/* =========================================================
+   Manager-Hub v4 — Additions
+   - Refresh button
+   - Manual ID form
+   - Manual entries badge
+========================================================= */
+
+/* أزرار التحكم */
+.mh-control-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mh-refresh-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #00d4ff 0%, #0088cc 100%);
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+    box-shadow: 0 3px 12px rgba(0, 212, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: inherit;
+}
+
+.mh-refresh-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 18px rgba(0, 212, 255, 0.55);
+}
+
+.mh-refresh-btn:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.mh-refresh-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.mh-refresh-btn.spinning {
+    animation: mhSpin 1s linear infinite;
+}
+
+/* Manual ID Form */
+.mh-manual-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.12) 0%, rgba(245, 158, 11, 0.06) 100%);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    border-radius: 14px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.25);
+}
+
+.mh-manual-label {
+    font-size: 12px;
+    font-weight: 900;
+    color: #fbbf24;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.mh-manual-input {
+    flex: 1 1 120px;
+    min-width: 0;
+    padding: 10px 12px;
+    background: rgba(15, 10, 30, 0.7);
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    font-family: inherit;
+    outline: none;
+    letter-spacing: 1px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mh-manual-input::placeholder {
+    color: #8a7a50;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.mh-manual-input:focus {
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.18);
+}
+
+/* إخفاء أسهم input[type=number] */
+.mh-manual-input::-webkit-outer-spin-button,
+.mh-manual-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.mh-manual-input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.mh-manual-add-btn {
+    flex: 0 0 auto;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+    color: #1a0f2e;
+    border: none;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 3px 12px rgba(251, 191, 36, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-transform: uppercase;
+}
+
+.mh-manual-add-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 18px rgba(251, 191, 36, 0.55);
+}
+
+.mh-manual-add-btn:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+.mh-manual-add-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Manual row styling in list */
+.mh-row-manual {
+    background: linear-gradient(90deg, rgba(251, 191, 36, 0.06) 0%, transparent 60%);
+    border-left: 2px solid rgba(251, 191, 36, 0.4);
+}
+
+.mh-row-manual:hover {
+    background: linear-gradient(90deg, rgba(251, 191, 36, 0.14) 0%, rgba(251, 191, 36, 0.04) 100%);
+}
+
+.mh-lr-logo-manual {
+    background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+    color: #1a0f2e;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    border-color: rgba(251, 191, 36, 0.5);
+}
+
+.mh-lr-team-manual {
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.1);
+    border-color: rgba(251, 191, 36, 0.3);
+    font-style: normal;
+    font-family: monospace;
+}
+
+.mh-lr-spacer {
+    width: 30px;
+    height: 30px;
+}
