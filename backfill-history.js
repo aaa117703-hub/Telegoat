@@ -1,36 +1,18 @@
 /* =========================================================
-   backfill-history.js — v4
-   - يستخدم getAllManagersCached + fetchWithTimeout
-   - localStorage flag بدل count query كل تحميل
+   backfill-history.js — v5
+   - نفس v4 لكن بدون شريط تشخيص مرئي
 ========================================================= */
 
-const BACKFILL_WORKER = 'https://fpl-api.aaa117703.workers.dev';
 const BACKFILL_FLAG_KEY = 'fpl_backfill_done_v1';
-const BACKFILL_FLAG_TTL = 24 * 60 * 60 * 1000; // 24 ساعة
+const BACKFILL_FLAG_TTL = 24 * 60 * 60 * 1000;
 
 let backfillRunning = false;
 let backfillDone = false;
 
-/* =========================================================
-   شريط تشخيص
-========================================================= */
-
+/* شريط التشخيص معطّل — لا يظهر شي على الشاشة */
 function showBackfillDebug(text, isError) {
-    let el = document.getElementById('backfillDebug');
-    if (!el) {
-        el = document.createElement('div');
-        el.id = 'backfillDebug';
-        el.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#000;color:#0f0;padding:10px;font-family:monospace;font-size:11px;z-index:999999;text-align:center;font-weight:bold;';
-        document.body.appendChild(el);
-    }
-    el.style.display = 'block';
-    el.textContent = text;
-    el.style.background = isError ? '#800' : '#000';
+    console.log('[Backfill]', text);
 }
-
-/* =========================================================
-   جلب تاريخ مدير واحد
-========================================================= */
 
 async function fetchManagerHistory(entryId) {
     try {
@@ -40,9 +22,7 @@ async function fetchManagerHistory(entryId) {
             8000
         );
 
-        if (!res.ok) {
-            return [];
-        }
+        if (!res.ok) return [];
 
         const data = await res.json();
         if (!data || !data.current) return [];
@@ -61,10 +41,6 @@ async function fetchManagerHistory(entryId) {
         return [];
     }
 }
-
-/* =========================================================
-   حفظ دفعة
-========================================================= */
 
 async function saveHistoryBatch(rows) {
     if (!window.sbClient) return false;
@@ -86,25 +62,16 @@ async function saveHistoryBatch(rows) {
     }
 }
 
-/* =========================================================
-   التشغيل الرئيسي
-========================================================= */
-
 async function runBackfillWithDebug() {
     if (backfillRunning || backfillDone) return;
-    if (!window.sbClient) {
-        showBackfillDebug('Backfill: no Supabase client', true);
-        return;
-    }
+    if (!window.sbClient) return;
 
     backfillRunning = true;
-    showBackfillDebug('Backfill: fetching managers...');
+    console.log('[Backfill] Starting...');
 
     const managers = await getAllManagersCached();
-    showBackfillDebug('Backfill: got ' + managers.length + ' managers');
 
     if (!managers || managers.length === 0) {
-        showBackfillDebug('Backfill: no managers', true);
         backfillRunning = false;
         return;
     }
@@ -127,35 +94,25 @@ async function runBackfillWithDebug() {
 
         await new Promise(function(r) { setTimeout(r, 150); });
 
-        if (done % 10 === 0) {
-            showBackfillDebug('Backfill: ' + done + '/' + managers.length + ' · saved=' + saved);
+        if (done % 25 === 0) {
+            console.log('[Backfill] ' + done + '/' + managers.length + ' · saved=' + saved);
         }
     }
 
-    showBackfillDebug('Backfill: DONE! saved=' + saved + ' rows');
+    console.log('[Backfill] DONE! saved=' + saved + ' rows');
 
     backfillRunning = false;
     backfillDone = true;
 
-    // نخزن flag — ما نعيد التشغيل لمدة 24 ساعة
     try {
         localStorage.setItem(BACKFILL_FLAG_KEY, JSON.stringify({
             ts: Date.now(),
             saved: saved
         }));
     } catch (e) {}
-
-    setTimeout(function() {
-        const el = document.getElementById('backfillDebug');
-        if (el) el.style.display = 'none';
-    }, 10000);
 }
 
 window.runBackfill = runBackfillWithDebug;
-
-/* =========================================================
-   فحص الـ flag المحلي
-========================================================= */
 
 function shouldRunBackfill() {
     try {
@@ -166,32 +123,21 @@ function shouldRunBackfill() {
         if (!parsed || !parsed.ts) return true;
 
         const age = Date.now() - parsed.ts;
-        if (age < BACKFILL_FLAG_TTL) {
-            return false; // ما نحتاج
-        }
+        if (age < BACKFILL_FLAG_TTL) return false;
         return true;
     } catch (e) {
         return true;
     }
 }
 
-/* =========================================================
-   تشغيل تلقائي
-========================================================= */
-
 function tryAutoBackfill() {
     if (backfillRunning || backfillDone) return;
-
     if (!shouldRunBackfill()) {
-        console.log('[Backfill] Skipped (flag fresh)');
         backfillDone = true;
         return;
     }
 
-    showBackfillDebug('Backfill: checking...');
-
     if (!window.sbClient) {
-        showBackfillDebug('Backfill: waiting for sbClient...');
         setTimeout(tryAutoBackfill, 3000);
         return;
     }
@@ -201,30 +147,21 @@ function tryAutoBackfill() {
         .select('*', { count: 'exact', head: true })
         .then(function(res) {
             const count = (res && res.count) || 0;
-            showBackfillDebug('Backfill: current rows=' + count);
 
             if (count < 100) {
-                showBackfillDebug('Backfill: table empty, starting...');
                 runBackfillWithDebug();
             } else {
-                showBackfillDebug('Backfill: already populated (' + count + ' rows)');
                 backfillDone = true;
-
                 try {
                     localStorage.setItem(BACKFILL_FLAG_KEY, JSON.stringify({
                         ts: Date.now(),
                         saved: count
                     }));
                 } catch (e) {}
-
-                setTimeout(function() {
-                    const el = document.getElementById('backfillDebug');
-                    if (el) el.style.display = 'none';
-                }, 3000);
             }
         })
         .catch(function(e) {
-            showBackfillDebug('Backfill check failed: ' + e.message, true);
+            console.warn('[Backfill] check failed:', e.message);
         });
 }
 
