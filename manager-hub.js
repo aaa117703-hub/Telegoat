@@ -1,7 +1,8 @@
 /* =========================================================
-   manager-hub.js — v4
-   - اعتماد مباشر على window.sbClient من config.js
-   - قائمة مسطحة لجميع المديرين + إضافة/حذف
+   manager-hub.js — v5
+   - إضافة: syncMissingManagers() — يجيب المديرين من FPL
+     الي مو معيّنين لأي فريق ويضيفهم لـ __NO_TEAM__
+   - إضافة: زر "نقل" ⇄ في وضع التعديل — نقل أي مدير لأي فريق
 ========================================================= */
 
 (function(){
@@ -42,7 +43,7 @@ function getAllTeams(){
 }
 
 function teamLabel(team){
-    return team === NO_TEAM_KEY ? '—' : team;
+    return team === NO_TEAM_KEY ? '— بدون فريق —' : team;
 }
 
 /* ========== Flatten ========== */
@@ -137,6 +138,63 @@ async function saveTeam(teamName, managers){
         console.error('[MH] Save exception:', e.message);
         return false;
     }
+}
+
+/* ========== Sync Missing Managers from FPL ========== */
+async function syncMissingManagers(){
+    if(typeof getAllManagersCached !== 'function'){
+        console.warn('[MH] getAllManagersCached not available');
+        return;
+    }
+
+    let allFPL = [];
+    try {
+        allFPL = await getAllManagersCached();
+    } catch(e){
+        console.warn('[MH] Sync fetch failed:', e.message);
+        return;
+    }
+
+    if(!allFPL || allFPL.length === 0) return;
+
+    // ابني set من كل الأسماء الموجودة (كل الفرق + بدون فريق)
+    const existing = {};
+    Object.keys(hubData).forEach(function(team){
+        (hubData[team] || []).forEach(function(name){
+            const key = String(name || '').trim().toLowerCase();
+            if(key) existing[key] = true;
+        });
+    });
+
+    // لقي المديرين الناقصين
+    const missing = [];
+    allFPL.forEach(function(m){
+        const name = String(m.player_name || m.entry_name || '').trim();
+        if(!name) return;
+        const key = name.toLowerCase();
+        if(!existing[key]){
+            missing.push(name);
+            existing[key] = true; // منع التكرار داخل نفس القائمة
+        }
+    });
+
+    if(missing.length === 0){
+        console.log('[MH] No missing managers');
+        return;
+    }
+
+    // أضفهم تحت "بدون فريق"
+    if(!hubData[NO_TEAM_KEY]) hubData[NO_TEAM_KEY] = [];
+    missing.forEach(function(name){
+        if(hubData[NO_TEAM_KEY].indexOf(name) === -1){
+            hubData[NO_TEAM_KEY].push(name);
+        }
+    });
+
+    // احفظ في Supabase
+    await saveTeam(NO_TEAM_KEY, hubData[NO_TEAM_KEY]);
+
+    console.log('[MH] Synced ' + missing.length + ' missing managers → ' + NO_TEAM_KEY);
 }
 
 /* ========== Render Main ========== */
@@ -308,6 +366,7 @@ function renderList(){
         html += '<div class="mh-lr-team' + (isNoTeam ? ' mh-lr-team-none' : '') + '">' + escapeHTML(teamLabel(item.team)) + '</div>';
 
         if(hubEditMode){
+            html += '<button class="mh-lr-move" title="نقل إلى فريق آخر" style="background:linear-gradient(135deg,#448aff,#1f5dbf);color:#fff;border:none;border-radius:6px;width:26px;height:26px;font-size:13px;font-weight:900;cursor:pointer;margin-right:4px;padding:0;line-height:1;">⇄</button>';
             html += '<button class="mh-lr-delete" title="Delete">×</button>';
         }
 
@@ -327,6 +386,14 @@ function renderList(){
             });
         }
 
+        const moveBtn = row.querySelector('.mh-lr-move');
+        if(moveBtn){
+            moveBtn.addEventListener('click', function(e){
+                e.stopPropagation();
+                openMoveModal(team, name);
+            });
+        }
+
         const delBtn = row.querySelector('.mh-lr-delete');
         if(delBtn){
             delBtn.addEventListener('click', function(){
@@ -334,6 +401,116 @@ function renderList(){
             });
         }
     });
+}
+
+/* ========== Move Modal ========== */
+function openMoveModal(fromTeam, name){
+    const modal = document.getElementById('mhModal');
+    if(!modal) return;
+
+    // ابني قائمة الفرق
+    let optionsHtml = '';
+
+    // "بدون فريق" أول شي (لو المدير حالياً في فريق)
+    if(fromTeam !== NO_TEAM_KEY){
+        optionsHtml +=
+            '<button class="mh-move-option" data-team="' + NO_TEAM_KEY + '" style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;text-align:left;width:100%;margin-bottom:6px;letter-spacing:0.3px;">' +
+                '<span style="font-size:14px;">—</span>' +
+                '<span>بدون فريق</span>' +
+            '</button>';
+    }
+
+    getAllTeams().forEach(function(t){
+        if(t === fromTeam) return;
+
+        const logo = logoURL(t);
+        optionsHtml +=
+            '<button class="mh-move-option" data-team="' + escapeHTML(t) + '" style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;text-align:left;width:100%;margin-bottom:6px;letter-spacing:0.3px;">' +
+                (logo ? '<img src="' + logo + '" style="width:22px;height:22px;object-fit:contain;" onerror="this.style.display=\'none\'">' : '') +
+                '<span>' + escapeHTML(t) + '</span>' +
+            '</button>';
+    });
+
+    modal.innerHTML =
+        '<div class="mh-modal-box" style="max-height:80vh;display:flex;flex-direction:column;">' +
+            '<div class="mh-modal-title">نقل "' + escapeHTML(name) + '"</div>' +
+            '<div style="color:#b8b8b8;font-size:12px;text-align:center;margin-bottom:12px;">' +
+                'من: <strong style="color:#00e676;">' + escapeHTML(teamLabel(fromTeam)) + '</strong>' +
+            '</div>' +
+            '<div style="color:#fff;font-size:12px;text-align:center;margin-bottom:10px;font-weight:700;">اختر الفريق الجديد:</div>' +
+            '<div class="mh-move-list" style="max-height:50vh;overflow-y:auto;padding:4px;">' + optionsHtml + '</div>' +
+            '<button class="mh-modal-btn mh-modal-cancel" id="mhMoveCancel" style="margin-top:10px;">إلغاء</button>' +
+        '</div>';
+
+    modal.classList.add('show');
+
+    // ربط أحداث خيارات النقل
+    modal.querySelectorAll('.mh-move-option').forEach(function(optBtn){
+        optBtn.addEventListener('click', function(){
+            const toTeam = this.dataset.team;
+            closeMoveModal();
+            executeMove(fromTeam, toTeam, name);
+        });
+    });
+
+    // زر الإلغاء
+    const cancelBtn = modal.querySelector('#mhMoveCancel');
+    if(cancelBtn){
+        cancelBtn.addEventListener('click', closeMoveModal);
+    }
+
+    // إغلاق بالضغط على الخلفية
+    modal.onclick = function(e){
+        if(e.target === modal) closeMoveModal();
+    };
+}
+
+function closeMoveModal(){
+    const modal = document.getElementById('mhModal');
+    if(modal){
+        modal.classList.remove('show');
+        modal.innerHTML = '';
+    }
+}
+
+async function executeMove(fromTeam, toTeam, name){
+    const fromList = hubData[fromTeam] || [];
+    const idx = fromList.indexOf(name);
+    if(idx === -1){
+        if(typeof showToast === 'function') showToast('المدير غير موجود', false);
+        return;
+    }
+
+    // شيله من الفريق القديم
+    fromList.splice(idx, 1);
+
+    // أضفه للفريق الجديد
+    if(!hubData[toTeam]) hubData[toTeam] = [];
+    if(hubData[toTeam].indexOf(name) !== -1){
+        // رجّعه لو كان مكرر
+        fromList.splice(idx, 0, name);
+        if(typeof showToast === 'function') showToast('موجود مسبقاً في ' + teamLabel(toTeam), false);
+        return;
+    }
+    hubData[toTeam].push(name);
+
+    // احفظ الفريقين
+    const okFrom = await saveTeam(fromTeam, fromList);
+    const okTo = await saveTeam(toTeam, hubData[toTeam]);
+
+    if(!okFrom || !okTo){
+        // رجّع الوضع القديم
+        hubData[toTeam].pop();
+        fromList.splice(idx, 0, name);
+        if(typeof showToast === 'function') showToast('فشل النقل', false);
+        else alert('فشل النقل');
+        return;
+    }
+
+    if(typeof showToast === 'function'){
+        showToast('نُقل إلى ' + teamLabel(toTeam), true);
+    }
+    render();
 }
 
 /* ========== Actions ========== */
@@ -482,13 +659,14 @@ async function initHub(){
         let data = await loadHubData();
 
         if(!data || Object.keys(data).length === 0){
-            console.log('[MH] Empty, seeding...');
+            console.log('[MH] Empty, seeding from PLAYERS_TEAMS...');
             await seedFromPlayersTeams();
             data = await loadHubData();
         }
 
         hubData = data || {};
 
+        // تأكد كل الفرق موجودة
         getAllTeams().forEach(function(t){
             if(!hubData[t]) hubData[t] = [];
         });
@@ -497,7 +675,16 @@ async function initHub(){
         hubLoading = false;
         hubLoaded = true;
         render();
+
         console.log('[MH] Ready. Managers:', getTotalCount());
+
+        // ⭐ مزامنة المديرين الناقصين من FPL
+        syncMissingManagers().then(function(){
+            render();
+        }).catch(function(e){
+            console.warn('[MH] Sync failed:', e);
+        });
+
     } catch(e){
         hubLoading = false;
         console.error('[MH] Init failed:', e);
