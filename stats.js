@@ -1,7 +1,15 @@
+/* =========================================================
+   stats.js — v10
+   - إصلاح: rank lookup بـ O(1) بدل sort كامل لكل نتيجة
+   - إضافة: debounce على البحث (150ms)
+========================================================= */
+
 const STATS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
 const STATS_TOTAL_PAGES = 7;
 
 let statsAllManagers = [];
+let statsSortedByTotal = [];
+let statsRankMap = {};
 let statsLoaded = false;
 let statsComputed = null;
 
@@ -188,6 +196,17 @@ function searchManager(query) {
     }).slice(0, 8);
 }
 
+function buildRankMap() {
+    statsRankMap = {};
+    statsSortedByTotal.forEach(function(m, i) {
+        statsRankMap[m.entry] = i + 1;
+    });
+}
+
+function getRankForEntry(entry) {
+    return statsRankMap[entry] || -1;
+}
+
 function renderSearchResults(results) {
     const container = document.getElementById('statsSearchResults');
     if (!container) return;
@@ -202,14 +221,7 @@ function renderSearchResults(results) {
     results.forEach(function(m) {
         const rawName = m.player_name || m.entry_name || '';
         const entryName = m.entry_name || '';
-
-        const sortedByTotal = [...statsAllManagers].sort(function(a, b) {
-            return (b.total || 0) - (a.total || 0);
-        });
-
-        const rank = sortedByTotal.findIndex(function(x) {
-            return x.entry === m.entry;
-        }) + 1;
+        const rank = getRankForEntry(m.entry);
 
         let teamName = '';
         if (typeof findPlayerTeam === 'function') {
@@ -249,14 +261,8 @@ function renderManagerProfile(manager) {
     const rawName = manager.player_name || manager.entry_name || '';
     const entryName = manager.entry_name || '';
 
-    const sortedByTotal = [...statsAllManagers].sort(function(a, b) {
-        return (b.total || 0) - (a.total || 0);
-    });
-
-    const rank = sortedByTotal.findIndex(function(m) {
-        return m.entry === manager.entry;
-    }) + 1;
-
+    const rank = getRankForEntry(manager.entry);
+    const safeRank = rank > 0 ? rank : 0;
     const totalManagers = statsAllManagers.length;
 
     let teamName = '';
@@ -271,20 +277,22 @@ function renderManagerProfile(manager) {
         logoHtml = '<div class="stats-profile-no-logo"></div>';
     }
 
-    const percentile = Math.round(((totalManagers - rank + 1) / totalManagers) * 100);
+    const percentile = safeRank > 0
+        ? Math.round(((totalManagers - safeRank + 1) / totalManagers) * 100)
+        : 0;
 
-    const topManager = sortedByTotal[0];
+    const topManager = statsSortedByTotal[0];
     const diff = topManager ? (topManager.total || 0) - (manager.total || 0) : 0;
 
-    const nextManager = sortedByTotal[rank - 2];
-    const prevManager = sortedByTotal[rank];
+    const nextManager = safeRank > 1 ? statsSortedByTotal[safeRank - 2] : null;
+    const prevManager = (safeRank > 0 && safeRank < totalManagers) ? statsSortedByTotal[safeRank] : null;
     const toNext = nextManager ? (nextManager.total || 0) - (manager.total || 0) : 0;
     const toPrev = prevManager ? (manager.total || 0) - (prevManager.total || 0) : 0;
 
     container.innerHTML =
         '<div class="stats-profile-card">' +
             '<button class="stats-profile-close" onclick="document.getElementById(\'statsProfile\').style.display=\'none\'">X</button>' +
-            '<div class="stats-profile-rank-badge">#' + rank + '</div>' +
+            '<div class="stats-profile-rank-badge">#' + safeRank + '</div>' +
             '<div class="stats-profile-shirt">' + logoHtml + '</div>' +
             '<div class="stats-profile-entry">' + (entryName || rawName) + '</div>' +
             '<div class="stats-profile-player">' + rawName + '</div>' +
@@ -292,7 +300,7 @@ function renderManagerProfile(manager) {
             '<div class="stats-profile-stats">' +
                 '<div class="stats-profile-stat stats-stat-total"><div class="stats-stat-label">Total</div><div class="stats-stat-value">' + (manager.total || 0) + '</div></div>' +
                 '<div class="stats-profile-stat stats-stat-gw"><div class="stats-stat-label">GW</div><div class="stats-stat-value">' + (manager.event_total || 0) + '</div></div>' +
-                '<div class="stats-profile-stat stats-stat-rank"><div class="stats-stat-label">Rank</div><div class="stats-stat-value">' + rank + '</div></div>' +
+                '<div class="stats-profile-stat stats-stat-rank"><div class="stats-stat-label">Rank</div><div class="stats-stat-value">' + safeRank + '</div></div>' +
             '</div>' +
             '<div class="stats-profile-details">' +
                 '<div class="stats-detail-row"><span class="stats-detail-label">Percentile</span><span class="stats-detail-value">' + percentile + '%</span></div>' +
@@ -334,6 +342,11 @@ async function loadStats() {
         }
 
         statsAllManagers = managers;
+        statsSortedByTotal = [...managers].sort(function(a, b) {
+            return (b.total || 0) - (a.total || 0);
+        });
+        buildRankMap();
+
         statsLoaded = true;
         statsComputed = computeLeagueStats(managers);
 
@@ -376,14 +389,22 @@ function switchStatsTab(tabName) {
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('statsSearchInput');
     if (searchInput) {
+        let searchTimer = null;
+
         searchInput.addEventListener('input', function() {
-            const q = this.value.trim();
-            if (q.length < 2) {
-                document.getElementById('statsSearchResults').innerHTML = '';
-                return;
-            }
-            const results = searchManager(q);
-            renderSearchResults(results);
+            clearTimeout(searchTimer);
+            const val = this.value;
+
+            searchTimer = setTimeout(function() {
+                const q = val.trim();
+                if (q.length < 2) {
+                    const resultsEl = document.getElementById('statsSearchResults');
+                    if (resultsEl) resultsEl.innerHTML = '';
+                    return;
+                }
+                const results = searchManager(q);
+                renderSearchResults(results);
+            }, 150);
         });
     }
 });
