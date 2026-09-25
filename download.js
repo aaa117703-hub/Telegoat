@@ -1,8 +1,8 @@
 /* =========================================================
-   download.js — v22
-   - كشف دقيق لأجهزة iOS (ما يعتمد على regex غلط)
-   - iOS: Modal لحفظ الصورة (بدل popup محجوب)
-   - Android/Desktop: تحميل مباشر
+   download.js — v23
+   - دائماً يعرض Modal فيه الصورة (يشتغل على كل المتصفحات)
+   - المستخدم يقدر: يضغط مطول / يضغط زر التحميل / يقفل
+   - بدون debug bar مزعج
 ========================================================= */
 
 function waitForImagesToLoad(element) {
@@ -72,28 +72,15 @@ function applyRoundedCorners(sourceCanvas, radius) {
 
 
 /* =========================================================
-   DEBUG helper
+   DEBUG (console فقط — بدون شريط مرئي)
 ========================================================= */
 
 function dlDebug(text, isError) {
-    let el = document.getElementById('backfillDebug');
-    if (!el) {
-        el = document.createElement('div');
-        el.id = 'backfillDebug';
-        el.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#000;color:#0f0;padding:10px;font-family:monospace;font-size:11px;z-index:999999;text-align:center;font-weight:bold;';
-        document.body.appendChild(el);
+    if (isError) {
+        console.error('[DL]', text);
+    } else {
+        console.log('[DL]', text);
     }
-    el.style.display = 'block';
-    el.textContent = 'DL: ' + text;
-    el.style.background = isError ? '#800' : '#000';
-}
-
-function dlDebugHide(delay) {
-    delay = delay || 4000;
-    setTimeout(function() {
-        const el = document.getElementById('backfillDebug');
-        if (el) el.style.display = 'none';
-    }, delay);
 }
 
 
@@ -157,20 +144,6 @@ function getActiveTabName() {
 
 
 /* =========================================================
-   iOS Detection — دقيق
-========================================================= */
-
-function detectIOS() {
-    const ua = navigator.userAgent || '';
-    // iPad on iOS 13+ reports as Mac with touch
-    const isIPad = /iPad/i.test(ua) ||
-                   (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
-    const isIPhone = /iPhone|iPod/i.test(ua);
-    return isIPad || isIPhone;
-}
-
-
-/* =========================================================
    CHECK CANVAS TAINTED
 ========================================================= */
 
@@ -185,62 +158,93 @@ function isCanvasTainted(canvas) {
 
 
 /* =========================================================
-   iOS SAVE MODAL — بدل popup
+   IMAGE MODAL — النافذة المضمونة
 ========================================================= */
 
-function showImageModalForIOS(blob, filename) {
+function showImageModal(blob, filename) {
     // شيل أي modal قديم
     const old = document.getElementById('dlImageModal');
-    if (old) old.remove();
+    if (old) {
+        const oldUrl = old.dataset.blobUrl;
+        if (oldUrl) URL.revokeObjectURL(oldUrl);
+        old.remove();
+    }
 
     const url = URL.createObjectURL(blob);
 
     const modal = document.createElement('div');
     modal.id = 'dlImageModal';
+    modal.dataset.blobUrl = url;
     modal.style.cssText = [
         'position:fixed',
         'inset:0',
         'background:rgba(0,0,0,0.95)',
-        'z-index:999999',
+        'z-index:9999999',
         'display:flex',
         'flex-direction:column',
         'align-items:center',
-        'justify-content:center',
         'padding:16px',
-        'overflow:auto'
+        'overflow-y:auto',
+        'direction:rtl',
+        'font-family:inherit'
     ].join(';');
 
     modal.innerHTML =
-        '<div style="text-align:center;color:#fff;margin-bottom:12px;font-weight:900;font-size:15px;letter-spacing:0.5px;">' +
-            '👆 اضغط مطولاً على الصورة لحفظها في الألبوم' +
+        '<div style="text-align:center;color:#00e676;margin-bottom:10px;font-weight:900;font-size:15px;letter-spacing:0.5px;padding:8px 12px;background:rgba(0,200,83,0.15);border-radius:12px;border:1px solid #00e676;max-width:500px;">' +
+            '👆 اضغط مطولاً على الصورة → احفظ في الألبوم' +
         '</div>' +
-        '<img id="dlImagePreview" src="' + url + '" style="max-width:100%;max-height:70vh;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.6);" />' +
-        '<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">' +
-            '<a id="dlImageDirectLink" href="' + url + '" download="' + filename + '" style="text-decoration:none;padding:12px 24px;background:linear-gradient(135deg,#00e676,#009b40);color:#fff;border-radius:24px;font-weight:900;font-size:14px;letter-spacing:0.5px;box-shadow:0 4px 12px rgba(0,200,83,0.5);">📥 تحميل</a>' +
-            '<button id="dlImageClose" style="padding:12px 24px;background:linear-gradient(135deg,#ff4081,#b8003f);color:#fff;border:none;border-radius:24px;font-weight:900;font-size:14px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 12px rgba(255,0,90,0.5);">✕ إغلاق</button>' +
+        '<img id="dlImagePreview" src="' + url + '" style="max-width:100%;max-height:65vh;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,0.8);border:2px solid #00e676;margin:8px 0;" />' +
+        '<div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding-bottom:20px;">' +
+            '<button id="dlDirectBtn" style="padding:12px 22px;background:linear-gradient(135deg,#00e676,#009b40);color:#fff;border:none;border-radius:24px;font-weight:900;font-size:14px;letter-spacing:0.5px;box-shadow:0 4px 14px rgba(0,200,83,0.5);cursor:pointer;font-family:inherit;">📥 تحميل مباشر</button>' +
+            '<button id="dlCloseBtn" style="padding:12px 22px;background:linear-gradient(135deg,#ff4081,#b8003f);color:#fff;border:none;border-radius:24px;font-weight:900;font-size:14px;letter-spacing:0.5px;box-shadow:0 4px 14px rgba(255,0,90,0.5);cursor:pointer;font-family:inherit;">✕ إغلاق</button>' +
+        '</div>' +
+        '<div style="color:#888;font-size:11px;margin-top:8px;text-align:center;padding-bottom:20px;">' +
+            'إذا ما اشتغل التحميل المباشر — اضغط مطولاً على الصورة' +
         '</div>';
 
     document.body.appendChild(modal);
 
-    modal.querySelector('#dlImageClose').addEventListener('click', function() {
-        modal.remove();
-        URL.revokeObjectURL(url);
-    });
+    // زر التحميل المباشر
+    modal.querySelector('#dlDirectBtn').addEventListener('click', function() {
+        try {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
-    // إغلاق عند الضغط على الخلفية
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.remove();
-            URL.revokeObjectURL(url);
+            if (typeof showToast === 'function') {
+                showToast('تم التحميل', true, 2500);
+            }
+        } catch (e) {
+            console.error('[DL] direct download failed:', e);
+            if (typeof showToast === 'function') {
+                showToast('اضغط مطولاً على الصورة', false, 4000);
+            }
         }
     });
 
-    console.log('[DL] iOS modal shown');
+    // زر الإغلاق
+    modal.querySelector('#dlCloseBtn').addEventListener('click', function() {
+        URL.revokeObjectURL(url);
+        modal.remove();
+    });
+
+    // إغلاق عند الضغط على الخلفية السوداء
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            URL.revokeObjectURL(url);
+            modal.remove();
+        }
+    });
+
+    console.log('[DL] Modal shown');
 }
 
 
 /* =========================================================
-   DOWNLOAD AS IMAGE — v22
+   DOWNLOAD AS IMAGE — v23
 ========================================================= */
 
 function downloadAsImage(scaleFactor) {
@@ -290,27 +294,23 @@ function downloadAsImage(scaleFactor) {
     if (!element) {
         dlDebug('element not found', true);
         if (typeof showToast === 'function') showToast('العنصر غير موجود', false, 4000);
-        dlDebugHide(8000);
         return;
     }
-
-    dlDebug('size=' + element.offsetWidth + 'x' + element.offsetHeight);
 
     if (element.offsetWidth === 0 || element.offsetHeight === 0) {
         dlDebug('element has 0 size!', true);
         if (typeof showToast === 'function') showToast('العنصر فارغ', false, 4000);
-        dlDebugHide(8000);
         return;
+    }
+
+    if (typeof showToast === 'function') {
+        showToast('جاري تجهيز الصورة...', false, 2000);
     }
 
     const cornerRadius = (isTOTW ? 0 : 20 * scaleFactor);
 
-    dlDebug('loading images...');
-
     waitForImagesToLoad(element)
         .then(function() {
-            dlDebug('rendering...');
-
             return html2canvas(element, {
                 backgroundColor: (isTOTW ? '#ffffff' : null),
                 scale: scaleFactor,
@@ -378,11 +378,10 @@ function downloadAsImage(scaleFactor) {
             dlDebug('canvas=' + canvas.width + 'x' + canvas.height);
 
             if (isCanvasTainted(canvas)) {
-                dlDebug('canvas tainted by CORS', true);
+                dlDebug('canvas tainted', true);
                 if (typeof showToast === 'function') {
-                    showToast('فشل: صور محمية (CORS)', false, 5000);
+                    showToast('فشل: صور محمية', false, 5000);
                 }
-                dlDebugHide(10000);
                 return;
             }
 
@@ -393,87 +392,44 @@ function downloadAsImage(scaleFactor) {
 
             finalCanvas.toBlob(function(blob) {
                 if (!blob) {
-                    dlDebug('blob is null', true);
+                    dlDebug('blob null', true);
                     if (typeof showToast === 'function') {
                         showToast('فشل إنشاء الصورة', false, 5000);
                     }
-                    dlDebugHide(10000);
                     return;
                 }
 
-                dlDebug('blob size=' + Math.round(blob.size / 1024) + 'KB');
+                dlDebug('blob=' + Math.round(blob.size / 1024) + 'KB');
 
                 const filename = filenamePrefix + '_' + scaleFactor + 'x.png';
 
-                const isIOS = detectIOS();
+                // دائماً نعرض Modal — المستخدم يقرر
+                showImageModal(blob, filename);
 
-                if (isIOS) {
-                    // iOS: نعرض Modal فيه الصورة — يحفظها بالضغط المطول
-                    dlDebug('iOS: showing save modal');
-                    showImageModalForIOS(blob, filename);
-                    dlDebug('modal ready');
-                    dlDebugHide(3000);
-                    if (typeof showToast === 'function') {
-                        showToast('اضغط مطولاً على الصورة', true, 3000);
-                    }
-                    return;
-                }
-
-                // Android / Desktop: تحميل مباشر
-                dlDebug('direct download...');
-
-                try {
-                    const link = document.createElement('a');
-                    link.download = filename;
-                    link.href = URL.createObjectURL(blob);
-                    document.body.appendChild(link);
-                    link.click();
-
-                    setTimeout(function() {
-                        document.body.removeChild(link);
-                        URL.revokeObjectURL(link.href);
-                    }, 1500);
-
-                    dlDebug('downloaded!');
-                    if (typeof showToast === 'function') {
-                        showToast('تم التحميل', true, 2500);
-                    }
-                    dlDebugHide(3000);
-
-                } catch (e) {
-                    console.error('[DL] direct download failed:', e);
-                    dlDebug('fallback to modal', true);
-                    showImageModalForIOS(blob, filename);
-                    dlDebugHide(3000);
+                if (typeof showToast === 'function') {
+                    showToast('اضغط مطولاً على الصورة', true, 3500);
                 }
 
             }, 'image/png', 1.0);
         })
         .catch(function(err) {
-            console.error('[DL]', err);
+            console.error('[DL] error:', err);
             dlDebug('error: ' + err.message, true);
             if (typeof showToast === 'function') {
-                showToast('فشل التحميل: ' + err.message, false, 6000);
+                showToast('فشل: ' + err.message, false, 5000);
             }
-            dlDebugHide(10000);
         });
 }
 
 
 function fallbackDownload(blob, filename) {
     const link = document.createElement('a');
-
     link.download = filename || 'image.png';
     link.href = URL.createObjectURL(blob);
-
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
     setTimeout(function() {
         URL.revokeObjectURL(link.href);
-        if (typeof showToast === 'function') {
-            showToast('تم التحميل', true);
-        }
-    }, 100);
+    }, 1000);
 }
