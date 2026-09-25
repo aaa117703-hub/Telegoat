@@ -1,6 +1,8 @@
 /* =========================================================
-   download.js — v21
-   إصلاح: allowTaint + canvas tainted check + fallbacks
+   download.js — v22
+   - كشف دقيق لأجهزة iOS (ما يعتمد على regex غلط)
+   - iOS: Modal لحفظ الصورة (بدل popup محجوب)
+   - Android/Desktop: تحميل مباشر
 ========================================================= */
 
 function waitForImagesToLoad(element) {
@@ -155,6 +157,20 @@ function getActiveTabName() {
 
 
 /* =========================================================
+   iOS Detection — دقيق
+========================================================= */
+
+function detectIOS() {
+    const ua = navigator.userAgent || '';
+    // iPad on iOS 13+ reports as Mac with touch
+    const isIPad = /iPad/i.test(ua) ||
+                   (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+    const isIPhone = /iPhone|iPod/i.test(ua);
+    return isIPad || isIPhone;
+}
+
+
+/* =========================================================
    CHECK CANVAS TAINTED
 ========================================================= */
 
@@ -169,7 +185,62 @@ function isCanvasTainted(canvas) {
 
 
 /* =========================================================
-   DOWNLOAD AS IMAGE — v21
+   iOS SAVE MODAL — بدل popup
+========================================================= */
+
+function showImageModalForIOS(blob, filename) {
+    // شيل أي modal قديم
+    const old = document.getElementById('dlImageModal');
+    if (old) old.remove();
+
+    const url = URL.createObjectURL(blob);
+
+    const modal = document.createElement('div');
+    modal.id = 'dlImageModal';
+    modal.style.cssText = [
+        'position:fixed',
+        'inset:0',
+        'background:rgba(0,0,0,0.95)',
+        'z-index:999999',
+        'display:flex',
+        'flex-direction:column',
+        'align-items:center',
+        'justify-content:center',
+        'padding:16px',
+        'overflow:auto'
+    ].join(';');
+
+    modal.innerHTML =
+        '<div style="text-align:center;color:#fff;margin-bottom:12px;font-weight:900;font-size:15px;letter-spacing:0.5px;">' +
+            '👆 اضغط مطولاً على الصورة لحفظها في الألبوم' +
+        '</div>' +
+        '<img id="dlImagePreview" src="' + url + '" style="max-width:100%;max-height:70vh;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.6);" />' +
+        '<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">' +
+            '<a id="dlImageDirectLink" href="' + url + '" download="' + filename + '" style="text-decoration:none;padding:12px 24px;background:linear-gradient(135deg,#00e676,#009b40);color:#fff;border-radius:24px;font-weight:900;font-size:14px;letter-spacing:0.5px;box-shadow:0 4px 12px rgba(0,200,83,0.5);">📥 تحميل</a>' +
+            '<button id="dlImageClose" style="padding:12px 24px;background:linear-gradient(135deg,#ff4081,#b8003f);color:#fff;border:none;border-radius:24px;font-weight:900;font-size:14px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 12px rgba(255,0,90,0.5);">✕ إغلاق</button>' +
+        '</div>';
+
+    document.body.appendChild(modal);
+
+    modal.querySelector('#dlImageClose').addEventListener('click', function() {
+        modal.remove();
+        URL.revokeObjectURL(url);
+    });
+
+    // إغلاق عند الضغط على الخلفية
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
+            URL.revokeObjectURL(url);
+        }
+    });
+
+    console.log('[DL] iOS modal shown');
+}
+
+
+/* =========================================================
+   DOWNLOAD AS IMAGE — v22
 ========================================================= */
 
 function downloadAsImage(scaleFactor) {
@@ -320,8 +391,6 @@ function downloadAsImage(scaleFactor) {
                 finalCanvas = applyRoundedCorners(canvas, cornerRadius);
             }
 
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
             finalCanvas.toBlob(function(blob) {
                 if (!blob) {
                     dlDebug('blob is null', true);
@@ -336,42 +405,47 @@ function downloadAsImage(scaleFactor) {
 
                 const filename = filenamePrefix + '_' + scaleFactor + 'x.png';
 
+                const isIOS = detectIOS();
+
                 if (isIOS) {
-                    dlDebug('iOS: opening in new tab');
-                    const url = URL.createObjectURL(blob);
-                    const win = window.open(url, '_blank');
-                    if (!win) {
-                        dlDebug('popup blocked!', true);
-                        if (typeof showToast === 'function') {
-                            showToast('افتح النوافذ المنبثقة للحفظ', false, 6000);
-                        }
-                        dlDebugHide(10000);
-                        return;
-                    }
-                    setTimeout(function() {
-                        URL.revokeObjectURL(url);
-                    }, 60000);
-                    dlDebug('opened in new tab');
+                    // iOS: نعرض Modal فيه الصورة — يحفظها بالضغط المطول
+                    dlDebug('iOS: showing save modal');
+                    showImageModalForIOS(blob, filename);
+                    dlDebug('modal ready');
                     dlDebugHide(3000);
+                    if (typeof showToast === 'function') {
+                        showToast('اضغط مطولاً على الصورة', true, 3000);
+                    }
                     return;
                 }
 
-                const link = document.createElement('a');
-                link.download = filename;
-                link.href = URL.createObjectURL(blob);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                // Android / Desktop: تحميل مباشر
+                dlDebug('direct download...');
 
-                setTimeout(function() {
-                    URL.revokeObjectURL(link.href);
-                }, 1000);
+                try {
+                    const link = document.createElement('a');
+                    link.download = filename;
+                    link.href = URL.createObjectURL(blob);
+                    document.body.appendChild(link);
+                    link.click();
 
-                dlDebug('downloaded!');
-                if (typeof showToast === 'function') {
-                    showToast('تم التحميل', true, 2500);
+                    setTimeout(function() {
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(link.href);
+                    }, 1500);
+
+                    dlDebug('downloaded!');
+                    if (typeof showToast === 'function') {
+                        showToast('تم التحميل', true, 2500);
+                    }
+                    dlDebugHide(3000);
+
+                } catch (e) {
+                    console.error('[DL] direct download failed:', e);
+                    dlDebug('fallback to modal', true);
+                    showImageModalForIOS(blob, filename);
+                    dlDebugHide(3000);
                 }
-                dlDebugHide(3000);
 
             }, 'image/png', 1.0);
         })
