@@ -1,10 +1,12 @@
 /* =========================================================
-   backfill-history.js — v3
-   مع شريط تشخيص مرئي
+   backfill-history.js — v4
+   - يستخدم getAllManagersCached + fetchWithTimeout
+   - localStorage flag بدل count query كل تحميل
 ========================================================= */
 
 const BACKFILL_WORKER = 'https://fpl-api.aaa117703.workers.dev';
-const BACKFILL_PAGES = 7;
+const BACKFILL_FLAG_KEY = 'fpl_backfill_done_v1';
+const BACKFILL_FLAG_TTL = 24 * 60 * 60 * 1000; // 24 ساعة
 
 let backfillRunning = false;
 let backfillDone = false;
@@ -27,40 +29,15 @@ function showBackfillDebug(text, isError) {
 }
 
 /* =========================================================
-   جلب كل المديرين
-========================================================= */
-
-async function fetchAllManagers() {
-    const all = [];
-
-    for (let page = 1; page <= BACKFILL_PAGES; page++) {
-        try {
-            const res = await fetch(BACKFILL_WORKER + '/?page=' + page);
-            const data = await res.json();
-
-            if (data && data.standings && data.standings.results) {
-                all.push(...data.standings.results);
-                if (data.standings.has_next !== true) break;
-            } else {
-                break;
-            }
-        } catch (e) {
-            console.error('[Backfill] Page ' + page + ' failed:', e);
-            break;
-        }
-    }
-
-    return all;
-}
-
-/* =========================================================
    جلب تاريخ مدير واحد
 ========================================================= */
 
 async function fetchManagerHistory(entryId) {
     try {
-        const res = await fetch(
-            'https://fantasy.premierleague.com/api/entry/' + entryId + '/history/'
+        const res = await fetchWithTimeout(
+            'https://fantasy.premierleague.com/api/entry/' + entryId + '/history/',
+            {},
+            8000
         );
 
         if (!res.ok) {
@@ -123,8 +100,14 @@ async function runBackfillWithDebug() {
     backfillRunning = true;
     showBackfillDebug('Backfill: fetching managers...');
 
-    const managers = await fetchAllManagers();
+    const managers = await getAllManagersCached();
     showBackfillDebug('Backfill: got ' + managers.length + ' managers');
+
+    if (!managers || managers.length === 0) {
+        showBackfillDebug('Backfill: no managers', true);
+        backfillRunning = false;
+        return;
+    }
 
     let done = 0;
     let saved = 0;
@@ -154,6 +137,14 @@ async function runBackfillWithDebug() {
     backfillRunning = false;
     backfillDone = true;
 
+    // نخزن flag — ما نعيد التشغيل لمدة 24 ساعة
+    try {
+        localStorage.setItem(BACKFILL_FLAG_KEY, JSON.stringify({
+            ts: Date.now(),
+            saved: saved
+        }));
+    } catch (e) {}
+
     setTimeout(function() {
         const el = document.getElementById('backfillDebug');
         if (el) el.style.display = 'none';
@@ -163,11 +154,39 @@ async function runBackfillWithDebug() {
 window.runBackfill = runBackfillWithDebug;
 
 /* =========================================================
+   فحص الـ flag المحلي
+========================================================= */
+
+function shouldRunBackfill() {
+    try {
+        const raw = localStorage.getItem(BACKFILL_FLAG_KEY);
+        if (!raw) return true;
+
+        const parsed = JSON.parse(raw);
+        if (!parsed || !parsed.ts) return true;
+
+        const age = Date.now() - parsed.ts;
+        if (age < BACKFILL_FLAG_TTL) {
+            return false; // ما نحتاج
+        }
+        return true;
+    } catch (e) {
+        return true;
+    }
+}
+
+/* =========================================================
    تشغيل تلقائي
 ========================================================= */
 
 function tryAutoBackfill() {
     if (backfillRunning || backfillDone) return;
+
+    if (!shouldRunBackfill()) {
+        console.log('[Backfill] Skipped (flag fresh)');
+        backfillDone = true;
+        return;
+    }
 
     showBackfillDebug('Backfill: checking...');
 
@@ -190,6 +209,14 @@ function tryAutoBackfill() {
             } else {
                 showBackfillDebug('Backfill: already populated (' + count + ' rows)');
                 backfillDone = true;
+
+                try {
+                    localStorage.setItem(BACKFILL_FLAG_KEY, JSON.stringify({
+                        ts: Date.now(),
+                        saved: count
+                    }));
+                } catch (e) {}
+
                 setTimeout(function() {
                     const el = document.getElementById('backfillDebug');
                     if (el) el.style.display = 'none';
