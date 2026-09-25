@@ -1,10 +1,11 @@
 /* =========================================================
-   clubs.js — v5
-   - عرض وإدارة لاعبي الأندية
-   - يستخدم fetchWithTimeout (من config.js)
+   clubs.js — v6
+   - يقرأ ويكتب من managers_by_team (نفس جدول manager-hub.js)
+   - مصدر واحد → أي نقل في Manager-Hub ينعكس هنا فوراً
 ========================================================= */
 
 const CLUBS_PIN = '024680';
+const NO_TEAM_KEY = '__NO_TEAM__';
 
 let clubsData = {};
 let clubsLoaded = false;
@@ -22,8 +23,8 @@ async function loadClubsData() {
 
     try {
         const { data, error } = await window.sbClient
-            .from('club_players')
-            .select('team, players');
+            .from('managers_by_team')
+            .select('team, managers');
 
         if (error) {
             console.error('Load clubs error:', error);
@@ -35,7 +36,9 @@ async function loadClubsData() {
 
         if (data && data.length > 0) {
             data.forEach(function(row) {
-                clubsData[row.team] = row.players || [];
+                // تجاهل الفئة الخاصة "بدون فريق" في قائمة الأندية
+                if (row.team === NO_TEAM_KEY) return;
+                clubsData[row.team] = row.managers || [];
             });
         } else {
             seedFromLocal();
@@ -71,14 +74,14 @@ async function seedClubsToSupabase() {
     for (const team in PLAYERS_TEAMS) {
         rows.push({
             team: team,
-            players: PLAYERS_TEAMS[team],
+            managers: PLAYERS_TEAMS[team],
             updated_at: new Date().toISOString()
         });
     }
 
     try {
         const { error } = await window.sbClient
-            .from('club_players')
+            .from('managers_by_team')
             .upsert(rows, { onConflict: 'team' });
 
         if (error) {
@@ -86,7 +89,7 @@ async function seedClubsToSupabase() {
             return;
         }
 
-        console.log('Seeded ' + rows.length + ' clubs');
+        console.log('Seeded ' + rows.length + ' teams');
     } catch (e) {
         console.error('seedClubsToSupabase exception:', e);
     }
@@ -99,11 +102,11 @@ async function saveClubPlayers(team, players) {
 
     try {
         const { error } = await window.sbClient
-            .from('club_players')
+            .from('managers_by_team')
             .upsert(
                 {
                     team: team,
-                    players: players,
+                    managers: players,
                     updated_at: new Date().toISOString()
                 },
                 { onConflict: 'team' }
@@ -349,6 +352,13 @@ async function loadClubs() {
 
     if (loadingEl) loadingEl.style.display = 'none';
 }
+
+
+/* إعادة تحميل عند العودة لتبويب Clubs */
+window.clubsReload = function() {
+    clubsLoaded = false;
+    loadClubs();
+};
 
 
 document.addEventListener('DOMContentLoaded', function() {
