@@ -1,8 +1,7 @@
 /* =========================================================
-   manager-hub.js — v5
-   - إضافة: syncMissingManagers() — يجيب المديرين من FPL
-     الي مو معيّنين لأي فريق ويضيفهم لـ __NO_TEAM__
-   - إضافة: زر "نقل" ⇄ في وضع التعديل — نقل أي مدير لأي فريق
+   manager-hub.js — v6
+   - زر تحديث يدوي ⟳
+   - خانة إضافة بـ Entry ID
 ========================================================= */
 
 (function(){
@@ -10,13 +9,15 @@
 
 const EDIT_PASSWORD = '024680';
 const NO_TEAM_KEY = '__NO_TEAM__';
+const MANUAL_KEY = '__MANUAL__';
 
-let hubData = {};              // { teamName: [names...] }
+let hubData = {};
 let hubLoading = false;
 let hubLoaded = false;
 let hubEditMode = false;
 let hubInitialized = false;
 let hubSearchQuery = '';
+let hubRefreshing = false;
 
 /* ========== Supabase ========== */
 function getSb(){
@@ -25,7 +26,7 @@ function getSb(){
 
 /* ========== Helpers ========== */
 function logoURL(teamName){
-    if(!teamName || teamName === NO_TEAM_KEY) return '';
+    if(!teamName || teamName === NO_TEAM_KEY || teamName === MANUAL_KEY) return '';
     if(typeof TEAMS_LOGOS === 'undefined') return '';
     const file = TEAMS_LOGOS[teamName];
     return file ? './' + file : '';
@@ -43,7 +44,9 @@ function getAllTeams(){
 }
 
 function teamLabel(team){
-    return team === NO_TEAM_KEY ? '— بدون فريق —' : team;
+    if(team === NO_TEAM_KEY) return '— بدون فريق —';
+    if(team === MANUAL_KEY) return '— مضاف بالـ ID —';
+    return team;
 }
 
 /* ========== Flatten ========== */
@@ -51,9 +54,22 @@ function flattenManagers(){
     const list = [];
     Object.keys(hubData).forEach(function(team){
         (hubData[team] || []).forEach(function(name){
-            list.push({ name: name, team: team });
+            list.push({ name: name, team: team, is_manual: false });
         });
     });
+
+    // أضف manual entries
+    if(typeof getManualEntries === 'function'){
+        getManualEntries().forEach(function(m){
+            list.push({
+                name: m.player_name || m.entry_name,
+                team: MANUAL_KEY,
+                entry: m.entry,
+                is_manual: true
+            });
+        });
+    }
+
     return list;
 }
 
@@ -62,6 +78,9 @@ function getTotalCount(){
     Object.keys(hubData).forEach(function(t){
         total += (hubData[t] || []).length;
     });
+    if(typeof getManualEntries === 'function'){
+        total += getManualEntries().length;
+    }
     return total;
 }
 
@@ -140,24 +159,19 @@ async function saveTeam(teamName, managers){
     }
 }
 
-/* ========== Sync Missing Managers from FPL ========== */
+/* ========== Sync Missing Managers ========== */
 async function syncMissingManagers(){
-    if(typeof getAllManagersCached !== 'function'){
-        console.warn('[MH] getAllManagersCached not available');
-        return;
-    }
+    if(typeof getAllManagersCached !== 'function') return;
 
     let allFPL = [];
     try {
         allFPL = await getAllManagersCached();
     } catch(e){
-        console.warn('[MH] Sync fetch failed:', e.message);
         return;
     }
 
     if(!allFPL || allFPL.length === 0) return;
 
-    // ابني set من كل الأسماء الموجودة (كل الفرق + بدون فريق)
     const existing = {};
     Object.keys(hubData).forEach(function(team){
         (hubData[team] || []).forEach(function(name){
@@ -166,24 +180,20 @@ async function syncMissingManagers(){
         });
     });
 
-    // لقي المديرين الناقصين
     const missing = [];
     allFPL.forEach(function(m){
+        if(m.is_manual) return; // تجاهل manual entries
         const name = String(m.player_name || m.entry_name || '').trim();
         if(!name) return;
         const key = name.toLowerCase();
         if(!existing[key]){
             missing.push(name);
-            existing[key] = true; // منع التكرار داخل نفس القائمة
+            existing[key] = true;
         }
     });
 
-    if(missing.length === 0){
-        console.log('[MH] No missing managers');
-        return;
-    }
+    if(missing.length === 0) return;
 
-    // أضفهم تحت "بدون فريق"
     if(!hubData[NO_TEAM_KEY]) hubData[NO_TEAM_KEY] = [];
     missing.forEach(function(name){
         if(hubData[NO_TEAM_KEY].indexOf(name) === -1){
@@ -191,10 +201,8 @@ async function syncMissingManagers(){
         }
     });
 
-    // احفظ في Supabase
     await saveTeam(NO_TEAM_KEY, hubData[NO_TEAM_KEY]);
-
-    console.log('[MH] Synced ' + missing.length + ' missing managers → ' + NO_TEAM_KEY);
+    console.log('[MH] Synced ' + missing.length + ' missing → NO_TEAM');
 }
 
 /* ========== Render Main ========== */
@@ -223,16 +231,30 @@ function render(){
     stats.innerHTML = '<span>' + getTotalCount() + '</span> MANAGERS';
     controls.appendChild(stats);
 
+    const actions = document.createElement('div');
+    actions.className = 'mh-control-actions';
+
+    const refreshBtn = document.createElement('button');
+    refreshBtn.className = 'mh-refresh-btn';
+    refreshBtn.innerHTML = hubRefreshing ? '⟳' : '⟳';
+    refreshBtn.title = 'تحديث البيانات';
+    refreshBtn.disabled = hubRefreshing;
+    if(hubRefreshing) refreshBtn.classList.add('spinning');
+    refreshBtn.addEventListener('click', doRefresh);
+    actions.appendChild(refreshBtn);
+
     const editBtn = document.createElement('button');
     editBtn.className = 'mh-edit-btn' + (hubEditMode ? ' active' : '');
     editBtn.textContent = hubEditMode ? 'DONE' : 'EDIT';
     editBtn.addEventListener('click', toggleEditMode);
-    controls.appendChild(editBtn);
+    actions.appendChild(editBtn);
 
+    controls.appendChild(actions);
     wrap.appendChild(controls);
 
-    /* --- Add form (edit mode only) --- */
+    /* --- Manual ID row (edit mode only) --- */
     if(hubEditMode){
+        wrap.appendChild(buildManualIdForm());
         wrap.appendChild(buildAddForm());
     }
 
@@ -262,7 +284,101 @@ function render(){
     renderList();
 }
 
-/* ========== Add Form ========== */
+/* ========== Refresh ========== */
+async function doRefresh(){
+    if(hubRefreshing) return;
+    hubRefreshing = true;
+    render();
+
+    if(typeof showToast === 'function') showToast('جاري التحديث...', false, 30000);
+
+    try {
+        // 1) Force refresh FPL cache
+        await getAllManagersCached(true);
+
+        // 2) Refresh manual entries
+        if(typeof refreshManualEntries === 'function'){
+            await refreshManualEntries();
+        }
+
+        // 3) Re-sync missing managers
+        await syncMissingManagers();
+
+        if(typeof showToast === 'function') showToast('تم التحديث', true, 2500);
+    } catch(e){
+        console.error('[MH] Refresh failed:', e);
+        if(typeof showToast === 'function') showToast('فشل التحديث', false, 4000);
+    }
+
+    hubRefreshing = false;
+    render();
+}
+
+/* ========== Manual ID Form ========== */
+function buildManualIdForm(){
+    const row = document.createElement('div');
+    row.className = 'mh-manual-row';
+
+    const label = document.createElement('div');
+    label.className = 'mh-manual-label';
+    label.textContent = 'إضافة بـ Entry ID:';
+    row.appendChild(label);
+
+    const input = document.createElement('input');
+    input.className = 'mh-manual-input';
+    input.type = 'number';
+    input.inputMode = 'numeric';
+    input.placeholder = 'مثال: 1234567';
+    input.min = '1';
+
+    const btn = document.createElement('button');
+    btn.className = 'mh-manual-add-btn';
+    btn.textContent = '+ ID';
+
+    let busy = false;
+
+    async function doAdd(){
+        if(busy) return;
+        const id = (input.value || '').trim();
+        if(!id){
+            if(typeof showToast === 'function') showToast('اكتب الـ ID', false);
+            return;
+        }
+
+        busy = true;
+        btn.disabled = true;
+        btn.textContent = '...';
+
+        try {
+            const result = await addManualEntryById(id);
+            if(result.ok){
+                input.value = '';
+                if(typeof showToast === 'function') showToast('أُضيف: ' + result.entry.player_name, true, 3000);
+                render();
+            } else {
+                if(typeof showToast === 'function') showToast(result.error, false, 4000);
+            }
+        } catch(e){
+            if(typeof showToast === 'function') showToast('خطأ: ' + e.message, false, 4000);
+        }
+
+        busy = false;
+        btn.disabled = false;
+        btn.textContent = '+ ID';
+    }
+
+    btn.addEventListener('click', doAdd);
+    input.addEventListener('keypress', function(e){
+        if(e.key === 'Enter') doAdd();
+    });
+
+    row.appendChild(input);
+    row.appendChild(btn);
+
+    return row;
+}
+
+/* ========== Add Form (by name) ========== */
 function buildAddForm(){
     const addRow = document.createElement('div');
     addRow.className = 'mh-add-row';
@@ -352,21 +468,33 @@ function renderList(){
     list.forEach(function(item, idx){
         const logo = logoURL(item.team);
         const isNoTeam = item.team === NO_TEAM_KEY;
+        const isManual = item.is_manual;
 
-        html += '<div class="mh-list-row" data-name="' + escapeHTML(item.name) + '" data-team="' + escapeHTML(item.team) + '">';
+        html += '<div class="mh-list-row' + (isManual ? ' mh-row-manual' : '') + '" data-name="' + escapeHTML(item.name) + '" data-team="' + escapeHTML(item.team) + '" data-entry="' + (item.entry || '') + '" data-manual="' + (isManual ? '1' : '0') + '">';
         html += '<div class="mh-lr-num">' + (idx + 1) + '</div>';
 
         if(logo){
             html += '<div class="mh-lr-logo"><img src="' + logo + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
+        } else if(isManual){
+            html += '<div class="mh-lr-logo mh-lr-logo-manual">ID</div>';
         } else {
             html += '<div class="mh-lr-logo mh-lr-logo-empty"></div>';
         }
 
         html += '<div class="mh-lr-name" title="' + escapeHTML(item.name) + '">' + escapeHTML(item.name) + '</div>';
-        html += '<div class="mh-lr-team' + (isNoTeam ? ' mh-lr-team-none' : '') + '">' + escapeHTML(teamLabel(item.team)) + '</div>';
+
+        if(isManual){
+            html += '<div class="mh-lr-team mh-lr-team-manual" title="ID: ' + item.entry + '">ID: ' + item.entry + '</div>';
+        } else {
+            html += '<div class="mh-lr-team' + (isNoTeam ? ' mh-lr-team-none' : '') + '">' + escapeHTML(teamLabel(item.team)) + '</div>';
+        }
 
         if(hubEditMode){
-            html += '<button class="mh-lr-move" title="نقل إلى فريق آخر" style="background:linear-gradient(135deg,#448aff,#1f5dbf);color:#fff;border:none;border-radius:6px;width:26px;height:26px;font-size:13px;font-weight:900;cursor:pointer;margin-right:4px;padding:0;line-height:1;">⇄</button>';
+            if(!isManual){
+                html += '<button class="mh-lr-move" title="نقل">⇄</button>';
+            } else {
+                html += '<div class="mh-lr-spacer"></div>';
+            }
             html += '<button class="mh-lr-delete" title="Delete">×</button>';
         }
 
@@ -378,11 +506,13 @@ function renderList(){
     container.querySelectorAll('.mh-list-row').forEach(function(row){
         const name = row.dataset.name;
         const team = row.dataset.team;
+        const entry = row.dataset.entry;
+        const isManual = row.dataset.manual === '1';
 
         const nameEl = row.querySelector('.mh-lr-name');
         if(nameEl){
             nameEl.addEventListener('click', function(){
-                openManagerSquadFor(name);
+                openManagerSquadFor(name, entry);
             });
         }
 
@@ -397,10 +527,25 @@ function renderList(){
         const delBtn = row.querySelector('.mh-lr-delete');
         if(delBtn){
             delBtn.addEventListener('click', function(){
-                deleteManager(team, name);
+                if(isManual){
+                    deleteManual(entry, name);
+                } else {
+                    deleteManager(team, name);
+                }
             });
         }
     });
+}
+
+/* ========== Delete Manual ========== */
+function deleteManual(entry, name){
+    if(!confirm('إزالة "' + name + '" (ID: ' + entry + ') من القائمة؟')) return;
+
+    if(typeof removeManualEntry === 'function'){
+        removeManualEntry(entry);
+        if(typeof showToast === 'function') showToast('تمت الإزالة', true);
+        render();
+    }
 }
 
 /* ========== Move Modal ========== */
@@ -408,13 +553,11 @@ function openMoveModal(fromTeam, name){
     const modal = document.getElementById('mhModal');
     if(!modal) return;
 
-    // ابني قائمة الفرق
     let optionsHtml = '';
 
-    // "بدون فريق" أول شي (لو المدير حالياً في فريق)
     if(fromTeam !== NO_TEAM_KEY){
         optionsHtml +=
-            '<button class="mh-move-option" data-team="' + NO_TEAM_KEY + '" style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;text-align:left;width:100%;margin-bottom:6px;letter-spacing:0.3px;">' +
+            '<button class="mh-move-option" data-team="' + NO_TEAM_KEY + '">' +
                 '<span style="font-size:14px;">—</span>' +
                 '<span>بدون فريق</span>' +
             '</button>';
@@ -422,29 +565,27 @@ function openMoveModal(fromTeam, name){
 
     getAllTeams().forEach(function(t){
         if(t === fromTeam) return;
-
         const logo = logoURL(t);
         optionsHtml +=
-            '<button class="mh-move-option" data-team="' + escapeHTML(t) + '" style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;text-align:left;width:100%;margin-bottom:6px;letter-spacing:0.3px;">' +
-                (logo ? '<img src="' + logo + '" style="width:22px;height:22px;object-fit:contain;" onerror="this.style.display=\'none\'">' : '') +
+            '<button class="mh-move-option" data-team="' + escapeHTML(t) + '">' +
+                (logo ? '<img src="' + logo + '" onerror="this.style.display=\'none\'">' : '') +
                 '<span>' + escapeHTML(t) + '</span>' +
             '</button>';
     });
 
     modal.innerHTML =
-        '<div class="mh-modal-box" style="max-height:80vh;display:flex;flex-direction:column;">' +
+        '<div class="mh-modal-box">' +
             '<div class="mh-modal-title">نقل "' + escapeHTML(name) + '"</div>' +
             '<div style="color:#b8b8b8;font-size:12px;text-align:center;margin-bottom:12px;">' +
                 'من: <strong style="color:#00e676;">' + escapeHTML(teamLabel(fromTeam)) + '</strong>' +
             '</div>' +
             '<div style="color:#fff;font-size:12px;text-align:center;margin-bottom:10px;font-weight:700;">اختر الفريق الجديد:</div>' +
-            '<div class="mh-move-list" style="max-height:50vh;overflow-y:auto;padding:4px;">' + optionsHtml + '</div>' +
+            '<div class="mh-move-list">' + optionsHtml + '</div>' +
             '<button class="mh-modal-btn mh-modal-cancel" id="mhMoveCancel" style="margin-top:10px;">إلغاء</button>' +
         '</div>';
 
     modal.classList.add('show');
 
-    // ربط أحداث خيارات النقل
     modal.querySelectorAll('.mh-move-option').forEach(function(optBtn){
         optBtn.addEventListener('click', function(){
             const toTeam = this.dataset.team;
@@ -453,13 +594,11 @@ function openMoveModal(fromTeam, name){
         });
     });
 
-    // زر الإلغاء
     const cancelBtn = modal.querySelector('#mhMoveCancel');
     if(cancelBtn){
         cancelBtn.addEventListener('click', closeMoveModal);
     }
 
-    // إغلاق بالضغط على الخلفية
     modal.onclick = function(e){
         if(e.target === modal) closeMoveModal();
     };
@@ -476,44 +615,33 @@ function closeMoveModal(){
 async function executeMove(fromTeam, toTeam, name){
     const fromList = hubData[fromTeam] || [];
     const idx = fromList.indexOf(name);
-    if(idx === -1){
-        if(typeof showToast === 'function') showToast('المدير غير موجود', false);
-        return;
-    }
+    if(idx === -1) return;
 
-    // شيله من الفريق القديم
     fromList.splice(idx, 1);
 
-    // أضفه للفريق الجديد
     if(!hubData[toTeam]) hubData[toTeam] = [];
     if(hubData[toTeam].indexOf(name) !== -1){
-        // رجّعه لو كان مكرر
         fromList.splice(idx, 0, name);
         if(typeof showToast === 'function') showToast('موجود مسبقاً في ' + teamLabel(toTeam), false);
         return;
     }
     hubData[toTeam].push(name);
 
-    // احفظ الفريقين
     const okFrom = await saveTeam(fromTeam, fromList);
     const okTo = await saveTeam(toTeam, hubData[toTeam]);
 
     if(!okFrom || !okTo){
-        // رجّع الوضع القديم
         hubData[toTeam].pop();
         fromList.splice(idx, 0, name);
         if(typeof showToast === 'function') showToast('فشل النقل', false);
-        else alert('فشل النقل');
         return;
     }
 
-    if(typeof showToast === 'function'){
-        showToast('نُقل إلى ' + teamLabel(toTeam), true);
-    }
+    if(typeof showToast === 'function') showToast('نُقل إلى ' + teamLabel(toTeam), true);
     render();
 }
 
-/* ========== Actions ========== */
+/* ========== Edit Toggle ========== */
 function toggleEditMode(){
     if(hubEditMode){
         hubEditMode = false;
@@ -533,7 +661,6 @@ async function addManager(team, name){
     if(hubData[team].indexOf(name) !== -1){
         const label = team === NO_TEAM_KEY ? 'بدون فريق' : team;
         if(typeof showToast === 'function') showToast('موجود مسبقاً في ' + label, false);
-        else alert('موجود مسبقاً');
         return;
     }
     hubData[team].push(name);
@@ -541,7 +668,6 @@ async function addManager(team, name){
     if(!ok){
         hubData[team].pop();
         if(typeof showToast === 'function') showToast('فشل الحفظ', false);
-        else alert('فشل الحفظ');
         return;
     }
     if(typeof showToast === 'function') showToast('تمت الإضافة', true);
@@ -560,7 +686,6 @@ async function deleteManager(team, name){
     if(!ok){
         managers.splice(idx, 0, name);
         if(typeof showToast === 'function') showToast('فشل الحذف', false);
-        else alert('فشل الحذف');
         return;
     }
     if(typeof showToast === 'function') showToast('تم الحذف', true);
@@ -626,22 +751,30 @@ function askPassword(callback){
 }
 
 /* ========== Open FPL Squad ========== */
-async function openManagerSquadFor(name){
+async function openManagerSquadFor(name, entryId){
     try {
+        // لو عندنا entry ID مباشرة (manual) — استخدمه
+        if(entryId){
+            if(typeof window.openManagerSquad === 'function'){
+                await window.openManagerSquad(parseInt(entryId, 10), name);
+            }
+            return;
+        }
+
         if(typeof window.findManagerEntryId !== 'function'){
             await new Promise(function(r){ setTimeout(r, 800); });
         }
         if(typeof window.findManagerEntryId !== 'function'){
-            alert('Squad viewer not ready. Try again.');
+            alert('Squad viewer not ready.');
             return;
         }
-        const entryId = await window.findManagerEntryId(name, '');
-        if(!entryId){
+        const id = await window.findManagerEntryId(name, '');
+        if(!id){
             alert('Could not find "' + name + '" in FPL league.');
             return;
         }
         if(typeof window.openManagerSquad === 'function'){
-            await window.openManagerSquad(entryId, name);
+            await window.openManagerSquad(id, name);
         }
     } catch(e){
         console.error('[MH] Squad error:', e);
@@ -659,14 +792,12 @@ async function initHub(){
         let data = await loadHubData();
 
         if(!data || Object.keys(data).length === 0){
-            console.log('[MH] Empty, seeding from PLAYERS_TEAMS...');
             await seedFromPlayersTeams();
             data = await loadHubData();
         }
 
         hubData = data || {};
 
-        // تأكد كل الفرق موجودة
         getAllTeams().forEach(function(t){
             if(!hubData[t]) hubData[t] = [];
         });
@@ -678,7 +809,6 @@ async function initHub(){
 
         console.log('[MH] Ready. Managers:', getTotalCount());
 
-        // ⭐ مزامنة المديرين الناقصين من FPL
         syncMissingManagers().then(function(){
             render();
         }).catch(function(e){
@@ -692,7 +822,7 @@ async function initHub(){
     }
 }
 
-/* ========== Hook Managers Tab ========== */
+/* ========== Hook ========== */
 function hookManagersTab(){
     const btn = document.querySelector('[data-tab="managers"]');
     if(!btn){
@@ -710,12 +840,17 @@ function hookManagersTab(){
     if(view && view.classList.contains('active')){
         setTimeout(initHub, 300);
     }
-
-    console.log('[MH] Hooked Managers tab');
 }
 
 document.addEventListener('DOMContentLoaded', function(){
     setTimeout(hookManagersTab, 800);
+});
+
+// استمع لتغييرات manual entries → أعد الرسم
+window.addEventListener('managers-updated', function(){
+    if(hubLoaded){
+        render();
+    }
 });
 
 window.mhInit = initHub;
