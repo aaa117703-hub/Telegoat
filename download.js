@@ -1,8 +1,7 @@
 /* =========================================================
-   download.js — v23
-   - دائماً يعرض Modal فيه الصورة (يشتغل على كل المتصفحات)
-   - المستخدم يقدر: يضغط مطول / يضغط زر التحميل / يقفل
-   - بدون debug bar مزعج
+   download.js — v24
+   - إصلاح: TOTW بدون خلفية بيضاء
+   - إصلاح: زوايا دائرية لـ TOTW
 ========================================================= */
 
 function waitForImagesToLoad(element) {
@@ -72,7 +71,7 @@ function applyRoundedCorners(sourceCanvas, radius) {
 
 
 /* =========================================================
-   DEBUG (console فقط — بدون شريط مرئي)
+   DEBUG
 ========================================================= */
 
 function dlDebug(text, isError) {
@@ -158,11 +157,10 @@ function isCanvasTainted(canvas) {
 
 
 /* =========================================================
-   IMAGE MODAL — النافذة المضمونة
+   IMAGE MODAL
 ========================================================= */
 
 function showImageModal(blob, filename) {
-    // شيل أي modal قديم
     const old = document.getElementById('dlImageModal');
     if (old) {
         const oldUrl = old.dataset.blobUrl;
@@ -193,7 +191,7 @@ function showImageModal(blob, filename) {
         '<div style="text-align:center;color:#00e676;margin-bottom:10px;font-weight:900;font-size:15px;letter-spacing:0.5px;padding:8px 12px;background:rgba(0,200,83,0.15);border-radius:12px;border:1px solid #00e676;max-width:500px;">' +
             '👆 اضغط مطولاً على الصورة → احفظ في الألبوم' +
         '</div>' +
-        '<img id="dlImagePreview" src="' + url + '" style="max-width:100%;max-height:65vh;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,0.8);border:2px solid #00e676;margin:8px 0;" />' +
+        '<img id="dlImagePreview" src="' + url + '" style="max-width:100%;max-height:65vh;border-radius:18px;box-shadow:0 10px 40px rgba(0,0,0,0.8);border:2px solid #00e676;margin:8px 0;background:transparent;" />' +
         '<div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding-bottom:20px;">' +
             '<button id="dlDirectBtn" style="padding:12px 22px;background:linear-gradient(135deg,#00e676,#009b40);color:#fff;border:none;border-radius:24px;font-weight:900;font-size:14px;letter-spacing:0.5px;box-shadow:0 4px 14px rgba(0,200,83,0.5);cursor:pointer;font-family:inherit;">📥 تحميل مباشر</button>' +
             '<button id="dlCloseBtn" style="padding:12px 22px;background:linear-gradient(135deg,#ff4081,#b8003f);color:#fff;border:none;border-radius:24px;font-weight:900;font-size:14px;letter-spacing:0.5px;box-shadow:0 4px 14px rgba(255,0,90,0.5);cursor:pointer;font-family:inherit;">✕ إغلاق</button>' +
@@ -204,7 +202,6 @@ function showImageModal(blob, filename) {
 
     document.body.appendChild(modal);
 
-    // زر التحميل المباشر
     modal.querySelector('#dlDirectBtn').addEventListener('click', function() {
         try {
             const link = document.createElement('a');
@@ -225,26 +222,22 @@ function showImageModal(blob, filename) {
         }
     });
 
-    // زر الإغلاق
     modal.querySelector('#dlCloseBtn').addEventListener('click', function() {
         URL.revokeObjectURL(url);
         modal.remove();
     });
 
-    // إغلاق عند الضغط على الخلفية السوداء
     modal.addEventListener('click', function(e) {
         if (e.target === modal) {
             URL.revokeObjectURL(url);
             modal.remove();
         }
     });
-
-    console.log('[DL] Modal shown');
 }
 
 
 /* =========================================================
-   DOWNLOAD AS IMAGE — v23
+   DOWNLOAD AS IMAGE — v24
 ========================================================= */
 
 function downloadAsImage(scaleFactor) {
@@ -307,12 +300,14 @@ function downloadAsImage(scaleFactor) {
         showToast('جاري تجهيز الصورة...', false, 2000);
     }
 
-    const cornerRadius = (isTOTW ? 0 : 20 * scaleFactor);
+    /* ⭐ cornerRadius لـ كل شي (بما فيها TOTW) */
+    const cornerRadius = 20 * scaleFactor;
 
     waitForImagesToLoad(element)
         .then(function() {
             return html2canvas(element, {
-                backgroundColor: (isTOTW ? '#ffffff' : null),
+                /* ⭐ شفاف تماماً — لا خلفية بيضاء */
+                backgroundColor: null,
                 scale: scaleFactor,
                 useCORS: true,
                 allowTaint: false,
@@ -371,6 +366,17 @@ function downloadAsImage(scaleFactor) {
 
                     const lockPanel = clonedElement.querySelector('#adminLockPanel');
                     if (lockPanel) lockPanel.style.display = 'none';
+
+                    /* ⭐ إزالة أي padding/خلفية من .totw-pitch-wrapper */
+                    if (isTOTW) {
+                        const totwWrapper = clonedElement.closest ? clonedElement : null;
+                        const parent = clonedElement.parentElement;
+                        if (parent && parent.classList && parent.classList.contains('totw-pitch-wrapper')) {
+                            parent.style.padding = '0';
+                            parent.style.margin = '0';
+                            parent.style.background = 'transparent';
+                        }
+                    }
                 }
             });
         })
@@ -385,10 +391,8 @@ function downloadAsImage(scaleFactor) {
                 return;
             }
 
-            let finalCanvas = canvas;
-            if (!isTOTW && cornerRadius > 0) {
-                finalCanvas = applyRoundedCorners(canvas, cornerRadius);
-            }
+            /* ⭐ نطبّق الزوايا الدائرية دائماً */
+            const finalCanvas = applyRoundedCorners(canvas, cornerRadius);
 
             finalCanvas.toBlob(function(blob) {
                 if (!blob) {
@@ -403,7 +407,6 @@ function downloadAsImage(scaleFactor) {
 
                 const filename = filenamePrefix + '_' + scaleFactor + 'x.png';
 
-                // دائماً نعرض Modal — المستخدم يقرر
                 showImageModal(blob, filename);
 
                 if (typeof showToast === 'function') {
