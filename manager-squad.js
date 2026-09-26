@@ -1,16 +1,64 @@
 /* =========================================================
-   manager-squad.js — v2
-   - يستخدم getAllManagersCached (بدل cache محلي)
-   - fetchWithTimeout محمي
+   manager-squad.js — v3
+   - إصلاح: شعار الفريق من TEAMS_LOGOS بدل FPL badge
+   - إصلاح: حجم الشعار مناسب بدون خلفية
 ========================================================= */
 
 (function(){
 'use strict';
 
 /* ========== Helpers ========== */
-function badgeURL(code, size){
-    size = size || 70;
-    return 'https://resources.premierleague.com/premierleague/badges/' + size + '/t' + code + '.png';
+
+/* خريطة أسماء فرق FPL → أسماء TEAMS_LOGOS */
+const FPL_TO_LOCAL_TEAM = {
+    'Arsenal': 'Arsenal',
+    'Aston Villa': 'Aston Villa',
+    'Bournemouth': 'Bournemouth',
+    'Brentford': 'Brentford',
+    'Brighton': 'Brighton',
+    'Chelsea': 'Chelsea',
+    'Crystal Palace': 'Crystal Palace',
+    'Everton': 'Everton',
+    'Fulham': 'Fulham',
+    'Ipswich': 'Ipswich Town',
+    'Ipswich Town': 'Ipswich Town',
+    'Leeds': 'Leeds United',
+    'Leeds United': 'Leeds United',
+    'Liverpool': 'Liverpool',
+    'Man City': 'Man City',
+    'Man Utd': 'Man Utd',
+    'Manchester City': 'Man City',
+    'Manchester United': 'Man Utd',
+    'Newcastle': 'Newcastle',
+    'Newcastle United': 'Newcastle',
+    "Nott'm Forest": 'Nottingham Forest',
+    'Nottingham Forest': 'Nottingham Forest',
+    'Spurs': 'Spurs',
+    'Tottenham': 'Spurs',
+    'Sunderland': 'Sunderland',
+    'Hull': 'Hull City',
+    'Hull City': 'Hull City',
+    'Coventry': 'Coventry City',
+    'Coventry City': 'Coventry City'
+};
+
+function getTeamLogo(fplTeam) {
+    if (!fplTeam) return '';
+
+    const rawName = fplTeam.name || '';
+    const mappedName = FPL_TO_LOCAL_TEAM[rawName] || rawName;
+
+    /* 1) جرّب TEAMS_LOGOS أولاً */
+    if (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[mappedName]) {
+        return './' + TEAMS_LOGOS[mappedName];
+    }
+
+    /* 2) Fallback: FPL badge URL */
+    if (fplTeam.code) {
+        return 'https://resources.premierleague.com/premierleague/badges/70/t' + fplTeam.code + '.png';
+    }
+
+    return '';
 }
 
 function escapeHTML(s){
@@ -123,9 +171,11 @@ function renderSquad(managerName, gw, picksData, liveData){
         if(slot.is_vice_captain) badges.push('<span class="squad-cap-badge squad-cap-V">V</span>');
         if(multiplier === 3) badges.push('<span class="squad-cap-badge squad-cap-3x">3x</span>');
 
+        const logoURL = getTeamLogo(team);
+
         return '<div class="squad-player">' +
                 '<div class="squad-player-badge">' +
-                    (team ? '<img src="' + badgeURL(team.code, 40) + '" alt="" loading="lazy">' : '') +
+                    (logoURL ? '<img src="' + logoURL + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' : '') +
                 '</div>' +
                 '<div class="squad-player-names">' +
                     '<div class="squad-player-name">' +
@@ -358,7 +408,7 @@ window.findManagerEntryId = findEntryId;
 /* ========== Init ========== */
 document.addEventListener('DOMContentLoaded', function(){
     setTimeout(setupProfileWatcher, 1500);
-    setTimeout(function(){ getAllManagersCached(); }, 2500); // Prefetch
+    setTimeout(function(){ getAllManagersCached(); }, 2500);
 });
 
 })();
