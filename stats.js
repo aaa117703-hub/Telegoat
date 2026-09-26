@@ -1,5 +1,7 @@
 /* =========================================================
-   stats.js — v13 (نسخة نظيفة)
+   stats.js — v13
+   - إزالة: loadTrends (الآن لا نحتاجها)
+   - Trends tab استُبدل بـ Clubs
 ========================================================= */
 
 const STATS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -119,15 +121,15 @@ function createStatsRow(rank, manager, value, valueLabel) {
         '<div class="stats-row-value">' +
             '<div class="stats-row-value-num">' + value + '</div>' +
             (valueLabel ? '<div class="stats-row-value-label">' + valueLabel + '</div>' : '') +
-        '</div>' +
+        '</div>' document +
     '</div>';
 }
 
 function renderStatsOverview(stats) {
-    if (!stats) return;
+    if.getElementById (!stats) return;
 
-    const setVal = function(id, val) {
-        const el = document.getElementById(id);
+(id    const setVal = function(id, val) {
+        const el =);
         if (el) el.textContent = val;
     };
 
@@ -358,14 +360,6 @@ async function loadStats() {
     if (statsLoaded && statsAllManagers.length > 0) {
         if (loadingEl) loadingEl.style.display = 'none';
         if (contentEl) contentEl.style.display = 'block';
-
-        if (typeof loadTrends === 'function') {
-            try {
-                await loadTrends(currentRound);
-            } catch (e) {
-                console.warn('loadTrends failed:', e);
-            }
-        }
         return;
     }
 
@@ -387,14 +381,6 @@ async function loadStats() {
         renderStatsOverview(statsComputed);
         renderStatsRecords(statsComputed);
 
-        if (typeof loadTrends === 'function') {
-            try {
-                await loadTrends(currentRound);
-            } catch (e) {
-                console.warn('loadTrends failed:', e);
-            }
-        }
-
         if (loadingEl) loadingEl.style.display = 'none';
         if (contentEl) contentEl.style.display = 'block';
 
@@ -415,14 +401,17 @@ function switchStatsTab(tabName) {
         view.classList.toggle('active', view.id === 'statsView-' + tabName);
     });
 
+    /* Clubs tab */
     if (tabName === 'clubs' && typeof loadClubs === 'function') {
         loadClubs();
     }
 
+    /* Charts tab */
     if (tabName === 'charts' && typeof initCharts === 'function') {
         initCharts();
     }
 
+    /* Scroll active button into view */
     setTimeout(function() {
         const activeBtn = document.querySelector('.stats-tab-btn.active');
         if (activeBtn && activeBtn.scrollIntoView) {
@@ -435,6 +424,7 @@ function switchStatsTab(tabName) {
     }, 50);
 }
 
+/* أعد حساب Stats عند إضافة/حذف Manual Entry */
 window.addEventListener('managers-updated', function() {
     if (!statsLoaded) return;
 
