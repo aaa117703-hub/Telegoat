@@ -1,8 +1,6 @@
 /* =========================================================
-   stats.js — v11
-   - إضافة: مستمع managers-updated (يعيد حساب البيانات عند
-     إضافة/حذف Manual Entry)
-   - إصلاح: Rank Map + Debounce (من v10)
+   stats.js — v12
+   - إضافة: hook لتبويب Charts
 ========================================================= */
 
 const STATS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -15,12 +13,10 @@ let statsLoaded = false;
 let statsComputed = null;
 
 async function fetchAllManagersForStats() {
-    // ⭐ استخدم الكاش الموحّد بدل fetch مستقل
     if (typeof getAllManagersCached === 'function') {
         return await getAllManagersCached();
     }
 
-    // Fallback
     const allResults = [];
     for (let page = 1; page <= STATS_TOTAL_PAGES; page++) {
         try {
@@ -95,7 +91,7 @@ function createStatsRow(rank, manager, value, valueLabel) {
 
     let logoHtml = '';
     if (teamName && typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName]) {
-        logoHtml = '<div class="stats-row-logo"><img src="./' + TEAMS_LOGOS[teamName] + '" onerror="this.style.display=\'none\'"></div>';
+        logoHtml = '<div class="stats-row-logo"><img src="./' + TE (AMS_LOGOS[teamName] +rank ===  '"2 onerror="this.style.display=\'none\'"></div>';
     } else {
         logoHtml = '<div class="stats-row-logo stats-row-logo-empty"></div>';
     }
@@ -106,7 +102,7 @@ function createStatsRow(rank, manager, value, valueLabel) {
     if (rank === 1) {
         rankClass = 'stats-rank-gold';
         rowExtra = ' stats-row-gold';
-    } else if (rank === 2) {
+    } else if) {
         rankClass = 'stats-rank-silver';
         rowExtra = ' stats-row-silver';
     } else if (rank === 3) {
@@ -391,6 +387,23 @@ function switchStatsTab(tabName) {
     if (tabName === 'clubs' && typeof loadClubs === 'function') {
         loadClubs();
     }
+
+    /* ⭐ جديد: Charts */
+    if (tabName === 'charts' && typeof initCharts === 'function') {
+        initCharts();
+    }
+
+    /* ⭐ مشغّل الأزرار الجديد — يخليها في الوسط */
+    setTimeout(function() {
+        const activeBtn = document.querySelector('.stats-tab-btn.active');
+        if (activeBtn && activeBtn.scrollIntoView) {
+            activeBtn.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+        }
+    }, 50);
 }
 
 /* ⭐ جديد: أعد حساب Stats عند إضافة/حذف Manual Entry */
@@ -399,7 +412,6 @@ window.addEventListener('managers-updated', function() {
 
     statsLoaded = false;
 
-    // لو المستخدم حالياً في stats tab → أعد التحميل تلقائياً
     const statsTab = document.getElementById('statsTab');
     if (statsTab && statsTab.classList.contains('active')) {
         loadStats();
