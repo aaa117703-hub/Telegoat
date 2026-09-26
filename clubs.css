@@ -676,3 +676,21 @@
         font-size: 10px;
     }
 }
+/* ⭐ للاعبين بدون نقاط (مو في FPL) */
+.cp-player-row.cp-not-found {
+    opacity: 0.75;
+}
+
+.cp-player-row.cp-not-found .cp-rank {
+    background: #E5E7EB;
+    color: #9CA3AF;
+}
+
+.cp-player-row.cp-not-found .cp-name {
+    color: #6B7280;
+}
+
+.cp-points.cp-points-empty {
+    color: #9CA3AF;
+    font-weight: 700;
+}
