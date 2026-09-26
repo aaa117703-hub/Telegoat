@@ -1,6 +1,6 @@
 /* =========================================================
-   theme.css — v5 (Light Purple Theme)
-   - إصلاح: خلفية الملعب من totw.css
+   theme.css — v6
+   - حذف قسم TOTW بالكامل (يتحكم به totw.css)
 ========================================================= */
 
 /* ========== 1. VARIABLES ========== */
@@ -468,89 +468,13 @@ body {
 .stats-record-green .stats-record-value { color: var(--green-600) !important; }
 
 /* =========================================================
-   14. TOTW — الملعب يترك لـ totw.css
+   14. TOTW — محذوف بالكامل
+   (يُدار بواسطة totw.css)
 ========================================================= */
 
-.totw-tab-btn {
-    background: #FFFFFF !important;
-    border: 1.5px solid var(--purple-100) !important;
-    color: var(--text-secondary) !important;
-    box-shadow: 0 2px 6px rgba(124, 58, 237, 0.06) !important;
-}
-.totw-tab-btn:hover {
-    border-color: var(--purple-300) !important;
-    color: var(--purple-600) !important;
-}
-.totw-tab-btn.active {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
-    border-color: var(--purple-500) !important;
-    color: #fff !important;
-    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35) !important;
-}
-
-.totw-loading { color: var(--purple-600) !important; }
-.totw-loading .spinner {
-    border: 3px solid rgba(124, 58, 237, 0.2) !important;
-    border-top-color: var(--purple-500) !important;
-}
-
-/* ⭐ الملعب — محذوف من هنا، يتحدد في totw.css */
-/* فقط الـ wrapper يبقى شفاف */
+/* فقط يمنع أي توريث غلط */
 .totw-pitch-wrapper {
     background: transparent !important;
-}
-
-.totw-pitch-title {
-    color: #fff !important;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.6) !important;
-}
-.totw-card {
-    background: #FFFFFF !important;
-    box-shadow: 0 4px 12px rgba(17, 24, 39, 0.15) !important;
-    border: 1.5px solid rgba(255,255,255,0.9) !important;
-}
-.tc-name { color: var(--text-primary) !important; }
-.tc-shirt {
-    background: transparent !important;
-    border: none !important;
-}
-
-.totw-list-item {
-    background: #FFFFFF !important;
-    border-bottom: 1px solid #F3F4F6 !important;
-}
-.totw-list-item:hover { background: var(--purple-50) !important; }
-.totw-list-item.selected {
-    background: var(--purple-50) !important;
-    border-right: 4px solid var(--purple-500) !important;
-}
-.totw-list-entry { color: var(--text-primary) !important; }
-.totw-list-player { color: var(--text-tertiary) !important; }
-.totw-list-gw {
-    color: var(--purple-600) !important;
-    text-shadow: none !important;
-}
-.totw-list-total { color: var(--text-primary) !important; }
-.totw-list-check.checked {
-    background: var(--purple-500) !important;
-    color: #fff !important;
-}
-.totw-count-bar {
-    background: #FFFFFF !important;
-    border: 1.5px solid var(--purple-100) !important;
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06) !important;
-}
-.save-btn {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
-    color: #fff !important;
-}
-.save-btn.saved {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-}
-.reset-btn {
-    background: #F3F4F6 !important;
-    color: var(--text-secondary) !important;
-    border: 1.5px solid #E5E7EB !important;
 }
 
 /* =========================================================
