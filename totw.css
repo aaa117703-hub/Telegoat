@@ -1,5 +1,8 @@
 /* =========================================================
-   totw.css — الأصلي + List محدّث بالبنفسجي
+   totw.css — v30
+   - إصلاح: حذف الحافة الخضراء المضيئة
+   - إصلاح: List grid (6 columns متطابقة)
+   - إصلاح: شعارات List بحجم صحيح
 ========================================================= */
 
 .totw-tabs{
@@ -47,6 +50,10 @@
     margin-bottom:16px;
 }
 
+/* =========================================================
+   الملعب — حذفنا الحافة الخضراء المضيئة
+========================================================= */
+
 .totw-pitch{
     position:relative;
     width:100%;
@@ -56,11 +63,9 @@
     background-size:100% 100%;
     background-position:center;
     background-repeat:no-repeat;
-    border:3px solid #1a5c2f;
+    border:3px solid #5B21B6;
     border-radius:18px;
-    box-shadow:
-        0 10px 40px rgba(0,0,0,.4),
-        0 0 30px rgba(0,255,135,.4);
+    box-shadow:0 10px 40px rgba(0,0,0,.25);
     overflow:hidden;
 }
 
@@ -253,12 +258,12 @@
 }
 
 /* =========================================================
-   عرض القائمة — ⭐ محدّث بالبنفسجي
+   عرض القائمة — ⭐ محدّث ومصلّح
 ========================================================= */
 
 .totw-list-view{
     width:100%;
-    max-width:480px;
+    max-width:520px;
     margin:0 auto 16px;
     background:#FFFFFF;
     border:1.5px solid #EDE9FE;
@@ -267,89 +272,163 @@
     box-shadow:0 4px 16px rgba(124,58,237,.1);
 }
 
+.totw-count-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:12px 16px;
+    background:#F5F3FF;
+    border-bottom:1.5px solid #EDE9FE;
+    font-size:13px;
+    font-weight:800;
+    color:#6D28D9;
+}
+
+.totw-count-bar .count-num{
+    color:#7C3AED;
+    font-weight:900;
+    font-size:16px;
+    margin:0 2px;
+}
+
+.totw-actions{
+    display:flex;
+    gap:6px;
+}
+
+.totw-actions button{
+    padding:6px 12px;
+    border-radius:8px;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    cursor:pointer;
+    border:none;
+    font-family:inherit;
+    transition:all .2s ease;
+}
+
+.totw-actions .save-btn{
+    background:linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    color:#fff;
+}
+
+.totw-actions .save-btn.saved{
+    background:linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.totw-actions .reset-btn{
+    background:#F3F4F6;
+    color:#6B7280;
+}
+
+.totw-actions button:active{
+    transform:scale(0.95);
+}
+
+/* Header — 6 columns مطابقة للـ items */
 .totw-list-header{
     display:grid;
-    grid-template-columns:26px 1fr 46px 50px;
+    grid-template-columns:26px 26px 32px 1fr 46px 50px;
     gap:6px;
     align-items:center;
     padding:10px 12px;
     border-bottom:1.5px solid #EDE9FE;
     background:#F5F3FF;
     color:#5B21B6;
-    font-size:10px;
-    font-weight:800;
+    font-size:9px;
+    font-weight:900;
     text-transform:uppercase;
     letter-spacing:1px;
 }
 
+.totw-list-h-check{text-align:center;font-size:11px;}
 .totw-list-h-rank{text-align:center;}
-.totw-list-h-team{text-align:right;}
+.totw-list-h-logo{width:32px;}
+.totw-list-h-team{text-align:right;padding-right:2px;}
 .totw-list-h-gw{text-align:center;}
 .totw-list-h-total{text-align:center;}
 
 .totw-list-item{
     display:grid;
-    grid-template-columns:26px 32px 1fr 46px 50px;
+    grid-template-columns:26px 26px 32px 1fr 46px 50px;
     gap:6px;
     align-items:center;
-    padding:10px 12px;
+    padding:8px 12px;
     border-bottom:1px solid #F3F4F6;
     color:#111827;
-    min-height:56px;
+    min-height:52px;
     background:#FFFFFF;
+    cursor:pointer;
     transition:background .2s ease;
 }
 
 .totw-list-item:last-child{border-bottom:none;}
 .totw-list-item:hover{background:#F5F3FF;}
+.totw-list-item.selected{background:#F5F3FF;}
 
-.totw-list-rank{
+.totw-list-check{
+    width:20px;
+    height:20px;
+    border:1.5px solid #A78BFA;
+    border-radius:6px;
     display:flex;
     align-items:center;
     justify-content:center;
-    width:22px;
-    height:22px;
-    font-size:12px;
+    font-size:11px;
     font-weight:900;
-    color:#9CA3AF;
-    text-align:center;
-    flex-shrink:0;
+    color:transparent;
     margin:0 auto;
+    background:#FFFFFF;
+    transition:all .2s ease;
+}
+
+.totw-list-check.checked{
+    background:#7C3AED;
+    border-color:#7C3AED;
+    color:#FFFFFF;
+}
+
+.totw-list-rank{
+    text-align:center;
+    font-size:12px;
+    font-weight:800;
+    color:#9CA3AF;
 }
 
 .totw-list-logo{
-    width:28px;
-    height:28px;
-    min-width:28px;
-    min-height:28px;
-    max-width:28px;
-    max-height:28px;
+    width:32px;
+    height:32px;
+    min-width:32px;
+    min-height:32px;
+    max-width:32px;
+    max-height:32px;
     position:relative;
     overflow:hidden;
     flex-shrink:0;
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#F5F3FF;
-    border:1px solid #EDE9FE;
-    border-radius:50%;
+    background:transparent;
+    border:none;
+    border-radius:0;
 }
 
 .totw-list-logo img{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    max-width:70%;
-    max-height:70%;
+    width:100%;
+    height:100%;
     object-fit:contain;
     display:block;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.15));
 }
 
 .totw-list-logo-empty{
     background:#F5F3FF;
     color:#A78BFA;
     font-size:14px;
+    border-radius:50%;
 }
 
 .totw-list-names{
@@ -362,7 +441,7 @@
 }
 
 .totw-list-entry{
-    font-size:13px;
+    font-size:12px;
     font-weight:900;
     color:#111827;
     text-align:right;
@@ -373,7 +452,7 @@
 }
 
 .totw-list-player{
-    font-size:11px;
+    font-size:10px;
     font-weight:600;
     color:#9CA3AF;
     text-align:right;
@@ -385,7 +464,7 @@
 
 .totw-list-gw{
     text-align:center;
-    font-size:14px;
+    font-size:13px;
     font-weight:900;
     color:#7C3AED;
     letter-spacing:0.5px;
@@ -393,7 +472,7 @@
 
 .totw-list-total{
     text-align:center;
-    font-size:14px;
+    font-size:13px;
     font-weight:900;
     color:#111827;
     letter-spacing:0.5px;
@@ -406,7 +485,7 @@
 .totw-loading{
     text-align:center;
     padding:40px 20px;
-    color:#00ff87;
+    color:#7C3AED;
     font-size:15px;
     font-weight:900;
 }
@@ -415,8 +494,8 @@
     display:inline-block;
     width:36px;
     height:36px;
-    border:4px solid rgba(0,255,135,.2);
-    border-top-color:#00ff87;
+    border:4px solid rgba(124,58,237,.2);
+    border-top-color:#7C3AED;
     border-radius:50%;
     animation:spinTOTW .8s linear infinite;
     margin-bottom:14px;
@@ -484,32 +563,46 @@
     .totw-row-mid{padding:0 3%;}
     .totw-row-fwd{padding:0 18%;}
 
+    /* List — mobile */
+    .totw-list-view{
+        max-width:100%;
+    }
+
     .totw-list-header{
-        grid-template-columns:22px 1fr 40px 44px;
-        padding:8px 8px;
-        font-size:9px;
+        grid-template-columns:22px 22px 28px 1fr 38px 42px;
+        padding:8px;
+        gap:5px;
+        font-size:8px;
     }
 
     .totw-list-item{
-        grid-template-columns:22px 26px 1fr 40px 44px;
-        padding:8px 8px;
+        grid-template-columns:22px 22px 28px 1fr 38px 42px;
+        padding:8px;
         gap:5px;
-        min-height:52px;
+        min-height:48px;
     }
 
-    .totw-list-rank{width:20px;height:20px;font-size:11px;}
+    .totw-list-check{
+        width:18px;
+        height:18px;
+        font-size:10px;
+    }
+
+    .totw-list-rank{
+        font-size:11px;
+    }
 
     .totw-list-logo{
-        width:24px;
-        height:24px;
-        min-width:24px;
-        min-height:24px;
-        max-width:24px;
-        max-height:24px;
+        width:28px;
+        height:28px;
+        min-width:28px;
+        min-height:28px;
+        max-width:28px;
+        max-height:28px;
     }
 
-    .totw-list-entry{font-size:12px;}
-    .totw-list-player{font-size:10px;}
+    .totw-list-entry{font-size:11px;}
+    .totw-list-player{font-size:9px;}
     .totw-list-gw,
     .totw-list-total{font-size:12px;}
 }
