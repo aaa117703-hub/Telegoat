@@ -1,8 +1,10 @@
 /* =========================================================
-   totw.css — v26 (FPL Style)
-   - الاسم: أبيض + نص أسود
-   - النقاط: سماوي + نص أبيض
-   - قميص شفاف فوق الملعب
+   totw.css — v27
+   - إصلاح الخلفية الشفافة (mix-blend-mode)
+   - الاسم يصعد ليغطي القميص
+   - النقاط بنفسجي (هوية الموقع)
+   - الاسم أصغر (12 حرف)
+   - إزالة TEAM OF THE WEEK
 ========================================================= */
 
 /* ========== TABS ========== */
@@ -123,48 +125,10 @@
     z-index: -1;
 }
 
-/* ========== PITCH TITLE ========== */
+/* ========== PITCH TITLE — مخفي ========== */
 
 .totw-pitch-title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 10px 20px;
-    margin: 0 auto 22px;
-    position: relative;
-    z-index: 2;
-    width: fit-content;
-    max-width: 90%;
-
-    background: linear-gradient(
-        90deg,
-        rgba(124, 58, 237, 0) 0%,
-        rgba(124, 58, 237, 0.85) 25%,
-        rgba(109, 40, 217, 0.95) 50%,
-        rgba(124, 58, 237, 0.85) 75%,
-        rgba(124, 58, 237, 0) 100%
-    );
-    border-radius: 50px;
-
-    color: #FFFFFF;
-    font-size: 13px;
-    font-weight: 900;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-}
-
-.totw-pitch-title .gw-label {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 10px;
-    letter-spacing: 1px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    flex-shrink: 0;
+    display: none !important;
 }
 
 /* ========== PLAYERS CONTAINER ========== */
@@ -172,7 +136,7 @@
 .totw-players {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
     position: relative;
     z-index: 2;
 }
@@ -194,7 +158,7 @@
 .totw-row-fwd { justify-content: space-around; }
 
 /* =========================================================
-   PLAYER CARD — تماماً مثل FPL
+   PLAYER CARD
 ========================================================= */
 
 .totw-card {
@@ -212,13 +176,15 @@
     transition: transform 0.2s ease;
     position: relative;
     overflow: visible;
+    /* ⭐ isolation للـ blend mode */
+    isolation: auto;
 }
 
 .totw-card:hover {
     transform: translateY(-3px);
 }
 
-/* ========== SHIRT — شفاف تماماً ========== */
+/* ========== SHIRT — شفاف مع mix-blend-mode ========== */
 
 .tc-shirt {
     width: 48px;
@@ -228,11 +194,11 @@
     justify-content: center;
     background: transparent !important;
     border: none !important;
-    margin-bottom: 0;
+    margin-bottom: -8px; /* ⭐ يصعد الاسم فوق حافة القميص */
     overflow: visible;
     position: relative;
     z-index: 1;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
 }
 
 .tc-shirt img {
@@ -240,10 +206,16 @@
     height: 100%;
     object-fit: contain;
     display: block;
+    /* ⭐ الحل السحري: يخلي الخلفية البيضاء شفافة */
+    mix-blend-mode: multiply;
 }
 
 .tc-shirt-fallback { background: transparent; }
-.tc-shirt-fallback img { width: 85%; height: 85%; }
+.tc-shirt-fallback img {
+    width: 85%;
+    height: 85%;
+    mix-blend-mode: multiply;
+}
 
 .tc-shirt-empty {
     background: rgba(255, 255, 255, 0.15);
@@ -253,53 +225,55 @@
 }
 
 /* =========================================================
-   NAME — أبيض + نص أسود (FPL)
+   NAME — أبيض + نص أسود + يصعد فوق القميص
 ========================================================= */
 
 .tc-name {
-    font-size: 10px;
+    font-size: 8px;         /* ⭐ أصغر ليتسع الاسم كامل */
     font-weight: 900;
     color: #111111;
     text-align: center;
-    line-height: 1.2;
-    letter-spacing: 0.2px;
+    line-height: 1.15;
+    letter-spacing: 0;
     margin: 0;
+    margin-top: 0;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    padding: 3px 6px;
+    padding: 3px 4px;
     background: #FFFFFF;
     border-radius: 0;
     width: 100%;
     position: relative;
-    z-index: 1;
+    z-index: 2;               /* ⭐ فوق القميص */
     border: none;
     box-sizing: border-box;
     font-family: inherit;
+    text-transform: none;
 }
 
 /* =========================================================
-   POINTS — سماوي + نص أبيض (FPL)
+   POINTS — بنفسجي (هوية الموقع)
 ========================================================= */
 
 .tc-points {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 900;
     color: #FFFFFF;
-    background: #00d4ff;
-    padding: 3px 6px 4px;
+    background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+    padding: 3px 4px 4px;
     text-align: center;
     letter-spacing: 0.5px;
     width: 100%;
     border: none;
-    border-top: none;
     border-radius: 0;
     min-width: 0;
     position: relative;
-    z-index: 1;
+    z-index: 2;
     box-sizing: border-box;
     font-family: inherit;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* ========== LIST VIEW ========== */
@@ -526,18 +500,6 @@
         padding: 16px 6px 18px;
     }
 
-    .totw-pitch-title {
-        font-size: 11px;
-        padding: 8px 16px;
-        letter-spacing: 1.5px;
-        margin-bottom: 18px;
-    }
-
-    .totw-pitch-title .gw-label {
-        font-size: 9px;
-        padding: 2px 8px;
-    }
-
     .totw-card {
         min-width: 62px;
         max-width: 72px;
@@ -546,16 +508,17 @@
     .tc-shirt {
         width: 42px;
         height: 42px;
+        margin-bottom: -6px;
     }
 
     .tc-name {
-        font-size: 9px;
-        padding: 2px 4px;
+        font-size: 7.5px;
+        padding: 2px 3px;
     }
 
     .tc-points {
-        font-size: 11px;
-        padding: 2px 4px 3px;
+        font-size: 10px;
+        padding: 2px 3px 3px;
     }
 
     .totw-row { gap: 4px; }
