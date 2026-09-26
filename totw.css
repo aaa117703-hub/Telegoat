@@ -1,9 +1,8 @@
 /* =========================================================
-   totw.css — v24
-   - بطاقات شفافة (بدون خلفية بيضاء)
-   - الاسم + النقاط بخلفيات منفصلة
-   - قمصان أصغر ومتناسقة
-   - عنوان TOTW بخلفية متدرجة
+   totw.css — v25
+   - بطاقات شفافة بدون خلفية بيضاء
+   - الاسم بخلفية بنفسجية متدرجة + حواف دائرية
+   - النقاط بخلفية بنفسجية داكنة + حواف سفلية
 ========================================================= */
 
 /* ========== TABS ========== */
@@ -39,9 +38,7 @@
     color: var(--text-secondary, #6B7280);
 }
 
-.totw-tab-btn:hover {
-    color: var(--purple-600, #6D28D9);
-}
+.totw-tab-btn:hover { color: var(--purple-600, #6D28D9); }
 
 .totw-tab-btn.active {
     background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
@@ -72,9 +69,7 @@
     animation: totwSpin 0.8s linear infinite;
 }
 
-@keyframes totwSpin {
-    to { transform: rotate(360deg); }
-}
+@keyframes totwSpin { to { transform: rotate(360deg); } }
 
 /* ========== PITCH WRAPPER ========== */
 
@@ -86,9 +81,7 @@
     padding: 8px 0;
 }
 
-.totw-pitch-wrapper.show {
-    display: flex;
-}
+.totw-pitch-wrapper.show { display: flex; }
 
 /* ========== PITCH ========== */
 
@@ -113,7 +106,6 @@
         inset 0 0 30px rgba(0, 0, 0, 0.15);
 }
 
-/* Fallback */
 .totw-pitch::before {
     content: '';
     position: absolute;
@@ -147,11 +139,11 @@
 
     background: linear-gradient(
         90deg,
-        rgba(0, 0, 0, 0) 0%,
-        rgba(17, 24, 39, 0.85) 20%,
-        rgba(124, 58, 237, 0.95) 50%,
-        rgba(17, 24, 39, 0.85) 80%,
-        rgba(0, 0, 0, 0) 100%
+        rgba(124, 58, 237, 0) 0%,
+        rgba(124, 58, 237, 0.85) 25%,
+        rgba(109, 40, 217, 0.95) 50%,
+        rgba(124, 58, 237, 0.85) 75%,
+        rgba(124, 58, 237, 0) 100%
     );
     border-radius: 50px;
 
@@ -160,11 +152,11 @@
     font-weight: 900;
     letter-spacing: 2px;
     text-transform: uppercase;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .totw-pitch-title .gw-label {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.2);
     padding: 3px 10px;
     border-radius: 20px;
     font-size: 10px;
@@ -201,7 +193,9 @@
 .totw-row-mid { justify-content: space-around; }
 .totw-row-fwd { justify-content: space-around; }
 
-/* ========== PLAYER CARD — شفافة بالكامل ========== */
+/* =========================================================
+   PLAYER CARD — شفاف بالكامل + العمود كامل بنفسجي
+========================================================= */
 
 .totw-card {
     display: flex;
@@ -217,13 +211,14 @@
     flex: 1 1 0;
     transition: transform 0.2s ease;
     position: relative;
+    overflow: visible;
 }
 
 .totw-card:hover {
     transform: translateY(-3px);
 }
 
-/* ========== SHIRT — صغير ومتناسق ========== */
+/* ========== SHIRT — شفاف بتظليل ========== */
 
 .tc-shirt {
     width: 44px;
@@ -233,11 +228,11 @@
     justify-content: center;
     background: transparent !important;
     border: none !important;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     overflow: visible;
     position: relative;
     z-index: 1;
-    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6));
 }
 
 .tc-shirt img {
@@ -247,14 +242,8 @@
     display: block;
 }
 
-.tc-shirt-fallback {
-    background: transparent;
-}
-
-.tc-shirt-fallback img {
-    width: 80%;
-    height: 80%;
-}
+.tc-shirt-fallback { background: transparent; }
+.tc-shirt-fallback img { width: 80%; height: 80%; }
 
 .tc-shirt-empty {
     background: rgba(255, 255, 255, 0.15);
@@ -263,47 +252,50 @@
     height: 36px;
 }
 
-/* ========== NAME — خلفية داكنة ========== */
+/* =========================================================
+   NAME — خلفية بنفسجية مع رأس دائري
+========================================================= */
 
 .tc-name {
     font-size: 9px;
-    font-weight: 800;
+    font-weight: 900;
     color: #FFFFFF;
     text-align: center;
     line-height: 1.15;
     letter-spacing: 0.2px;
-    margin-bottom: 0;
+    margin: 0;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    padding: 3px 6px;
-    background: rgba(17, 24, 39, 0.85);
-    border-radius: 6px 6px 0 0;
+    padding: 4px 6px;
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    border-radius: 10px 10px 0 0;
     width: 100%;
     position: relative;
     z-index: 1;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
     border-bottom: none;
     box-sizing: border-box;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* ========== POINTS — خلفية زرقاء (FPL style) ========== */
+/* =========================================================
+   POINTS — خلفية بنفسجية داكنة مع ذيل دائري
+========================================================= */
 
 .tc-points {
     font-size: 11px;
     font-weight: 900;
     color: #FFFFFF;
-    background: linear-gradient(135deg, #00b8ff 0%, #0088cc 100%);
-    padding: 2px 6px 3px;
+    background: linear-gradient(135deg, #5B21B6 0%, #4C1D95 100%);
+    padding: 3px 6px 4px;
     text-align: center;
     letter-spacing: 0.5px;
     width: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
     border-top: none;
-    border-radius: 0 0 6px 6px;
+    border-radius: 0 0 10px 10px;
     min-width: 0;
     position: relative;
     z-index: 1;
@@ -341,14 +333,9 @@
     margin: 0 2px;
 }
 
-.totw-count-bar .count-num.full {
-    color: var(--green-600, #059669);
-}
+.totw-count-bar .count-num.full { color: var(--green-600, #059669); }
 
-.totw-actions {
-    display: flex;
-    gap: 6px;
-}
+.totw-actions { display: flex; gap: 6px; }
 
 .totw-actions button {
     padding: 7px 14px;
@@ -378,9 +365,7 @@
     border: 1.5px solid #E5E7EB;
 }
 
-.totw-actions button:active {
-    transform: scale(0.95);
-}
+.totw-actions button:active { transform: scale(0.95); }
 
 /* ========== LIST HEADER ========== */
 
@@ -427,9 +412,7 @@
     border-radius: 0 0 12px 12px;
 }
 
-.totw-list-item:hover {
-    background: var(--purple-50, #F5F3FF);
-}
+.totw-list-item:hover { background: var(--purple-50, #F5F3FF); }
 
 .totw-list-item.selected {
     background: var(--purple-50, #F5F3FF);
@@ -487,10 +470,7 @@
     font-size: 16px;
 }
 
-.totw-list-names {
-    min-width: 0;
-    overflow: hidden;
-}
+.totw-list-names { min-width: 0; overflow: hidden; }
 
 .totw-list-entry {
     font-size: 12px;
@@ -571,21 +551,16 @@
 
     .tc-name {
         font-size: 8px;
-        padding: 2px 4px;
+        padding: 3px 4px;
     }
 
     .tc-points {
         font-size: 10px;
-        padding: 2px 4px;
+        padding: 2px 4px 3px;
     }
 
-    .totw-row {
-        gap: 4px;
-    }
-
-    .totw-players {
-        gap: 16px;
-    }
+    .totw-row { gap: 4px; }
+    .totw-players { gap: 16px; }
 
     .totw-list-header,
     .totw-list-item {
