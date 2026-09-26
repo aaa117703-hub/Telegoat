@@ -1,6 +1,9 @@
 /* =========================================================
-   totw.css — v23
-   - خلفية الملعب من ملف محلي: pitch-bg.png
+   totw.css — v24
+   - بطاقات شفافة (بدون خلفية بيضاء)
+   - الاسم + النقاط بخلفيات منفصلة
+   - قمصان أصغر ومتناسقة
+   - عنوان TOTW بخلفية متدرجة
 ========================================================= */
 
 /* ========== TABS ========== */
@@ -58,7 +61,6 @@
     color: var(--purple-600, #6D28D9);
     font-size: 14px;
     font-weight: 700;
-    letter-spacing: 0.5px;
 }
 
 .totw-loading .spinner {
@@ -88,32 +90,30 @@
     display: flex;
 }
 
-/* ========== PITCH — خلفية الملعب المحلية ========== */
+/* ========== PITCH ========== */
 
 .totw-pitch {
     width: 100%;
     max-width: 480px;
     margin: 0 auto;
-    padding: 24px 12px 24px;
+    padding: 20px 8px 22px;
     position: relative;
     overflow: hidden;
     border-radius: 20px;
 
-    /* ⭐ خلفية الملعب من ملف محلي */
     background-image: url('./pitch-bg.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-color: #4a8b3a;
 
-    /* إطار أخضر داكن */
     border: 3px solid #2d5a24;
     box-shadow:
         0 10px 40px rgba(0, 0, 0, 0.4),
         inset 0 0 30px rgba(0, 0, 0, 0.15);
 }
 
-/* Fallback: ملعب أخضر بـ CSS (يظهر وراء الصورة) */
+/* Fallback */
 .totw-pitch::before {
     content: '';
     position: absolute;
@@ -131,34 +131,48 @@
     z-index: -1;
 }
 
-/* ========== PITCH TITLE ========== */
+/* ========== PITCH TITLE — بالوسط مع خلفية متدرجة ========== */
 
 .totw-pitch-title {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 12px 20px;
+    justify-content: center;
+    gap: 12px;
+    padding: 10px 20px;
+    margin: 0 auto 22px;
+    position: relative;
+    z-index: 2;
+    width: fit-content;
+    max-width: 90%;
+
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(17, 24, 39, 0.85) 20%,
+        rgba(124, 58, 237, 0.95) 50%,
+        rgba(17, 24, 39, 0.85) 80%,
+        rgba(0, 0, 0, 0) 100%
+    );
+    border-radius: 50px;
+
     color: #FFFFFF;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 900;
     letter-spacing: 2px;
     text-transform: uppercase;
-    position: relative;
-    z-index: 2;
-    text-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.8),
-        0 0 20px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
 .totw-pitch-title .gw-label {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 4px 12px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 3px 10px;
     border-radius: 20px;
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 1px;
     border: 1px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    flex-shrink: 0;
 }
 
 /* ========== PLAYERS CONTAINER ========== */
@@ -166,7 +180,7 @@
 .totw-players {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 20px;
     position: relative;
     z-index: 2;
 }
@@ -177,9 +191,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: nowrap;
-    padding: 0 4px;
+    padding: 0 2px;
 }
 
 .totw-row-gk  { justify-content: center; }
@@ -187,24 +201,20 @@
 .totw-row-mid { justify-content: space-around; }
 .totw-row-fwd { justify-content: space-around; }
 
-/* ========== PLAYER CARD ========== */
+/* ========== PLAYER CARD — شفافة بالكامل ========== */
 
 .totw-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    background: #FFFFFF;
-    border-radius: 8px;
-    padding: 4px 4px 0;
-    min-width: 78px;
-    max-width: 92px;
+    justify-content: flex-end;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0;
+    min-width: 66px;
+    max-width: 78px;
     flex: 1 1 0;
-    overflow: hidden;
-    box-shadow:
-        0 4px 12px rgba(0, 0, 0, 0.3),
-        0 1px 3px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(0, 0, 0, 0.15);
     transition: transform 0.2s ease;
     position: relative;
 }
@@ -213,20 +223,21 @@
     transform: translateY(-3px);
 }
 
-/* ========== SHIRT ========== */
+/* ========== SHIRT — صغير ومتناسق ========== */
 
 .tc-shirt {
-    width: 56px;
-    height: 56px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: transparent;
-    border: none;
-    margin-bottom: 2px;
+    background: transparent !important;
+    border: none !important;
+    margin-bottom: 4px;
     overflow: visible;
     position: relative;
     z-index: 1;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
 }
 
 .tc-shirt img {
@@ -234,25 +245,30 @@
     height: 100%;
     object-fit: contain;
     display: block;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
-.tc-shirt-fallback { background: transparent; }
-.tc-shirt-fallback img { width: 80%; height: 80%; }
+.tc-shirt-fallback {
+    background: transparent;
+}
+
+.tc-shirt-fallback img {
+    width: 80%;
+    height: 80%;
+}
 
 .tc-shirt-empty {
-    background: rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 50%;
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
 }
 
-/* ========== NAME ========== */
+/* ========== NAME — خلفية داكنة ========== */
 
 .tc-name {
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 800;
-    color: var(--text-primary, #111827);
+    color: #FFFFFF;
     text-align: center;
     line-height: 1.15;
     letter-spacing: 0.2px;
@@ -261,29 +277,38 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    padding: 4px 4px 3px;
-    background: #FFFFFF;
+    padding: 3px 6px;
+    background: rgba(17, 24, 39, 0.85);
+    border-radius: 6px 6px 0 0;
     width: 100%;
     position: relative;
     z-index: 1;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: none;
+    box-sizing: border-box;
 }
 
-/* ========== POINTS — شريط أزرق FPL ========== */
+/* ========== POINTS — خلفية زرقاء (FPL style) ========== */
 
 .tc-points {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 900;
     color: #FFFFFF;
-    background: #00b8ff;
-    padding: 3px 4px;
+    background: linear-gradient(135deg, #00b8ff 0%, #0088cc 100%);
+    padding: 2px 6px 3px;
     text-align: center;
     letter-spacing: 0.5px;
     width: 100%;
-    border: none;
-    border-radius: 0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
     min-width: 0;
     position: relative;
     z-index: 1;
+    box-sizing: border-box;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* ========== LIST VIEW ========== */
@@ -519,32 +544,47 @@
 
 @media (max-width: 400px) {
     .totw-pitch {
-        padding: 20px 8px 20px;
+        padding: 16px 6px 18px;
+    }
+
+    .totw-pitch-title {
+        font-size: 11px;
+        padding: 8px 16px;
+        letter-spacing: 1.5px;
+        margin-bottom: 18px;
+    }
+
+    .totw-pitch-title .gw-label {
+        font-size: 9px;
+        padding: 2px 8px;
     }
 
     .totw-card {
-        min-width: 66px;
-        max-width: 78px;
-        padding: 4px 3px 0;
+        min-width: 58px;
+        max-width: 68px;
     }
 
     .tc-shirt {
-        width: 46px;
-        height: 46px;
+        width: 38px;
+        height: 38px;
     }
 
     .tc-name {
-        font-size: 9px;
-        padding: 3px 3px 2px;
+        font-size: 8px;
+        padding: 2px 4px;
     }
 
     .tc-points {
-        font-size: 11px;
-        padding: 2px 3px;
+        font-size: 10px;
+        padding: 2px 4px;
     }
 
     .totw-row {
-        gap: 5px;
+        gap: 4px;
+    }
+
+    .totw-players {
+        gap: 16px;
     }
 
     .totw-list-header,
