@@ -1,8 +1,6 @@
 /* =========================================================
-   clubs.js — v7
-   - قائمة الأندية
-   - Modal: لاعبين مرتبين بالنقاط (من FPL)
-   - إدارة اللاعبين (من Manager-Hub)
+   clubs.js — v8
+   - إصلاح: استخدام normalizePlayerName من players-teams.js
 ========================================================= */
 
 const CLUBS_PIN = '024680';
@@ -13,6 +11,18 @@ let clubsLoaded = false;
 let clubsEditMode = false;
 let currentOpenClub = null;
 let cpModalEl = null;
+
+
+/* =========================================================
+   NORMALIZE HELPER
+========================================================= */
+
+function _clubsNormalize(s) {
+    if (typeof normalizePlayerName === 'function') {
+        return normalizePlayerName(s);
+    }
+    return String(s || '').trim().toLowerCase();
+}
 
 
 /* =========================================================
@@ -93,8 +103,6 @@ async function seedClubsToSupabase() {
             console.error('Seed clubs error:', error);
             return;
         }
-
-        console.log('Seeded ' + rows.length + ' teams');
     } catch (e) {
         console.error('seedClubsToSupabase exception:', e);
     }
@@ -138,10 +146,7 @@ async function saveClubPlayers(team, players) {
 function renderClubsList() {
 
     const container = document.getElementById('clubsList');
-    if (!container) {
-        console.warn('clubsList not found');
-        return;
-    }
+    if (!container) return;
 
     const teamKeys = Object.keys(clubsData);
 
@@ -241,24 +246,42 @@ async function openClubPlayers(team) {
 
         const teamPlayers = clubsData[team] || [];
 
+        /* ⭐ بناء خريطة النقاط باستخدام normalize قوي */
         const pointsMap = {};
-        allManagers.forEach(function(m) {
-            const pn = String(m.player_name || '').trim().toLowerCase();
-            const en = String(m.entry_name || '').trim().toLowerCase();
 
-            if (pn) {
+        allManagers.forEach(function(m) {
+            const pn = _clubsNormalize(m.player_name || '');
+            const en = _clubsNormalize(m.entry_name || '');
+
+            if (pn && !pointsMap[pn]) {
                 pointsMap[pn] = m;
             }
-            if (en) {
-                if (!pointsMap[en]) {
-                    pointsMap[en] = m;
-                }
+            if (en && !pointsMap[en]) {
+                pointsMap[en] = m;
             }
         });
 
+        /* ⭐ مطابقة قوية */
         teamPlayers.forEach(function(name) {
-            const key = String(name || '').trim().toLowerCase();
-            const m = pointsMap[key];
+            const key = _clubsNormalize(name);
+            let m = pointsMap[key];
+
+            /* Fallback: بحث جزئي */
+            if (!m && key.length >= 3) {
+                for (let i = 0; i < allManagers.length; i++) {
+                    const pn = _clubsNormalize(allManagers[i].player_name || '');
+                    const en = _clubsNormalize(allManagers[i].entry_name || '');
+
+                    if (pn === key || en === key) {
+                        m = allManagers[i];
+                        break;
+                    }
+
+                    if (pn.indexOf(key) !== -1 || en.indexOf(key) !== -1) {
+                        if (!m) m = allManagers[i];
+                    }
+                }
+            }
 
             if (m) {
                 playersWithPoints.push({
@@ -324,17 +347,21 @@ function renderClubPlayersModal(team, logoHtml, players) {
             const displayEntry = p.entry_name || p.player_name || p.name || 'Unknown';
             const displayPlayer = p.player_name && p.player_name !== displayEntry ? p.player_name : '';
 
+            /* ⭐ إذا مو موجود في FPL — نظهر "—" بدل 0 */
+            const pointsDisplay = p.found ? (p.total || 0) : '—';
+            const notFoundClass = p.found ? '' : ' cp-not-found';
+
             playersHtml +=
-                '<div class="cp-player-row' + rowClass + '">' +
+                '<div class="cp-player-row' + rowClass + notFoundClass + '">' +
                     '<div class="cp-rank">' + rank + '</div>' +
                     '<div class="cp-logo cp-logo-empty"></div>' +
                     '<div class="cp-names">' +
                         '<div class="cp-name">' + escapeHtml(displayEntry) + '</div>' +
                         (displayPlayer ? '<div class="cp-player">' + escapeHtml(displayPlayer) + '</div>' : '') +
                     '</div>' +
-                    '<div class="cp-points">' +
-                        (p.total || 0) +
-                        '<span class="cp-points-label">PTS</span>' +
+                    '<div class="cp-points' + (p.found ? '' : ' cp-points-empty') + '">' +
+                        pointsDisplay +
+                        (p.found ? '<span class="cp-points-label">PTS</span>' : '<span class="cp-points-label">—</span>') +
                     '</div>' +
                 '</div>';
         });
@@ -392,7 +419,7 @@ function escapeHtml(s) {
 
 
 /* =========================================================
-   OLD CLUB DETAIL — للإدارة
+   OLD CLUB DETAIL
 ========================================================= */
 
 function openClubDetail(team) {
