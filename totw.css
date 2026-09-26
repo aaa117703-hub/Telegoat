@@ -1,8 +1,8 @@
 /* =========================================================
-   totw.css — v25
-   - بطاقات شفافة بدون خلفية بيضاء
-   - الاسم بخلفية بنفسجية متدرجة + حواف دائرية
-   - النقاط بخلفية بنفسجية داكنة + حواف سفلية
+   totw.css — v26 (FPL Style)
+   - الاسم: أبيض + نص أسود
+   - النقاط: سماوي + نص أبيض
+   - قميص شفاف فوق الملعب
 ========================================================= */
 
 /* ========== TABS ========== */
@@ -123,7 +123,7 @@
     z-index: -1;
 }
 
-/* ========== PITCH TITLE — بالوسط مع خلفية متدرجة ========== */
+/* ========== PITCH TITLE ========== */
 
 .totw-pitch-title {
     display: flex;
@@ -194,7 +194,7 @@
 .totw-row-fwd { justify-content: space-around; }
 
 /* =========================================================
-   PLAYER CARD — شفاف بالكامل + العمود كامل بنفسجي
+   PLAYER CARD — تماماً مثل FPL
 ========================================================= */
 
 .totw-card {
@@ -206,8 +206,8 @@
     border: none !important;
     box-shadow: none !important;
     padding: 0;
-    min-width: 66px;
-    max-width: 78px;
+    min-width: 70px;
+    max-width: 82px;
     flex: 1 1 0;
     transition: transform 0.2s ease;
     position: relative;
@@ -218,21 +218,21 @@
     transform: translateY(-3px);
 }
 
-/* ========== SHIRT — شفاف بتظليل ========== */
+/* ========== SHIRT — شفاف تماماً ========== */
 
 .tc-shirt {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: transparent !important;
     border: none !important;
-    margin-bottom: 3px;
+    margin-bottom: 0;
     overflow: visible;
     position: relative;
     z-index: 1;
-    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6));
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 .tc-shirt img {
@@ -243,64 +243,63 @@
 }
 
 .tc-shirt-fallback { background: transparent; }
-.tc-shirt-fallback img { width: 80%; height: 80%; }
+.tc-shirt-fallback img { width: 85%; height: 85%; }
 
 .tc-shirt-empty {
     background: rgba(255, 255, 255, 0.15);
     border-radius: 50%;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
 }
 
 /* =========================================================
-   NAME — خلفية بنفسجية مع رأس دائري
+   NAME — أبيض + نص أسود (FPL)
 ========================================================= */
 
 .tc-name {
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 900;
-    color: #FFFFFF;
+    color: #111111;
     text-align: center;
-    line-height: 1.15;
+    line-height: 1.2;
     letter-spacing: 0.2px;
     margin: 0;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    padding: 4px 6px;
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    border-radius: 10px 10px 0 0;
+    padding: 3px 6px;
+    background: #FFFFFF;
+    border-radius: 0;
     width: 100%;
     position: relative;
     z-index: 1;
-    border: 1.5px solid rgba(255, 255, 255, 0.25);
-    border-bottom: none;
+    border: none;
     box-sizing: border-box;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-family: inherit;
 }
 
 /* =========================================================
-   POINTS — خلفية بنفسجية داكنة مع ذيل دائري
+   POINTS — سماوي + نص أبيض (FPL)
 ========================================================= */
 
 .tc-points {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 900;
     color: #FFFFFF;
-    background: linear-gradient(135deg, #5B21B6 0%, #4C1D95 100%);
+    background: #00d4ff;
     padding: 3px 6px 4px;
     text-align: center;
     letter-spacing: 0.5px;
     width: 100%;
-    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    border: none;
     border-top: none;
-    border-radius: 0 0 10px 10px;
+    border-radius: 0;
     min-width: 0;
     position: relative;
     z-index: 1;
     box-sizing: border-box;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-family: inherit;
 }
 
 /* ========== LIST VIEW ========== */
@@ -540,22 +539,22 @@
     }
 
     .totw-card {
-        min-width: 58px;
-        max-width: 68px;
+        min-width: 62px;
+        max-width: 72px;
     }
 
     .tc-shirt {
-        width: 38px;
-        height: 38px;
+        width: 42px;
+        height: 42px;
     }
 
     .tc-name {
-        font-size: 8px;
-        padding: 3px 4px;
+        font-size: 9px;
+        padding: 2px 4px;
     }
 
     .tc-points {
-        font-size: 10px;
+        font-size: 11px;
         padding: 2px 4px 3px;
     }
 
