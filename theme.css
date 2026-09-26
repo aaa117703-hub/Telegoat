@@ -1,6 +1,6 @@
 /* =========================================================
-   theme.css — v6
-   - حذف قسم TOTW بالكامل (يتحكم به totw.css)
+   theme.css — v7
+   - إصلاح: Scroll داخل الإعدادات
 ========================================================= */
 
 /* ========== 1. VARIABLES ========== */
@@ -468,11 +468,9 @@ body {
 .stats-record-green .stats-record-value { color: var(--green-600) !important; }
 
 /* =========================================================
-   14. TOTW — محذوف بالكامل
-   (يُدار بواسطة totw.css)
+   14. TOTW — الملعب يدار بواسطة totw.css
 ========================================================= */
 
-/* فقط يمنع أي توريث غلط */
 .totw-pitch-wrapper {
     background: transparent !important;
 }
@@ -506,30 +504,9 @@ body {
     border-color: var(--purple-500) !important;
     color: #fff !important;
 }
-.club-modal-box {
-    background: #FFFFFF !important;
-    border: 1.5px solid var(--purple-100) !important;
-    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25) !important;
-}
-.club-modal-title { color: var(--text-primary) !important; }
-.club-modal-sub { color: var(--text-secondary) !important; }
-.club-player-row {
-    background: #FFFFFF !important;
-    border-bottom: 1px solid #F3F4F6 !important;
-    color: var(--text-primary) !important;
-}
-.club-player-num { color: var(--purple-600) !important; }
-.club-add-btn {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
-    color: #fff !important;
-}
-.club-stats-btn {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-    color: #fff !important;
-}
 
 /* =========================================================
-   16. TRENDS
+   16. TRENDS (يبقى احتياطاً)
 ========================================================= */
 
 .trend-row {
@@ -843,3 +820,60 @@ body {
 .team-player-name { color: var(--text-primary) !important; }
 .team-player-points { color: var(--purple-600) !important; text-shadow: none !important; }
 .team-player-rank { color: var(--text-tertiary) !important; }
+
+/* =========================================================
+   21. SETTINGS EMBED — إصلاح Scroll
+========================================================= */
+
+.settings-body {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    max-height: 100% !important;
+    touch-action: pan-y !important;
+}
+
+.settings-embed {
+    width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.settings-embed .clubs-list,
+.settings-embed #clubsList {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.settings-embed .clubs-controls {
+    display: flex !important;
+    justify-content: center !important;
+    margin-bottom: 12px !important;
+    padding: 8px 0 !important;
+}
+
+/* منع أي عنصر من محاولة التمرير بشكل مستقل */
+#clubsList.clubs-list {
+    overflow: visible !important;
+    max-height: none !important;
+}
+
+/* زر الرجوع بعرض كامل */
+.settings-back {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 12px !important;
+}
+
+.clubs-edit-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
