@@ -1,5 +1,5 @@
 /* =========================================================
-   totw.css
+   totw.css — الأصلي + List محدّث بالبنفسجي
 ========================================================= */
 
 .totw-tabs{
@@ -13,9 +13,9 @@
 
 .totw-tab-btn{
     padding:6px 22px;
-    background:linear-gradient(135deg, #38003c 0%, #2e0b3d 100%);
-    color:#fff;
-    border:2px solid #00ff87;
+    background:#FFFFFF;
+    color:#6B7280;
+    border:2px solid #EDE9FE;
     border-radius:50px;
     font-size:11px;
     font-weight:900;
@@ -28,13 +28,16 @@
 }
 
 .totw-tab-btn.active{
-    background:linear-gradient(135deg, #00e676 0%, #009b40 100%);
-    box-shadow:0 0 15px rgba(0,255,135,.7);
+    background:linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    color:#FFFFFF;
+    border-color:#7C3AED;
+    box-shadow:0 4px 14px rgba(124,58,237,.35);
 }
 
 .totw-tab-btn:hover{
     transform:translateY(-2px);
-    box-shadow:0 4px 12px rgba(0,255,135,.5);
+    border-color:#A78BFA;
+    color:#7C3AED;
 }
 
 .totw-pitch-wrapper{
@@ -250,18 +253,18 @@
 }
 
 /* =========================================================
-   عرض القائمة
+   عرض القائمة — ⭐ محدّث بالبنفسجي
 ========================================================= */
 
 .totw-list-view{
     width:100%;
     max-width:480px;
     margin:0 auto 16px;
-    background:linear-gradient(135deg, #37003c 0%, #2e0b3d 100%);
-    border:2px solid #5a055a;
+    background:#FFFFFF;
+    border:1.5px solid #EDE9FE;
     border-radius:14px;
     overflow:hidden;
-    box-shadow:0 0 25px rgba(0,255,135,.3);
+    box-shadow:0 4px 16px rgba(124,58,237,.1);
 }
 
 .totw-list-header{
@@ -270,8 +273,9 @@
     gap:6px;
     align-items:center;
     padding:10px 12px;
-    border-bottom:1px solid rgba(255,255,255,.15);
-    color:#a8a8a8;
+    border-bottom:1.5px solid #EDE9FE;
+    background:#F5F3FF;
+    color:#5B21B6;
     font-size:10px;
     font-weight:800;
     text-transform:uppercase;
@@ -289,14 +293,15 @@
     gap:6px;
     align-items:center;
     padding:10px 12px;
-    border-bottom:1px solid rgba(255,255,255,.08);
-    color:#ffffff;
+    border-bottom:1px solid #F3F4F6;
+    color:#111827;
     min-height:56px;
+    background:#FFFFFF;
     transition:background .2s ease;
 }
 
 .totw-list-item:last-child{border-bottom:none;}
-.totw-list-item:hover{background:rgba(255,255,255,.05);}
+.totw-list-item:hover{background:#F5F3FF;}
 
 .totw-list-rank{
     display:flex;
@@ -306,7 +311,7 @@
     height:22px;
     font-size:12px;
     font-weight:900;
-    color:#ffffff;
+    color:#9CA3AF;
     text-align:center;
     flex-shrink:0;
     margin:0 auto;
@@ -325,7 +330,8 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background:rgba(255,255,255,.1);
+    background:#F5F3FF;
+    border:1px solid #EDE9FE;
     border-radius:50%;
 }
 
@@ -341,8 +347,8 @@
 }
 
 .totw-list-logo-empty{
-    background:rgba(255,255,255,.15);
-    color:#ffffff;
+    background:#F5F3FF;
+    color:#A78BFA;
     font-size:14px;
 }
 
@@ -358,7 +364,7 @@
 .totw-list-entry{
     font-size:13px;
     font-weight:900;
-    color:#ffffff;
+    color:#111827;
     text-align:right;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -369,7 +375,7 @@
 .totw-list-player{
     font-size:11px;
     font-weight:600;
-    color:#b8b8b8;
+    color:#9CA3AF;
     text-align:right;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -381,7 +387,7 @@
     text-align:center;
     font-size:14px;
     font-weight:900;
-    color:#ffffff;
+    color:#7C3AED;
     letter-spacing:0.5px;
 }
 
@@ -389,7 +395,7 @@
     text-align:center;
     font-size:14px;
     font-weight:900;
-    color:#ffffff;
+    color:#111827;
     letter-spacing:0.5px;
 }
 
