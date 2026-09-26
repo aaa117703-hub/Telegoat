@@ -1,7 +1,7 @@
 /* =========================================================
    stats.js — v13
-   - إزالة: loadTrends (الآن لا نحتاجها)
-   - Trends tab استُبدل بـ Clubs
+   - Trends tab مُستبدل بـ Clubs
+   - Clubs tab يفتح قائمة الأندية
 ========================================================= */
 
 const STATS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -121,15 +121,15 @@ function createStatsRow(rank, manager, value, valueLabel) {
         '<div class="stats-row-value">' +
             '<div class="stats-row-value-num">' + value + '</div>' +
             (valueLabel ? '<div class="stats-row-value-label">' + valueLabel + '</div>' : '') +
-        '</div>' document +
+        '</div>' +
     '</div>';
 }
 
 function renderStatsOverview(stats) {
-    if.getElementById (!stats) return;
+    if (!stats) return;
 
-(id    const setVal = function(id, val) {
-        const el =);
+    const setVal = function(id, val) {
+        const el = document.getElementById(id);
         if (el) el.textContent = val;
     };
 
@@ -411,7 +411,6 @@ function switchStatsTab(tabName) {
         initCharts();
     }
 
-    /* Scroll active button into view */
     setTimeout(function() {
         const activeBtn = document.querySelector('.stats-tab-btn.active');
         if (activeBtn && activeBtn.scrollIntoView) {
@@ -424,7 +423,6 @@ function switchStatsTab(tabName) {
     }, 50);
 }
 
-/* أعد حساب Stats عند إضافة/حذف Manual Entry */
 window.addEventListener('managers-updated', function() {
     if (!statsLoaded) return;
 
