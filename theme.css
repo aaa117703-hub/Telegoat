@@ -1,215 +1,1180 @@
 /* =========================================================
-   THEME — توحيد الألوان (يأتي بعد كل الـ CSS)
+   theme.css — v2 (Light Theme + Purple Accent)
+   كل الألوان والواجهات + Stats/TOTW/Clubs/Trends/Managers
 ========================================================= */
 
-.stats-kpi-card{
-    background:linear-gradient(135deg, rgba(0, 200, 83, 0.15) 0%, rgba(56, 0, 60, 0.95) 100%) !important;
-    border-color:rgba(0, 200, 83, 0.35) !important;
+/* =========================================================
+   1. CSS VARIABLES
+========================================================= */
+
+:root {
+    /* Purple palette */
+    --purple-500: #7C3AED;
+    --purple-600: #6D28D9;
+    --purple-700: #5B21B6;
+    --purple-300: #A78BFA;
+    --purple-100: #EDE9FE;
+    --purple-50:  #F5F3FF;
+
+    /* Neutral */
+    --text-primary:   #111827;
+    --text-secondary: #6B7280;
+    --text-tertiary:  #9CA3AF;
+
+    /* Accents */
+    --green-600: #059669;
+    --green-500: #10B981;
+    --green-50:  #ECFDF5;
+
+    --red-600: #DC2626;
+    --red-50:  #FEF2F2;
+
+    --amber-600: #D97706;
+    --amber-50:  #FFFBEB;
+
+    /* Backgrounds */
+    --bg-main:      #FFFFFF;
+    --bg-light:     #F8F7FC;
+    --bg-card:      #FFFFFF;
+    --border-light: #E5E7EB;
+
+    /* Radius */
+    --radius-card: 16px;
+    --radius-pill: 50px;
+
+    /* Fonts */
+    --font-ar: 'Cairo', 'Tajawal', sans-serif;
+    --font-en: 'EnglishCustom', 'Cairo', sans-serif;
+
+    /* Legacy compat (Fixtures/Standings need these) */
+    --pl-dark-bg: #240024;
+    --pl-pink: #ff005a;
+    --pl-purple-btn: #38003c;
+    --text-white: #fff;
+    --border-dark: #5a055a;
 }
 
-.stats-kpi-grid .stats-kpi-card:nth-child(1){
-    background:linear-gradient(135deg, rgba(0, 200, 83, 0.35) 0%, rgba(56, 0, 60, 0.95) 70%) !important;
-    border-color:rgba(0, 200, 83, 0.55) !important;
+/* =========================================================
+   2. BODY + GLOBAL
+========================================================= */
+
+body {
+    background: linear-gradient(180deg, #F8F7FC 0%, #FFFFFF 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: var(--text-primary);
+    width: 100%;
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 0 0 90px;
+    overflow-x: hidden;
+    touch-action: manipulation;
+    font-family: var(--font-en);
 }
 
-.stats-kpi-grid .stats-kpi-card:nth-child(2){
-    background:linear-gradient(135deg, rgba(0, 200, 83, 0.25) 0%, rgba(56, 0, 60, 0.95) 70%) !important;
-    border-color:rgba(0, 200, 83, 0.45) !important;
+/* =========================================================
+   3. ERROR BOX
+========================================================= */
+
+#errorBox {
+    background: #DC2626;
+    box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
+}
+#errorBox .err-close {
+    color: #DC2626;
+    background: #fff;
 }
 
-.stats-kpi-grid .stats-kpi-card:nth-child(3){
-    background:linear-gradient(135deg, rgba(0, 200, 83, 0.15) 0%, rgba(56, 0, 60, 0.95) 70%) !important;
-    border-color:rgba(0, 200, 83, 0.35) !important;
+/* =========================================================
+   4. TOAST
+========================================================= */
+
+#toast {
+    background: #FFFFFF;
+    color: var(--text-primary);
+    border: 2px solid var(--purple-500);
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.25);
+}
+#toast.error {
+    border: 2px solid var(--red-600);
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.25);
+}
+.toast-spinner {
+    border: 3px solid rgba(124, 58, 237, 0.2);
+    border-top-color: var(--purple-500);
 }
 
-.stats-kpi-grid .stats-kpi-card:nth-child(4){
-    background:linear-gradient(135deg, rgba(107, 33, 168, 0.30) 0%, rgba(56, 0, 60, 0.95) 70%) !important;
-    border-color:rgba(107, 33, 168, 0.5) !important;
+/* =========================================================
+   5. CAROUSEL
+========================================================= */
+
+.carousel {
+    border: 2px solid var(--purple-100);
+    background: #FFFFFF;
+    box-shadow: 0 6px 24px rgba(124, 58, 237, 0.12);
+}
+.carousel-dot {
+    background: rgba(124, 58, 237, 0.25);
+}
+.carousel-dot.active {
+    background: var(--purple-500);
+    box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
 }
 
-.stats-row-gold{
-    background:linear-gradient(90deg, rgba(0, 200, 83, 0.40) 0%, rgba(0, 200, 83, 0.15) 50%, rgba(0, 200, 83, 0) 100%) !important;
-    border-right:none !important;
-    border-left:4px solid rgba(0, 200, 83, 0.8) !important;
+/* =========================================================
+   6. ROUND SELECTOR
+========================================================= */
+
+.round-select-pill {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    color: var(--purple-600);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%237C3AED' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+}
+.round-select-pill option {
+    background: #FFFFFF;
+    color: var(--text-primary);
 }
 
-.stats-row-silver{
-    background:linear-gradient(90deg, rgba(0, 200, 83, 0.28) 0%, rgba(0, 200, 83, 0.10) 50%, rgba(0, 200, 83, 0) 100%) !important;
-    border-right:none !important;
-    border-left:4px solid rgba(0, 200, 83, 0.6) !important;
+/* =========================================================
+   7. HEADER / NAV
+========================================================= */
+
+.round-indicator {
+    color: var(--purple-700);
+}
+.nav-arrow-btn {
+    background: #FFFFFF;
+    color: var(--purple-600);
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+.nav-arrow-btn:hover {
+    transform: scale(1.06);
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.2);
+}
+.nav-arrow-btn:active { transform: scale(0.94); }
+
+/* =========================================================
+   8. EDIT PANEL
+========================================================= */
+
+.edit-panel {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+}
+.save-round-btn {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+.clear-round-btn {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+.download-action-btn {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
-.stats-row-bronze{
-    background:linear-gradient(90deg, rgba(0, 200, 83, 0.16) 0%, rgba(0, 200, 83, 0.05) 50%, rgba(0, 200, 83, 0) 100%) !important;
-    border-right:none !important;
-    border-left:4px solid rgba(0, 200, 83, 0.4) !important;
+/* =========================================================
+   9. DOWNLOAD BUTTON + MENU
+========================================================= */
+
+.download-btn {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    border: none;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+}
+.download-btn:hover {
+    box-shadow: 0 6px 18px rgba(124, 58, 237, 0.5);
 }
 
-.stats-rank-gold{
-    background:linear-gradient(135deg, #00c853 0%, #009b40 100%) !important;
-    color:#fff !important;
-    box-shadow:0 0 15px rgba(0, 200, 83, 0.8), inset 0 1px 0 rgba(255,255,255,0.5) !important;
+.download-menu {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 12px 36px rgba(124, 58, 237, 0.15);
+}
+.download-menu-item {
+    color: var(--text-primary);
+}
+.download-menu-item:hover {
+    background: var(--purple-50);
+}
+.download-menu-item .q-scale {
+    color: var(--purple-500);
 }
 
-.stats-rank-silver{
-    background:linear-gradient(135deg, #66bb6a 0%, #388e3c 100%) !important;
-    color:#fff !important;
-    box-shadow:0 0 15px rgba(102, 187, 106, 0.6), inset 0 1px 0 rgba(255,255,255,0.4) !important;
+/* =========================================================
+   10. SETTINGS BUTTON
+========================================================= */
+
+.settings-btn-inline {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    color: var(--purple-600);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.settings-btn-inline:hover {
+    transform: scale(1.06) rotate(20deg);
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.2);
+    background: var(--purple-50);
+}
+.settings-btn-inline:active {
+    transform: scale(0.94) rotate(0deg);
 }
 
-.stats-rank-bronze{
-    background:linear-gradient(135deg, #a5d6a7 0%, #4caf50 100%) !important;
-    color:#1a3a1a !important;
-    box-shadow:0 0 15px rgba(165, 214, 167, 0.6), inset 0 1px 0 rgba(255,255,255,0.4) !important;
+/* =========================================================
+   11. SETTINGS MODAL
+========================================================= */
+
+.settings-modal {
+    background: rgba(17, 24, 39, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
-.stats-section{
-    background:linear-gradient(135deg, rgba(0, 200, 83, 0.08) 0%, rgba(46, 11, 61, 0.95) 100%) !important;
-    border-color:rgba(0, 200, 83, 0.25) !important;
+.settings-modal-box {
+    background: #FFFFFF;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25);
 }
 
-.stats-section-title{
-    color:#00e676 !important;
-    text-shadow:0 0 10px rgba(0, 200, 83, 0.5) !important;
-    border-bottom-color:rgba(0, 200, 83, 0.25) !important;
+.settings-header {
+    background: linear-gradient(135deg, #7C3AED 0%, #A855F7 100%);
+    color: #fff;
+    font-family: var(--font-ar);
 }
 
-.stats-tab-btn{
-    border-color:rgba(0, 200, 83, 0.25) !important;
+.settings-close {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+.settings-close:hover {
+    background: rgba(255, 255, 255, 0.35);
 }
 
-.stats-tab-btn.active{
-    background:linear-gradient(135deg, #00c853 0%, #009b40 100%) !important;
-    border-color:#00e676 !important;
-    box-shadow:0 0 20px rgba(0, 200, 83, 0.6), inset 0 1px 0 rgba(255,255,255,0.3) !important;
+.settings-body {
+    background: #F8F7FC;
 }
 
-.totw-tab-btn{
-    border-color:rgba(0, 200, 83, 0.3) !important;
+.settings-item {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    color: var(--text-primary);
+    font-family: var(--font-ar);
+    box-shadow: 0 2px 6px rgba(124, 58, 237, 0.04);
+}
+.settings-item:hover {
+    background: var(--purple-50);
+    border-color: var(--purple-300);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.12);
 }
 
-.totw-tab-btn.active{
-    background:linear-gradient(135deg, #00c853 0%, #009b40 100%) !important;
-    border-color:#00e676 !important;
-    box-shadow:0 0 15px rgba(0, 200, 83, 0.7) !important;
+.settings-back {
+    background: #F3F4F6 !important;
+    border-color: #E5E7EB !important;
+    color: var(--text-secondary) !important;
+}
+.settings-back:hover {
+    background: #E5E7EB !important;
+    color: var(--text-primary) !important;
 }
 
-.club-item{
-    background:linear-gradient(135deg, rgba(0, 200, 83, 0.08) 0%, rgba(46, 11, 61, 0.95) 100%) !important;
-    border-color:rgba(0, 200, 83, 0.25) !important;
+.settings-hint {
+    color: var(--text-tertiary);
+    font-family: var(--font-ar);
 }
 
-.club-item:hover{
-    border-color:#00c853 !important;
-    box-shadow:0 6px 20px rgba(0, 200, 83, 0.35) !important;
+.settings-embed {
+    background: #F8F7FC;
 }
 
-.club-item-count{
-    color:#00e676 !important;
+/* Locks */
+.lock-item {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    color: var(--text-primary);
+    font-family: var(--font-ar);
+    box-shadow: 0 2px 6px rgba(124, 58, 237, 0.04);
 }
 
-.club-item-arrow{
-    color:#00e676 !important;
+.lock-item-btn.unlocked {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+}
+.lock-item-btn.locked {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(239, 68, 68, 0.3);
 }
 
-.clubs-edit-btn{
-    border-color:rgba(0, 200, 83, 0.3) !important;
-    color:#00e676 !important;
+.maint-all-btn {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    color: #fff;
+    font-family: var(--font-ar);
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+}
+.maint-open-btn {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #fff;
+    font-family: var(--font-ar);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
 }
 
-.clubs-edit-btn.active{
-    background:linear-gradient(135deg, #00c853 0%, #009b40 100%) !important;
-    border-color:#00e676 !important;
-    color:#fff !important;
+/* =========================================================
+   12. MAINTENANCE SCREEN
+========================================================= */
+
+#sectionMaintenance {
+    background: rgba(248, 247, 252, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+#sectionMaintenance .maint-box {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 20px 60px rgba(124, 58, 237, 0.15), 0 0 40px rgba(124, 58, 237, 0.08);
+    font-family: var(--font-ar);
+}
+#sectionMaintenance h2 {
+    color: var(--purple-700);
+    font-family: var(--font-ar);
+}
+#sectionMaintenance p {
+    color: var(--text-secondary);
+    font-family: var(--font-ar);
+}
+#sectionMaintenance .maint-team {
+    color: var(--purple-500);
+    border-top: 1.5px solid var(--purple-100);
+    font-family: var(--font-en);
 }
 
-.stats-search-input:focus{
-    border-color:#00c853 !important;
-    box-shadow:0 0 25px rgba(0, 200, 83, 0.4), inset 0 2px 10px rgba(0,0,0,0.3) !important;
+/* =========================================================
+   13. STATS SECTION
+========================================================= */
+
+#statsTab .stats-tabs {
+    background: transparent;
 }
 
-.stats-search-item{
-    background:linear-gradient(135deg, rgba(0, 200, 83, 0.06) 0%, rgba(46, 11, 61, 0.9) 100%) !important;
-    border-color:rgba(0, 200, 83, 0.2) !important;
+.stats-tab-btn {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    color: var(--text-secondary);
+    font-family: var(--font-en);
+    box-shadow: 0 2px 6px rgba(124, 58, 237, 0.06);
+    transition: all 0.2s ease;
+}
+.stats-tab-btn:hover {
+    border-color: var(--purple-300);
+    color: var(--purple-600);
+}
+.stats-tab-btn.active {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    border-color: var(--purple-500);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
 }
 
-.stats-search-item:hover{
-    border-color:#00c853 !important;
-    box-shadow:0 6px 20px rgba(0, 200, 83, 0.3) !important;
+.stats-loading, .totw-loading {
+    color: var(--purple-600);
+}
+.stats-loading .spinner, .totw-loading .spinner {
+    border: 3px solid rgba(124, 58, 237, 0.2);
+    border-top-color: var(--purple-500);
 }
 
-.stats-search-rank,
-.stats-search-total{
-    color:#00e676 !important;
-    text-shadow:0 0 10px rgba(0, 200, 83, 0.5) !important;
+/* KPI Grid */
+.stats-kpi-card {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    transition: all 0.2s ease;
+}
+.stats-kpi-card:hover {
+    border-color: var(--purple-300);
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15);
+}
+.stats-kpi-value {
+    color: var(--purple-600);
+    font-family: var(--font-en);
+}
+.stats-kpi-label {
+    color: var(--text-secondary);
 }
 
-.stats-profile-card{
-    border-color:#00c853 !important;
-    box-shadow:0 0 40px rgba(0, 200, 83, 0.4), 0 20px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+/* Stats Sections */
+.stats-section {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+}
+.stats-section-title {
+    color: var(--purple-700);
+    border-bottom: 1.5px solid var(--purple-100);
+    font-family: var(--font-en);
+    text-shadow: none;
 }
 
-.stats-profile-team{
-    background:rgba(0, 200, 83, 0.15) !important;
-    border-color:#00c853 !important;
-    color:#00e676 !important;
-    box-shadow:0 0 15px rgba(0, 200, 83, 0.3) !important;
+/* Stats Rows */
+.stats-row {
+    background: #FFFFFF;
+    border-bottom: 1px solid #F3F4F6;
+    transition: background 0.2s ease;
+}
+.stats-row:hover {
+    background: var(--purple-50);
+}
+.stats-row-gold {
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.12) 0%, rgba(124, 58, 237, 0.02) 60%, transparent 100%);
+    border-left: 4px solid var(--purple-500);
+}
+.stats-row-silver {
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.02) 60%, transparent 100%);
+    border-left: 4px solid var(--purple-300);
+}
+.stats-row-bronze {
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.05) 0%, transparent 60%);
+    border-left: 4px solid var(--purple-100);
+}
+.stats-rank {
+    color: var(--text-primary);
+}
+.stats-rank-gold {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
+}
+.stats-rank-silver {
+    background: linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(167, 139, 250, 0.4);
+}
+.stats-rank-bronze {
+    background: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 100%);
+    color: #4C1D95;
+    box-shadow: 0 2px 8px rgba(196, 181, 253, 0.4);
+}
+.stats-row-entry {
+    color: var(--text-primary);
+}
+.stats-row-player {
+    color: var(--text-tertiary);
+}
+.stats-row-value-num {
+    color: var(--purple-600);
+}
+.stats-row-value-label {
+    color: var(--text-tertiary);
 }
 
-.stats-stat-value{
-    color:#00e676 !important;
-    text-shadow:0 0 15px rgba(0, 200, 83, 0.6) !important;
+/* Stats Search */
+.stats-search-input {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+}
+.stats-search-input::placeholder {
+    color: var(--text-tertiary);
+}
+.stats-search-input:focus {
+    border-color: var(--purple-500);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15), 0 4px 14px rgba(124, 58, 237, 0.1);
 }
 
-.trend-diff-up{
-    background:rgba(0, 200, 83, 0.20) !important;
-    border-color:rgba(0, 200, 83, 0.5) !important;
-    box-shadow:0 0 15px rgba(0, 200, 83, 0.3) !important;
+.stats-search-item {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    transition: all 0.2s ease;
+}
+.stats-search-item:hover {
+    border-color: var(--purple-300);
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15);
+}
+.stats-search-rank, .stats-search-total {
+    color: var(--purple-600);
+    text-shadow: none;
+}
+.stats-search-entry {
+    color: var(--text-primary);
+}
+.stats-search-player {
+    color: var(--text-tertiary);
 }
 
-.trend-diff-down{
-    background:rgba(229, 57, 53, 0.20) !important;
-    border-color:rgba(229, 57, 53, 0.5) !important;
-    box-shadow:0 0 15px rgba(229, 57, 53, 0.3) !important;
+/* Stats Profile */
+.stats-profile-card {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
+}
+.stats-profile-rank-badge {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+}
+.stats-profile-entry {
+    color: var(--text-primary);
+}
+.stats-profile-player {
+    color: var(--text-secondary);
+}
+.stats-profile-team {
+    background: var(--purple-50);
+    border: 1px solid var(--purple-100);
+    color: var(--purple-600);
+    box-shadow: none;
+}
+.stats-stat-label {
+    color: var(--text-tertiary);
+}
+.stats-stat-value {
+    color: var(--purple-600);
+    text-shadow: none;
+}
+.stats-detail-label {
+    color: var(--text-secondary);
+}
+.stats-detail-value {
+    color: var(--text-primary);
+}
+.stats-green { color: var(--green-600); }
+.stats-yellow { color: var(--amber-600); }
+
+/* Stats Records */
+.stats-record-card {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+}
+.stats-record-label {
+    color: var(--text-secondary);
+}
+.stats-record-value {
+    color: var(--purple-600);
+}
+.stats-record-name {
+    color: var(--text-tertiary);
+}
+.stats-record-gold {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.10) 0%, #FFFFFF 100%);
+    border-color: var(--purple-300);
+}
+.stats-record-gold .stats-record-value {
+    color: var(--purple-600);
+    text-shadow: none;
+}
+.stats-record-red {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, #FFFFFF 100%);
+    border-color: #FCA5A5;
+}
+.stats-record-red .stats-record-value {
+    color: var(--red-600);
+    text-shadow: none;
+}
+.stats-record-green {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, #FFFFFF 100%);
+    border-color: #6EE7B7;
+}
+.stats-record-green .stats-record-value {
+    color: var(--green-600);
+    text-shadow: none;
 }
 
-.stats-record-gold{
-    background:linear-gradient(135deg, rgba(0, 200, 83, 0.20) 0%, rgba(56, 0, 60, 0.95) 100%) !important;
-    border-color:rgba(0, 200, 83, 0.5) !important;
+/* =========================================================
+   14. TOTW SECTION
+========================================================= */
+
+.totw-tab-btn {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    color: var(--text-secondary);
+    box-shadow: 0 2px 6px rgba(124, 58, 237, 0.06);
+}
+.totw-tab-btn:hover {
+    border-color: var(--purple-300);
+    color: var(--purple-600);
+}
+.totw-tab-btn.active {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    border-color: var(--purple-500);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
 }
 
-.stats-record-gold .stats-record-value{
-    color:#00e676 !important;
-    text-shadow:0 0 20px rgba(0, 200, 83, 0.6) !important;
+.totw-pitch {
+    background: linear-gradient(180deg, #7C3AED 0%, #A78BFA 100%);
+}
+.totw-pitch-title {
+    color: #fff;
+}
+.totw-card {
+    background: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(17, 24, 39, 0.15);
+    border: 1.5px solid var(--purple-100);
+}
+.tc-name {
+    color: var(--text-primary);
+}
+.tc-points {
+    color: var(--purple-600);
+    background: var(--purple-50);
+    border: 1px solid var(--purple-100);
 }
 
-.stats-record-red{
-    background:linear-gradient(135deg, rgba(229, 57, 53, 0.20) 0%, rgba(56, 0, 60, 0.95) 100%) !important;
-    border-color:rgba(229, 57, 53, 0.5) !important;
+/* TOTW List */
+.totw-list-item {
+    background: #FFFFFF;
+    border-bottom: 1px solid #F3F4F6;
+    transition: background 0.2s ease;
+}
+.totw-list-item:hover {
+    background: var(--purple-50);
+}
+.totw-list-item.selected {
+    background: var(--purple-50);
+    border-right: 4px solid var(--purple-500);
+}
+.totw-list-entry {
+    color: var(--text-primary);
+}
+.totw-list-player {
+    color: var(--text-tertiary);
+}
+.totw-list-gw {
+    color: var(--purple-600);
+}
+.totw-list-total {
+    color: var(--text-primary);
+}
+.totw-list-check.checked {
+    background: var(--purple-500);
+    color: #fff;
+}
+.totw-count-bar {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+}
+.save-btn {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(124, 58, 237, 0.3);
+}
+.save-btn.saved {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+}
+.reset-btn {
+    background: #F3F4F6;
+    color: var(--text-secondary);
+    border: 1.5px solid #E5E7EB;
 }
 
-.stats-record-red .stats-record-value{
-    color:#ff5252 !important;
-    text-shadow:0 0 20px rgba(229, 57, 53, 0.5) !important;
+/* =========================================================
+   15. CLUBS SECTION
+========================================================= */
+
+.club-item {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    transition: all 0.2s ease;
+}
+.club-item:hover {
+    border-color: var(--purple-300);
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15);
+    transform: translateY(-2px);
+}
+.club-item-name {
+    color: var(--text-primary);
+}
+.club-item-count {
+    color: var(--purple-600);
+}
+.club-item-arrow {
+    color: var(--purple-500);
 }
 
-.stats-record-green{
-    background:linear-gradient(135deg, rgba(0, 200, 83, 0.12) 0%, rgba(56, 0, 60, 0.95) 100%) !important;
-    border-color:rgba(0, 200, 83, 0.35) !important;
+.clubs-edit-btn {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    color: var(--purple-600);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+}
+.clubs-edit-btn:hover {
+    border-color: var(--purple-300);
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.15);
+}
+.clubs-edit-btn.active {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    border-color: var(--purple-500);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
 }
 
-.stats-record-green .stats-record-value{
-    color:#00e676 !important;
-    text-shadow:0 0 20px rgba(0, 200, 83, 0.5) !important;
+.club-modal-box {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25);
+}
+.club-modal-title {
+    color: var(--text-primary);
+}
+.club-modal-sub {
+    color: var(--text-secondary);
+}
+.club-player-row {
+    background: #FFFFFF;
+    border-bottom: 1px solid #F3F4F6;
+    color: var(--text-primary);
+}
+.club-player-num {
+    color: var(--purple-600);
+}
+.club-player-del {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    color: #fff;
+}
+.club-add-btn {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+.club-stats-btn {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
-.stats-loading,
-.totw-loading{
-    color:#00e676 !important;
+/* =========================================================
+   16. TRENDS SECTION
+========================================================= */
+
+.trend-row {
+    background: #FFFFFF;
+    border-bottom: 1px solid #F3F4F6;
+}
+.trend-row:hover {
+    background: var(--purple-50);
+}
+.trend-row-entry {
+    color: var(--text-primary);
+}
+.trend-row-player {
+    color: var(--text-tertiary);
+}
+.trend-diff-up {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--green-600);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: none;
+}
+.trend-diff-down {
+    background: rgba(220, 38, 38, 0.12);
+    color: var(--red-600);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    box-shadow: none;
 }
 
-.stats-loading .spinner,
-.totw-loading .spinner{
-    border-top-color:#00c853 !important;
-    box-shadow:0 0 20px rgba(0, 200, 83, 0.3) !important;
+/* =========================================================
+   17. MANAGER HUB
+========================================================= */
+
+.mh-controls {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    backdrop-filter: none;
+}
+.mh-stats {
+    color: var(--text-secondary);
+}
+.mh-stats span {
+    color: var(--purple-600);
+    text-shadow: none;
+}
+
+.mh-edit-btn {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    box-shadow: 0 3px 12px rgba(124, 58, 237, 0.3);
+}
+.mh-edit-btn.active {
+    background: linear-gradient(135deg, #10B981 0%, #047857 100%);
+    box-shadow: 0 3px 12px rgba(16, 185, 129, 0.4);
+}
+
+.mh-refresh-btn {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    box-shadow: 0 3px 12px rgba(124, 58, 237, 0.3);
+}
+
+.mh-search-input {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    backdrop-filter: none;
+}
+.mh-search-input::placeholder {
+    color: var(--text-tertiary);
+}
+.mh-search-input:focus {
+    border-color: var(--purple-500);
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+.mh-search-box::before {
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+.mh-list-container {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    backdrop-filter: none;
+}
+.mh-list-container.edit-mode {
+    border-color: rgba(16, 185, 129, 0.4);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.1);
+}
+
+.mh-list-header {
+    background: var(--purple-50);
+    border-bottom: 1.5px solid var(--purple-100);
+    color: var(--purple-700);
+    backdrop-filter: none;
+}
+
+.mh-list-row {
+    border-bottom: 1px solid #F3F4F6;
+}
+.mh-list-row:hover {
+    background: var(--purple-50);
+}
+.mh-list-row::before {
+    background: linear-gradient(180deg, #7C3AED 0%, #A78BFA 100%);
+}
+.mh-list-row:active {
+    background: var(--purple-100);
+}
+.mh-lr-num {
+    color: var(--text-tertiary);
+}
+.mh-lr-logo {
+    background: var(--purple-50);
+    border: 1px solid var(--purple-100);
+}
+.mh-lr-name {
+    color: var(--text-primary);
+}
+.mh-list-row:hover .mh-lr-name {
+    color: var(--purple-600);
+}
+.mh-lr-team {
+    color: var(--purple-600);
+    background: var(--purple-50);
+    border: 1px solid var(--purple-100);
+}
+.mh-lr-team-none {
+    color: var(--text-tertiary);
+    background: #F3F4F6;
+    border-color: #E5E7EB;
+}
+
+.mh-lr-move {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+.mh-lr-delete {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.mh-add-row {
+    background: rgba(16, 185, 129, 0.06);
+    border: 1.5px solid rgba(16, 185, 129, 0.25);
+    backdrop-filter: none;
+}
+.mh-add-input, .mh-add-select {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    color: var(--text-primary);
+}
+.mh-add-input::placeholder {
+    color: var(--text-tertiary);
+}
+.mh-add-input:focus, .mh-add-select:focus {
+    border-color: var(--purple-500);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+.mh-add-select option {
+    background: #FFFFFF;
+    color: var(--text-primary);
+}
+.mh-add-btn {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    box-shadow: 0 3px 12px rgba(16, 185, 129, 0.3);
+}
+
+.mh-manual-row {
+    background: rgba(245, 158, 11, 0.06);
+    border: 1.5px solid rgba(245, 158, 11, 0.3);
+    backdrop-filter: none;
+}
+.mh-manual-label {
+    color: var(--amber-600);
+}
+.mh-manual-input {
+    background: #FFFFFF;
+    border: 1.5px solid rgba(245, 158, 11, 0.4);
+    color: var(--text-primary);
+}
+.mh-manual-input::placeholder {
+    color: var(--text-tertiary);
+}
+.mh-manual-input:focus {
+    border-color: var(--amber-600);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+.mh-manual-add-btn {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    color: #fff;
+    box-shadow: 0 3px 12px rgba(245, 158, 11, 0.3);
+}
+
+.mh-row-manual {
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.06) 0%, transparent 60%);
+    border-left: 2px solid rgba(245, 158, 11, 0.4);
+}
+.mh-row-manual:hover {
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0.03) 100%);
+}
+.mh-lr-logo-manual {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    color: #fff;
+    border-color: rgba(245, 158, 11, 0.5);
+}
+.mh-lr-team-manual {
+    color: var(--amber-600);
+    background: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+/* MH Modal */
+#mhModal {
+    background: rgba(17, 24, 39, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+.mh-modal-box {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25);
+}
+.mh-modal-title {
+    color: var(--purple-700);
+    border-bottom: 1.5px solid var(--purple-100);
+    background: none;
+    -webkit-text-fill-color: var(--purple-700);
+}
+.mh-pass-input {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    color: var(--text-primary);
+}
+.mh-pass-input:focus {
+    border-color: var(--purple-500);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+.mh-modal-cancel {
+    background: #F3F4F6;
+    color: var(--text-secondary);
+    border: 1.5px solid #E5E7EB;
+}
+.mh-modal-cancel:hover {
+    background: #E5E7EB;
+    color: var(--text-primary);
+}
+.mh-modal-confirm {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+}
+.mh-modal-error {
+    color: var(--red-600);
+}
+.mh-move-option {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    color: var(--text-primary);
+}
+.mh-move-option:hover {
+    background: var(--purple-50);
+    border-color: var(--purple-300);
+    color: var(--purple-700);
+}
+
+/* =========================================================
+   18. FPL DATABASE
+========================================================= */
+
+.fpl-player-row {
+    background: #FFFFFF;
+    border-bottom: 1px solid #F3F4F6;
+}
+.fpl-player-row:hover {
+    background: var(--purple-50);
+}
+.fpl-player-name {
+    color: var(--text-primary);
+}
+.fpl-player-sub {
+    color: var(--text-tertiary);
+}
+.fpl-player-price {
+    color: var(--purple-600);
+}
+.fpl-player-points {
+    color: var(--text-primary);
+}
+.fpl-team-card {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    transition: all 0.2s ease;
+}
+.fpl-team-card:hover {
+    border-color: var(--purple-300);
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15);
+    transform: translateY(-2px);
+}
+.fpl-team-card-name {
+    color: var(--text-primary);
+}
+.fpl-team-card-count {
+    color: var(--purple-600);
+}
+.fpl-modal-box {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25);
+}
+.fpl-modal-name {
+    color: var(--text-primary);
+}
+.fpl-stat-box {
+    background: var(--purple-50);
+    border: 1.5px solid var(--purple-100);
+}
+.fpl-stat-label {
+    color: var(--text-secondary);
+}
+.fpl-stat-value {
+    color: var(--purple-600);
+}
+.fpl-stat-value.green { color: var(--green-600); }
+.fpl-stat-value.red { color: var(--red-600); }
+.fpl-stat-value.gold { color: var(--amber-600); }
+
+/* =========================================================
+   19. SQUAD MODAL
+========================================================= */
+
+.squad-modal-box {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25);
+}
+.squad-modal-manager {
+    color: var(--text-primary);
+}
+.squad-modal-subtitle {
+    color: var(--text-secondary);
+}
+.squad-section-title {
+    color: var(--purple-700);
+    border-bottom: 1.5px solid var(--purple-100);
+}
+.squad-player {
+    background: #FFFFFF;
+    border-bottom: 1px solid #F3F4F6;
+}
+.squad-player:hover {
+    background: var(--purple-50);
+}
+.squad-player-name {
+    color: var(--text-primary);
+}
+.squad-player-team {
+    color: var(--text-tertiary);
+}
+.squad-player-points {
+    color: var(--purple-600);
+}
+.squad-stat-box {
+    background: var(--purple-50);
+    border: 1.5px solid var(--purple-100);
+}
+.squad-stat-label {
+    color: var(--text-secondary);
+}
+.squad-stat-value {
+    color: var(--purple-600);
+}
+.squad-stat-value.green { color: var(--green-600); }
+.squad-stat-value.gold { color: var(--amber-600); }
+
+/* =========================================================
+   20. TEAM MODAL
+========================================================= */
+
+.team-modal-box {
+    background: #FFFFFF;
+    border: 1.5px solid var(--purple-100);
+    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25);
+}
+.team-modal-title {
+    color: var(--text-primary);
+}
+.team-modal-loading {
+    color: var(--text-secondary);
+}
+.team-modal-kpi {
+    background: var(--purple-50);
+    border: 1.5px solid var(--purple-100);
+}
+.team-modal-kpi-label {
+    color: var(--text-secondary);
+}
+.team-modal-kpi-value {
+    color: var(--purple-600);
+}
+.team-player-row {
+    background: #FFFFFF;
+    border-bottom: 1px solid #F3F4F6;
+}
+.team-player-row.top {
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.08) 0%, transparent 60%);
+    border-right: 4px solid var(--purple-500);
+}
+.team-player-row.bottom {
+    background: linear-gradient(90deg, rgba(220, 38, 38, 0.06) 0%, transparent 60%);
+    border-right: 4px solid var(--red-600);
+}
+.team-player-name {
+    color: var(--text-primary);
+}
+.team-player-points {
+    color: var(--purple-600);
+}
+.team-player-rank {
+    color: var(--text-tertiary);
 }
