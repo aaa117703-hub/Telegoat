@@ -1,7 +1,7 @@
 /* =========================================================
    clubs.js — v7
    - قائمة الأندية
-   - Modal: لاعبين مرتبين بالنقاط (من FPL) — يظهر عند ضغط النادي
+   - Modal: لاعبين مرتبين بالنقاط (من FPL)
    - إدارة اللاعبين (من Manager-Hub)
 ========================================================= */
 
@@ -16,7 +16,7 @@ let cpModalEl = null;
 
 
 /* =========================================================
-   LOAD CLUBS DATA (من managers_by_team)
+   LOAD CLUBS DATA
 ========================================================= */
 
 async function loadClubsData() {
@@ -185,14 +185,13 @@ function renderClubsList() {
 
 
 /* =========================================================
-   OPEN CLUB PLAYERS MODAL — لاعبين مرتبين بالنقاط
+   OPEN CLUB PLAYERS MODAL
 ========================================================= */
 
 async function openClubPlayers(team) {
 
     if (!team) return;
 
-    /* إنشاء أو إعادة استخدام الـ modal */
     if (!cpModalEl) {
         cpModalEl = document.createElement('div');
         cpModalEl.className = 'cp-modal';
@@ -200,7 +199,6 @@ async function openClubPlayers(team) {
         document.body.appendChild(cpModalEl);
     }
 
-    /* إغلاق عند الضغط على الخلفية */
     cpModalEl.onclick = function(e) {
         if (e.target === cpModalEl) closeClubPlayers();
     };
@@ -215,7 +213,6 @@ async function openClubPlayers(team) {
             '</div>';
     }
 
-    /* عرض Loading */
     cpModalEl.innerHTML =
         '<div class="cp-modal-box">' +
             '<div class="cp-header">' +
@@ -234,20 +231,16 @@ async function openClubPlayers(team) {
 
     cpModalEl.classList.add('show');
 
-    /* جلب البيانات */
     let playersWithPoints = [];
 
     try {
-        /* 1) جلب كل المديرين من FPL */
         let allManagers = [];
         if (typeof getAllManagersCached === 'function') {
             allManagers = await getAllManagersCached();
         }
 
-        /* 2) قائمة اللاعبين في هذا الفريق */
         const teamPlayers = clubsData[team] || [];
 
-        /* 3) بناء map للنقاط */
         const pointsMap = {};
         allManagers.forEach(function(m) {
             const pn = String(m.player_name || '').trim().toLowerCase();
@@ -257,14 +250,12 @@ async function openClubPlayers(team) {
                 pointsMap[pn] = m;
             }
             if (en) {
-                /* إذا موجود، نفضّل الأحدث (آخر واحد) */
                 if (!pointsMap[en]) {
                     pointsMap[en] = m;
                 }
             }
         });
 
-        /* 4) ربط كل لاعب بنقاطه */
         teamPlayers.forEach(function(name) {
             const key = String(name || '').trim().toLowerCase();
             const m = pointsMap[key];
@@ -292,7 +283,6 @@ async function openClubPlayers(team) {
             }
         });
 
-        /* 5) ترتيب من الأعلى للنقاط */
         playersWithPoints.sort(function(a, b) {
             return (b.total || 0) - (a.total || 0);
         });
@@ -301,7 +291,6 @@ async function openClubPlayers(team) {
         console.error('[Clubs] Failed to load players:', e);
     }
 
-    /* عرض القائمة */
     renderClubPlayersModal(team, logoHtml, playersWithPoints);
 }
 
@@ -332,7 +321,6 @@ function renderClubPlayersModal(team, logoHtml, players) {
             else if (rank === 2) rowClass = ' cp-top-2';
             else if (rank === 3) rowClass = ' cp-top-3';
 
-            /* اسم المدير المميز */
             const displayEntry = p.entry_name || p.player_name || p.name || 'Unknown';
             const displayPlayer = p.player_name && p.player_name !== displayEntry ? p.player_name : '';
 
@@ -387,7 +375,7 @@ function closeClubPlayers() {
 
 
 /* =========================================================
-   ESCAPE HTML HELPER
+   ESCAPE HTML
 ========================================================= */
 
 function escapeHtml(s) {
@@ -404,7 +392,7 @@ function escapeHtml(s) {
 
 
 /* =========================================================
-   OLD CLUB DETAIL — يبقى متوفر (للإدارة)
+   OLD CLUB DETAIL — للإدارة
 ========================================================= */
 
 function openClubDetail(team) {
