@@ -1,534 +1,313 @@
 /* =========================================================
-   totw.css — v27
-   - إصلاح الخلفية الشفافة (mix-blend-mode)
-   - الاسم يصعد ليغطي القميص
-   - النقاط بنفسجي (هوية الموقع)
-   - الاسم أصغر (12 حرف)
-   - إزالة TEAM OF THE WEEK
+   totw.css — الأصلي + ألوان جديدة فقط
 ========================================================= */
 
-/* ========== TABS ========== */
-
-.totw-tabs {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin: 12px 0 16px;
-    padding: 6px;
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100, #EDE9FE);
-    border-radius: 50px;
-    max-width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+.totw-header-box {
+    text-align: center;
+    margin-bottom: 14px;
+    padding: 16px 14px;
+    background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+    border-radius: 16px;
+    border: 3px solid #A855F7;
+    box-shadow: 0 0 25px rgba(168, 85, 247, .5);
 }
 
-.totw-tab-btn {
-    padding: 8px 24px;
-    border-radius: 40px;
+.totw-header-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 3px 10px rgba(0,0,0,.6);
+}
+
+.totw-controls-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.totw-gw-select {
+    background: #FFFFFF;
+    border: 2px solid #EDE9FE;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #6D28D9;
+    cursor: pointer;
+    outline: none;
+    min-width: 120px;
+    text-align: center;
+}
+
+.totw-gw-select option {
+    background: #FFFFFF;
+    color: #111827;
+}
+
+.totw-action-btn {
+    color: #fff;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    padding: 8px 14px;
     font-size: 12px;
     font-weight: 900;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
     cursor: pointer;
-    transition: all 0.25s ease;
-    font-family: inherit;
-    border: none;
-    background: transparent;
-    color: var(--text-secondary, #6B7280);
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
-.totw-tab-btn:hover { color: var(--purple-600, #6D28D9); }
-
-.totw-tab-btn.active {
+.totw-refresh-btn {
     background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
 }
 
-/* ========== LOADING ========== */
-
-.totw-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    gap: 14px;
-    color: var(--purple-600, #6D28D9);
-    font-size: 14px;
-    font-weight: 700;
+.totw-save-btn {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
 }
-
-.totw-loading .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(124, 58, 237, 0.2);
-    border-top-color: var(--purple-500, #7C3AED);
-    border-radius: 50%;
-    animation: totwSpin 0.8s linear infinite;
-}
-
-@keyframes totwSpin { to { transform: rotate(360deg); } }
-
-/* ========== PITCH WRAPPER ========== */
 
 .totw-pitch-wrapper {
-    display: none;
     width: 100%;
+    display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 8px 0;
+    margin-bottom: 16px;
 }
 
-.totw-pitch-wrapper.show { display: flex; }
-
-/* ========== PITCH ========== */
+/* =========================================================
+   الملعب
+========================================================= */
 
 .totw-pitch {
+    position: relative;
     width: 100%;
     max-width: 480px;
-    margin: 0 auto;
-    padding: 20px 8px 22px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 20px;
-
+    aspect-ratio: 1080 / 1500;
     background-image: url('./pitch-bg.png');
-    background-size: cover;
+    background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: #4a8b3a;
-
-    border: 3px solid #2d5a24;
+    border: 3px solid #5B21B6;
+    border-radius: 18px;
     box-shadow:
-        0 10px 40px rgba(0, 0, 0, 0.4),
-        inset 0 0 30px rgba(0, 0, 0, 0.15);
+        0 10px 40px rgba(0,0,0,.4),
+        0 0 30px rgba(124, 58, 237, .4);
+    overflow: hidden;
 }
-
-.totw-pitch::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        repeating-linear-gradient(
-            180deg,
-            transparent 0,
-            transparent 80px,
-            rgba(255, 255, 255, 0.12) 80px,
-            rgba(255, 255, 255, 0.12) 82px
-        ),
-        linear-gradient(180deg, #4a8b3a 0%, #3d7530 50%, #2d5a24 100%);
-    border-radius: inherit;
-    z-index: -1;
-}
-
-/* ========== PITCH TITLE — مخفي ========== */
-
-.totw-pitch-title {
-    display: none !important;
-}
-
-/* ========== PLAYERS CONTAINER ========== */
 
 .totw-players {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    position: relative;
+    position: absolute;
+    inset: 0;
     z-index: 2;
 }
 
-/* ========== ROWS ========== */
+/* =========================================================
+   الصفوف — محاذاة دقيقة
+========================================================= */
 
 .totw-row {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 6px;
-    flex-wrap: nowrap;
-    padding: 0 2px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
 }
 
-.totw-row-gk  { justify-content: center; }
-.totw-row-def { justify-content: space-around; }
-.totw-row-mid { justify-content: space-around; }
-.totw-row-fwd { justify-content: space-around; }
+.totw-row-gk {
+    top: 24%;
+    justify-content: center;
+}
+
+.totw-row-def {
+    top: 41%;
+    justify-content: space-evenly;
+    padding: 0 4%;
+}
+
+.totw-row-mid {
+    top: 61%;
+    justify-content: space-evenly;
+    padding: 0 12%;
+}
+
+.totw-row-fwd {
+    top: 80%;
+    justify-content: space-evenly;
+    padding: 0 12%;
+}
 
 /* =========================================================
-   PLAYER CARD
+   الكرت
 ========================================================= */
 
 .totw-card {
+    width: 76px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+    justify-content: center;
     padding: 0;
-    min-width: 70px;
-    max-width: 82px;
-    flex: 1 1 0;
-    transition: transform 0.2s ease;
     position: relative;
-    overflow: visible;
-    /* ⭐ isolation للـ blend mode */
-    isolation: auto;
+    transition: transform .3s ease;
 }
 
 .totw-card:hover {
-    transform: translateY(-3px);
+    transform: scale(1.08);
+    z-index: 100;
 }
 
-/* ========== SHIRT — شفاف مع mix-blend-mode ========== */
-
-.tc-shirt {
-    width: 48px;
-    height: 48px;
+/* 1. الاسم — فوق */
+.totw-card .tc-name {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: transparent !important;
-    border: none !important;
-    margin-bottom: -8px; /* ⭐ يصعد الاسم فوق حافة القميص */
-    overflow: visible;
-    position: relative;
-    z-index: 1;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
-}
-
-.tc-shirt img {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    /* ⭐ الحل السحري: يخلي الخلفية البيضاء شفافة */
-    mix-blend-mode: multiply;
-}
-
-.tc-shirt-fallback { background: transparent; }
-.tc-shirt-fallback img {
-    width: 85%;
-    height: 85%;
-    mix-blend-mode: multiply;
-}
-
-.tc-shirt-empty {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-}
-
-/* =========================================================
-   NAME — أبيض + نص أسود + يصعد فوق القميص
-========================================================= */
-
-.tc-name {
-    font-size: 8px;         /* ⭐ أصغر ليتسع الاسم كامل */
-    font-weight: 900;
-    color: #111111;
-    text-align: center;
-    line-height: 1.15;
-    letter-spacing: 0;
-    margin: 0;
-    margin-top: 0;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding: 3px 4px;
+    min-height: 20px;
+    padding: 2px 4px;
     background: #FFFFFF;
-    border-radius: 0;
-    width: 100%;
-    position: relative;
-    z-index: 2;               /* ⭐ فوق القميص */
-    border: none;
-    box-sizing: border-box;
-    font-family: inherit;
-    text-transform: none;
-}
-
-/* =========================================================
-   POINTS — بنفسجي (هوية الموقع)
-========================================================= */
-
-.tc-points {
-    font-size: 11px;
-    font-weight: 900;
-    color: #FFFFFF;
-    background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
-    padding: 3px 4px 4px;
-    text-align: center;
-    letter-spacing: 0.5px;
-    width: 100%;
-    border: none;
-    border-radius: 0;
-    min-width: 0;
-    position: relative;
-    z-index: 2;
-    box-sizing: border-box;
-    font-family: inherit;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-/* ========== LIST VIEW ========== */
-
-.totw-list-view {
-    display: block;
-    padding: 4px 0;
-}
-
-.totw-count-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px 16px;
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100, #EDE9FE);
-    border-radius: 14px;
-    margin-bottom: 12px;
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--text-primary, #111827);
-}
-
-.totw-count-bar .count-num {
-    color: var(--purple-600, #6D28D9);
-    font-weight: 900;
-    font-size: 16px;
-    margin: 0 2px;
-}
-
-.totw-count-bar .count-num.full { color: var(--green-600, #059669); }
-
-.totw-actions { display: flex; gap: 6px; }
-
-.totw-actions button {
-    padding: 7px 14px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border: none;
-    font-family: inherit;
-    transition: transform 0.15s ease;
-}
-
-.save-btn {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    color: #fff;
-}
-
-.save-btn.saved {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-}
-
-.reset-btn {
-    background: #F3F4F6;
-    color: var(--text-secondary, #6B7280);
-    border: 1.5px solid #E5E7EB;
-}
-
-.totw-actions button:active { transform: scale(0.95); }
-
-/* ========== LIST HEADER ========== */
-
-.totw-list-header {
-    display: grid;
-    grid-template-columns: 34px 34px 32px 1fr 48px 52px;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 12px;
-    background: var(--purple-50, #F5F3FF);
-    border-bottom: 1.5px solid var(--purple-100, #EDE9FE);
-    border-radius: 12px 12px 0 0;
+    border: 1.5px solid #7C3AED;
+    border-radius: 6px;
+    color: #6D28D9;
     font-size: 9px;
     font-weight: 900;
-    letter-spacing: 1px;
-    color: var(--purple-700, #5B21B6);
-    text-transform: uppercase;
-}
-
-.totw-list-h-check { text-align: center; }
-.totw-list-h-rank { text-align: center; }
-.totw-list-h-logo { width: 32px; }
-.totw-list-h-team { text-align: left; padding-left: 8px; }
-.totw-list-h-gw { text-align: center; }
-.totw-list-h-total { text-align: right; }
-
-/* ========== LIST ITEMS ========== */
-
-.totw-list-item {
-    display: grid;
-    grid-template-columns: 34px 34px 32px 1fr 48px 52px;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 12px;
-    background: #FFFFFF;
-    border-bottom: 1px solid #F3F4F6;
-    cursor: pointer;
-    transition: background 0.2s ease;
-    font-size: 12px;
-}
-
-.totw-list-item:last-child {
-    border-bottom: none;
-    border-radius: 0 0 12px 12px;
-}
-
-.totw-list-item:hover { background: var(--purple-50, #F5F3FF); }
-
-.totw-list-item.selected {
-    background: var(--purple-50, #F5F3FF);
-    border-right: 4px solid var(--purple-500, #7C3AED);
-}
-
-.totw-list-check {
-    width: 22px;
-    height: 22px;
-    border: 1.5px solid var(--purple-300, #A78BFA);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 900;
-    color: transparent;
-    transition: all 0.2s ease;
-    margin: 0 auto;
-}
-
-.totw-list-check.checked {
-    background: var(--purple-500, #7C3AED);
-    border-color: var(--purple-500, #7C3AED);
-    color: #fff;
-}
-
-.totw-list-rank {
     text-align: center;
-    font-weight: 800;
-    color: var(--text-tertiary, #9CA3AF);
-    font-size: 11px;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    z-index: 4;
+    box-shadow: 0 2px 4px rgba(0,0,0,.3);
+    margin-bottom: -5px;
 }
 
-.totw-list-logo {
-    width: 32px;
-    height: 32px;
+/* 2. القميص — في الوسط */
+.totw-card .tc-shirt {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: transparent;
-    border-radius: 50%;
-    overflow: visible;
+    width: 58px;
+    height: 54px;
+    position: relative;
+    z-index: 3;
 }
 
-.totw-list-logo img {
-    width: 100%;
-    height: 100%;
+.totw-card .tc-shirt img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
     object-fit: contain;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    display: block;
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,.45));
 }
 
-.totw-list-logo-empty {
-    color: var(--purple-300, #A78BFA);
-    font-size: 16px;
-}
-
-.totw-list-names { min-width: 0; overflow: hidden; }
-
-.totw-list-entry {
-    font-size: 12px;
-    font-weight: 800;
-    color: var(--text-primary, #111827);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.totw-list-player {
+.totw-card .tc-shirt-fallback {
+    background: rgba(255,255,255,.95);
+    border-radius: 50%;
+    padding: 6px;
     font-size: 10px;
-    font-weight: 600;
-    color: var(--text-tertiary, #9CA3AF);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-top: 1px;
-}
-
-.totw-list-gw {
-    text-align: center;
-    font-weight: 900;
-    color: var(--purple-600, #6D28D9);
-    font-size: 13px;
-}
-
-.totw-list-total {
-    text-align: right;
     font-weight: 800;
-    color: var(--text-primary, #111827);
-    font-size: 13px;
 }
 
-/* ========== ERROR ========== */
+/* 3. النقاط — تحت */
+.totw-card .tc-points {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    min-height: 19px;
+    padding: 2px 4px;
+    background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+    border: 1.5px solid #A855F7;
+    border-radius: 50px;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 900;
+    text-align: center;
+    position: relative;
+    z-index: 4;
+    margin-top: -5px;
+    box-shadow: 0 2px 6px rgba(124, 58, 237, .5);
+}
+
+/* =========================================================
+   Loading + Error
+========================================================= */
+
+.totw-loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: #7C3AED;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.totw-loading .spinner {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border: 4px solid rgba(124, 58, 237,.2);
+    border-top-color: #7C3AED;
+    border-radius: 50%;
+    animation: spinTOTW .8s linear infinite;
+    margin-bottom: 14px;
+}
+
+@keyframes spinTOTW {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+}
 
 .totw-error {
-    padding: 20px;
-    margin: 12px 0;
-    background: rgba(220, 38, 38, 0.08);
-    border: 1.5px solid rgba(220, 38, 38, 0.3);
-    border-radius: 14px;
-    color: var(--red-600, #DC2626);
-    font-size: 13px;
-    font-weight: 700;
     text-align: center;
-    line-height: 1.6;
+    padding: 24px 16px;
+    background: rgba(255,0,90,.15);
+    border: 2px solid #ff005a;
+    border-radius: 12px;
+    color: #ff005a;
+    font-size: 13px;
+    font-weight: 800;
 }
 
-/* ========== MOBILE ========== */
+/* =========================================================
+   الموبايل
+========================================================= */
 
-@media (max-width: 400px) {
+@media (max-width: 480px) {
+    .totw-header-title {
+        font-size: 18px;
+    }
+
     .totw-pitch {
-        padding: 16px 6px 18px;
+        max-width: 100%;
     }
 
     .totw-card {
-        min-width: 62px;
-        max-width: 72px;
+        width: 64px;
     }
 
-    .tc-shirt {
-        width: 42px;
-        height: 42px;
-        margin-bottom: -6px;
+    .totw-card .tc-name {
+        font-size: 8px;
+        min-height: 18px;
+        padding: 1px 2px;
     }
 
-    .tc-name {
-        font-size: 7.5px;
-        padding: 2px 3px;
+    .totw-card .tc-shirt {
+        width: 48px;
+        height: 46px;
     }
 
-    .tc-points {
+    .totw-card .tc-points {
+        width: 54px;
+        min-height: 17px;
         font-size: 10px;
-        padding: 2px 3px 3px;
     }
 
-    .totw-row { gap: 4px; }
-    .totw-players { gap: 16px; }
-
-    .totw-list-header,
-    .totw-list-item {
-        grid-template-columns: 28px 28px 28px 1fr 40px 44px;
-        gap: 4px;
-        padding: 8px;
-        font-size: 11px;
-    }
+    .totw-row-def { padding: 0 2%; }
+    .totw-row-mid { padding: 0 8%; }
+    .totw-row-fwd { padding: 0 8%; }
 }
