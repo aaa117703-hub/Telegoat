@@ -1,6 +1,5 @@
 /* =========================================================
-   theme.css — v2 (Light Theme + Purple Accent)
-   كل الألوان والواجهات + Stats/TOTW/Clubs/Trends/Managers
+   theme.css — v3 (Light Theme + Purple Accent)
 ========================================================= */
 
 /* =========================================================
@@ -8,7 +7,6 @@
 ========================================================= */
 
 :root {
-    /* Purple palette */
     --purple-500: #7C3AED;
     --purple-600: #6D28D9;
     --purple-700: #5B21B6;
@@ -16,12 +14,10 @@
     --purple-100: #EDE9FE;
     --purple-50:  #F5F3FF;
 
-    /* Neutral */
     --text-primary:   #111827;
     --text-secondary: #6B7280;
     --text-tertiary:  #9CA3AF;
 
-    /* Accents */
     --green-600: #059669;
     --green-500: #10B981;
     --green-50:  #ECFDF5;
@@ -32,21 +28,17 @@
     --amber-600: #D97706;
     --amber-50:  #FFFBEB;
 
-    /* Backgrounds */
     --bg-main:      #FFFFFF;
     --bg-light:     #F8F7FC;
     --bg-card:      #FFFFFF;
     --border-light: #E5E7EB;
 
-    /* Radius */
     --radius-card: 16px;
     --radius-pill: 50px;
 
-    /* Fonts */
     --font-ar: 'Cairo', 'Tajawal', sans-serif;
     --font-en: 'EnglishCustom', 'Cairo', sans-serif;
 
-    /* Legacy compat (Fixtures/Standings need these) */
     --pl-dark-bg: #240024;
     --pl-pink: #ff005a;
     --pl-purple-btn: #38003c;
@@ -126,11 +118,13 @@ body {
 ========================================================= */
 
 .round-select-pill {
-    background: #FFFFFF;
+    background-color: #FFFFFF;
     border: 1.5px solid var(--purple-100);
     color: var(--purple-600);
     box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%237C3AED' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
 }
 .round-select-pill option {
     background: #FFFFFF;
@@ -293,7 +287,6 @@ body {
     background: #F8F7FC;
 }
 
-/* Locks */
 .lock-item {
     background: #FFFFFF;
     border: 1.5px solid var(--purple-100);
@@ -364,228 +357,226 @@ body {
 }
 
 .stats-tab-btn {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    color: var(--text-secondary);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    color: var(--text-secondary) !important;
     font-family: var(--font-en);
-    box-shadow: 0 2px 6px rgba(124, 58, 237, 0.06);
+    box-shadow: 0 2px 6px rgba(124, 58, 237, 0.06) !important;
     transition: all 0.2s ease;
 }
 .stats-tab-btn:hover {
-    border-color: var(--purple-300);
-    color: var(--purple-600);
+    border-color: var(--purple-300) !important;
+    color: var(--purple-600) !important;
 }
 .stats-tab-btn.active {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    border-color: var(--purple-500);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+    border-color: var(--purple-500) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35) !important;
 }
 
 .stats-loading, .totw-loading {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
 .stats-loading .spinner, .totw-loading .spinner {
-    border: 3px solid rgba(124, 58, 237, 0.2);
-    border-top-color: var(--purple-500);
+    border: 3px solid rgba(124, 58, 237, 0.2) !important;
+    border-top-color: var(--purple-500) !important;
 }
 
-/* KPI Grid */
 .stats-kpi-card {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06) !important;
     transition: all 0.2s ease;
 }
 .stats-kpi-card:hover {
-    border-color: var(--purple-300);
-    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15);
+    border-color: var(--purple-300) !important;
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15) !important;
 }
 .stats-kpi-value {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
     font-family: var(--font-en);
 }
 .stats-kpi-label {
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
 }
 
-/* Stats Sections */
 .stats-section {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06) !important;
 }
 .stats-section-title {
-    color: var(--purple-700);
-    border-bottom: 1.5px solid var(--purple-100);
+    color: var(--purple-700) !important;
+    border-bottom: 1.5px solid var(--purple-100) !important;
     font-family: var(--font-en);
-    text-shadow: none;
+    text-shadow: none !important;
 }
 
-/* Stats Rows */
 .stats-row {
-    background: #FFFFFF;
-    border-bottom: 1px solid #F3F4F6;
+    background: #FFFFFF !important;
+    border-bottom: 1px solid #F3F4F6 !important;
     transition: background 0.2s ease;
 }
 .stats-row:hover {
-    background: var(--purple-50);
+    background: var(--purple-50) !important;
 }
 .stats-row-gold {
-    background: linear-gradient(90deg, rgba(124, 58, 237, 0.12) 0%, rgba(124, 58, 237, 0.02) 60%, transparent 100%);
-    border-left: 4px solid var(--purple-500);
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.12) 0%, rgba(124, 58, 237, 0.02) 60%, transparent 100%) !important;
+    border-left: 4px solid var(--purple-500) !important;
+    border-right: none !important;
 }
 .stats-row-silver {
-    background: linear-gradient(90deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.02) 60%, transparent 100%);
-    border-left: 4px solid var(--purple-300);
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0.02) 60%, transparent 100%) !important;
+    border-left: 4px solid var(--purple-300) !important;
+    border-right: none !important;
 }
 .stats-row-bronze {
-    background: linear-gradient(90deg, rgba(124, 58, 237, 0.05) 0%, transparent 60%);
-    border-left: 4px solid var(--purple-100);
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.05) 0%, transparent 60%) !important;
+    border-left: 4px solid var(--purple-100) !important;
+    border-right: none !important;
 }
 .stats-rank {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .stats-rank-gold {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4) !important;
 }
 .stats-rank-silver {
-    background: linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(167, 139, 250, 0.4);
+    background: linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(167, 139, 250, 0.4) !important;
 }
 .stats-rank-bronze {
-    background: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 100%);
-    color: #4C1D95;
-    box-shadow: 0 2px 8px rgba(196, 181, 253, 0.4);
+    background: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 100%) !important;
+    color: #4C1D95 !important;
+    box-shadow: 0 2px 8px rgba(196, 181, 253, 0.4) !important;
 }
 .stats-row-entry {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .stats-row-player {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 .stats-row-value-num {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
 .stats-row-value-label {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 
 /* Stats Search */
 .stats-search-input {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    color: var(--text-primary);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06) !important;
 }
 .stats-search-input::placeholder {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 .stats-search-input:focus {
-    border-color: var(--purple-500);
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15), 0 4px 14px rgba(124, 58, 237, 0.1);
+    border-color: var(--purple-500) !important;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15), 0 4px 14px rgba(124, 58, 237, 0.1) !important;
 }
 
 .stats-search-item {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
     transition: all 0.2s ease;
 }
 .stats-search-item:hover {
-    border-color: var(--purple-300);
-    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15);
+    border-color: var(--purple-300) !important;
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15) !important;
 }
 .stats-search-rank, .stats-search-total {
-    color: var(--purple-600);
-    text-shadow: none;
+    color: var(--purple-600) !important;
+    text-shadow: none !important;
 }
 .stats-search-entry {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .stats-search-player {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 
-/* Stats Profile */
 .stats-profile-card {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15) !important;
 }
 .stats-profile-rank-badge {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4) !important;
 }
 .stats-profile-entry {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .stats-profile-player {
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
 }
 .stats-profile-team {
-    background: var(--purple-50);
-    border: 1px solid var(--purple-100);
-    color: var(--purple-600);
-    box-shadow: none;
+    background: var(--purple-50) !important;
+    border: 1px solid var(--purple-100) !important;
+    color: var(--purple-600) !important;
+    box-shadow: none !important;
 }
 .stats-stat-label {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 .stats-stat-value {
-    color: var(--purple-600);
-    text-shadow: none;
+    color: var(--purple-600) !important;
+    text-shadow: none !important;
 }
 .stats-detail-label {
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
 }
 .stats-detail-value {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
-.stats-green { color: var(--green-600); }
-.stats-yellow { color: var(--amber-600); }
+.stats-green { color: var(--green-600) !important; }
+.stats-yellow { color: var(--amber-600) !important; }
 
-/* Stats Records */
 .stats-record-card {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06) !important;
 }
 .stats-record-label {
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
 }
 .stats-record-value {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
 .stats-record-name {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 .stats-record-gold {
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.10) 0%, #FFFFFF 100%);
-    border-color: var(--purple-300);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.10) 0%, #FFFFFF 100%) !important;
+    border-color: var(--purple-300) !important;
 }
 .stats-record-gold .stats-record-value {
-    color: var(--purple-600);
-    text-shadow: none;
+    color: var(--purple-600) !important;
+    text-shadow: none !important;
 }
 .stats-record-red {
-    background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, #FFFFFF 100%);
-    border-color: #FCA5A5;
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, #FFFFFF 100%) !important;
+    border-color: #FCA5A5 !important;
 }
 .stats-record-red .stats-record-value {
-    color: var(--red-600);
-    text-shadow: none;
+    color: var(--red-600) !important;
+    text-shadow: none !important;
 }
 .stats-record-green {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, #FFFFFF 100%);
-    border-color: #6EE7B7;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, #FFFFFF 100%) !important;
+    border-color: #6EE7B7 !important;
 }
 .stats-record-green .stats-record-value {
-    color: var(--green-600);
-    text-shadow: none;
+    color: var(--green-600) !important;
+    text-shadow: none !important;
 }
 
 /* =========================================================
@@ -593,89 +584,88 @@ body {
 ========================================================= */
 
 .totw-tab-btn {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    color: var(--text-secondary);
-    box-shadow: 0 2px 6px rgba(124, 58, 237, 0.06);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    color: var(--text-secondary) !important;
+    box-shadow: 0 2px 6px rgba(124, 58, 237, 0.06) !important;
 }
 .totw-tab-btn:hover {
-    border-color: var(--purple-300);
-    color: var(--purple-600);
+    border-color: var(--purple-300) !important;
+    color: var(--purple-600) !important;
 }
 .totw-tab-btn.active {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    border-color: var(--purple-500);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+    border-color: var(--purple-500) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35) !important;
 }
 
 .totw-pitch {
-    background: linear-gradient(180deg, #7C3AED 0%, #A78BFA 100%);
+    background: linear-gradient(180deg, #7C3AED 0%, #A78BFA 100%) !important;
 }
 .totw-pitch-title {
-    color: #fff;
+    color: #fff !important;
 }
 .totw-card {
-    background: #FFFFFF;
-    box-shadow: 0 4px 12px rgba(17, 24, 39, 0.15);
-    border: 1.5px solid var(--purple-100);
+    background: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(17, 24, 39, 0.15) !important;
+    border: 1.5px solid var(--purple-100) !important;
 }
 .tc-name {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .tc-points {
-    color: var(--purple-600);
-    background: var(--purple-50);
-    border: 1px solid var(--purple-100);
+    color: var(--purple-600) !important;
+    background: var(--purple-50) !important;
+    border: 1px solid var(--purple-100) !important;
 }
 
-/* TOTW List */
 .totw-list-item {
-    background: #FFFFFF;
-    border-bottom: 1px solid #F3F4F6;
+    background: #FFFFFF !important;
+    border-bottom: 1px solid #F3F4F6 !important;
     transition: background 0.2s ease;
 }
 .totw-list-item:hover {
-    background: var(--purple-50);
+    background: var(--purple-50) !important;
 }
 .totw-list-item.selected {
-    background: var(--purple-50);
-    border-right: 4px solid var(--purple-500);
+    background: var(--purple-50) !important;
+    border-right: 4px solid var(--purple-500) !important;
 }
 .totw-list-entry {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .totw-list-player {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 .totw-list-gw {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
 .totw-list-total {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .totw-list-check.checked {
-    background: var(--purple-500);
-    color: #fff;
+    background: var(--purple-500) !important;
+    color: #fff !important;
 }
 .totw-count-bar {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06) !important;
 }
 .save-btn {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    color: #fff;
-    box-shadow: 0 3px 10px rgba(124, 58, 237, 0.3);
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 3px 10px rgba(124, 58, 237, 0.3) !important;
 }
 .save-btn.saved {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3) !important;
 }
 .reset-btn {
-    background: #F3F4F6;
-    color: var(--text-secondary);
-    border: 1.5px solid #E5E7EB;
+    background: #F3F4F6 !important;
+    color: var(--text-secondary) !important;
+    border: 1.5px solid #E5E7EB !important;
 }
 
 /* =========================================================
@@ -683,75 +673,75 @@ body {
 ========================================================= */
 
 .club-item {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06) !important;
     transition: all 0.2s ease;
 }
 .club-item:hover {
-    border-color: var(--purple-300);
-    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15);
+    border-color: var(--purple-300) !important;
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15) !important;
     transform: translateY(-2px);
 }
 .club-item-name {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .club-item-count {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
 .club-item-arrow {
-    color: var(--purple-500);
+    color: var(--purple-500) !important;
 }
 
 .clubs-edit-btn {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    color: var(--purple-600);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    color: var(--purple-600) !important;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06) !important;
 }
 .clubs-edit-btn:hover {
-    border-color: var(--purple-300);
-    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.15);
+    border-color: var(--purple-300) !important;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.15) !important;
 }
 .clubs-edit-btn.active {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    border-color: var(--purple-500);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+    border-color: var(--purple-500) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35) !important;
 }
 
 .club-modal-box {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25) !important;
 }
 .club-modal-title {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .club-modal-sub {
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
 }
 .club-player-row {
-    background: #FFFFFF;
-    border-bottom: 1px solid #F3F4F6;
-    color: var(--text-primary);
+    background: #FFFFFF !important;
+    border-bottom: 1px solid #F3F4F6 !important;
+    color: var(--text-primary) !important;
 }
 .club-player-num {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
 .club-player-del {
-    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
-    color: #fff;
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
+    color: #fff !important;
 }
 .club-add-btn {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3) !important;
 }
 .club-stats-btn {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
 /* =========================================================
@@ -759,29 +749,29 @@ body {
 ========================================================= */
 
 .trend-row {
-    background: #FFFFFF;
-    border-bottom: 1px solid #F3F4F6;
+    background: #FFFFFF !important;
+    border-bottom: 1px solid #F3F4F6 !important;
 }
 .trend-row:hover {
-    background: var(--purple-50);
+    background: var(--purple-50) !important;
 }
 .trend-row-entry {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .trend-row-player {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 .trend-diff-up {
-    background: rgba(16, 185, 129, 0.12);
-    color: var(--green-600);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    box-shadow: none;
+    background: rgba(16, 185, 129, 0.12) !important;
+    color: var(--green-600) !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    box-shadow: none !important;
 }
 .trend-diff-down {
-    background: rgba(220, 38, 38, 0.12);
-    color: var(--red-600);
-    border: 1px solid rgba(220, 38, 38, 0.3);
-    box-shadow: none;
+    background: rgba(220, 38, 38, 0.12) !important;
+    color: var(--red-600) !important;
+    border: 1px solid rgba(220, 38, 38, 0.3) !important;
+    box-shadow: none !important;
 }
 
 /* =========================================================
@@ -789,237 +779,236 @@ body {
 ========================================================= */
 
 .mh-controls {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
-    backdrop-filter: none;
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06) !important;
+    backdrop-filter: none !important;
 }
 .mh-stats {
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
 }
 .mh-stats span {
-    color: var(--purple-600);
-    text-shadow: none;
+    color: var(--purple-600) !important;
+    text-shadow: none !important;
 }
 
 .mh-edit-btn {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    box-shadow: 0 3px 12px rgba(124, 58, 237, 0.3);
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+    box-shadow: 0 3px 12px rgba(124, 58, 237, 0.3) !important;
 }
 .mh-edit-btn.active {
-    background: linear-gradient(135deg, #10B981 0%, #047857 100%);
-    box-shadow: 0 3px 12px rgba(16, 185, 129, 0.4);
+    background: linear-gradient(135deg, #10B981 0%, #047857 100%) !important;
+    box-shadow: 0 3px 12px rgba(16, 185, 129, 0.4) !important;
 }
 
 .mh-refresh-btn {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    box-shadow: 0 3px 12px rgba(124, 58, 237, 0.3);
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+    box-shadow: 0 3px 12px rgba(124, 58, 237, 0.3) !important;
 }
 
 .mh-search-input {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    color: var(--text-primary);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
-    backdrop-filter: none;
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06) !important;
+    backdrop-filter: none !important;
 }
 .mh-search-input::placeholder {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 .mh-search-input:focus {
-    border-color: var(--purple-500);
-    background: #FFFFFF;
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    border-color: var(--purple-500) !important;
+    background: #FFFFFF !important;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15) !important;
 }
 .mh-search-box::before {
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") center/contain no-repeat;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") center/contain no-repeat !important;
 }
 
 .mh-list-container {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
-    backdrop-filter: none;
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06) !important;
+    backdrop-filter: none !important;
 }
 .mh-list-container.edit-mode {
-    border-color: rgba(16, 185, 129, 0.4);
-    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.4) !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.1) !important;
 }
 
 .mh-list-header {
-    background: var(--purple-50);
-    border-bottom: 1.5px solid var(--purple-100);
-    color: var(--purple-700);
-    backdrop-filter: none;
+    background: var(--purple-50) !important;
+    border-bottom: 1.5px solid var(--purple-100) !important;
+    color: var(--purple-700) !important;
+    backdrop-filter: none !important;
 }
 
 .mh-list-row {
-    border-bottom: 1px solid #F3F4F6;
+    border-bottom: 1px solid #F3F4F6 !important;
 }
 .mh-list-row:hover {
-    background: var(--purple-50);
+    background: var(--purple-50) !important;
 }
 .mh-list-row::before {
-    background: linear-gradient(180deg, #7C3AED 0%, #A78BFA 100%);
+    background: linear-gradient(180deg, #7C3AED 0%, #A78BFA 100%) !important;
 }
 .mh-list-row:active {
-    background: var(--purple-100);
+    background: var(--purple-100) !important;
 }
 .mh-lr-num {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 .mh-lr-logo {
-    background: var(--purple-50);
-    border: 1px solid var(--purple-100);
+    background: var(--purple-50) !important;
+    border: 1px solid var(--purple-100) !important;
 }
 .mh-lr-name {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .mh-list-row:hover .mh-lr-name {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
 .mh-lr-team {
-    color: var(--purple-600);
-    background: var(--purple-50);
-    border: 1px solid var(--purple-100);
+    color: var(--purple-600) !important;
+    background: var(--purple-50) !important;
+    border: 1px solid var(--purple-100) !important;
 }
 .mh-lr-team-none {
-    color: var(--text-tertiary);
-    background: #F3F4F6;
-    border-color: #E5E7EB;
+    color: var(--text-tertiary) !important;
+    background: #F3F4F6 !important;
+    border-color: #E5E7EB !important;
 }
 
 .mh-lr-move {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3) !important;
 }
 .mh-lr-delete {
-    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
-    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3) !important;
 }
 
 .mh-add-row {
-    background: rgba(16, 185, 129, 0.06);
-    border: 1.5px solid rgba(16, 185, 129, 0.25);
-    backdrop-filter: none;
+    background: rgba(16, 185, 129, 0.06) !important;
+    border: 1.5px solid rgba(16, 185, 129, 0.25) !important;
+    backdrop-filter: none !important;
 }
 .mh-add-input, .mh-add-select {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    color: var(--text-primary);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    color: var(--text-primary) !important;
 }
 .mh-add-input::placeholder {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 .mh-add-input:focus, .mh-add-select:focus {
-    border-color: var(--purple-500);
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    border-color: var(--purple-500) !important;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15) !important;
 }
 .mh-add-select option {
-    background: #FFFFFF;
-    color: var(--text-primary);
+    background: #FFFFFF !important;
+    color: var(--text-primary) !important;
 }
 .mh-add-btn {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    box-shadow: 0 3px 12px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+    box-shadow: 0 3px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
 .mh-manual-row {
-    background: rgba(245, 158, 11, 0.06);
-    border: 1.5px solid rgba(245, 158, 11, 0.3);
-    backdrop-filter: none;
+    background: rgba(245, 158, 11, 0.06) !important;
+    border: 1.5px solid rgba(245, 158, 11, 0.3) !important;
+    backdrop-filter: none !important;
 }
 .mh-manual-label {
-    color: var(--amber-600);
+    color: var(--amber-600) !important;
 }
 .mh-manual-input {
-    background: #FFFFFF;
-    border: 1.5px solid rgba(245, 158, 11, 0.4);
-    color: var(--text-primary);
+    background: #FFFFFF !important;
+    border: 1.5px solid rgba(245, 158, 11, 0.4) !important;
+    color: var(--text-primary) !important;
 }
 .mh-manual-input::placeholder {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 .mh-manual-input:focus {
-    border-color: var(--amber-600);
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+    border-color: var(--amber-600) !important;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15) !important;
 }
 .mh-manual-add-btn {
-    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
-    color: #fff;
-    box-shadow: 0 3px 12px rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 3px 12px rgba(245, 158, 11, 0.3) !important;
 }
 
 .mh-row-manual {
-    background: linear-gradient(90deg, rgba(245, 158, 11, 0.06) 0%, transparent 60%);
-    border-left: 2px solid rgba(245, 158, 11, 0.4);
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.06) 0%, transparent 60%) !important;
+    border-left: 2px solid rgba(245, 158, 11, 0.4) !important;
 }
 .mh-row-manual:hover {
-    background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0.03) 100%);
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0.03) 100%) !important;
 }
 .mh-lr-logo-manual {
-    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
-    color: #fff;
-    border-color: rgba(245, 158, 11, 0.5);
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
+    color: #fff !important;
+    border-color: rgba(245, 158, 11, 0.5) !important;
 }
 .mh-lr-team-manual {
-    color: var(--amber-600);
-    background: rgba(245, 158, 11, 0.08);
-    border-color: rgba(245, 158, 11, 0.3);
+    color: var(--amber-600) !important;
+    background: rgba(245, 158, 11, 0.08) !important;
+    border-color: rgba(245, 158, 11, 0.3) !important;
 }
 
-/* MH Modal */
 #mhModal {
     background: rgba(17, 24, 39, 0.6);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 }
 .mh-modal-box {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25) !important;
 }
 .mh-modal-title {
-    color: var(--purple-700);
-    border-bottom: 1.5px solid var(--purple-100);
-    background: none;
-    -webkit-text-fill-color: var(--purple-700);
+    color: var(--purple-700) !important;
+    border-bottom: 1.5px solid var(--purple-100) !important;
+    background: none !important;
+    -webkit-text-fill-color: var(--purple-700) !important;
 }
 .mh-pass-input {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    color: var(--text-primary);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    color: var(--text-primary) !important;
 }
 .mh-pass-input:focus {
-    border-color: var(--purple-500);
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    border-color: var(--purple-500) !important;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15) !important;
 }
 .mh-modal-cancel {
-    background: #F3F4F6;
-    color: var(--text-secondary);
-    border: 1.5px solid #E5E7EB;
+    background: #F3F4F6 !important;
+    color: var(--text-secondary) !important;
+    border: 1.5px solid #E5E7EB !important;
 }
 .mh-modal-cancel:hover {
-    background: #E5E7EB;
-    color: var(--text-primary);
+    background: #E5E7EB !important;
+    color: var(--text-primary) !important;
 }
 .mh-modal-confirm {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3) !important;
 }
 .mh-modal-error {
-    color: var(--red-600);
+    color: var(--red-600) !important;
 }
 .mh-move-option {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    color: var(--text-primary);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    color: var(--text-primary) !important;
 }
 .mh-move-option:hover {
-    background: var(--purple-50);
-    border-color: var(--purple-300);
-    color: var(--purple-700);
+    background: var(--purple-50) !important;
+    border-color: var(--purple-300) !important;
+    color: var(--purple-700) !important;
 }
 
 /* =========================================================
@@ -1027,154 +1016,154 @@ body {
 ========================================================= */
 
 .fpl-player-row {
-    background: #FFFFFF;
-    border-bottom: 1px solid #F3F4F6;
+    background: #FFFFFF !important;
+    border-bottom: 1px solid #F3F4F6 !important;
 }
 .fpl-player-row:hover {
-    background: var(--purple-50);
+    background: var(--purple-50) !important;
 }
 .fpl-player-name {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .fpl-player-sub {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 .fpl-player-price {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
 .fpl-player-points {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .fpl-team-card {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06) !important;
     transition: all 0.2s ease;
 }
 .fpl-team-card:hover {
-    border-color: var(--purple-300);
-    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15);
+    border-color: var(--purple-300) !important;
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15) !important;
     transform: translateY(-2px);
 }
 .fpl-team-card-name {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .fpl-team-card-count {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
 .fpl-modal-box {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25) !important;
 }
 .fpl-modal-name {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .fpl-stat-box {
-    background: var(--purple-50);
-    border: 1.5px solid var(--purple-100);
+    background: var(--purple-50) !important;
+    border: 1.5px solid var(--purple-100) !important;
 }
 .fpl-stat-label {
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
 }
 .fpl-stat-value {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
-.fpl-stat-value.green { color: var(--green-600); }
-.fpl-stat-value.red { color: var(--red-600); }
-.fpl-stat-value.gold { color: var(--amber-600); }
+.fpl-stat-value.green { color: var(--green-600) !important; }
+.fpl-stat-value.red { color: var(--red-600) !important; }
+.fpl-stat-value.gold { color: var(--amber-600) !important; }
 
 /* =========================================================
    19. SQUAD MODAL
 ========================================================= */
 
 .squad-modal-box {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25) !important;
 }
 .squad-modal-manager {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .squad-modal-subtitle {
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
 }
 .squad-section-title {
-    color: var(--purple-700);
-    border-bottom: 1.5px solid var(--purple-100);
+    color: var(--purple-700) !important;
+    border-bottom: 1.5px solid var(--purple-100) !important;
 }
 .squad-player {
-    background: #FFFFFF;
-    border-bottom: 1px solid #F3F4F6;
+    background: #FFFFFF !important;
+    border-bottom: 1px solid #F3F4F6 !important;
 }
 .squad-player:hover {
-    background: var(--purple-50);
+    background: var(--purple-50) !important;
 }
 .squad-player-name {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .squad-player-team {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
 .squad-player-points {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
 .squad-stat-box {
-    background: var(--purple-50);
-    border: 1.5px solid var(--purple-100);
+    background: var(--purple-50) !important;
+    border: 1.5px solid var(--purple-100) !important;
 }
 .squad-stat-label {
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
 }
 .squad-stat-value {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
-.squad-stat-value.green { color: var(--green-600); }
-.squad-stat-value.gold { color: var(--amber-600); }
+.squad-stat-value.green { color: var(--green-600) !important; }
+.squad-stat-value.gold { color: var(--amber-600) !important; }
 
 /* =========================================================
    20. TEAM MODAL
 ========================================================= */
 
 .team-modal-box {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100);
-    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25);
+    background: #FFFFFF !important;
+    border: 1.5px solid var(--purple-100) !important;
+    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25) !important;
 }
 .team-modal-title {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .team-modal-loading {
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
 }
 .team-modal-kpi {
-    background: var(--purple-50);
-    border: 1.5px solid var(--purple-100);
+    background: var(--purple-50) !important;
+    border: 1.5px solid var(--purple-100) !important;
 }
 .team-modal-kpi-label {
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
 }
 .team-modal-kpi-value {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
 .team-player-row {
-    background: #FFFFFF;
-    border-bottom: 1px solid #F3F4F6;
+    background: #FFFFFF !important;
+    border-bottom: 1px solid #F3F4F6 !important;
 }
 .team-player-row.top {
-    background: linear-gradient(90deg, rgba(124, 58, 237, 0.08) 0%, transparent 60%);
-    border-right: 4px solid var(--purple-500);
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.08) 0%, transparent 60%) !important;
+    border-right: 4px solid var(--purple-500) !important;
 }
 .team-player-row.bottom {
-    background: linear-gradient(90deg, rgba(220, 38, 38, 0.06) 0%, transparent 60%);
-    border-right: 4px solid var(--red-600);
+    background: linear-gradient(90deg, rgba(220, 38, 38, 0.06) 0%, transparent 60%) !important;
+    border-right: 4px solid var(--red-600) !important;
 }
 .team-player-name {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 .team-player-points {
-    color: var(--purple-600);
+    color: var(--purple-600) !important;
 }
 .team-player-rank {
-    color: var(--text-tertiary);
+    color: var(--text-tertiary) !important;
 }
