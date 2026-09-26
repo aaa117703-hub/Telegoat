@@ -1,5 +1,6 @@
 /* =========================================================
-   theme.css — v4 (Light Purple Theme — Final)
+   theme.css — v5 (Light Purple Theme)
+   - إصلاح: خلفية الملعب من totw.css
 ========================================================= */
 
 /* ========== 1. VARIABLES ========== */
@@ -255,7 +256,7 @@ body {
 }
 
 /* =========================================================
-   13. STATS — كل الألوان بنفسجية
+   13. STATS
 ========================================================= */
 
 .stats-tab-btn {
@@ -281,7 +282,6 @@ body {
     border-top-color: var(--purple-500) !important;
 }
 
-/* KPI Grid */
 .stats-kpi-card {
     background: #FFFFFF !important;
     border: 1.5px solid var(--purple-100) !important;
@@ -298,7 +298,6 @@ body {
 }
 .stats-kpi-label { color: var(--text-secondary) !important; }
 
-/* Sections */
 .stats-section {
     background: #FFFFFF !important;
     border: 1.5px solid var(--purple-100) !important;
@@ -310,7 +309,6 @@ body {
     text-shadow: none !important;
 }
 
-/* Rows */
 .stats-row {
     background: #FFFFFF !important;
     border-bottom: 1px solid #F3F4F6 !important;
@@ -361,7 +359,6 @@ body {
 .stats-row-value-num { color: var(--purple-600) !important; text-shadow: none !important; }
 .stats-row-value-label { color: var(--text-tertiary) !important; }
 
-/* ⭐ شعار الفريق في الصفوف — حجم مناسب بدون خلفية */
 .stats-row-logo {
     background: transparent !important;
     border: none !important;
@@ -391,7 +388,6 @@ body {
     box-shadow: none !important;
 }
 
-/* Search */
 .stats-search-input {
     background: #FFFFFF !important;
     border: 1.5px solid var(--purple-100) !important;
@@ -418,7 +414,6 @@ body {
 .stats-search-entry { color: var(--text-primary) !important; }
 .stats-search-player { color: var(--text-tertiary) !important; }
 
-/* Profile */
 .stats-profile-card {
     background: #FFFFFF !important;
     border: 1.5px solid var(--purple-100) !important;
@@ -446,7 +441,6 @@ body {
 .stats-green { color: var(--green-600) !important; }
 .stats-yellow { color: var(--amber-600) !important; }
 
-/* Records */
 .stats-record-card {
     background: #FFFFFF !important;
     border: 1.5px solid var(--purple-100) !important;
@@ -474,12 +468,9 @@ body {
 .stats-record-green .stats-record-value { color: var(--green-600) !important; }
 
 /* =========================================================
-   14. TOTW — إصلاح كامل
+   14. TOTW — الملعب يترك لـ totw.css
 ========================================================= */
 
-.totw-tabs {
-    background: transparent;
-}
 .totw-tab-btn {
     background: #FFFFFF !important;
     border: 1.5px solid var(--purple-100) !important;
@@ -503,17 +494,15 @@ body {
     border-top-color: var(--purple-500) !important;
 }
 
-/* الملعب — بنفسجي */
+/* ⭐ الملعب — محذوف من هنا، يتحدد في totw.css */
+/* فقط الـ wrapper يبقى شفاف */
 .totw-pitch-wrapper {
     background: transparent !important;
 }
-.totw-pitch {
-    background: linear-gradient(180deg, #7C3AED 0%, #A78BFA 100%) !important;
-    border-radius: 16px !important;
-}
+
 .totw-pitch-title {
     color: #fff !important;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6) !important;
 }
 .totw-card {
     background: #FFFFFF !important;
@@ -521,18 +510,11 @@ body {
     border: 1.5px solid rgba(255,255,255,0.9) !important;
 }
 .tc-name { color: var(--text-primary) !important; }
-.tc-points {
-    color: var(--purple-600) !important;
-    background: var(--purple-50) !important;
-    border: 1px solid var(--purple-100) !important;
-    text-shadow: none !important;
-}
 .tc-shirt {
     background: transparent !important;
     border: none !important;
 }
 
-/* TOTW List */
 .totw-list-item {
     background: #FFFFFF !important;
     border-bottom: 1px solid #F3F4F6 !important;
@@ -873,7 +855,6 @@ body {
     text-shadow: none !important;
 }
 
-/* ⭐ شعار الفريق في Squad — بدون خلفية بحجم مناسب */
 .squad-player-badge {
     background: transparent !important;
     border: none !important;
