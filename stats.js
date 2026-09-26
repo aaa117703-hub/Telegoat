@@ -1,6 +1,5 @@
 /* =========================================================
-   stats.js — v12
-   - إضافة: hook لتبويب Charts
+   stats.js — v12 (نسخة نظيفة)
 ========================================================= */
 
 const STATS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -91,7 +90,7 @@ function createStatsRow(rank, manager, value, valueLabel) {
 
     let logoHtml = '';
     if (teamName && typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName]) {
-        logoHtml = '<div class="stats-row-logo"><img src="./' + TE (AMS_LOGOS[teamName] +rank ===  '"2 onerror="this.style.display=\'none\'"></div>';
+        logoHtml = '<div class="stats-row-logo"><img src="./' + TEAMS_LOGOS[teamName] + '" onerror="this.style.display=\'none\'"></div>';
     } else {
         logoHtml = '<div class="stats-row-logo stats-row-logo-empty"></div>';
     }
@@ -102,7 +101,7 @@ function createStatsRow(rank, manager, value, valueLabel) {
     if (rank === 1) {
         rankClass = 'stats-rank-gold';
         rowExtra = ' stats-row-gold';
-    } else if) {
+    } else if (rank === 2) {
         rankClass = 'stats-rank-silver';
         rowExtra = ' stats-row-silver';
     } else if (rank === 3) {
@@ -164,21 +163,53 @@ function renderStatsRecords(stats) {
 
     if (stats.topEvent[0]) {
         const m = stats.topEvent[0];
-        cards.push({ label: 'Highest GW', value: stats.highestEvent, name: m.player_name || m.entry_name, color: 'gold' });
+        cards.push({
+            label: 'Highest GW',
+            value: stats.highestEvent,
+            name: m.player_name || m.entry_name,
+            color: 'gold'
+        });
     }
 
     if (stats.topTotal[0]) {
         const m = stats.topTotal[0];
-        cards.push({ label: 'Top Total', value: stats.highestTotal, name: m.player_name || m.entry_name, color: 'gold' });
+        cards.push({
+            label: 'Top Total',
+            value: stats.highestTotal,
+            name: m.player_name || m.entry_name,
+            color: 'gold'
+        });
     }
 
     if (stats.lowestEvent) {
-        cards.push({ label: 'Lowest GW', value: stats.lowestEvent, name: '—', color: 'red' });
+        cards.push({
+            label: 'Lowest GW',
+            value: stats.lowestEvent,
+            name: '—',
+            color: 'red'
+        });
     }
 
-    cards.push({ label: 'Avg GW', value: stats.avgEvent, name: 'Per Manager', color: 'green' });
-    cards.push({ label: 'Avg Total', value: stats.avgTotal, name: 'Per Manager', color: 'green' });
-    cards.push({ label: 'Managers', value: stats.totalManagers, name: 'League', color: 'purple' });
+    cards.push({
+        label: 'Avg GW',
+        value: stats.avgEvent,
+        name: 'Per Manager',
+        color: 'green'
+    });
+
+    cards.push({
+        label: 'Avg Total',
+        value: stats.avgTotal,
+        name: 'Per Manager',
+        color: 'green'
+    });
+
+    cards.push({
+        label: 'Managers',
+        value: stats.totalManagers,
+        name: 'League',
+        color: 'purple'
+    });
 
     container.innerHTML = cards.map(function(c) {
         return '<div class="stats-record-card stats-record-' + c.color + '">' +
@@ -388,12 +419,10 @@ function switchStatsTab(tabName) {
         loadClubs();
     }
 
-    /* ⭐ جديد: Charts */
     if (tabName === 'charts' && typeof initCharts === 'function') {
         initCharts();
     }
 
-    /* ⭐ مشغّل الأزرار الجديد — يخليها في الوسط */
     setTimeout(function() {
         const activeBtn = document.querySelector('.stats-tab-btn.active');
         if (activeBtn && activeBtn.scrollIntoView) {
@@ -406,7 +435,6 @@ function switchStatsTab(tabName) {
     }, 50);
 }
 
-/* ⭐ جديد: أعد حساب Stats عند إضافة/حذف Manual Entry */
 window.addEventListener('managers-updated', function() {
     if (!statsLoaded) return;
 
@@ -420,23 +448,23 @@ window.addEventListener('managers-updated', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('statsSearchInput');
-    if (searchInput) {
-        let searchTimer = null;
+    if (!searchInput) return;
 
-        searchInput.addEventListener('input', function() {
-            clearTimeout(searchTimer);
-            const val = this.value;
+    let searchTimer = null;
 
-            searchTimer = setTimeout(function() {
-                const q = val.trim();
-                if (q.length < 2) {
-                    const resultsEl = document.getElementById('statsSearchResults');
-                    if (resultsEl) resultsEl.innerHTML = '';
-                    return;
-                }
-                const results = searchManager(q);
-                renderSearchResults(results);
-            }, 150);
-        });
-    }
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimer);
+        const val = this.value;
+
+        searchTimer = setTimeout(function() {
+            const q = val.trim();
+            if (q.length < 2) {
+                const resultsEl = document.getElementById('statsSearchResults');
+                if (resultsEl) resultsEl.innerHTML = '';
+                return;
+            }
+            const results = searchManager(q);
+            renderSearchResults(results);
+        }, 150);
+    });
 });
