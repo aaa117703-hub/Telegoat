@@ -1,7 +1,8 @@
 /* =========================================================
-   totw.css — v31
-   - نفس التصميم v30
-   - الألوان: عنابي (Qatar 2022) + ذهبي
+   totw.css — v30
+   - إصلاح: حذف الحافة الخضراء المضيئة
+   - إصلاح: List grid (6 columns متطابقة)
+   - إصلاح: شعارات List بحجم صحيح
 ========================================================= */
 
 .totw-tabs{
@@ -16,8 +17,8 @@
 .totw-tab-btn{
     padding:6px 22px;
     background:#FFFFFF;
-    color:#6B0F1F;
-    border:2px solid #E5D4A5;
+    color:#6B7280;
+    border:2px solid #EDE9FE;
     border-radius:50px;
     font-size:11px;
     font-weight:900;
@@ -30,16 +31,16 @@
 }
 
 .totw-tab-btn.active{
-    background:linear-gradient(135deg, #8B1A2F 0%, #6B0F1F 100%);
+    background:linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
     color:#FFFFFF;
-    border-color:#8B1A2F;
-    box-shadow:0 4px 14px rgba(139,26,47,.35);
+    border-color:#7C3AED;
+    box-shadow:0 4px 14px rgba(124,58,237,.35);
 }
 
 .totw-tab-btn:hover{
     transform:translateY(-2px);
-    border-color:#C8A95F;
-    color:#8B1A2F;
+    border-color:#A78BFA;
+    color:#7C3AED;
 }
 
 .totw-pitch-wrapper{
@@ -50,7 +51,7 @@
 }
 
 /* =========================================================
-   الملعب
+   الملعب — حذفنا الحافة الخضراء المضيئة
 ========================================================= */
 
 .totw-pitch{
@@ -62,14 +63,14 @@
     background-size:100% 100%;
     background-position:center;
     background-repeat:no-repeat;
-    border:3px solid #8B1A2F;
+    border:3px solid #5B21B6;
     border-radius:18px;
     box-shadow:0 10px 40px rgba(0,0,0,.25);
     overflow:hidden;
 }
 
 /* =========================================================
-   عنوان TEAM OF THE WEEK — عنابي متلاشي
+   عنوان TEAM OF THE WEEK — بنفسجي متلاشي
 ========================================================= */
 
 .totw-pitch-title{
@@ -89,17 +90,17 @@
     padding:6px 40px;
     border-radius:0;
     background:linear-gradient(90deg,
-        rgba(139, 26, 47, 0)    0%,
-        rgba(139, 26, 47, 0.35) 8%,
-        rgba(139, 26, 47, 0.85) 20%,
-        rgba(139, 26, 47, 1)    50%,
-        rgba(139, 26, 47, 0.85) 80%,
-        rgba(139, 26, 47, 0.35) 92%,
-        rgba(139, 26, 47, 0)    100%);
+        rgba(123, 63, 245, 0)    0%,
+        rgba(123, 63, 245, 0.35) 8%,
+        rgba(123, 63, 245, 0.85) 20%,
+        rgba(123, 63, 245, 1)    50%,
+        rgba(123, 63, 245, 0.85) 80%,
+        rgba(123, 63, 245, 0.35) 92%,
+        rgba(123, 63, 245, 0)    100%);
     box-shadow:none;
     text-shadow:
         0 1px 3px rgba(0,0,0,.65),
-        0 0 10px rgba(200, 169, 95, .5);
+        0 0 10px rgba(123, 63, 245, .7);
 }
 
 .totw-pitch-title .gw-label{
@@ -183,7 +184,7 @@
     position:relative;
     z-index:3;
     flex-shrink:0;
-    background:rgba(139, 26, 47, 0.55);
+    background:rgba(30, 90, 50, 0.55);
     padding:4px 6px 0 6px;
     box-sizing:border-box;
     margin:0;
@@ -218,7 +219,7 @@
     padding:0 3px;
     margin-top:-6px;
     background:#ffffff;
-    color:#4A0A15;
+    color:#37003c;
     font-size:7px;
     font-weight:900;
     text-align:center;
@@ -242,8 +243,8 @@
     height:14px;
     padding:0 6px;
     margin:0;
-    background:#4A0A15;
-    color:#C8A95F;
+    background:#37003c;
+    color:#ffffff;
     font-size:9px;
     font-weight:900;
     text-align:center;
@@ -257,7 +258,7 @@
 }
 
 /* =========================================================
-   عرض القائمة
+   عرض القائمة — ⭐ محدّث ومصلّح
 ========================================================= */
 
 .totw-list-view{
@@ -265,10 +266,10 @@
     max-width:520px;
     margin:0 auto 16px;
     background:#FFFFFF;
-    border:1.5px solid #E5D4A5;
+    border:1.5px solid #EDE9FE;
     border-radius:14px;
     overflow:hidden;
-    box-shadow:0 4px 16px rgba(139,26,47,.1);
+    box-shadow:0 4px 16px rgba(124,58,237,.1);
 }
 
 .totw-count-bar{
@@ -277,15 +278,15 @@
     justify-content:space-between;
     gap:10px;
     padding:12px 16px;
-    background:#FAF6F0;
-    border-bottom:1.5px solid #E5D4A5;
+    background:#F5F3FF;
+    border-bottom:1.5px solid #EDE9FE;
     font-size:13px;
     font-weight:800;
-    color:#6B0F1F;
+    color:#6D28D9;
 }
 
 .totw-count-bar .count-num{
-    color:#8B1A2F;
+    color:#7C3AED;
     font-weight:900;
     font-size:16px;
     margin:0 2px;
@@ -310,7 +311,7 @@
 }
 
 .totw-actions .save-btn{
-    background:linear-gradient(135deg, #8B1A2F 0%, #6B0F1F 100%);
+    background:linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
     color:#fff;
 }
 
@@ -320,23 +321,23 @@
 
 .totw-actions .reset-btn{
     background:#F3F4F6;
-    color:#6B0F1F;
+    color:#6B7280;
 }
 
 .totw-actions button:active{
     transform:scale(0.95);
 }
 
-/* Header — 6 columns */
+/* Header — 6 columns مطابقة للـ items */
 .totw-list-header{
     display:grid;
     grid-template-columns:26px 26px 32px 1fr 46px 50px;
     gap:6px;
     align-items:center;
     padding:10px 12px;
-    border-bottom:1.5px solid #E5D4A5;
-    background:#FAF6F0;
-    color:#6B0F1F;
+    border-bottom:1.5px solid #EDE9FE;
+    background:#F5F3FF;
+    color:#5B21B6;
     font-size:9px;
     font-weight:900;
     text-transform:uppercase;
@@ -365,13 +366,13 @@
 }
 
 .totw-list-item:last-child{border-bottom:none;}
-.totw-list-item:hover{background:#FAF6F0;}
-.totw-list-item.selected{background:#FAF6F0;}
+.totw-list-item:hover{background:#F5F3FF;}
+.totw-list-item.selected{background:#F5F3FF;}
 
 .totw-list-check{
     width:20px;
     height:20px;
-    border:1.5px solid #C8A95F;
+    border:1.5px solid #A78BFA;
     border-radius:6px;
     display:flex;
     align-items:center;
@@ -385,8 +386,8 @@
 }
 
 .totw-list-check.checked{
-    background:#8B1A2F;
-    border-color:#8B1A2F;
+    background:#7C3AED;
+    border-color:#7C3AED;
     color:#FFFFFF;
 }
 
@@ -424,8 +425,8 @@
 }
 
 .totw-list-logo-empty{
-    background:#FAF6F0;
-    color:#C8A95F;
+    background:#F5F3FF;
+    color:#A78BFA;
     font-size:14px;
     border-radius:50%;
 }
@@ -465,7 +466,7 @@
     text-align:center;
     font-size:13px;
     font-weight:900;
-    color:#8B1A2F;
+    color:#7C3AED;
     letter-spacing:0.5px;
 }
 
@@ -484,7 +485,7 @@
 .totw-loading{
     text-align:center;
     padding:40px 20px;
-    color:#8B1A2F;
+    color:#7C3AED;
     font-size:15px;
     font-weight:900;
 }
@@ -493,8 +494,8 @@
     display:inline-block;
     width:36px;
     height:36px;
-    border:4px solid rgba(139,26,47,.2);
-    border-top-color:#8B1A2F;
+    border:4px solid rgba(124,58,237,.2);
+    border-top-color:#7C3AED;
     border-radius:50%;
     animation:spinTOTW .8s linear infinite;
     margin-bottom:14px;
@@ -508,10 +509,10 @@
 .totw-error{
     text-align:center;
     padding:24px 16px;
-    background:rgba(139, 26, 47, .15);
-    border:2px solid #8B1A2F;
+    background:rgba(255,0,90,.15);
+    border:2px solid #ff005a;
     border-radius:12px;
-    color:#8B1A2F;
+    color:#ff005a;
     font-size:13px;
     font-weight:800;
 }
@@ -562,6 +563,7 @@
     .totw-row-mid{padding:0 3%;}
     .totw-row-fwd{padding:0 18%;}
 
+    /* List — mobile */
     .totw-list-view{
         max-width:100%;
     }
