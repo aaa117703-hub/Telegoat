@@ -1,8 +1,8 @@
 /* =========================================================
-   stats.js — v14
-   - إضافة: Compare Tab support
-   - إضافة: أنميشنات بسيطة عند التنقل
-   - تحسين: تنظيم الكود
+   stats.js — v15
+   - Debug: تشخيص مشكلة No data
+   - Support: Compare Tab
+   - Animations: KPI + Rows + Records
 ========================================================= */
 
 const STATS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
@@ -15,30 +15,67 @@ let statsLoaded         = false;
 let statsComputed       = null;
 
 /* =========================================================
-   FETCH
+   FETCH — مع تشخيص كامل
 ========================================================= */
 
 async function fetchAllManagersForStats() {
+
+    /* ---------- 1. حاول من الكاش ---------- */
     if (typeof getAllManagersCached === 'function') {
-        return await getAllManagersCached();
+        try {
+            const result = await getAllManagersCached();
+            console.log('[Stats] Cache result:', result);
+            console.log('[Stats] Cache count:', result ? result.length : 0);
+
+            if (result && result.length > 0) {
+                return result;
+            }
+            console.warn('[Stats] Cache empty → falling back to Worker');
+        } catch (e) {
+            console.warn('[Stats] getAllManagersCached failed:', e);
+        }
+    } else {
+        console.warn('[Stats] getAllManagersCached NOT defined');
     }
 
+    /* ---------- 2. Fallback: Worker مباشرة ---------- */
     const allResults = [];
+
     for (let page = 1; page <= STATS_TOTAL_PAGES; page++) {
         try {
-            const response = await fetch(STATS_WORKER_URL + '/?page=' + page);
+            const url = STATS_WORKER_URL + '/?page=' + page;
+            console.log('[Stats] Fetching:', url);
+
+            const response = await fetch(url);
+            console.log('[Stats] Response status:', response.status, response.ok);
+
+            if (!response.ok) {
+                console.warn('[Stats] Worker page', page, 'bad status');
+                break;
+            }
+
             const data = await response.json();
+            console.log('[Stats] Page', page, 'raw data:', data);
+
             if (data && data.standings && data.standings.results) {
                 allResults.push(...data.standings.results);
-                if (data.standings.has_next !== true) break;
+                console.log('[Stats] Total so far:', allResults.length);
+
+                if (data.standings.has_next !== true) {
+                    console.log('[Stats] Last page reached');
+                    break;
+                }
             } else {
+                console.warn('[Stats] Unexpected data shape:', data);
                 break;
             }
         } catch (e) {
-            console.error('Stats page ' + page + ' failed:', e);
+            console.error('[Stats] Fetch page ' + page + ' ERROR:', e);
             break;
         }
     }
+
+    console.log('[Stats] FINAL total:', allResults.length);
     return allResults;
 }
 
@@ -167,16 +204,13 @@ function createStatsRow(rank, manager, value, valueLabel) {
 function renderStatsOverview(stats) {
     if (!stats) return;
 
-    /* KPI values with count-up animation */
-    statsAnimateNumber('kpiManagers',      stats.totalManagers);
-    statsAnimateNumber('kpiAvg',           stats.avgEvent);
-    statsAnimateNumber('kpiHigh',          stats.highestEvent);
-    statsAnimateNumber('kpiHighestTotal',  stats.highestTotal);
+    statsAnimateNumber('kpiManagers',     stats.totalManagers);
+    statsAnimateNumber('kpiAvg',          stats.avgEvent);
+    statsAnimateNumber('kpiHigh',         stats.highestEvent);
+    statsAnimateNumber('kpiHighestTotal', stats.highestTotal);
 
-    /* Stagger KPI cards */
     statsAnimateStagger('.stats-kpi-card', null, 60, 70);
 
-    /* Top Total list */
     const topTotalList = document.getElementById('statsTopTotal');
     if (topTotalList) {
         topTotalList.innerHTML = '';
@@ -186,7 +220,6 @@ function renderStatsOverview(stats) {
         statsAnimateStagger('.stats-row', topTotalList, 100, 40);
     }
 
-    /* Top Event list (hidden by default) */
     const topEventList = document.getElementById('statsTopEvent');
     if (topEventList) {
         topEventList.innerHTML = '';
@@ -441,8 +474,11 @@ async function loadStats() {
 
     try {
         const managers = await fetchAllManagersForStats();
+
+        console.log('[Stats] Managers received:', managers ? managers.length : 0);
+
         if (!managers || managers.length === 0) {
-            throw new Error('No data');
+            throw new Error('No data — الكاش والـ Worker ما رجعوا بيانات');
         }
 
         statsAllManagers = managers;
@@ -482,22 +518,22 @@ function switchStatsTab(tabName) {
         view.classList.toggle('active', view.id === 'statsView-' + tabName);
     });
 
-    /* ✅ Clubs tab */
+    /* Clubs tab */
     if (tabName === 'clubs' && typeof loadClubs === 'function') {
         loadClubs();
     }
 
-    /* ✅ Charts tab */
+    /* Charts tab */
     if (tabName === 'charts' && typeof initCharts === 'function') {
         initCharts();
     }
 
-    /* ✅ Compare tab */
+    /* Compare tab */
     if (tabName === 'compare' && typeof cmpInit === 'function') {
         cmpInit();
     }
 
-    /* ✅ Animation on active view */
+    /* Animation on active view */
     const activeView = document.querySelector('.stats-view.active');
     if (activeView) {
         activeView.classList.remove('stats-view-enter');
