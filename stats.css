@@ -1,98 +1,582 @@
 /* =========================================================
-   STATS — ANIMATIONS v1
+   stats.css — v10
+   Layout + Animations
+   (الألوان في theme.css)
 ========================================================= */
 
-/* View enter animation */
+/* =========================================================
+   1. TABS BAR
+========================================================= */
+
+.stats-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 10px 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+}
+.stats-tabs::-webkit-scrollbar { display: none; }
+
+.stats-tab-btn {
+    flex: 0 0 auto;
+    padding: 9px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    font-family: inherit;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .25s ease;
+    scroll-snap-align: center;
+}
+.stats-tab-btn:active {
+    transform: scale(0.95);
+}
+
+/* =========================================================
+   2. VIEWS (switch)
+========================================================= */
+
+.stats-view {
+    display: none;
+    padding: 4px 4px 20px;
+}
+.stats-view.active {
+    display: block;
+}
+
+/* =========================================================
+   3. LOADING
+========================================================= */
+
+.stats-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.stats-loading .spinner {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* =========================================================
+   4. KPI GRID (Overview)
+========================================================= */
+
+.stats-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 10px 0 16px;
+}
+
+.stats-kpi-card {
+    padding: 16px 12px;
+    border-radius: 14px;
+    text-align: center;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+.stats-kpi-card:active {
+    transform: scale(0.97);
+}
+
+.stats-kpi-value {
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 4px;
+}
+
+.stats-kpi-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   5. SECTIONS
+========================================================= */
+
+.stats-section {
+    margin: 12px 0;
+    padding: 14px 12px;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.stats-section-title {
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+/* =========================================================
+   6. ROWS (Top 10 / Rankings)
+========================================================= */
+
+.stats-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 8px;
+    border-radius: 10px;
+    transition: background .2s ease, transform .2s ease;
+}
+.stats-row:active {
+    transform: scale(0.99);
+}
+
+.stats-rank {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+}
+
+.stats-row-names {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.stats-row-entry {
+    font-size: 13px;
+    font-weight: 800;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.stats-row-player {
+    font-size: 10px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.stats-row-value {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    min-width: 48px;
+}
+
+.stats-row-value-num {
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.stats-row-value-label {
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   7. LOGOS (row)
+========================================================= */
+
+.stats-row-logo {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.stats-row-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+.stats-row-logo-empty {
+    background: transparent;
+}
+
+/* =========================================================
+   8. SEARCH
+========================================================= */
+
+.stats-search-box {
+    margin: 10px 4px 14px;
+}
+
+.stats-search-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    outline: none;
+    transition: all .2s ease;
+}
+
+.stats-search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.stats-search-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.stats-search-item:active {
+    transform: scale(0.98);
+}
+
+.stats-search-rank {
+    flex: 0 0 auto;
+    font-size: 12px;
+    font-weight: 900;
+    min-width: 32px;
+    text-align: center;
+}
+
+.stats-search-logo {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.stats-search-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.stats-search-logo-empty {
+    background: transparent;
+}
+
+.stats-search-names {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stats-search-entry {
+    font-size: 13px;
+    font-weight: 800;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.stats-search-player {
+    font-size: 10px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.stats-search-total {
+    flex: 0 0 auto;
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.stats-empty {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    font-style: italic;
+}
+
+/* =========================================================
+   9. PROFILE CARD
+========================================================= */
+
+.stats-profile-card {
+    position: relative;
+    padding: 24px 18px 18px;
+    border-radius: 18px;
+    margin: 14px 4px;
+    text-align: center;
+}
+
+.stats-profile-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: #F3F4F6;
+    color: #6B7280;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    transition: background .2s ease;
+}
+.stats-profile-close:hover {
+    background: #E5E7EB;
+}
+
+.stats-profile-rank-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+}
+
+.stats-profile-shirt {
+    width: 80px;
+    height: 80px;
+    margin: 6px auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.stats-profile-shirt img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.stats-profile-no-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(124,58,237,0.08);
+}
+
+.stats-profile-entry {
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 0.3px;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+.stats-profile-player {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.stats-profile-team {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+}
+
+.stats-profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 14px 0;
+}
+
+.stats-profile-stat {
+    padding: 12px 8px;
+    border-radius: 12px;
+    background: rgba(124,58,237,0.06);
+}
+
+.stats-stat-label {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.stats-stat-value {
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.stats-profile-details {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1.5px dashed rgba(124,58,237,0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stats-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 2px;
+}
+
+.stats-detail-label {
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.stats-detail-value {
+    font-weight: 900;
+}
+
+.stats-green { }
+.stats-yellow { }
+
+/* =========================================================
+   10. RECORDS
+========================================================= */
+
+.stats-records-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.stats-record-card {
+    padding: 14px 12px;
+    border-radius: 14px;
+    text-align: center;
+    transition: transform .25s ease;
+}
+.stats-record-card:active {
+    transform: scale(0.97);
+}
+
+.stats-record-label {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.stats-record-value {
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.stats-record-name {
+    font-size: 10px;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 4px;
+}
+
+/* =========================================================
+   11. ANIMATIONS
+========================================================= */
+
 .stats-view-enter {
     animation: statsViewEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @keyframes statsViewEnter {
-    from {
-        opacity: 0;
-        transform: translateY(14px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Individual element fade-in */
 .stats-anim-in {
     animation: statsAnimIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 @keyframes statsAnimIn {
-    from {
-        opacity: 0;
-        transform: translateY(12px) scale(0.98);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Staggered rows */
 .stats-anim-row {
     animation: statsRowIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 @keyframes statsRowIn {
-    from {
-        opacity: 0;
-        transform: translateX(-14px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    from { opacity: 0; transform: translateX(-14px); }
+    to   { opacity: 1; transform: translateX(0); }
 }
 
-/* KPI cards pop */
 .stats-kpi-card.stats-anim-row {
     animation: statsKpiPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 @keyframes statsKpiPop {
-    from {
-        opacity: 0;
-        transform: scale(0.85);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
 }
 
-/* Record cards */
 .stats-record-card.stats-anim-row {
     animation: statsRecordIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 @keyframes statsRecordIn {
-    from {
-        opacity: 0;
-        transform: translateY(16px) scale(0.94);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    from { opacity: 0; transform: translateY(16px) scale(0.94); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Profile card */
 .stats-profile-card.stats-anim-in {
     animation: statsProfileIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 @keyframes statsProfileIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px) scale(0.94);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    from { opacity: 0; transform: translateY(20px) scale(0.94); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Tab button active pulse */
 .stats-tab-btn.active {
     animation: statsTabPulse 0.4s ease;
 }
@@ -100,4 +584,25 @@
     0%   { transform: scale(1); }
     50%  { transform: scale(1.06); }
     100% { transform: scale(1); }
+}
+
+/* =========================================================
+   12. RESPONSIVE
+========================================================= */
+
+@media (max-width: 380px) {
+    .stats-kpi-value   { font-size: 22px; }
+    .stats-record-value { font-size: 22px; }
+    .stats-profile-stat { padding: 10px 6px; }
+    .stats-stat-value  { font-size: 17px; }
+    .stats-rank        { width: 26px; height: 26px; font-size: 11px; }
+}
+
+@media (min-width: 600px) {
+    .stats-kpi-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .stats-records-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
