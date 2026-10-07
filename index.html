@@ -7,6 +7,22 @@
 
 <meta name="color-scheme" content="only light">
 
+<!-- ========== PWA META ========== -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#7C3AED">
+
+<!-- iOS PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GOAT 🐐">
+<link rel="apple-touch-icon" href="./icon-512.png">
+<link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png">
+
+<!-- Microsoft/Android -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="TELEGRAM GOAT">
+<meta name="msapplication-TileColor" content="#7C3AED">
+
 <script>
 document.addEventListener('dblclick', function(e) { e.preventDefault(); }, { passive: false });
 let _lastTouchEnd = 0;
@@ -503,6 +519,16 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
     z-index:999999;
     text-align:center;font-weight:bold;
 }
+
+/* =========================================================
+   PWA STANDALONE — إخفاء أي عناصر غير مرغوبة
+========================================================= */
+@media all and (display-mode: standalone) {
+    body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: calc(90px + env(safe-area-inset-bottom));
+    }
+}
 </style>
 
 <link rel="stylesheet" href="mobile.css">
@@ -515,10 +541,66 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <link rel="stylesheet" href="manager-hub.css?v4">
 <link rel="stylesheet" href="theme.css?v=7">
 <link rel="stylesheet" href="charts.css?v=1">
+<link rel="stylesheet" href="splash.css?v=1">
+<link rel="stylesheet" href="compare.css?v=1">
 
 </head>
 
 <body>
+
+<!-- ========== SPLASH SCREEN ========== -->
+<div id="splashScreen" class="splash-screen" aria-hidden="true">
+
+    <div class="splash-bg"></div>
+    <div class="splash-grid"></div>
+
+    <div class="splash-corner tl"></div>
+    <div class="splash-corner tr"></div>
+    <div class="splash-corner bl"></div>
+    <div class="splash-corner br"></div>
+
+    <div class="splash-lines">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="splash-rings">
+        <div class="splash-ring r1"></div>
+        <div class="splash-ring r2"></div>
+        <div class="splash-ring r3"></div>
+        <div class="splash-ring r4"></div>
+    </div>
+
+    <div class="splash-hex">
+        <svg viewBox="0 0 200 200">
+            <polygon points="100,8 188,54 188,146 100,192 12,146 12,54" />
+        </svg>
+    </div>
+
+    <div class="splash-content">
+        <div class="splash-logo-wrap">
+            <div class="splash-logo-glow"></div>
+            <img src="./premier-league-logo.png" alt="" class="splash-logo" onerror="this.style.opacity=0">
+            <div class="splash-shine"></div>
+        </div>
+
+        <div class="splash-title">
+            <span data-i="0">T</span><span data-i="1">E</span><span data-i="2">L</span><span data-i="3">E</span>
+            <span data-i="4">G</span><span data-i="5">R</span><span data-i="6">A</span><span data-i="7">M</span>
+            <span class="gap"></span>
+            <span data-i="8">G</span><span data-i="9">O</span><span data-i="10">A</span><span data-i="11">T</span>
+        </div>
+
+        <div class="splash-sub">PREMIER LEAGUE · FANTASY</div>
+        <div class="splash-line"></div>
+    </div>
+
+    <div class="splash-particles" id="splashParticles"></div>
+    <div class="splash-skip">TAP TO SKIP</div>
+
+</div>
+<!-- ========== END SPLASH ========== -->
 
 <div id="backfillDebug"></div>
 
@@ -672,6 +754,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
             <button class="stats-tab-btn" data-tab="clubs" onclick="switchStatsTab('clubs')">Clubs</button>
             <button class="stats-tab-btn" data-tab="search" onclick="switchStatsTab('search')">Search</button>
             <button class="stats-tab-btn" data-tab="records" onclick="switchStatsTab('records')">Records</button>
+            <button class="stats-tab-btn" data-tab="compare" onclick="switchStatsTab('compare')">⚔️ Compare</button>
             <button class="stats-tab-btn" data-tab="managers" style="display:none;" onclick="switchStatsTab('managers')">Managers</button>
         </div>
 
@@ -742,6 +825,10 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
                     <div class="stats-section-title">League Records</div>
                     <div id="statsRecordsContent" class="stats-records-grid"></div>
                 </div>
+            </div>
+
+            <div id="statsView-compare" class="stats-view">
+                <div class="cmp-container" id="cmpContainer"></div>
             </div>
 
             <div id="statsView-managers" class="stats-view">
@@ -848,12 +935,30 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <script src="fpl-database.js?v=5"></script>
 <script src="manager-squad.js?v=3"></script>
 <script src="manager-hub.js?v=6"></script>
-<script src="stats.js?v=13"></script>
+<script src="stats.js?v=14"></script>
 <script src="charts.js?v=1"></script>
 <script src="clubs.js?v=8"></script>
 <script src="team-view.js?v=2"></script>
 <script src="main.js?v=19"></script>
 <script src="backfill-history.js?v=5"></script>
+
+<script src="compare.js?v=1"></script>
+<script src="splash.js?v=1"></script>
+
+<!-- ========== PWA SERVICE WORKER ========== -->
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js')
+            .then(function (reg) {
+                console.log('[PWA] Service Worker registered:', reg.scope);
+            })
+            .catch(function (err) {
+                console.warn('[PWA] SW registration failed:', err);
+            });
+    });
+}
+</script>
 
 </body>
 </html>
