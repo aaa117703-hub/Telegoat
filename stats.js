@@ -1,17 +1,22 @@
 /* =========================================================
-   stats.js — v13
-   - Trends tab مُستبدل بـ Clubs
-   - Clubs tab يفتح قائمة الأندية
+   stats.js — v14
+   - إضافة: Compare Tab support
+   - إضافة: أنميشنات بسيطة عند التنقل
+   - تحسين: تنظيم الكود
 ========================================================= */
 
 const STATS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
 const STATS_TOTAL_PAGES = 7;
 
-let statsAllManagers = [];
-let statsSortedByTotal = [];
-let statsRankMap = {};
-let statsLoaded = false;
-let statsComputed = null;
+let statsAllManagers    = [];
+let statsSortedByTotal  = [];
+let statsRankMap        = {};
+let statsLoaded         = false;
+let statsComputed       = null;
+
+/* =========================================================
+   FETCH
+========================================================= */
 
 async function fetchAllManagersForStats() {
     if (typeof getAllManagersCached === 'function') {
@@ -37,6 +42,10 @@ async function fetchAllManagersForStats() {
     return allResults;
 }
 
+/* =========================================================
+   COMPUTE
+========================================================= */
+
 function computeLeagueStats(managers) {
     if (!managers || managers.length === 0) return null;
 
@@ -47,7 +56,7 @@ function computeLeagueStats(managers) {
     let highestTotal = 0;
     let lowestEvent = Infinity;
 
-    managers.forEach(function(m) {
+    managers.forEach(function (m) {
         const ev = m.event_total || 0;
         const to = m.total || 0;
         sumEvent += ev;
@@ -60,11 +69,11 @@ function computeLeagueStats(managers) {
     const avgEvent = Math.round(sumEvent / totalManagers);
     const avgTotal = Math.round(sumTotal / totalManagers);
 
-    const sortedByEvent = [...managers].sort(function(a, b) {
+    const sortedByEvent = [...managers].sort(function (a, b) {
         return (b.event_total || 0) - (a.event_total || 0);
     });
 
-    const sortedByTotal = [...managers].sort(function(a, b) {
+    const sortedByTotal = [...managers].sort(function (a, b) {
         return (b.total || 0) - (a.total || 0);
     });
 
@@ -80,6 +89,32 @@ function computeLeagueStats(managers) {
         allManagers: managers
     };
 }
+
+/* =========================================================
+   ANIMATION HELPERS
+========================================================= */
+
+function statsAnimateIn(el, delay) {
+    if (!el) return;
+    el.classList.remove('stats-anim-in');
+    void el.offsetWidth;
+    if (delay) el.style.animationDelay = delay + 'ms';
+    el.classList.add('stats-anim-in');
+}
+
+function statsAnimateStagger(selector, parent, baseDelay, step) {
+    const items = (parent || document).querySelectorAll(selector);
+    items.forEach(function (el, i) {
+        el.classList.remove('stats-anim-row');
+        void el.offsetWidth;
+        el.style.animationDelay = (baseDelay + i * step) + 'ms';
+        el.classList.add('stats-anim-row');
+    });
+}
+
+/* =========================================================
+   ROW RENDERING
+========================================================= */
 
 function createStatsRow(rank, manager, value, valueLabel) {
     const rawName = manager.player_name || manager.entry_name || 'Unknown';
@@ -98,17 +133,17 @@ function createStatsRow(rank, manager, value, valueLabel) {
     }
 
     let rankClass = 'stats-rank-normal';
-    let rowExtra = '';
+    let rowExtra  = '';
 
     if (rank === 1) {
         rankClass = 'stats-rank-gold';
-        rowExtra = ' stats-row-gold';
+        rowExtra  = ' stats-row-gold';
     } else if (rank === 2) {
         rankClass = 'stats-rank-silver';
-        rowExtra = ' stats-row-silver';
+        rowExtra  = ' stats-row-silver';
     } else if (rank === 3) {
         rankClass = 'stats-rank-bronze';
-        rowExtra = ' stats-row-bronze';
+        rowExtra  = ' stats-row-bronze';
     }
 
     return '<div class="stats-row' + rowExtra + '">' +
@@ -125,35 +160,63 @@ function createStatsRow(rank, manager, value, valueLabel) {
     '</div>';
 }
 
+/* =========================================================
+   RENDER — OVERVIEW
+========================================================= */
+
 function renderStatsOverview(stats) {
     if (!stats) return;
 
-    const setVal = function(id, val) {
-        const el = document.getElementById(id);
-        if (el) el.textContent = val;
-    };
+    /* KPI values with count-up animation */
+    statsAnimateNumber('kpiManagers',      stats.totalManagers);
+    statsAnimateNumber('kpiAvg',           stats.avgEvent);
+    statsAnimateNumber('kpiHigh',          stats.highestEvent);
+    statsAnimateNumber('kpiHighestTotal',  stats.highestTotal);
 
-    setVal('kpiManagers', stats.totalManagers);
-    setVal('kpiAvg', stats.avgEvent);
-    setVal('kpiHigh', stats.highestEvent);
-    setVal('kpiHighestTotal', stats.highestTotal);
+    /* Stagger KPI cards */
+    statsAnimateStagger('.stats-kpi-card', null, 60, 70);
 
-    const topEventList = document.getElementById('statsTopEvent');
-    if (topEventList) {
-        topEventList.innerHTML = '';
-        stats.topEvent.forEach(function(m, i) {
-            topEventList.innerHTML += createStatsRow(i + 1, m, m.event_total || 0, 'GW');
-        });
-    }
-
+    /* Top Total list */
     const topTotalList = document.getElementById('statsTopTotal');
     if (topTotalList) {
         topTotalList.innerHTML = '';
-        stats.topTotal.forEach(function(m, i) {
+        stats.topTotal.forEach(function (m, i) {
             topTotalList.innerHTML += createStatsRow(i + 1, m, m.total || 0, 'TOTAL');
+        });
+        statsAnimateStagger('.stats-row', topTotalList, 100, 40);
+    }
+
+    /* Top Event list (hidden by default) */
+    const topEventList = document.getElementById('statsTopEvent');
+    if (topEventList) {
+        topEventList.innerHTML = '';
+        stats.topEvent.forEach(function (m, i) {
+            topEventList.innerHTML += createStatsRow(i + 1, m, m.event_total || 0, 'GW');
         });
     }
 }
+
+function statsAnimateNumber(id, target) {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const duration = 800;
+    const start = performance.now();
+    const from = 0;
+
+    function step(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(from + (target - from) * eased);
+        if (t < 1) requestAnimationFrame(step);
+        else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+}
+
+/* =========================================================
+   RENDER — RECORDS
+========================================================= */
 
 function renderStatsRecords(stats) {
     if (!stats) return;
@@ -213,19 +276,25 @@ function renderStatsRecords(stats) {
         color: 'purple'
     });
 
-    container.innerHTML = cards.map(function(c) {
+    container.innerHTML = cards.map(function (c) {
         return '<div class="stats-record-card stats-record-' + c.color + '">' +
             '<div class="stats-record-label">' + c.label + '</div>' +
             '<div class="stats-record-value">' + c.value + '</div>' +
             '<div class="stats-record-name">' + c.name + '</div>' +
         '</div>';
     }).join('');
+
+    statsAnimateStagger('.stats-record-card', container, 80, 60);
 }
+
+/* =========================================================
+   SEARCH
+========================================================= */
 
 function searchManager(query) {
     if (!query || !statsAllManagers.length) return [];
     const q = query.toLowerCase().trim();
-    return statsAllManagers.filter(function(m) {
+    return statsAllManagers.filter(function (m) {
         const pn = (m.player_name || '').toLowerCase();
         const en = (m.entry_name || '').toLowerCase();
         return pn.indexOf(q) !== -1 || en.indexOf(q) !== -1;
@@ -234,7 +303,7 @@ function searchManager(query) {
 
 function buildRankMap() {
     statsRankMap = {};
-    statsSortedByTotal.forEach(function(m, i) {
+    statsSortedByTotal.forEach(function (m, i) {
         statsRankMap[m.entry] = i + 1;
     });
 }
@@ -254,7 +323,7 @@ function renderSearchResults(results) {
 
     container.innerHTML = '';
 
-    results.forEach(function(m) {
+    results.forEach(function (m) {
         const rawName = m.player_name || m.entry_name || '';
         const entryName = m.entry_name || '';
         const rank = getRankForEntry(m.entry);
@@ -282,12 +351,14 @@ function renderSearchResults(results) {
             '</div>' +
             '<div class="stats-search-total">' + (m.total || 0) + '</div>';
 
-        div.addEventListener('click', function() {
+        div.addEventListener('click', function () {
             renderManagerProfile(m);
         });
 
         container.appendChild(div);
     });
+
+    statsAnimateStagger('.stats-search-item', container, 40, 50);
 }
 
 function renderManagerProfile(manager) {
@@ -347,8 +418,13 @@ function renderManagerProfile(manager) {
         '</div>';
 
     container.style.display = 'block';
+    statsAnimateIn(container.querySelector('.stats-profile-card'));
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+/* =========================================================
+   LOAD
+========================================================= */
 
 async function loadStats() {
     const loadingEl = document.getElementById('statsLoading');
@@ -370,7 +446,7 @@ async function loadStats() {
         }
 
         statsAllManagers = managers;
-        statsSortedByTotal = [...managers].sort(function(a, b) {
+        statsSortedByTotal = [...managers].sort(function (a, b) {
             return (b.total || 0) - (a.total || 0);
         });
         buildRankMap();
@@ -393,25 +469,44 @@ async function loadStats() {
     }
 }
 
+/* =========================================================
+   TAB SWITCHING + ANIMATIONS
+========================================================= */
+
 function switchStatsTab(tabName) {
-    document.querySelectorAll('.stats-tab-btn').forEach(function(btn) {
+    document.querySelectorAll('.stats-tab-btn').forEach(function (btn) {
         btn.classList.toggle('active', btn.dataset.tab === tabName);
     });
-    document.querySelectorAll('.stats-view').forEach(function(view) {
+
+    document.querySelectorAll('.stats-view').forEach(function (view) {
         view.classList.toggle('active', view.id === 'statsView-' + tabName);
     });
 
-    /* Clubs tab */
+    /* ✅ Clubs tab */
     if (tabName === 'clubs' && typeof loadClubs === 'function') {
         loadClubs();
     }
 
-    /* Charts tab */
+    /* ✅ Charts tab */
     if (tabName === 'charts' && typeof initCharts === 'function') {
         initCharts();
     }
 
-    setTimeout(function() {
+    /* ✅ Compare tab */
+    if (tabName === 'compare' && typeof cmpInit === 'function') {
+        cmpInit();
+    }
+
+    /* ✅ Animation on active view */
+    const activeView = document.querySelector('.stats-view.active');
+    if (activeView) {
+        activeView.classList.remove('stats-view-enter');
+        void activeView.offsetWidth;
+        activeView.classList.add('stats-view-enter');
+    }
+
+    /* Scroll tab button into view */
+    setTimeout(function () {
         const activeBtn = document.querySelector('.stats-tab-btn.active');
         if (activeBtn && activeBtn.scrollIntoView) {
             activeBtn.scrollIntoView({
@@ -423,7 +518,11 @@ function switchStatsTab(tabName) {
     }, 50);
 }
 
-window.addEventListener('managers-updated', function() {
+/* =========================================================
+   EVENTS
+========================================================= */
+
+window.addEventListener('managers-updated', function () {
     if (!statsLoaded) return;
 
     statsLoaded = false;
@@ -434,17 +533,17 @@ window.addEventListener('managers-updated', function() {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('statsSearchInput');
     if (!searchInput) return;
 
     let searchTimer = null;
 
-    searchInput.addEventListener('input', function() {
+    searchInput.addEventListener('input', function () {
         clearTimeout(searchTimer);
         const val = this.value;
 
-        searchTimer = setTimeout(function() {
+        searchTimer = setTimeout(function () {
             const q = val.trim();
             if (q.length < 2) {
                 const resultsEl = document.getElementById('statsSearchResults');
