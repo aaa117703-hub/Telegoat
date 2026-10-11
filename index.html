@@ -119,7 +119,7 @@ body{
 #toast.show{opacity:1}
 
 .toast-spinner{
-    display:inline-block;width:18px;height:18px-btn;
+    display:inline-block;width:18px;height:18px;
     border-radius:50%;
     animation:spin .6s linear infinite;
 }
@@ -127,7 +127,7 @@ body{
 
 .download-wrapper{position:relative;display:inline-block;}
 
-.download{
+.download-btn{
     display:flex;align-items:center;justify-content:center;
     width:44px;height:38px;
     padding:0;
@@ -660,14 +660,13 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
         </div>
     </div>
 
-    <button id="settingsBtn" class="settings-btn-inline" onclick="openSettingsWithPin()" title="الإعدادات">⚙️"></button>
+    <button id="settingsBtn" class="settings-btn-inline" onclick="openSettingsWithPin()" title="الإعدادات">⚙️</button>
 </div>
 
 <div class="header">
     <div class="round-nav-container">
         <button class="nav-arrow-btn" onclick="changeRound(1)">›</button>
-        <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockSecretPanel()">MATCHWEEK 1Clear</button</>
-           div>
+        <div class="round-indicator" id="currentRoundTitle" ondblclick="unlockSecretPanel()">MATCHWEEK 1</div>
         <button class="nav-arrow-btn" onclick="changeRound(-1)">‹</button>
     </div>
 </div>
@@ -678,7 +677,8 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 
         <div id="editPanel" class="edit-panel" style="display:none;">
             <button class="edit-action-btn save-round-btn" id="saveRoundBtn" onclick="saveCurrentRound()">Save</button>
-            <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound() <button class="edit-action-btn download-action-btn" onclick="downloadAsImage(3)">Download</button>
+            <button class="edit-action-btn clear-round-btn" id="clearRoundBtn" onclick="clearCurrentRound()">Clear</button>
+            <button class="edit-action-btn download-action-btn" onclick="downloadAsImage(3)">Download</button>
         </div>
 
         <div id="captureFixtures" class="export-area">
@@ -896,11 +896,11 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
     }
 
     window.onerror=function(message,source,lineno,colno,error){
-        if (!source || source === '' ||
-            source.indexOf('extension') !== -1 ||
-            source.indexOf('chrome-extension') !== -1 ||
-            source.indexOf('moz-extension') !== -1 ||
-            message.indexOf('Script error') === 0 ||
+        window if (!source || source === '' ||
+            source.indexOf('extension.addEventListener') !== -1 ||
+            source.indexOf('chrome-('extension') !== -1 ||
+            source.indexOf('moz-unextension') !== -1 ||
+            message.indexOf('handScript error') === 0led ||
             message.indexOf('ethereum') !== -1 ||
             message.indexOf('MetaMask') !== -1) {
             return false;
@@ -909,7 +909,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
         return false;
     };
 
-    window.addEventListener('unhandledrejection',function(e){
+   rejection',function(e){
         const reason = e.reason && e.reason.message ? e.reason.message : String(e.reason);
         if (reason.indexOf('ethereum') !== -1 ||
             reason.indexOf('MetaMask') !== -1 ||
