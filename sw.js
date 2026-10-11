@@ -1,10 +1,10 @@
 /* =========================================================
-   sw.js — Service Worker v1
-   - Cache للأصول الأساسية
-   - Network-first للمحتوى الحيوي
+   sw.js — v2 (Fixed)
+   - إصلاح: respondWith لا يرجع null
+   - Cache للأصول المحلية فقط
 ========================================================= */
 
-const CACHE_NAME  = 'telegoat-v1';
+const CACHE_NAME  = 'telegoat-v2';
 const CACHE_FILES = [
     './',
     './index.html',
@@ -21,7 +21,6 @@ const CACHE_FILES = [
     './manager-hub.css',
     './manager-squad.css',
     './premier-league-logo.png',
-    './icon-192.png',
     './icon-512.png'
 ];
 
@@ -59,33 +58,50 @@ self.addEventListener('activate', function (event) {
 self.addEventListener('fetch', function (event) {
     const url = event.request.url;
 
-    /* تجاهل Supabase و Workers و Google Fonts */
-    if (url.indexOf('supabase.co') !== -1 ||
+    /* تجاهل كل الطلبات الخارجية + non-GET */
+    if (event.request.method !== 'GET' ||
+        url.indexOf('supabase.co') !== -1 ||
         url.indexOf('workers.dev') !== -1 ||
+        url.indexOf('fantasy.premierleague.com') !== -1 ||
         url.indexOf('fonts.googleapis') !== -1 ||
         url.indexOf('fonts.gstatic') !== -1 ||
         url.indexOf('cdn.jsdelivr') !== -1 ||
         url.indexOf('cdnjs.cloudflare') !== -1 ||
-        event.request.method !== 'GET') {
-        return;
+        url.indexOf('unpkg.com') !== -1) {
+        return; /* ← لا نستدعي respondWith أصلاً */
     }
 
+    /* تعامل مع الطلبات المحلية فقط */
     event.respondWith(
         caches.match(event.request).then(function (cached) {
-            /* Network-first للأصول المحلية */
-            const fetchPromise = fetch(event.request).then(function (response) {
+
+            if (cached) {
+                return cached;
+            }
+
+            return fetch(event.request).then(function (response) {
+
+                /* تخزين فقط الاستجابات الناجحة */
                 if (response && response.status === 200 && response.type === 'basic') {
                     const clone = response.clone();
                     caches.open(CACHE_NAME).then(function (cache) {
                         cache.put(event.request, clone);
-                    });
+                    }).catch(function () {});
                 }
-                return response;
-            }).catch(function () {
-                return cached;
-            });
 
-            return cached || fetchPromise;
+                return response;
+
+            }).catch(function () {
+                /* fallback: صفحة رئيسية للطلبات navigation */
+                if (event.request.mode === 'navigate') {
+                    return caches.match('./index.html');
+                }
+                /* رجّع Response فاضي بدل null */
+                return new Response('', {
+                    status: 408,
+                    statusText: 'Offline'
+                });
+            });
         })
     );
 });
