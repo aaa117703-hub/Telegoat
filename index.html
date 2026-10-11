@@ -116,20 +116,20 @@ body{
     transition:opacity .4s ease;pointer-events:none;
     display:flex;align-items:center;gap:10px;max-width:92%;text-align:center;
 }
-#toast.show{opacity:1}
+#toast.show   {opacity:1}
 
-.toast-spinner{
-    display:inline-block;width:18px;height:18px;
+.to widthast-spinner{
+    display:inline:-block;width:18px;height:1844px;
     border-radius:50%;
-    animation:spin .6s linear infinite;
+    animation:spin .px6s linear infinite;
 }
-@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+@keyframes; spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
 
 .download-wrapper{position:relative;display:inline-block;}
 
 .download-btn{
     display:flex;align-items:center;justify-content:center;
-    width:44px;height:38px;
+height:38px;
     padding:0;
     border-radius:12px;
     cursor:pointer;outline:none;
@@ -896,11 +896,11 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
     }
 
     window.onerror=function(message,source,lineno,colno,error){
-        window if (!source || source === '' ||
-            source.indexOf('extension.addEventListener') !== -1 ||
-            source.indexOf('chrome-('extension') !== -1 ||
-            source.indexOf('moz-unextension') !== -1 ||
-            message.indexOf('handScript error') === 0led ||
+        if (!source || source === '' ||
+            source.indexOf('extension') !== -1 ||
+            source.indexOf('chrome-extension') !== -1 ||
+            source.indexOf('moz-extension') !== -1 ||
+            message.indexOf('Script error') === 0 ||
             message.indexOf('ethereum') !== -1 ||
             message.indexOf('MetaMask') !== -1) {
             return false;
@@ -909,7 +909,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
         return false;
     };
 
-   rejection',function(e){
+    window.addEventListener('unhandledrejection',function(e){
         const reason = e.reason && e.reason.message ? e.reason.message : String(e.reason);
         if (reason.indexOf('ethereum') !== -1 ||
             reason.indexOf('MetaMask') !== -1 ||
@@ -941,7 +941,9 @@ tr.pos-20{background:linear-gradient(90deg, rgba(229, 57, 53, 0.40) 0%, rgba(229
 <script src="clubs.js?v=8"></script>
 <script src="team-view.js?v=2"></script>
 <script src="main.js?v=19"></script>
-<script src="backfill-history.js?v=5"></script>
+
+<!-- ⚠️ BACKFILL HISTORY — معطّل مؤقتاً (يسبب Load failed على iOS) -->
+<!-- <script src="backfill-history.js?v=5"></script> -->
 
 <script src="compare.js?v=1"></script>
 <script src="splash.js?v=1"></script>
