@@ -1,7 +1,8 @@
 /* =========================================================
-   manager-hub.js — v6
-   - زر تحديث يدوي ⟳
-   - خانة إضافة بـ Entry ID
+   manager-hub.js — v7
+   - Dark Luxury Theme
+   - استبدال الرموز (⟳ ⇄ ×) بأيقونات SVG (tg-icon-*)
+   - لا تغيير في المنطق
 ========================================================= */
 
 (function(){
@@ -236,7 +237,7 @@ function render(){
 
     const refreshBtn = document.createElement('button');
     refreshBtn.className = 'mh-refresh-btn';
-    refreshBtn.innerHTML = hubRefreshing ? '⟳' : '⟳';
+    refreshBtn.innerHTML = '<span class="tg-icon tg-icon-refresh"></span>';
     refreshBtn.title = 'تحديث البيانات';
     refreshBtn.disabled = hubRefreshing;
     if(hubRefreshing) refreshBtn.classList.add('spinning');
@@ -333,7 +334,7 @@ function buildManualIdForm(){
 
     const btn = document.createElement('button');
     btn.className = 'mh-manual-add-btn';
-    btn.textContent = '+ ID';
+    btn.innerHTML = '<span class="tg-icon tg-icon-sm tg-icon-plus"></span><span>ID</span>';
 
     let busy = false;
 
@@ -347,7 +348,7 @@ function buildManualIdForm(){
 
         busy = true;
         btn.disabled = true;
-        btn.textContent = '...';
+        btn.innerHTML = '...';
 
         try {
             const result = await addManualEntryById(id);
@@ -364,7 +365,7 @@ function buildManualIdForm(){
 
         busy = false;
         btn.disabled = false;
-        btn.textContent = '+ ID';
+        btn.innerHTML = '<span class="tg-icon tg-icon-sm tg-icon-plus"></span><span>ID</span>';
     }
 
     btn.addEventListener('click', doAdd);
@@ -491,11 +492,11 @@ function renderList(){
 
         if(hubEditMode){
             if(!isManual){
-                html += '<button class="mh-lr-move" title="نقل">⇄</button>';
+                html += '<button class="mh-lr-move" title="نقل"><span class="tg-icon tg-icon-sm tg-icon-move"></span></button>';
             } else {
                 html += '<div class="mh-lr-spacer"></div>';
             }
-            html += '<button class="mh-lr-delete" title="Delete">×</button>';
+            html += '<button class="mh-lr-delete" title="Delete"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button>';
         }
 
         html += '</div>';
@@ -576,10 +577,10 @@ function openMoveModal(fromTeam, name){
     modal.innerHTML =
         '<div class="mh-modal-box">' +
             '<div class="mh-modal-title">نقل "' + escapeHTML(name) + '"</div>' +
-            '<div style="color:#b8b8b8;font-size:12px;text-align:center;margin-bottom:12px;">' +
-                'من: <strong style="color:#00e676;">' + escapeHTML(teamLabel(fromTeam)) + '</strong>' +
+            '<div style="color:#A1A1B5;font-size:12px;text-align:center;margin-bottom:12px;">' +
+                'من: <strong style="color:#A78BFA;">' + escapeHTML(teamLabel(fromTeam)) + '</strong>' +
             '</div>' +
-            '<div style="color:#fff;font-size:12px;text-align:center;margin-bottom:10px;font-weight:700;">اختر الفريق الجديد:</div>' +
+            '<div style="color:#F5F3FF;font-size:12px;text-align:center;margin-bottom:10px;font-weight:700;">اختر الفريق الجديد:</div>' +
             '<div class="mh-move-list">' + optionsHtml + '</div>' +
             '<button class="mh-modal-btn mh-modal-cancel" id="mhMoveCancel" style="margin-top:10px;">إلغاء</button>' +
         '</div>';
