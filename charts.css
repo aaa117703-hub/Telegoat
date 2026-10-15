@@ -1,9 +1,10 @@
 /* =========================================================
-   charts.css — v1
-   قسم الرسوم البيانية — Light Purple Theme
+   charts.css — v2
+   - Dark Luxury Theme
+   - قسم الرسوم البيانية
 ========================================================= */
 
-/* ========== TABS — Horizontal Scroll (يسمح بالتبويب الجديد) ========== */
+/* ========== TABS — Horizontal Scroll ========== */
 
 .stats-tabs {
     display: flex !important;
@@ -36,36 +37,44 @@
 
 .charts-intro {
     padding: 14px 18px;
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(0, 184, 255, 0.06) 100%);
-    border: 1.5px solid var(--purple-100, #EDE9FE);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.12) 0%, rgba(124, 58, 237, 0.04) 100%);
+    border: 1.5px solid var(--border-purple);
     border-radius: 14px;
     margin-bottom: 16px;
     font-size: 12px;
-    color: var(--text-secondary, #6B7280);
+    color: var(--text-secondary);
     text-align: center;
     line-height: 1.7;
     font-weight: 700;
     letter-spacing: 0.2px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
 .charts-intro strong {
-    color: var(--purple-600, #6D28D9);
+    color: var(--purple-300);
     font-weight: 900;
     font-size: 14px;
+    text-shadow: 0 0 12px rgba(124, 58, 237, 0.4);
 }
 
 /* ========== CHART CARD ========== */
 
 .chart-card {
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100, #EDE9FE);
+    background: var(--bg-card);
+    border: 1.5px solid var(--border-purple);
     border-radius: 18px;
     padding: 18px 14px 14px;
     margin-bottom: 16px;
-    box-shadow: 0 2px 12px rgba(124, 58, 237, 0.06);
-    animation: chartFadeIn 0.5s ease both;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    animation: chartFadeIn 0.5s var(--ease-out) both;
     overflow: hidden;
     position: relative;
+    transition: border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+}
+
+.chart-card:hover {
+    border-color: var(--border-purple-strong);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45), 0 0 30px rgba(124, 58, 237, 0.15);
 }
 
 .chart-card:nth-child(2) { animation-delay: 0.05s; }
@@ -80,8 +89,9 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #7C3AED 0%, #A855F7 50%, #00B8FF 100%);
+    background: linear-gradient(90deg, #7C3AED 0%, #A855F7 50%, #C4B5FD 100%);
     border-radius: 18px 18px 0 0;
+    box-shadow: 0 0 16px rgba(124, 58, 237, 0.6);
 }
 
 @keyframes chartFadeIn {
@@ -105,28 +115,29 @@
     padding: 0 4px;
     font-size: 13px;
     font-weight: 900;
-    color: var(--text-primary, #111827);
+    color: var(--text-primary);
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
 
 .chart-title .chart-icon {
     font-size: 20px;
-    filter: drop-shadow(0 2px 4px rgba(124, 58, 237, 0.3));
+    filter: drop-shadow(0 2px 6px rgba(124, 58, 237, 0.5));
     flex-shrink: 0;
 }
 
 .chart-title .chart-sub {
     margin-left: auto;
-    color: var(--purple-500, #7C3AED);
+    color: var(--purple-300);
     font-size: 10px;
     font-weight: 900;
     letter-spacing: 1px;
     padding: 3px 10px;
-    background: var(--purple-50, #F5F3FF);
-    border: 1px solid var(--purple-100, #EDE9FE);
+    background: var(--purple-bg);
+    border: 1px solid var(--border-purple);
     border-radius: 20px;
     white-space: nowrap;
+    text-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
 }
 
 /* ========== CHART WRAP ========== */
@@ -155,7 +166,7 @@
     justify-content: center;
     padding: 80px 20px;
     gap: 14px;
-    color: var(--purple-600, #6D28D9);
+    color: var(--purple-300);
     font-size: 14px;
     font-weight: 700;
 }
@@ -164,9 +175,10 @@
     width: 40px;
     height: 40px;
     border: 3px solid rgba(124, 58, 237, 0.2);
-    border-top-color: var(--purple-500, #7C3AED);
+    border-top-color: var(--purple-500);
     border-radius: 50%;
     animation: chartsSpin 0.8s linear infinite;
+    box-shadow: 0 0 25px rgba(124, 58, 237, 0.35);
 }
 
 @keyframes chartsSpin {
@@ -177,10 +189,10 @@
 
 .charts-error {
     padding: 20px;
-    background: rgba(220, 38, 38, 0.08);
-    border: 1.5px solid rgba(220, 38, 38, 0.3);
+    background: rgba(239, 68, 68, 0.12);
+    border: 1.5px solid rgba(239, 68, 68, 0.4);
     border-radius: 14px;
-    color: var(--red-600, #DC2626);
+    color: var(--red-500);
     font-size: 13px;
     font-weight: 700;
     text-align: center;
@@ -191,20 +203,21 @@
 .chart-empty {
     padding: 40px 20px;
     text-align: center;
-    color: var(--text-tertiary, #9CA3AF);
+    color: var(--text-tertiary);
     font-size: 13px;
     font-weight: 700;
-    background: var(--purple-50, #F5F3FF);
+    background: var(--purple-bg);
     border-radius: 12px;
     line-height: 1.8;
-    border: 1px dashed var(--purple-100, #EDE9FE);
+    border: 1px dashed var(--border-purple);
 }
 
 .chart-empty .chart-empty-icon {
     font-size: 42px;
     display: block;
     margin-bottom: 12px;
-    opacity: 0.6;
+    opacity: 0.7;
+    filter: drop-shadow(0 3px 10px rgba(124, 58, 237, 0.3));
 }
 
 /* ========== MOBILE ========== */
