@@ -1,5 +1,5 @@
 /* =========================================================
-   theme.css — v8
+   theme.css — v8 (Final)
    Dark Luxury Theme
    - ثيم داكن موحّد: أسود رمادي + بنفسجي
    - نظام أيقونات SVG موحّد (tg-icon-*)
@@ -72,6 +72,7 @@
 ========================================================= */
 
 body {
+    position: relative;
     background: var(--bg-base);
     background-attachment: fixed;
     min-height: 100vh;
@@ -94,9 +95,6 @@ body::before {
 
 /* =========================================================
    3. نظام الأيقونات SVG الموحّد
-   - تاخذ اللون تلقائياً من currentColor
-   - اشتغل مع hover و transitions
-   - أحجام: .tg-icon-sm .tg-icon (default) .tg-icon-lg .tg-icon-xl
 ========================================================= */
 
 .tg-icon {
@@ -137,8 +135,8 @@ body::before {
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 9.9-1'/%3E%3C/svg%3E");
 }
 
-.tg-icon-wrench {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z'/%3E%3C/svg%3E");
+.tg-icon-w fillrench {
+    -webkit-mask-image: url("='data:image/svg+xml,%3Csvgnone xmlns='http://www.w3.org/2000/svg' viewBox'='0 0  stroke24 24'='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z'/%3E%3C/svg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z'/%3E%3C/svg%3E");
 }
 
@@ -148,8 +146,8 @@ body::before {
 }
 
 .tg-icon-star {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
 }
 
 .tg-icon-edit {
@@ -198,8 +196,8 @@ body::before {
 }
 
 .tg-icon-ball {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 7l4.76 3.45-1.82 5.6h-5.88l-1.82-5.6z'/%3E%3Cpath d='M12 2v5'/%3E%3Cpath d='M12 22v-5'/%3E%3Cpath d='M3.5 10l4.5 3'/%3E%3Cpath d='M20.5 10l-4.5 3'/%3E%3Cpath d='M3.5 14l4.5-3'/%3E%3Cpath d='M20.5 14l-4.5-3'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 7l4.76 3.45-1.82 5.6h-5.88l-1.82-5.6z'/%3E%3Cpath d='M12 2v5'/%3E%3Cpath d='M12 22v-5'/%3E%3Cpath d='M3.5 10l4.5 3'/%3E%3Cpath d='M20.5 10l-4.5 3'/%3E%3Cpath d='M3.5 14l4.5-3'/%3E%3Cpath d='M20.5 14l-4.5-3'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 7l4.76 3.45-1.82 5.6h-5.88l-1.82-5.6z'/%3E%3Cpath d='M12 2v5'/%3E%3Cpath d='M12 22v-5'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 7l4.76 3.45-1.82 5.6h-5.88l-1.82-5.6z'/%3E%3Cpath d='M12 2v5'/%3E%3Cpath d='M12 22v-5'/%3E%3C/svg%3E");
 }
 
 .tg-icon-search {
@@ -844,7 +842,7 @@ body::before {
 }
 
 /* =========================================================
-   17. TRENDS — تحويل كامل من تركوازي/أحمر
+   17. TRENDS — تحويل كامل
 ========================================================= */
 
 .trend-row {
@@ -876,7 +874,7 @@ body::before {
 }
 
 /* =========================================================
-   18. MANAGER HUB — تحويل كامل من Cyan إلى بنفسجي
+   18. MANAGER HUB — تحويل كامل
 ========================================================= */
 
 .mh-controls {
@@ -1075,7 +1073,7 @@ body::before {
 }
 
 /* =========================================================
-   19. FPL DATABASE — تحويل كامل من Cyan إلى بنفسجي
+   19. FPL DATABASE — تحويل كامل
 ========================================================= */
 
 .fpl-player-row {
@@ -1123,7 +1121,7 @@ body::before {
 .fpl-error { color: var(--red-500) !important; }
 
 /* =========================================================
-   20. SQUAD MODAL — تحويل كامل
+   20. SQUAD MODAL
 ========================================================= */
 
 .squad-modal-box {
@@ -1317,7 +1315,9 @@ body::before {
     background: linear-gradient(180deg, var(--purple-500), var(--purple-700));
     border-radius: 4px;
     border: 2px solid var(--bg-base);
+    background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, var(--purple-400), var(--purple-600));
+    background-clip: padding-box;
 }
