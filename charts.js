@@ -1,10 +1,8 @@
 /* =========================================================
-   charts.js — v1
-   قسم الرسوم البيانية (Chart.js)
-   - Rank Progression (Top 10 عبر الجولات)
-   - Top 15 Total Points
-   - Points Distribution
-   - Risers/Fallers
+   charts.js — v2
+   - Dark Luxury Theme
+   - استبدال الإيموجي بأيقونات SVG
+   - لا تغيير في المنطق
 ========================================================= */
 
 (function(){
@@ -14,17 +12,17 @@ let chartsLoaded = false;
 let chartsData = null;
 let chartInstances = {};
 
-/* ألوان الرسوم */
+/* ألوان الرسوم — بنفسجي + متسقة */
 const CHART_COLORS = [
-    '#7C3AED', // purple
-    '#00B8FF', // sky blue
+    '#7C3AED', // purple-500
+    '#A855F7', // purple-400
+    '#A78BFA', // purple-300
+    '#C4B5FD', // purple-200
+    '#6D28D9', // purple-600
+    '#5B21B6', // purple-700
     '#10B981', // emerald
     '#F59E0B', // amber
     '#EF4444', // red
-    '#A855F7', // light purple
-    '#EC4899', // pink
-    '#14B8A6', // teal
-    '#F97316', // orange
     '#6366F1'  // indigo
 ];
 
@@ -65,12 +63,13 @@ if (typeof Chart !== 'undefined') {
     Chart.defaults.font.family = "'Cairo', 'EnglishCustom', sans-serif";
     Chart.defaults.font.size = 11;
     Chart.defaults.font.weight = '700';
-    Chart.defaults.color = '#6B7280';
-    Chart.defaults.borderColor = 'rgba(124, 58, 237, 0.08)';
+    Chart.defaults.color = '#A1A1B5';
+    Chart.defaults.borderColor = 'rgba(124, 58, 237, 0.15)';
 
     Chart.defaults.plugins.legend.labels.usePointStyle = true;
     Chart.defaults.plugins.legend.labels.boxWidth = 8;
     Chart.defaults.plugins.legend.labels.padding = 14;
+    Chart.defaults.plugins.legend.labels.color = '#F5F3FF';
     Chart.defaults.plugins.legend.labels.font = {
         size: 11,
         weight: '800',
@@ -78,9 +77,9 @@ if (typeof Chart !== 'undefined') {
     };
     Chart.defaults.plugins.legend.position = 'bottom';
 
-    Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(17, 24, 39, 0.95)';
-    Chart.defaults.plugins.tooltip.titleColor = '#fff';
-    Chart.defaults.plugins.tooltip.bodyColor = '#E5E7EB';
+    Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(26, 26, 34, 0.98)';
+    Chart.defaults.plugins.tooltip.titleColor = '#F5F3FF';
+    Chart.defaults.plugins.tooltip.bodyColor = '#A1A1B5';
     Chart.defaults.plugins.tooltip.borderColor = '#7C3AED';
     Chart.defaults.plugins.tooltip.borderWidth = 1;
     Chart.defaults.plugins.tooltip.padding = 12;
@@ -132,24 +131,17 @@ async function fetchAllRanks() {
 function buildRankProgression(ranks) {
     if (!ranks || ranks.length === 0) return null;
 
-    /* اجمع كل الجولات */
     const rounds = [...new Set(ranks.map(r => r.round))].sort((a, b) => a - b);
-
-    /* آخر جولة */
     const lastRound = rounds[rounds.length - 1];
 
-    /* Top 10 من آخر جولة */
     const lastRoundRanks = ranks
         .filter(r => r.round === lastRound)
         .sort((a, b) => a.rank - b.rank)
         .slice(0, 10);
 
     const topEntries = lastRoundRanks.map(r => r.entry_id);
-
-    /* آخر 8 جولات */
     const displayRounds = rounds.slice(-8);
 
-    /* بناء datasets */
     const datasets = lastRoundRanks.map((entry, idx) => {
         const color = CHART_COLORS[idx % CHART_COLORS.length];
 
@@ -167,11 +159,11 @@ function buildRankProgression(ranks) {
             tension: 0.4,
             pointRadius: 3,
             pointHoverRadius: 6,
-            pointBackgroundColor: '#fff',
+            pointBackgroundColor: '#1A1A22',
             pointBorderColor: color,
             pointBorderWidth: 2,
             pointHoverBackgroundColor: color,
-            pointHoverBorderColor: '#fff',
+            pointHoverBorderColor: '#F5F3FF',
             pointHoverBorderWidth: 3,
             spanGaps: true
         };
@@ -218,7 +210,6 @@ function buildPointsDistribution(managers) {
     const min = Math.min(...totals);
     const max = Math.max(...totals);
 
-    /* 10 buckets */
     const bucketCount = 10;
     const step = Math.ceil((max - min + 1) / bucketCount);
 
@@ -307,6 +298,7 @@ function createRankProgressionChart(canvasId, data) {
                         usePointStyle: true,
                         boxWidth: 8,
                         padding: 12,
+                        color: '#F5F3FF',
                         font: { size: 10, weight: '800' }
                     }
                 },
@@ -323,13 +315,13 @@ function createRankProgressionChart(canvasId, data) {
                     reverse: true,
                     beginAtZero: false,
                     grid: {
-                        color: 'rgba(124, 58, 237, 0.08)',
+                        color: 'rgba(124, 58, 237, 0.12)',
                         drawBorder: false
                     },
                     ticks: {
                         callback: function(v) { return '#' + v; },
                         font: { size: 10, weight: '800' },
-                        color: '#6B7280'
+                        color: '#A1A1B5'
                     }
                 },
                 x: {
@@ -339,7 +331,7 @@ function createRankProgressionChart(canvasId, data) {
                     },
                     ticks: {
                         font: { size: 10, weight: '800' },
-                        color: '#6B7280'
+                        color: '#A1A1B5'
                     }
                 }
             }
@@ -372,19 +364,19 @@ function createTop15Chart(canvasId, data) {
                 x: {
                     beginAtZero: true,
                     grid: {
-                        color: 'rgba(124, 58, 237, 0.08)',
+                        color: 'rgba(124, 58, 237, 0.12)',
                         drawBorder: false
                     },
                     ticks: {
                         font: { size: 10, weight: '800' },
-                        color: '#6B7280'
+                        color: '#A1A1B5'
                     }
                 },
                 y: {
                     grid: { display: false, drawBorder: false },
                     ticks: {
                         font: { size: 10, weight: '800' },
-                        color: '#111827'
+                        color: '#F5F3FF'
                     }
                 }
             }
@@ -416,20 +408,20 @@ function createDistributionChart(canvasId, data) {
                 y: {
                     beginAtZero: true,
                     grid: {
-                        color: 'rgba(124, 58, 237, 0.08)',
+                        color: 'rgba(124, 58, 237, 0.12)',
                         drawBorder: false
                     },
                     ticks: {
                         precision: 0,
                         font: { size: 10, weight: '800' },
-                        color: '#6B7280'
+                        color: '#A1A1B5'
                     }
                 },
                 x: {
                     grid: { display: false, drawBorder: false },
                     ticks: {
                         font: { size: 9, weight: '800' },
-                        color: '#6B7280',
+                        color: '#A1A1B5',
                         maxRotation: 45,
                         minRotation: 45
                     }
@@ -479,8 +471,8 @@ function createRisersFallersChart(canvasId, data) {
                         label: function(ctx) {
                             const v = ctx.parsed.x;
                             return v > 0
-                                ? ' ▲ ' + v + ' ranks up'
-                                : ' ▼ ' + Math.abs(v) + ' ranks down';
+                                ? ' +' + v + ' ranks up'
+                                : ' ' + Math.abs(v) + ' ranks down';
                         }
                     }
                 }
@@ -488,19 +480,19 @@ function createRisersFallersChart(canvasId, data) {
             scales: {
                 x: {
                     grid: {
-                        color: 'rgba(124, 58, 237, 0.08)',
+                        color: 'rgba(124, 58, 237, 0.12)',
                         drawBorder: false
                     },
                     ticks: {
                         font: { size: 10, weight: '800' },
-                        color: '#6B7280'
+                        color: '#A1A1B5'
                     }
                 },
                 y: {
                     grid: { display: false, drawBorder: false },
                     ticks: {
                         font: { size: 10, weight: '800' },
-                        color: '#111827'
+                        color: '#F5F3FF'
                     }
                 }
             }
@@ -516,14 +508,12 @@ async function renderChartsPage() {
     const container = document.getElementById('chartsContent');
     if (!container) return;
 
-    /* Loading */
     container.innerHTML =
         '<div class="charts-loading">' +
             '<div class="spinner"></div>' +
             '<div>Loading charts...</div>' +
         '</div>';
 
-    /* Check Chart.js */
     if (typeof Chart === 'undefined') {
         container.innerHTML =
             '<div class="charts-error">' +
@@ -533,7 +523,6 @@ async function renderChartsPage() {
     }
 
     try {
-        /* Parallel fetch */
         const [ranks, managers] = await Promise.all([
             fetchAllRanks(),
             typeof getAllManagersCached === 'function'
@@ -546,13 +535,12 @@ async function renderChartsPage() {
         const distData = buildPointsDistribution(managers);
         const risersData = buildRisersFallers(ranks);
 
-        /* Build HTML */
         let html = '';
 
         /* Intro */
         html +=
             '<div class="charts-intro">' +
-                '<strong>📊 League Analytics</strong><br>' +
+                '<strong><span class="tg-icon tg-icon-sm tg-icon-chart"></span> League Analytics</strong><br>' +
                 'نظرة شاملة على أداء المديرين — الرتب، النقاط، والتوزيع' +
             '</div>';
 
@@ -561,7 +549,7 @@ async function renderChartsPage() {
             html +=
                 '<div class="chart-card">' +
                     '<div class="chart-title">' +
-                        '<span class="chart-icon">📈</span>' +
+                        '<span class="chart-icon"><span class="tg-icon tg-icon-lg tg-icon-chart"></span></span>' +
                         '<span>Rank Progression</span>' +
                         '<span class="chart-sub">TOP 10</span>' +
                     '</div>' +
@@ -573,11 +561,11 @@ async function renderChartsPage() {
             html +=
                 '<div class="chart-card">' +
                     '<div class="chart-title">' +
-                        '<span class="chart-icon">📈</span>' +
+                        '<span class="chart-icon"><span class="tg-icon tg-icon-lg tg-icon-chart"></span></span>' +
                         '<span>Rank Progression</span>' +
                     '</div>' +
                     '<div class="chart-empty">' +
-                        '<span class="chart-empty-icon">📊</span>' +
+                        '<span class="chart-empty-icon"><span class="tg-icon tg-icon-xl tg-icon-chart"></span></span>' +
                         'Not enough rounds saved yet.<br>' +
                         'Save at least 2 rounds to see progression.' +
                     '</div>' +
@@ -589,7 +577,7 @@ async function renderChartsPage() {
             html +=
                 '<div class="chart-card">' +
                     '<div class="chart-title">' +
-                        '<span class="chart-icon">⚡</span>' +
+                        '<span class="chart-icon"><span class="tg-icon tg-icon-lg tg-icon-bolt"></span></span>' +
                         '<span>Risers & Fallers</span>' +
                         '<span class="chart-sub">LAST GW</span>' +
                     '</div>' +
@@ -604,7 +592,7 @@ async function renderChartsPage() {
             html +=
                 '<div class="chart-card">' +
                     '<div class="chart-title">' +
-                        '<span class="chart-icon">🏆</span>' +
+                        '<span class="chart-icon"><span class="tg-icon tg-icon-lg tg-icon-trophy"></span></span>' +
                         '<span>Top 15 Total Points</span>' +
                         '<span class="chart-sub">SEASON</span>' +
                     '</div>' +
@@ -619,7 +607,7 @@ async function renderChartsPage() {
             html +=
                 '<div class="chart-card">' +
                     '<div class="chart-title">' +
-                        '<span class="chart-icon">📊</span>' +
+                        '<span class="chart-icon"><span class="tg-icon tg-icon-lg tg-icon-chart"></span></span>' +
                         '<span>Points Distribution</span>' +
                         '<span class="chart-sub">' + managers.length + ' MGRS</span>' +
                     '</div>' +
@@ -631,7 +619,6 @@ async function renderChartsPage() {
 
         container.innerHTML = html;
 
-        /* Destroy old + Create new */
         destroyCharts();
 
         setTimeout(function() {
@@ -639,7 +626,7 @@ async function renderChartsPage() {
                 createRankProgressionChart('chartRankProg', rankData);
             }
             if (risersData && document.getElementById('chartRisers')) {
-                createRisersFallersChart('chartRisers', risersData);
+                createRisersFallerChart('chartRisers', risersData);
             }
             if (top15Data) {
                 createTop15Chart('chartTop15', top15Data);
