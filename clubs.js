@@ -1,6 +1,8 @@
 /* =========================================================
-   clubs.js — v8
-   - إصلاح: استخدام normalizePlayerName من players-teams.js
+   clubs.js — v9
+   - Dark Luxury Theme
+   - استبدال الإيموجي بأيقونات SVG
+   - لا تغيير في المنطق
 ========================================================= */
 
 const CLUBS_PIN = '024680';
@@ -181,7 +183,7 @@ function renderClubsList() {
                     '<div class="club-item-name">' + team + '</div>' +
                     '<div class="club-item-count">' + players.length + ' لاعب</div>' +
                 '</div>' +
-                '<div class="club-item-arrow">›</div>' +
+                '<div class="club-item-arrow"><span class="tg-icon tg-icon-arrow-left" style="transform:rotate(180deg);"></span></div>' +
             '</div>';
     });
 
@@ -226,7 +228,7 @@ async function openClubPlayers(team) {
                     '<div class="cp-header-title">' + team + '</div>' +
                     '<div class="cp-header-sub">Loading...</div>' +
                 '</div>' +
-                '<button class="cp-close" onclick="closeClubPlayers()">✕</button>' +
+                '<button class="cp-close" onclick="closeClubPlayers()"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button>' +
             '</div>' +
             '<div class="cp-loading">' +
                 '<div class="spinner"></div>' +
@@ -331,7 +333,7 @@ function renderClubPlayersModal(team, logoHtml, players) {
     if (players.length === 0) {
         playersHtml =
             '<div class="cp-empty">' +
-                '<span class="cp-empty-icon">👥</span>' +
+                '<span class="cp-empty-icon"><span class="tg-icon tg-icon-xl tg-icon-users"></span></span>' +
                 'لا يوجد لاعبون في هذا الفريق' +
             '</div>';
     } else {
@@ -375,7 +377,7 @@ function renderClubPlayersModal(team, logoHtml, players) {
                     '<div class="cp-header-title">' + escapeHtml(team) + '</div>' +
                     '<div class="cp-header-sub">' + players.length + ' لاعب — مرتبين بالنقاط</div>' +
                 '</div>' +
-                '<button class="cp-close" onclick="closeClubPlayers()">✕</button>' +
+                '<button class="cp-close" onclick="closeClubPlayers()"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button>' +
             '</div>' +
             (players.length > 0 ?
                 '<div class="cp-list-header">' +
@@ -449,7 +451,7 @@ function openClubDetail(team) {
                     '<div class="club-player-name">' + player + '</div>' +
                     (clubsEditMode ?
                         '<button class="club-player-del" onclick="deletePlayer(\'' +
-                            team.replace(/'/g, "\\'") + '\',' + index + ')">X</button>'
+                            team.replace(/'/g, "\\'") + '\',' + index + ')"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button>'
                         : '') +
                 '</div>';
         });
@@ -461,14 +463,17 @@ function openClubDetail(team) {
 
     const statsBtn =
         '<button class="club-stats-btn" onclick="openTeamStats(\'' +
-            team.replace(/'/g, "\\'") + '\')">📊 إحصائيات الفريق</button>';
+            team.replace(/'/g, "\\'") + '\')">' +
+            '<span class="tg-icon tg-icon-sm tg-icon-chart"></span>' +
+            '<span>إحصائيات الفريق</span>' +
+        '</button>';
 
     modal.innerHTML =
         '<div class="club-modal-box">' +
             '<div class="club-modal-header">' +
                 '<div class="club-modal-logo">' + logoHtml + '</div>' +
                 '<div class="club-modal-title">' + team + '</div>' +
-                '<button class="club-modal-close" onclick="closeClubDetail()">X</button>' +
+                '<button class="club-modal-close" onclick="closeClubDetail()"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button>' +
             '</div>' +
             '<div class="club-modal-sub">' +
                 players.length + ' لاعب' +
