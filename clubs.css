@@ -1,7 +1,9 @@
 /* =========================================================
-   clubs.css — v7
+   clubs.css — v9
+   - Dark Luxury Theme
    - قائمة الأندية
    - Modal لاعبين مرتبين بالنقاط
+   - Modal احتياطي (ClubModal)
 ========================================================= */
 
 /* ========== Controls ========== */
@@ -15,28 +17,30 @@
 
 .clubs-edit-btn {
     padding: 8px 16px;
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100, #EDE9FE);
+    background: var(--bg-elevated);
+    border: 1.5px solid var(--border-purple);
     border-radius: 10px;
-    color: var(--purple-600, #6D28D9);
+    color: var(--purple-300);
     font-size: 12px;
     font-weight: 900;
     letter-spacing: 0.5px;
     cursor: pointer;
     font-family: inherit;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    transition: all 0.25s var(--ease-out);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 }
 
 .clubs-edit-btn:hover {
-    border-color: var(--purple-300, #A78BFA);
-    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.15);
+    border-color: var(--purple-500);
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+    transform: translateY(-1px);
 }
 
 .clubs-edit-btn.active {
     background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    border-color: var(--purple-500, #7C3AED);
+    border-color: var(--purple-500);
     color: #fff;
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.5);
 }
 
 /* ========== Clubs List ========== */
@@ -50,12 +54,12 @@
 .clubs-empty {
     text-align: center;
     padding: 40px 20px;
-    color: var(--text-tertiary, #9CA3AF);
+    color: var(--text-tertiary);
     font-size: 13px;
     font-weight: 700;
-    background: var(--purple-50, #F5F3FF);
+    background: var(--bg-card);
     border-radius: 12px;
-    border: 1px dashed var(--purple-100, #EDE9FE);
+    border: 1px dashed var(--border-purple);
 }
 
 .club-item {
@@ -63,18 +67,18 @@
     align-items: center;
     gap: 12px;
     padding: 12px 16px;
-    background: #FFFFFF;
-    border: 1.5px solid var(--purple-100, #EDE9FE);
+    background: var(--bg-card);
+    border: 1.5px solid var(--border-purple);
     border-radius: 14px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+    transition: all 0.25s var(--ease-out);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 }
 
 .club-item:hover {
-    border-color: var(--purple-300, #A78BFA);
-    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15);
-    transform: translateY(-2px);
+    border-color: var(--purple-500);
+    box-shadow: 0 8px 26px rgba(124, 58, 237, 0.3);
+    transform: translateY(-3px);
 }
 
 .club-item-logo {
@@ -93,13 +97,13 @@
     height: 100%;
     object-fit: contain;
     display: block;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
 }
 
 .club-item-logo-empty {
-    background: var(--purple-50, #F5F3FF);
+    background: var(--purple-bg);
     border-radius: 50%;
-    border: 1px solid var(--purple-100, #EDE9FE);
+    border: 1px solid var(--border-purple);
 }
 
 .club-item-info {
@@ -113,7 +117,7 @@
 .club-item-name {
     font-size: 14px;
     font-weight: 900;
-    color: var(--text-primary, #111827);
+    color: var(--text-primary);
     letter-spacing: 0.2px;
     white-space: nowrap;
     overflow: hidden;
@@ -123,20 +127,21 @@
 .club-item-count {
     font-size: 11px;
     font-weight: 800;
-    color: var(--purple-600, #6D28D9);
+    color: var(--purple-300);
     letter-spacing: 0.5px;
+    text-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
 }
 
 .club-item-arrow {
     font-size: 22px;
     font-weight: 900;
-    color: var(--purple-500, #7C3AED);
+    color: var(--purple-300);
     flex-shrink: 0;
-    transition: transform 0.2s ease;
+    transition: transform 0.25s var(--ease-out);
 }
 
 .club-item:hover .club-item-arrow {
-    transform: translateX(-4px);
+    transform: translateX(-6px);
 }
 
 /* =========================================================
@@ -147,13 +152,13 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(17, 24, 39, 0.6);
+    background: rgba(0, 0, 0, 0.8);
     z-index: 99999;
     align-items: center;
     justify-content: center;
     padding: 16px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .cp-modal.show {
@@ -164,18 +169,19 @@
     width: 100%;
     max-width: 520px;
     max-height: 88vh;
-    background: #FFFFFF;
+    background: var(--bg-card);
+    border: 1.5px solid var(--border-purple);
     border-radius: 20px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.3);
-    animation: cpIn 0.25s ease;
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.75), 0 0 40px rgba(124, 58, 237, 0.2);
+    animation: cpIn 0.3s var(--ease-spring);
 }
 
 @keyframes cpIn {
     from { opacity: 0; transform: scale(0.95) translateY(20px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 /* Header */
@@ -184,10 +190,11 @@
     align-items: center;
     gap: 12px;
     padding: 16px 18px;
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
     color: #fff;
     position: relative;
     flex-shrink: 0;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
 }
 
 .cp-header-logo {
@@ -249,13 +256,14 @@
     align-items: center;
     justify-content: center;
     padding: 0;
-    transition: background 0.2s ease;
+    transition: background 0.2s var(--ease-out), transform 0.2s var(--ease-out);
     flex-shrink: 0;
     font-family: inherit;
 }
 
 .cp-close:hover {
     background: rgba(255, 255, 255, 0.35);
+    transform: rotate(90deg);
 }
 
 /* List Header */
@@ -265,9 +273,9 @@
     gap: 8px;
     align-items: center;
     padding: 10px 16px;
-    background: var(--purple-50, #F5F3FF);
-    border-bottom: 1.5px solid var(--purple-100, #EDE9FE);
-    color: var(--purple-700, #5B21B6);
+    background: var(--purple-bg);
+    border-bottom: 1.5px solid var(--border-purple);
+    color: var(--purple-300);
     font-size: 9px;
     font-weight: 900;
     text-transform: uppercase;
@@ -286,7 +294,7 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
-    background: #FFFFFF;
+    background: var(--bg-card);
 }
 
 .cp-player-row {
@@ -295,9 +303,9 @@
     gap: 8px;
     align-items: center;
     padding: 10px 16px;
-    border-bottom: 1px solid #F3F4F6;
-    transition: background 0.2s ease;
-    background: #FFFFFF;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s var(--ease-out);
+    background: var(--bg-card);
 }
 
 .cp-player-row:last-child {
@@ -305,20 +313,21 @@
 }
 
 .cp-player-row:hover {
-    background: var(--purple-50, #F5F3FF);
+    background: var(--purple-bg);
 }
 
 /* Top 3 */
 .cp-player-row.cp-top-1 {
-    background: linear-gradient(90deg, rgba(124, 58, 237, 0.12) 0%, transparent 60%);
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.18) 0%, transparent 60%);
     border-left: 4px solid #7C3AED;
+    box-shadow: inset 0 0 30px rgba(124, 58, 237, 0.08);
 }
 .cp-player-row.cp-top-2 {
-    background: linear-gradient(90deg, rgba(124, 58, 237, 0.08) 0%, transparent 60%);
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.12) 0%, transparent 60%);
     border-left: 4px solid #A78BFA;
 }
 .cp-player-row.cp-top-3 {
-    background: linear-gradient(90deg, rgba(124, 58, 237, 0.05) 0%, transparent 60%);
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.08) 0%, transparent 60%);
     border-left: 4px solid #C4B5FD;
 }
 
@@ -331,26 +340,32 @@
     justify-content: center;
     font-size: 11px;
     font-weight: 900;
-    color: #6B7280;
+    color: var(--text-secondary);
     margin: 0 auto;
     border-radius: 50%;
-    background: #F3F4F6;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
 }
 
 .cp-top-1 .cp-rank {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
     color: #fff;
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
+    box-shadow: 0 0 15px rgba(124, 58, 237, 0.6);
+    border-color: var(--purple-500);
 }
 
 .cp-top-2 .cp-rank {
     background: linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%);
     color: #fff;
+    box-shadow: 0 0 12px rgba(167, 139, 250, 0.5);
+    border-color: var(--purple-300);
 }
 
 .cp-top-3 .cp-rank {
     background: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 100%);
-    color: #4C1D95;
+    color: #2D1B4E;
+    box-shadow: 0 0 10px rgba(196, 181, 253, 0.4);
+    border-color: var(--purple-200);
 }
 
 /* Logo */
@@ -370,13 +385,13 @@
     height: 100%;
     object-fit: contain;
     display: block;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
 }
 
 .cp-logo-empty {
-    background: var(--purple-50, #F5F3FF);
+    background: var(--purple-bg);
     border-radius: 50%;
-    border: 1px solid var(--purple-100, #EDE9FE);
+    border: 1px solid var(--border-purple);
 }
 
 /* Names */
@@ -391,7 +406,7 @@
 .cp-name {
     font-size: 13px;
     font-weight: 900;
-    color: var(--text-primary, #111827);
+    color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -401,7 +416,7 @@
 .cp-player {
     font-size: 10px;
     font-weight: 600;
-    color: var(--text-tertiary, #9CA3AF);
+    color: var(--text-tertiary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -413,15 +428,16 @@
     text-align: right;
     font-size: 15px;
     font-weight: 900;
-    color: var(--purple-600, #6D28D9);
+    color: var(--purple-300);
     letter-spacing: 0.5px;
+    text-shadow: 0 0 10px rgba(124, 58, 237, 0.35);
 }
 
 .cp-points-label {
     display: block;
     font-size: 8px;
     font-weight: 800;
-    color: var(--text-tertiary, #9CA3AF);
+    color: var(--text-tertiary);
     letter-spacing: 1px;
     text-transform: uppercase;
     text-align: right;
@@ -436,7 +452,7 @@
     justify-content: center;
     padding: 60px 20px;
     gap: 14px;
-    color: var(--purple-600, #6D28D9);
+    color: var(--purple-300);
     font-size: 13px;
     font-weight: 700;
 }
@@ -445,9 +461,10 @@
     width: 36px;
     height: 36px;
     border: 3px solid rgba(124, 58, 237, 0.2);
-    border-top-color: var(--purple-500, #7C3AED);
+    border-top-color: var(--purple-500);
     border-radius: 50%;
     animation: cpSpin 0.8s linear infinite;
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
 }
 
 @keyframes cpSpin {
@@ -458,7 +475,7 @@
 .cp-empty {
     padding: 40px 20px;
     text-align: center;
-    color: var(--text-tertiary, #9CA3AF);
+    color: var(--text-tertiary);
     font-size: 13px;
     font-weight: 700;
     line-height: 1.7;
@@ -468,7 +485,7 @@
     font-size: 40px;
     display: block;
     margin-bottom: 12px;
-    opacity: 0.5;
+    opacity: 0.6;
 }
 
 /* =========================================================
@@ -479,13 +496,13 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(17, 24, 39, 0.6);
+    background: rgba(0, 0, 0, 0.8);
     z-index: 99998;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 #clubModal.show {
@@ -496,10 +513,11 @@
     width: 100%;
     max-width: 480px;
     max-height: 85vh;
-    background: #FFFFFF;
+    background: var(--bg-card);
+    border: 1.5px solid var(--border-purple);
     border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(17, 24, 39, 0.25);
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.75), 0 0 30px rgba(124, 58, 237, 0.2);
     display: flex;
     flex-direction: column;
     direction: rtl;
@@ -510,8 +528,9 @@
     align-items: center;
     gap: 12px;
     padding: 16px 18px;
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
     color: #fff;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
 }
 
 .club-modal-logo {
@@ -554,15 +573,20 @@
     justify-content: center;
     padding: 0;
     font-family: inherit;
+    transition: background 0.2s var(--ease-out);
+}
+
+.club-modal-close:hover {
+    background: rgba(255, 255, 255, 0.35);
 }
 
 .club-modal-sub {
     padding: 12px 18px;
     font-size: 12px;
     font-weight: 800;
-    color: var(--text-secondary, #6B7280);
-    background: var(--purple-50, #F5F3FF);
-    border-bottom: 1.5px solid var(--purple-100, #EDE9FE);
+    color: var(--text-secondary);
+    background: var(--purple-bg);
+    border-bottom: 1.5px solid var(--border-purple);
 }
 
 .club-players-list {
@@ -576,14 +600,19 @@
     align-items: center;
     gap: 10px;
     padding: 10px 18px;
-    border-bottom: 1px solid #F3F4F6;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s var(--ease-out);
+}
+
+.club-player-row:hover {
+    background: var(--purple-bg);
 }
 
 .club-player-num {
     width: 24px;
     font-size: 11px;
     font-weight: 900;
-    color: var(--purple-600, #6D28D9);
+    color: var(--purple-300);
     text-align: center;
 }
 
@@ -591,7 +620,7 @@
     flex: 1;
     font-size: 13px;
     font-weight: 700;
-    color: var(--text-primary, #111827);
+    color: var(--text-primary);
 }
 
 .club-player-del {
@@ -609,6 +638,12 @@
     justify-content: center;
     padding: 0;
     font-family: inherit;
+    transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+
+.club-player-del:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
 }
 
 .club-add-btn {
@@ -622,6 +657,13 @@
     font-weight: 900;
     cursor: pointer;
     font-family: inherit;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+    transition: transform 0.2s var(--ease-spring), box-shadow 0.2s var(--ease-out);
+}
+
+.club-add-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.55);
 }
 
 .club-stats-btn {
@@ -637,10 +679,45 @@
     font-family: inherit;
     display: block;
     width: calc(100% - 36px);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+    transition: transform 0.2s var(--ease-spring), box-shadow 0.2s var(--ease-out);
 }
 
-/* Mobile */
+.club-stats-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.55);
+}
+
+/* =========================================================
+   Not Found Players
+========================================================= */
+
+.cp-player-row.cp-not-found {
+    opacity: 0.7;
+}
+
+.cp-player-row.cp-not-found .cp-rank {
+    background: var(--bg-elevated);
+    color: var(--text-tertiary);
+    border-color: var(--border);
+}
+
+.cp-player-row.cp-not-found .cp-name {
+    color: var(--text-secondary);
+}
+
+.cp-points.cp-points-empty {
+    color: var(--text-tertiary);
+    font-weight: 700;
+    text-shadow: none;
+}
+
+/* =========================================================
+   Mobile
+========================================================= */
+
 @media (max-width: 480px) {
+
     .cp-header {
         padding: 14px;
         gap: 10px;
@@ -675,22 +752,4 @@
         height: 22px;
         font-size: 10px;
     }
-}
-/* ⭐ للاعبين بدون نقاط (مو في FPL) */
-.cp-player-row.cp-not-found {
-    opacity: 0.75;
-}
-
-.cp-player-row.cp-not-found .cp-rank {
-    background: #E5E7EB;
-    color: #9CA3AF;
-}
-
-.cp-player-row.cp-not-found .cp-name {
-    color: #6B7280;
-}
-
-.cp-points.cp-points-empty {
-    color: #9CA3AF;
-    font-weight: 700;
 }
