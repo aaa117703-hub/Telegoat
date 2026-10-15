@@ -1,8 +1,8 @@
 /* =========================================================
-   locks.js — v18
-   - إصلاح: إدارة المديرين والأندية في الإعدادات
-   - إضافة: restoreSettingsContent() ترجع العناصر
-   - إضافة: استدعاء مباشر لـ mhInit و loadClubs
+   locks.js — v19
+   - Dark Luxury Theme
+   - استبدال الإيموجي بأيقونات SVG (tg-icon-*)
+   - لا تغيير في المنطق
 ========================================================= */
 
 window.sectionLocks = {
@@ -24,12 +24,11 @@ const EDIT_PIN = '1999';
 const SETTINGS_PIN = '024680';
 
 const SECTIONS = [
-    { key: 'fixtures',  label: 'المواجهات',  icon: '⚽' },
-    { key: 'standings', label: 'الترتيب',    icon: '🏆' },
-    { key: 'totw',      label: 'TOTW',       icon: '⭐' },
-    { key: 'stats',     label: 'الإحصائيات', icon: '📊' }
+    { key: 'fixtures',  label: 'المواجهات',  icon: 'tg-icon-ball'   },
+    { key: 'standings', label: 'الترتيب',    icon: 'tg-icon-trophy' },
+    { key: 'totw',      label: 'TOTW',       icon: 'tg-icon-star'   },
+    { key: 'stats',     label: 'الإحصائيات', icon: 'tg-icon-chart'  }
 ];
-
 
 /* =========================================================
    HELPERS
@@ -46,7 +45,6 @@ function isLocker() {
 function canBypassLocks() {
     return isLocker() || isAdmin();
 }
-
 
 /* =========================================================
    LOAD / SAVE LOCKS
@@ -77,7 +75,6 @@ async function loadLocks() {
     }
 }
 
-
 async function saveLock(section, isLocked) {
     if (!window.sbClient) return false;
 
@@ -106,11 +103,9 @@ async function saveLock(section, isLocked) {
     }
 }
 
-
 function isLocked(section) {
     return window.sectionLocks[section] === true;
 }
-
 
 /* =========================================================
    MAINTENANCE SCREEN
@@ -127,22 +122,20 @@ function showSectionMaintenance(sectionName) {
 
     overlay.innerHTML =
         '<div class="maint-box">' +
-            '<div class="maint-icon">🔧</div>' +
+            '<div class="maint-icon"><span class="tg-icon tg-icon-xl tg-icon-wrench"></span></div>' +
             '<h2>الموقع في حالة صيانة</h2>' +
             '<p>قسم ' + sectionName + ' قيد الصيانة حالياً</p>' +
-            '<p style="font-size:12px;color:#888;margin-top:8px;">نرجع لكم قريباً</p>' +
-            '<div class="maint-team">TELEGRAM GOAT 🐐</div>' +
+            '<p style="font-size:12px;color:#6B6B80;margin-top:8px;">نرجع لكم قريباً</p>' +
+            '<div class="maint-team">TELEGRAM GOAT</div>' +
         '</div>';
 
     overlay.classList.add('show');
 }
 
-
 function hideSectionMaintenance() {
     const overlay = document.getElementById('sectionMaintenance');
     if (overlay) overlay.classList.remove('show');
 }
-
 
 /* =========================================================
    SETTINGS — فتح مع PIN
@@ -161,12 +154,10 @@ function openSettingsWithPin() {
     openSettingsMain();
 }
 
-
 function openSettingsModal() {
     const modal = document.getElementById('settingsModal');
     if (modal) modal.classList.add('show');
 }
-
 
 function closeSettingsModal() {
     // ⭐ رجّع العناصر المنقولة قبل الإغلاق
@@ -175,7 +166,6 @@ function closeSettingsModal() {
     const modal = document.getElementById('settingsModal');
     if (modal) modal.classList.remove('show');
 }
-
 
 /* =========================================================
    إرجاع العناصر المنقولة لمكانها الأصلي
@@ -229,7 +219,6 @@ function restoreSettingsContent() {
     }
 }
 
-
 /* =========================================================
    SETTINGS — القائمة الرئيسية
 ========================================================= */
@@ -243,26 +232,25 @@ function openSettingsMain() {
 
     body.innerHTML =
         '<button class="settings-item" onclick="openSettingsManagers()">' +
-            '<span class="si-icon">👥</span>' +
+            '<span class="si-icon"><span class="tg-icon tg-icon-lg tg-icon-users"></span></span>' +
             '<span class="si-label">إدارة المديرين</span>' +
         '</button>' +
         '<button class="settings-item" onclick="openSettingsClubs()">' +
-            '<span class="si-icon">🏟️</span>' +
+            '<span class="si-icon"><span class="tg-icon tg-icon-lg tg-icon-stadium"></span></span>' +
             '<span class="si-label">إدارة الأندية</span>' +
         '</button>' +
         '<button class="settings-item" onclick="openSettingsLocks()">' +
-            '<span class="si-icon">🔐</span>' +
+            '<span class="si-icon"><span class="tg-icon tg-icon-lg tg-icon-lock"></span></span>' +
             '<span class="si-label">قفل الأقسام</span>' +
         '</button>' +
         '<button class="settings-item" onclick="openSettingsMaintenance()">' +
-            '<span class="si-icon">🔧</span>' +
+            '<span class="si-icon"><span class="tg-icon tg-icon-lg tg-icon-wrench"></span></span>' +
             '<span class="si-label">وضع الصيانة</span>' +
         '</button>' +
-        '<div class="settings-hint">TELEGRAM GOAT 🐐</div>';
+        '<div class="settings-hint">TELEGRAM GOAT</div>';
 
     openSettingsModal();
 }
-
 
 /* =========================================================
    SETTINGS — إدارة المديرين
@@ -276,7 +264,7 @@ function openSettingsManagers() {
 
     body.innerHTML =
         '<button class="settings-item settings-back" onclick="openSettingsMain()">' +
-            '<span class="si-icon">←</span>' +
+            '<span class="si-icon"><span class="tg-icon tg-icon-arrow-left"></span></span>' +
             '<span class="si-label">رجوع</span>' +
         '</button>' +
         '<div id="settings-managers-content" class="settings-embed"></div>';
@@ -314,7 +302,6 @@ function openSettingsManagers() {
     tryMove();
 }
 
-
 /* =========================================================
    SETTINGS — إدارة الأندية
 ========================================================= */
@@ -327,7 +314,7 @@ function openSettingsClubs() {
 
     body.innerHTML =
         '<button class="settings-item settings-back" onclick="openSettingsMain()">' +
-            '<span class="si-icon">←</span>' +
+            '<span class="si-icon"><span class="tg-icon tg-icon-arrow-left"></span></span>' +
             '<span class="si-label">رجوع</span>' +
         '</button>' +
         '<div id="settings-clubs-content" class="settings-embed"></div>';
@@ -366,7 +353,6 @@ function openSettingsClubs() {
     tryMove();
 }
 
-
 /* =========================================================
    SETTINGS — قفل الأقسام
 ========================================================= */
@@ -382,12 +368,15 @@ function openSettingsLocks() {
     SECTIONS.forEach(function(s) {
         const locked = isLocked(s.key);
         const btnClass = locked ? 'locked' : 'unlocked';
-        const btnText = locked ? '🔒 مقفول' : '🔓 مفتوح';
+
+        const btnText = locked
+            ? '<span class="tg-icon tg-icon-sm tg-icon-lock"></span><span>مقفول</span>'
+            : '<span class="tg-icon tg-icon-sm tg-icon-unlock"></span><span>مفتوح</span>';
 
         itemsHtml +=
             '<div class="lock-item">' +
                 '<div class="lock-item-label">' +
-                    '<span class="lock-item-icon">' + s.icon + '</span>' +
+                    '<span class="lock-item-icon"><span class="tg-icon tg-icon-lg ' + s.icon + '"></span></span>' +
                     '<span>' + s.label + '</span>' +
                 '</div>' +
                 '<button class="lock-item-btn ' + btnClass + '" onclick="toggleLockFromSettings(\'' + s.key + '\')">' +
@@ -400,7 +389,7 @@ function openSettingsLocks() {
 
     body.innerHTML =
         '<button class="settings-item settings-back" onclick="openSettingsMain()">' +
-            '<span class="si-icon">←</span>' +
+            '<span class="si-icon"><span class="tg-icon tg-icon-arrow-left"></span></span>' +
             '<span class="si-label">رجوع</span>' +
         '</button>' +
         '<div class="settings-hint" style="padding:4px 0 12px 0;">' +
@@ -408,7 +397,6 @@ function openSettingsLocks() {
         '</div>' +
         itemsHtml;
 }
-
 
 async function toggleLockFromSettings(sectionKey) {
     const current = isLocked(sectionKey);
@@ -438,7 +426,6 @@ async function toggleLockFromSettings(sectionKey) {
     }
 }
 
-
 /* =========================================================
    SETTINGS — الصيانة
 ========================================================= */
@@ -453,20 +440,21 @@ function openSettingsMaintenance() {
 
     body.innerHTML =
         '<button class="settings-item settings-back" onclick="openSettingsMain()">' +
-            '<span class="si-icon">←</span>' +
+            '<span class="si-icon"><span class="tg-icon tg-icon-arrow-left"></span></span>' +
             '<span class="si-label">رجوع</span>' +
         '</button>' +
         '<div class="settings-hint" style="padding:4px 0 8px 0;">' +
             'عند تفعيل الصيانة، جميع الأقسام تُقفل للزوار' +
         '</div>' +
         '<button class="maint-all-btn" onclick="activateMaintenance()">' +
-            '🔧 ' + (allLocked ? 'إلغاء الصيانة' : 'تفعيل الصيانة') +
+            '<span class="tg-icon tg-icon-sm tg-icon-wrench"></span>' +
+            '<span>' + (allLocked ? 'إلغاء الصيانة' : 'تفعيل الصيانة') + '</span>' +
         '</button>' +
         '<button class="maint-open-btn" onclick="deactivateMaintenance()">' +
-            '🔓 فتح كل الأقسام' +
+            '<span class="tg-icon tg-icon-sm tg-icon-unlock"></span>' +
+            '<span>فتح كل الأقسام</span>' +
         '</button>';
 }
-
 
 async function activateMaintenance() {
     const pass = prompt('أدخل رمز التأكيد:');
@@ -495,7 +483,6 @@ async function activateMaintenance() {
     openSettingsMaintenance();
 }
 
-
 async function deactivateMaintenance() {
     const pass = prompt('أدخل رمز التأكيد:');
     if (pass !== LOCK_PIN) {
@@ -523,7 +510,6 @@ async function deactivateMaintenance() {
     openSettingsMaintenance();
 }
 
-
 /* =========================================================
    INIT
 ========================================================= */
@@ -532,7 +518,6 @@ async function initLockSystem() {
     localStorage.removeItem('tg_locker');
     await loadLocks();
 }
-
 
 window.openSettingsWithPin = openSettingsWithPin;
 window.openSettingsModal = openSettingsModal;
