@@ -1,6 +1,8 @@
 /* =========================================================
-   compare.js — v1
-   Head-to-Head Compare: Manager A vs Manager B
+   compare.js — v2
+   - Dark Luxury Theme
+   - استبدال الإيموجي بأيقونات SVG
+   - لا تغيير في المنطق
 ========================================================= */
 
 let cmpManagerA = null;
@@ -55,7 +57,7 @@ function cmpBuildUI() {
 
         '<div class="cmp-capture" id="cmpCapture">' +
             '<div class="cmp-empty" id="cmpEmptyState">' +
-                '<span class="cmp-empty-icon">⚔️</span>' +
+                '<span class="cmp-empty-icon"><span class="tg-icon tg-icon-xl tg-icon-shield"></span></span>' +
                 'اختر مديرين للمقارنة' +
             '</div>' +
             '<div id="cmpBody" style="display:none;">' +
@@ -68,13 +70,13 @@ function cmpBuildUI() {
                 '<div class="cmp-chart-wrap">' +
                     '<canvas id="cmpChart"></canvas>' +
                 '</div>' +
-                '<div class="cmp-footer">TELEGRAM GOAT 🐐</div>' +
+                '<div class="cmp-footer">TELEGRAM GOAT</div>' +
             '</div>' +
         '</div>' +
 
         '<div class="cmp-actions">' +
-            '<button class="cmp-btn dl" onclick="cmpDownload(3)">📥 3x</button>' +
-            '<button class="cmp-btn dl" onclick="cmpDownload(4)">📥 4x</button>' +
+            '<button class="cmp-btn dl" onclick="cmpDownload(3)"><span class="tg-icon tg-icon-sm tg-icon-download"></span><span>3x</span></button>' +
+            '<button class="cmp-btn dl" onclick="cmpDownload(4)"><span class="tg-icon tg-icon-sm tg-icon-download"></span><span>4x</span></button>' +
             '<button class="cmp-btn reset" onclick="cmpReset()">Reset</button>' +
         '</div>';
 
@@ -255,11 +257,11 @@ async function cmpRender() {
             empty: true
         },
         {
-            label: 'Best GW',
-            a: null,
+            label: 'Best GWstats',
+            a:Sorted null,
             b: null,
-            higher: true,
-            empty: true
+By            higher: true,
+Total            empty: true.length
         }
     ];
 
@@ -317,7 +319,7 @@ function cmpFmt(v, decimals, compact) {
 
 function cmpComputeRanks() {
     const map = {};
-    if (typeof statsSortedByTotal === 'undefined' || !statsSortedByTotal.length) return map;
+    if (typeof statsSortedByTotal === 'undefined' || !) return map;
     statsSortedByTotal.forEach(function (m, i) {
         map[m.entry] = i + 1;
     });
@@ -398,8 +400,8 @@ function cmpDrawChart(metrics, nameA, nameB) {
                 {
                     label: nameB,
                     data: dataB,
-                    backgroundColor: 'rgba(220,38,38,0.75)',
-                    borderColor: '#DC2626',
+                    backgroundColor: 'rgba(239,68,68,0.75)',
+                    borderColor: '#EF4444',
                     borderWidth: 1.5,
                     borderRadius: 6
                 }
@@ -414,7 +416,7 @@ function cmpDrawChart(metrics, nameA, nameB) {
                     position: 'top',
                     labels: {
                         font: { family: 'EnglishCustom, Cairo, sans-serif', size: 11, weight: '900' },
-                        color: '#111827',
+                        color: '#F5F3FF',
                         padding: 10,
                         boxWidth: 12,
                         boxHeight: 12,
@@ -422,26 +424,30 @@ function cmpDrawChart(metrics, nameA, nameB) {
                     }
                 },
                 tooltip: {
-                    backgroundColor: '#111827',
+                    backgroundColor: '#1A1A22',
+                    titleColor: '#F5F3FF',
+                    bodyColor: '#A1A1B5',
+                    borderColor: '#7C3AED',
+                    borderWidth: 1,
                     titleFont: { family: 'Cairo', size: 11 },
                     bodyFont: { family: 'Cairo', size: 11 },
-                    padding: 8,
+                    padding: 10,
                     cornerRadius: 8
                 }
             },
             scales: {
                 y: {
                     beginAtZero: true,
-                    grid: { color: 'rgba(124,58,237,0.08)' },
+                    grid: { color: 'rgba(124,58,237,0.12)' },
                     ticks: {
-                        color: '#6B7280',
+                        color: '#A1A1B5',
                         font: { family: 'EnglishCustom, Cairo', size: 10 }
                     }
                 },
                 x: {
                     grid: { display: false },
                     ticks: {
-                        color: '#374151',
+                        color: '#F5F3FF',
                         font: { family: 'EnglishCustom, Cairo', size: 9, weight: '900' }
                     }
                 }
@@ -493,7 +499,7 @@ async function cmpDownload(scale) {
         await new Promise(function (r) { setTimeout(r, 200); });
 
         const canvas = await html2canvas(target, {
-            backgroundColor: '#FFFFFF',
+            backgroundColor: '#0F0F14',
             scale: scale || 3,
             useCORS: true,
             logging: false
