@@ -1,22 +1,23 @@
 /* =========================================================
-   locks.js — v19
-   - Dark Luxury Theme
-   - استبدال الإيموجي بأيقونات SVG (tg-icon-*)
-   - لا تغيير في المنطق
+   locks.js — v20
+   - إضافة: قسم Champions Cup
+   - champions مقفول افتراضياً
 ========================================================= */
 
 window.sectionLocks = {
     fixtures:  false,
     standings: false,
     totw:      false,
-    stats:     false
+    stats:     false,
+    champions: true
 };
 
 window.pendingLocks = {
     fixtures:  false,
     standings: false,
     totw:      false,
-    stats:     false
+    stats:     false,
+    champions: true
 };
 
 const LOCK_PIN = '024680';
@@ -24,11 +25,13 @@ const EDIT_PIN = '1999';
 const SETTINGS_PIN = '024680';
 
 const SECTIONS = [
-    { key: 'fixtures',  label: 'المواجهات',  icon: 'tg-icon-ball'   },
-    { key: 'standings', label: 'الترتيب',    icon: 'tg-icon-trophy' },
-    { key: 'totw',      label: 'TOTW',       icon: 'tg-icon-star'   },
-    { key: 'stats',     label: 'الإحصائيات', icon: 'tg-icon-chart'  }
+    { key: 'fixtures',  label: 'المواجهات',     icon: 'tg-icon-ball'   },
+    { key: 'standings', label: 'الترتيب',       icon: 'tg-icon-trophy' },
+    { key: 'totw',      label: 'TOTW',          icon: 'tg-icon-star'   },
+    { key: 'stats',     label: 'الإحصائيات',    icon: 'tg-icon-chart'  },
+    { key: 'champions', label: 'Champions Cup', icon: 'tg-icon-trophy' }
 ];
+
 
 /* =========================================================
    HELPERS
@@ -45,6 +48,7 @@ function isLocker() {
 function canBypassLocks() {
     return isLocker() || isAdmin();
 }
+
 
 /* =========================================================
    LOAD / SAVE LOCKS
@@ -75,6 +79,7 @@ async function loadLocks() {
     }
 }
 
+
 async function saveLock(section, isLocked) {
     if (!window.sbClient) return false;
 
@@ -103,9 +108,11 @@ async function saveLock(section, isLocked) {
     }
 }
 
+
 function isLocked(section) {
     return window.sectionLocks[section] === true;
 }
+
 
 /* =========================================================
    MAINTENANCE SCREEN
@@ -132,10 +139,12 @@ function showSectionMaintenance(sectionName) {
     overlay.classList.add('show');
 }
 
+
 function hideSectionMaintenance() {
     const overlay = document.getElementById('sectionMaintenance');
     if (overlay) overlay.classList.remove('show');
 }
+
 
 /* =========================================================
    SETTINGS — فتح مع PIN
@@ -154,18 +163,20 @@ function openSettingsWithPin() {
     openSettingsMain();
 }
 
+
 function openSettingsModal() {
     const modal = document.getElementById('settingsModal');
     if (modal) modal.classList.add('show');
 }
 
+
 function closeSettingsModal() {
-    // ⭐ رجّع العناصر المنقولة قبل الإغلاق
     restoreSettingsContent();
 
     const modal = document.getElementById('settingsModal');
     if (modal) modal.classList.remove('show');
 }
+
 
 /* =========================================================
    إرجاع العناصر المنقولة لمكانها الأصلي
@@ -173,13 +184,11 @@ function closeSettingsModal() {
 
 function restoreSettingsContent() {
 
-    // --- mhContent ---
     const mhContent = document.getElementById('mhContent');
     if (mhContent) {
         const originalParent = document.getElementById('statsView-managers');
         const settingsContainer = document.getElementById('settings-managers-content');
 
-        // إذا هو داخل الإعدادات → رجّعه
         if (settingsContainer && settingsContainer.contains(mhContent)) {
             if (originalParent) {
                 originalParent.appendChild(mhContent);
@@ -187,7 +196,6 @@ function restoreSettingsContent() {
         }
     }
 
-    // --- clubsList ---
     const clubsList = document.getElementById('clubsList');
     if (clubsList) {
         const originalParent = document.getElementById('statsView-clubs');
@@ -200,7 +208,6 @@ function restoreSettingsContent() {
         }
     }
 
-    // --- clubs-controls (زر التعديل) ---
     const clubsControls = document.querySelector('.clubs-controls');
     if (clubsControls) {
         const originalParent = document.getElementById('statsView-clubs');
@@ -219,12 +226,12 @@ function restoreSettingsContent() {
     }
 }
 
+
 /* =========================================================
    SETTINGS — القائمة الرئيسية
 ========================================================= */
 
 function openSettingsMain() {
-    // ⭐ رجّع أي عنصر منقول قبل عرض القائمة
     restoreSettingsContent();
 
     const body = document.getElementById('settingsBody');
@@ -252,6 +259,7 @@ function openSettingsMain() {
     openSettingsModal();
 }
 
+
 /* =========================================================
    SETTINGS — إدارة المديرين
 ========================================================= */
@@ -269,23 +277,20 @@ function openSettingsManagers() {
         '</button>' +
         '<div id="settings-managers-content" class="settings-embed"></div>';
 
-    // ⭐ شغّل manager-hub
     if (typeof window.mhInit === 'function') {
         try { window.mhInit(); } catch (e) { console.warn('[Settings] mhInit error:', e); }
     }
 
-    // ⭐ انتظر ثم انقل
     let attempts = 0;
     const tryMove = function() {
         attempts++;
         const mhContent = document.getElementById('mhContent');
         const container = document.getElementById('settings-managers-content');
 
-        if (!container) return; // المستخدم رجع للقائمة الرئيسية
+        if (!container) return;
 
         if (mhContent && container && !container.contains(mhContent)) {
 
-            // تأكد أن UI جاهز (مو Loading فقط)
             const isLoading = mhContent.querySelector('.mh-loading') !== null;
             const hasContent = mhContent.innerHTML.trim() !== '';
 
@@ -301,6 +306,7 @@ function openSettingsManagers() {
     };
     tryMove();
 }
+
 
 /* =========================================================
    SETTINGS — إدارة الأندية
@@ -319,12 +325,10 @@ function openSettingsClubs() {
         '</button>' +
         '<div id="settings-clubs-content" class="settings-embed"></div>';
 
-    // ⭐ شغّل clubs
     if (typeof loadClubs === 'function') {
         try { loadClubs(); } catch (e) { console.warn('[Settings] loadClubs error:', e); }
     }
 
-    // ⭐ انتظر ثم انقل
     let attempts = 0;
     const tryMove = function() {
         attempts++;
@@ -332,7 +336,7 @@ function openSettingsClubs() {
         const clubsControls = document.querySelector('.clubs-controls');
         const container = document.getElementById('settings-clubs-content');
 
-        if (!container) return; // المستخدم رجع
+        if (!container) return;
 
         if (clubsList && container && !container.contains(clubsList)) {
 
@@ -352,6 +356,7 @@ function openSettingsClubs() {
     };
     tryMove();
 }
+
 
 /* =========================================================
    SETTINGS — قفل الأقسام
@@ -398,6 +403,7 @@ function openSettingsLocks() {
         itemsHtml;
 }
 
+
 async function toggleLockFromSettings(sectionKey) {
     const current = isLocked(sectionKey);
     const newState = !current;
@@ -425,6 +431,7 @@ async function toggleLockFromSettings(sectionKey) {
         if (typeof showToast === 'function') showToast('فشل الحفظ', false, 3000);
     }
 }
+
 
 /* =========================================================
    SETTINGS — الصيانة
@@ -456,6 +463,7 @@ function openSettingsMaintenance() {
         '</button>';
 }
 
+
 async function activateMaintenance() {
     const pass = prompt('أدخل رمز التأكيد:');
     if (pass !== LOCK_PIN) {
@@ -482,6 +490,7 @@ async function activateMaintenance() {
 
     openSettingsMaintenance();
 }
+
 
 async function deactivateMaintenance() {
     const pass = prompt('أدخل رمز التأكيد:');
@@ -510,6 +519,7 @@ async function deactivateMaintenance() {
     openSettingsMaintenance();
 }
 
+
 /* =========================================================
    INIT
 ========================================================= */
@@ -518,6 +528,7 @@ async function initLockSystem() {
     localStorage.removeItem('tg_locker');
     await loadLocks();
 }
+
 
 window.openSettingsWithPin = openSettingsWithPin;
 window.openSettingsModal = openSettingsModal;
