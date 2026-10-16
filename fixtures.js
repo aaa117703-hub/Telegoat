@@ -1,8 +1,6 @@
 /* =========================================================
-   fixtures.js — v41
-   - إضافة: Champions Cup tab
-   - unlockSecretPanel: فقط editMode (PIN 1999)
-   - نظام القفل انتقل للإعدادات
+   fixtures.js — v42
+   - إضافة: Champions Cup tab + فحص القفل
 ========================================================= */
 
 function initRoundDropdown() {
@@ -63,6 +61,11 @@ function switchTab(tabName) {
 
         if (tabName === 'totw' && isLocked('totw')) {
             showSectionMaintenance('تشكيلة الأسبوع');
+            return;
+        }
+
+        if (tabName === 'champions' && isLocked('champions')) {
+            showSectionMaintenance('Champions Cup');
             return;
         }
     }
