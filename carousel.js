@@ -1,13 +1,14 @@
 /* =========================================================
-   carousel.js — v3
-   إصلاح: banner3.png (بدل banner3.png.png)
+   carousel.js — v4
+   - إضافة: banner5 (Champions Cup)
 ========================================================= */
 
 const carouselSlides = [
-    { image: './banner1.png.png', tab: 'standings', alt: 'STANDINGS' },
-    { image: './banner2.png.png', tab: 'fixtures',  alt: 'MATCHES' },
-    { image: './banner3.png',     tab: 'totw',      alt: 'TOTW' },
-    { image: './banner4.png.PNG', tab: 'stats',     alt: 'STATISTICS' }
+    { image: './banner1.png.png', tab: 'standings',  alt: 'STANDINGS' },
+    { image: './banner2.png.png', tab: 'fixtures',   alt: 'MATCHES' },
+    { image: './banner3.png',     tab: 'totw',       alt: 'TOTW' },
+    { image: './banner4.png.PNG', tab: 'stats',      alt: 'STATISTICS' },
+    { image: './banner5.png',     tab: 'champions',  alt: 'CHAMPIONS CUP' }
 ];
 
 let carouselIndex = 0;
@@ -46,7 +47,7 @@ function buildCarousel() {
             if (parent && !parent.querySelector('.carousel-fallback')) {
                 const fallback = document.createElement('div');
                 fallback.className = 'carousel-fallback';
-                fallback.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#38003c 0%,#ff005a 100%);color:#fff;font-weight:900;font-size:clamp(20px,5vw,36px);letter-spacing:3px;text-transform:uppercase;text-shadow:0 4px 15px rgba(0,0,0,.6);text-align:center;padding:20px;';
+                fallback.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2D1B4E 0%,#5B21B6 100%);color:#fff;font-weight:900;font-size:clamp(20px,5vw,36px);letter-spacing:3px;text-transform:uppercase;text-shadow:0 4px 15px rgba(0,0,0,.6);text-align:center;padding:20px;';
                 fallback.textContent = slide.alt || 'BANNER';
                 parent.appendChild(fallback);
             }
