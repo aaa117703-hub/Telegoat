@@ -33,7 +33,7 @@ document.addEventListener('touchend', function(e) {
 }, false);
 </script>
 
-<!-- ========== EXTERNAL LIBRARIES (FIXED VERSIONS) ========== -->
+<!-- ========== EXTERNAL LIBRARIES ========== -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/eruda@2.4.1/eruda.js"></script>
@@ -46,7 +46,7 @@ document.addEventListener('touchend', function(e) {
 <style>
 /* =========================================================
    BASE + RESET + LAYOUT
-   - Dark Luxury Theme
+   Dark Luxury Theme
 ========================================================= */
 
 @font-face{
@@ -165,13 +165,12 @@ body::before{
     border:2px solid var(--purple-500);
     box-shadow:0 8px 30px rgba(124,58,237,0.4);
 }
-#toast.show   {opacity:1}
+#toast.show{opacity:1}
 #toast.error{
     border:2px solid var(--red-500);
     box-shadow:0 8px 30px rgba(239,68,68,0.3);
 }
 
-/* ✅ إصلاح: toast-spinner كان مكسور في النسخة القديمة */
 .toast-spinner{
     display:inline-block;
     width:18px;
@@ -541,9 +540,10 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
     z-index:99998;
     align-items:center;justify-content:center;
     padding:12px;
-    background:rgba(0,0,0,0.75);
-    backdrop-filter:blur(10px);
-    -webkit-backdrop-filter:blur(10px);
+    background:rgba(0:h,0,idden0,0.75);
+    backdrop-filter;
+:   blur(10px);
+    -webkit-backdrop-filter:blur(10 animationpx);
 }
 .settings-modal.show{display:flex;}
 
@@ -551,8 +551,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
     width:100%;max-width:100%;
     height:92vh;
     border-radius:20px;
-    overflow:hidden;
-    animation:settingsIn .25s ease;
+    overflow:settingsIn .25s ease;
     direction:rtl;
     display:flex;flex-direction:column;
     background:var(--bg-card);
@@ -764,7 +763,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
 }
 
 /* =========================================================
-   TG ICONS (نسخة مصغرة داخل index.html للاحتياط)
+   TG ICONS — fallback inline
 ========================================================= */
 .tg-icon{
     display:inline-block;
@@ -1171,7 +1170,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
             message.indexOf('MetaMask') !== -1) {
             return false;
         }
-        showError('❌ '+message+' | '+(source||'')+':'+lineno);
+        showError('ERROR: '+message+' | '+(source||'')+':'+lineno);
         return false;
     };
 
@@ -1182,7 +1181,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
             reason.indexOf('extension') !== -1) {
             return;
         }
-        showError('⚠️ Promise: ' + reason);
+        showError('Promise: ' + reason);
     });
 })();
 </script>
@@ -1192,7 +1191,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
 <script src="teams.js?v=2"></script>
 <script src="matchweeks.js"></script>
 <script src="supabase.js"></script>
-<script src="carousel.js?v=38"></script>
+<script src="carousel.js?v=3"></script>
 <script src="fixtures.js?v=40"></script>
 <script src="standings.js?v=9"></script>
 <script src="download.js?v=24"></script>
@@ -1206,7 +1205,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
 <script src="charts.js?v=2"></script>
 <script src="clubs.js?v=9"></script>
 <script src="team-view.js?v=1"></script>
-<script src="main.js?v=19"></script>
+<script src="main.js?v=3"></script>
 
 <!-- ⚠️ BACKFILL HISTORY — معطّل مؤقتاً (يسبب Load failed على iOS) -->
 <!-- <script src="backfill-history.js?v=5"></script> -->
