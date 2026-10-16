@@ -1,7 +1,9 @@
 /* =========================================================
-   manager-squad.js — v3
-   - إصلاح: شعار الفريق من TEAMS_LOGOS بدل FPL badge
-   - إصلاح: حجم الشعار مناسب بدون خلفية
+   manager-squad.js — v4
+   - Dark Luxury Theme
+   - استبدال الرموز (×) بأيقونات SVG (tg-icon-*)
+   - زر "View FPL Squad" مع أيقونة
+   - لا تغيير في المنطق
 ========================================================= */
 
 (function(){
@@ -9,7 +11,6 @@
 
 /* ========== Helpers ========== */
 
-/* خريطة أسماء فرق FPL → أسماء TEAMS_LOGOS */
 const FPL_TO_LOCAL_TEAM = {
     'Arsenal': 'Arsenal',
     'Aston Villa': 'Aston Villa',
@@ -48,12 +49,10 @@ function getTeamLogo(fplTeam) {
     const rawName = fplTeam.name || '';
     const mappedName = FPL_TO_LOCAL_TEAM[rawName] || rawName;
 
-    /* 1) جرّب TEAMS_LOGOS أولاً */
     if (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[mappedName]) {
         return './' + TEAMS_LOGOS[mappedName];
     }
 
-    /* 2) Fallback: FPL badge URL */
     if (fplTeam.code) {
         return 'https://resources.premierleague.com/premierleague/badges/70/t' + fplTeam.code + '.png';
     }
@@ -239,6 +238,13 @@ function renderSquad(managerName, gw, picksData, liveData){
     return html;
 }
 
+/* ========== Close Button HTML (موحّد) ========== */
+function closeBtnHTML(){
+    return '<button class="squad-modal-close" onclick="document.getElementById(\'squadModal\').classList.remove(\'show\')">' +
+                '<span class="tg-icon tg-icon-sm tg-icon-close"></span>' +
+            '</button>';
+}
+
 /* ========== Open Modal ========== */
 async function openSquadModal(entryId, managerName){
     const modal = document.getElementById('squadModal');
@@ -246,7 +252,7 @@ async function openSquadModal(entryId, managerName){
 
     modal.innerHTML =
         '<div class="squad-modal-box">' +
-            '<button class="squad-modal-close" onclick="document.getElementById(\'squadModal\').classList.remove(\'show\')">×</button>' +
+            closeBtnHTML() +
             '<div class="squad-modal-title">' +
                 '<div class="squad-modal-manager">' + escapeHTML(managerName || 'Squad') + '</div>' +
                 '<div class="squad-modal-subtitle">Loading...</div>' +
@@ -288,7 +294,7 @@ async function openSquadModal(entryId, managerName){
 
         modal.innerHTML =
             '<div class="squad-modal-box">' +
-                '<button class="squad-modal-close" onclick="document.getElementById(\'squadModal\').classList.remove(\'show\')">×</button>' +
+                closeBtnHTML() +
                 '<div class="squad-modal-title">' +
                     '<div class="squad-modal-manager">' + escapeHTML(managerName || 'Squad') + '</div>' +
                     '<div class="squad-modal-subtitle">GW ' + usedGw + ' Squad</div>' +
@@ -304,7 +310,7 @@ async function openSquadModal(entryId, managerName){
         console.error('[SQUAD] Failed:', e);
         modal.innerHTML =
             '<div class="squad-modal-box">' +
-                '<button class="squad-modal-close" onclick="document.getElementById(\'squadModal\').classList.remove(\'show\')">×</button>' +
+                closeBtnHTML() +
                 '<div class="squad-modal-title">' +
                     '<div class="squad-modal-manager">' + escapeHTML(managerName || 'Squad') + '</div>' +
                 '</div>' +
@@ -332,17 +338,19 @@ function attachSquadButton(){
 
     const btn = document.createElement('button');
     btn.className = 'btn-view-squad';
-    btn.innerHTML = 'View FPL Squad';
     btn.type = 'button';
+    btn.innerHTML =
+        '<span class="tg-icon tg-icon-sm tg-icon-squad"></span>' +
+        '<span>View FPL Squad</span>';
 
     btn.addEventListener('click', async function(){
-        const origText = btn.textContent;
-        btn.textContent = 'Loading...';
+        const origHTML = btn.innerHTML;
+        btn.innerHTML = '<div class="spinner" style="width:16px;height:16px;border-width:2px;"></div><span>Loading...</span>';
         btn.disabled = true;
 
         try {
             const entryId = await findEntryId(playerName, teamName);
-            btn.textContent = origText;
+            btn.innerHTML = origHTML;
             btn.disabled = false;
 
             if(!entryId){
@@ -353,7 +361,7 @@ function attachSquadButton(){
             await openSquadModal(entryId, teamName || playerName);
         } catch(e){
             console.error('[SQUAD] Error:', e);
-            btn.textContent = origText;
+            btn.innerHTML = origHTML;
             btn.disabled = false;
             alert('Error: ' + e.message);
         }
