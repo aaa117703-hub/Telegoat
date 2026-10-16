@@ -1,5 +1,6 @@
 /* =========================================================
-   fixtures.js — v40
+   fixtures.js — v41
+   - إضافة: Champions Cup tab
    - unlockSecretPanel: فقط editMode (PIN 1999)
    - نظام القفل انتقل للإعدادات
 ========================================================= */
@@ -87,6 +88,10 @@ function switchTab(tabName) {
         const el = document.getElementById('statsTab');
         if (el) el.classList.add('active');
         if (typeof loadStats === 'function') loadStats();
+    } else if (tabName === 'champions') {
+        const el = document.getElementById('championsTab');
+        if (el) el.classList.add('active');
+        if (typeof ccInit === 'function') ccInit();
     } else {
         const el = document.getElementById('fixturesTab');
         if (el) el.classList.add('active');
