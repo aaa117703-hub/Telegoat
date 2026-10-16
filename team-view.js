@@ -1,166 +1,293 @@
 /* =========================================================
-   team-view.js — v2
-   - يستخدم getAllManagersCached (cache موحّد)
-   - fetchWithTimeout محمي
+   team-view.js — v1
+   - ملف جديد: عرض إحصائيات تفصيلية لكل فريق
+   - Dark Luxury Theme
+   - يستخدم: getAllManagersCached + findPlayerTeam + TEAMS_LOGOS
+   - يُستدعى من clubs.js عبر openTeamView(teamName)
 ========================================================= */
 
-async function openTeamView(teamName) {
-    if (!teamName) return;
+(function(){
+'use strict';
 
-    const modal = document.getElementById('teamModal');
-    if (!modal) return;
+/* =========================================================
+   HELPERS
+========================================================= */
 
-    modal.classList.add('show');
-    modal.innerHTML = '<div class="team-modal-box"><div class="team-modal-loading">Loading...</div></div>';
+function tvEscapeHTML(s){
+    return String(s || '').replace(/[&<>"']/g, function(c){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+}
+
+function tvNormalize(s){
+    if (typeof normalizePlayerName === 'function') {
+        return normalizePlayerName(s);
+    }
+    return String(s || '').trim().toLowerCase();
+}
+
+function tvShortenName(name, max){
+    max = max || 22;
+    if (!name) return '';
+    if (name.length <= max) return name;
+    return name.substring(0, max - 1) + '…';
+}
+
+function tvFindTeamKey(teamName){
+    /* مطابقة اسم الفريق مع مفاتيح TEAMS_LOGOS */
+    if (typeof TEAMS_LOGOS === 'undefined') return teamName;
+    if (TEAMS_LOGOS[teamName]) return teamName;
+
+    /* محاولة مطابقة جزئية */
+    const clean = String(teamName || '').toLowerCase();
+    for (const key in TEAMS_LOGOS) {
+        if (key.toLowerCase() === clean) return key;
+    }
+    for (const key in TEAMS_LOGOS) {
+        const k = key.toLowerCase();
+        if (k.indexOf(clean) !== -1 || clean.indexOf(k) !== -1) return key;
+    }
+    return teamName;
+}
+
+function tvGetLogoURL(teamName){
+    const key = tvFindTeamKey(teamName);
+    if (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[key]) {
+        return './' + TEAMS_LOGOS[key];
+    }
+    return '';
+}
+
+/* =========================================================
+   COLLECT TEAM DATA
+========================================================= */
+
+async function tvCollectTeamData(teamName){
+    const result = {
+        teamName: teamName,
+        managers: [],
+        totalPoints: 0,
+        avgPoints: 0,
+        avgGW: 0,
+        topPoints: 0,
+        lowPoints: 0,
+        topManager: null,
+        lowManager: null,
+        totalManagers: 0
+    };
 
     try {
-        // 1) جلب كل المديرين (من الكاش الموحّد)
-        const managers = await fetchTeamManagers(teamName);
+        const all = await getAllManagersCached();
+        if (!all || all.length === 0) return result;
 
-        if (!managers || managers.length === 0) {
-            modal.innerHTML = '<div class="team-modal-box"><div class="team-modal-loading">لا يوجد مديرون لهذا الفريق</div></div>';
-            return;
-        }
+        /* فلترة المديرين اللي يخصون هذا الفريق */
+        const teamMembers = [];
 
-        // 2) جلب النقاط من Supabase
-        const entries = managers.map(function(m) { return m.entry; });
-        const history = await loadTeamHistory(entries);
+        all.forEach(function(m){
+            const rawName = m.player_name || m.entry_name || '';
+            let detectedTeam = '';
 
-        // 3) دمج البيانات
-        const players = managers.map(function(m) {
-            const rows = history[m.entry] || [];
-            const total = rows.length > 0 ? rows[rows.length - 1].total_points : 0;
-            const trend = calcTrend(rows);
-            return {
-                name: m.player_name || m.entry_name,
-                entry: m.entry,
-                total: total,
-                trend: trend,
-                rows: rows
-            };
+            if (typeof findPlayerTeam === 'function') {
+                detectedTeam = findPlayerTeam(rawName) || '';
+            }
+
+            /* مطابقة قوية */
+            const key = tvFindTeamKey(teamName);
+            const detectedKey = tvFindTeamKey(detectedTeam);
+
+            if (detectedKey === key) {
+                teamMembers.push({
+                    entry: m.entry,
+                    player_name: m.player_name || '',
+                    entry_name: m.entry_name || '',
+                    total: m.total || 0,
+                    event_total: m.event_total || 0
+                });
+            }
         });
 
-        // 4) ترتيب
-        players.sort(function(a, b) { return b.total - a.total; });
+        /* ترتيب حسب النقاط */
+        teamMembers.sort(function(a, b){
+            return (b.total || 0) - (a.total || 0);
+        });
 
-        // 5) عرض
-        renderTeamModal(teamName, players);
+        result.managers = teamMembers;
+        result.totalManagers = teamMembers.length;
 
-    } catch (e) {
-        console.error('[TeamView]', e);
-        modal.innerHTML = '<div class="team-modal-box"><div class="team-modal-loading">خطأ: ' + e.message + '</div></div>';
-    }
-}
+        if (teamMembers.length > 0) {
+            let sum = 0;
+            let sumGW = 0;
 
-/* =========================================================
-   جلب مديري الفريق من الكاش الموحّد
-========================================================= */
+            teamMembers.forEach(function(m){
+                sum += m.total || 0;
+                sumGW += m.event_total || 0;
+            });
 
-async function fetchTeamManagers(teamName) {
-    const all = await getAllManagersCached();
+            result.totalPoints = sum;
+            result.avgPoints = Math.round(sum / teamMembers.length);
+            result.avgGW = Math.round(sumGW / teamMembers.length);
+            result.topPoints = teamMembers[0].total || 0;
+            result.lowPoints = teamMembers[teamMembers.length - 1].total || 0;
+            result.topManager = teamMembers[0];
+            result.lowManager = teamMembers[teamMembers.length - 1];
+        }
 
-    // فلترة حسب الفريق
-    return all.filter(function(m) {
-        if (typeof findPlayerTeam !== 'function') return false;
-        const raw = m.player_name || '';
-        return findPlayerTeam(raw) === teamName;
-    });
-}
-
-/* =========================================================
-   جلب النقاط من Supabase
-========================================================= */
-
-async function loadTeamHistory(entries) {
-    if (!window.sbClient) return {};
-
-    const { data, error } = await window.sbClient
-        .from('manager_history')
-        .select('entry, event, points, total_points, overall_rank')
-        .in('entry', entries)
-        .order('event', { ascending: true });
-
-    if (error) {
-        console.error('[TeamView] Supabase:', error);
-        return {};
+    } catch(e){
+        console.error('[TeamView] collect error:', e);
     }
 
-    const map = {};
-    (data || []).forEach(function(row) {
-        if (!map[row.entry]) map[row.entry] = [];
-        map[row.entry].push(row);
-    });
-
-    return map;
+    return result;
 }
 
 /* =========================================================
-   حساب الاتجاه (Trend)
+   RENDER MODAL CONTENT
 ========================================================= */
 
-function calcTrend(rows) {
-    if (!rows || rows.length < 3) return '➡️';
+function tvRenderModal(data){
+    const logoURL = tvGetLogoURL(data.teamName);
 
-    const last3 = rows.slice(-3);
-    const first = last3[0].points;
-    const last = last3[last3.length - 1].points;
+    let logoHtml = '';
+    if (logoURL) {
+        logoHtml = '<img src="' + logoURL + '" alt="" onerror="this.style.display=\'none\'">';
+    }
 
-    if (last > first + 5) return '📈';
-    if (last < first - 5) return '📉';
-    return '➡️';
-}
+    /* Header */
+    let html = '';
 
-/* =========================================================
-   عرض Modal
-========================================================= */
+    html += '<button class="team-modal-close" onclick="closeTeamView()">' +
+                '<span class="tg-icon tg-icon-sm tg-icon-close"></span>' +
+            '</button>';
 
-function renderTeamModal(teamName, players) {
-    const modal = document.getElementById('teamModal');
-    if (!modal) return;
+    html += '<div class="team-modal-header">' +
+                logoHtml +
+                '<div class="team-modal-title">' + tvEscapeHTML(data.teamName) + '</div>' +
+            '</div>';
 
-    const logo = (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName])
-        ? './' + TEAMS_LOGOS[teamName]
-        : '';
+    /* KPIs */
+    html += '<div class="team-modal-kpis">' +
+                '<div class="team-modal-kpi">' +
+                    '<div class="team-modal-kpi-label">Managers</div>' +
+                    '<div class="team-modal-kpi-value">' + data.totalManagers + '</div>' +
+                '</div>' +
+                '<div class="team-modal-kpi">' +
+                    '<div class="team-modal-kpi-label">Avg Points</div>' +
+                    '<div class="team-modal-kpi-value">' + data.avgPoints + '</div>' +
+                '</div>' +
+                '<div class="team-modal-kpi">' +
+                    '<div class="team-modal-kpi-label">Top Points</div>' +
+                    '<div class="team-modal-kpi-value">' + data.topPoints + '</div>' +
+                '</div>' +
+            '</div>';
 
-    const total = players.reduce(function(s, p) { return s + p.total; }, 0);
-    const avg = Math.round(total / players.length);
+    /* Managers list */
+    if (data.managers.length === 0) {
+        html += '<div class="team-modal-loading">' +
+                    'لا يوجد مديرون مسجلون لهذا الفريق' +
+                '</div>';
+    } else {
+        html += '<div class="team-modal-list">';
 
-    let html = '<div class="team-modal-box">';
-    html += '<button class="team-modal-close" onclick="closeTeamView()">✕</button>';
+        data.managers.forEach(function(m, idx){
+            const rank = idx + 1;
+            const entryName = m.entry_name || m.player_name || 'Unknown';
+            const playerName = m.player_name || '';
 
-    html += '<div class="team-modal-header">';
-    if (logo) html += '<img src="' + logo + '" alt="">';
-    html += '<div class="team-modal-title">' + teamName + '</div>';
-    html += '</div>';
+            /* تمييز أول 3 وآخر 3 */
+            let rowClass = '';
+            if (rank === 1)      rowClass = ' top';
+            else if (rank === data.managers.length && data.managers.length > 3) rowClass = ' bottom';
 
-    html += '<div class="team-modal-kpis">';
-    html += '<div class="team-modal-kpi"><div class="team-modal-kpi-label">Total</div><div class="team-modal-kpi-value">' + total + '</div></div>';
-    html += '<div class="team-modal-kpi"><div class="team-modal-kpi-label">Avg</div><div class="team-modal-kpi-value">' + avg + '</div></div>';
-    html += '<div class="team-modal-kpi"><div class="team-modal-kpi-label">Players</div><div class="team-modal-kpi-value">' + players.length + '</div></div>';
-    html += '</div>';
+            /* Trend indicator (بسيط) */
+            let trendIcon = '';
+            if (rank === 1) trendIcon = '<span class="tg-icon tg-icon-sm tg-icon-crown" style="color:#F59E0B;"></span>';
+            else if (rowClass === ' bottom') trendIcon = '<span class="tg-icon tg-icon-sm tg-icon-warning" style="color:#EF4444;"></span>';
 
-    html += '<div class="team-modal-list">';
+            html += '<div class="team-player-row' + rowClass + '">' +
+                        '<div class="team-player-rank">' + rank + '</div>' +
+                        '<div class="team-player-name" title="' + tvEscapeHTML(entryName) + '">' +
+                            tvEscapeHTML(entryName) +
+                        '</div>' +
+                        '<div class="team-player-points">' + (m.total || 0) + '</div>' +
+                        '<div class="team-player-trend">' + trendIcon + '</div>' +
+                    '</div>';
 
-    players.forEach(function(p, i) {
-        let rowClass = '';
-        if (i === 0) rowClass = ' top';
-        else if (i === players.length - 1) rowClass = ' bottom';
+            /* سطر ثانوي لاسم اللاعب إذا مختلف */
+            if (playerName && playerName !== entryName) {
+                /* صف فارغ يحتوي الاسم الحقيقي بمحاذاة */
+                /* ندمجه في نفس الصف بدل صف جديد */
+            }
+        });
 
-        html += '<div class="team-player-row' + rowClass + '">';
-        html += '<div class="team-player-rank">' + (i + 1) + '</div>';
-        html += '<div class="team-player-name">' + p.name + '</div>';
-        html += '<div class="team-player-points">' + p.total + '</div>';
-        html += '<div class="team-player-trend">' + p.trend + '</div>';
         html += '</div>';
-    });
+    }
 
-    html += '</div>';
-    html += '</div>';
+    /* Footer */
+    html += '<div style="margin-top:14px;padding-top:12px;border-top:1.5px solid rgba(124,58,237,0.25);text-align:center;font-size:9px;font-weight:900;letter-spacing:3px;color:#A78BFA;">TELEGRAM GOAT</div>';
 
-    modal.innerHTML = html;
+    return html;
 }
 
-function closeTeamView() {
+/* =========================================================
+   OPEN / CLOSE
+========================================================= */
+
+async function openTeamView(teamName){
+    if (!teamName) {
+        if (typeof showToast === 'function') showToast('اسم الفريق غير معروف', false);
+        return;
+    }
+
+    const modal = document.getElementById('teamModal');
+    if (!modal) {
+        console.warn('[TeamView] #teamModal not found');
+        if (typeof showToast === 'function') showToast('Modal غير موجود', false);
+        return;
+    }
+
+    /* Loading state */
+    modal.innerHTML =
+        '<div class="team-modal-box">' +
+            '<button class="team-modal-close" onclick="closeTeamView()">' +
+                '<span class="tg-icon tg-icon-sm tg-icon-close"></span>' +
+            '</button>' +
+            '<div class="team-modal-loading">' +
+                '<div class="spinner" style="margin:0 auto 12px;"></div>' +
+                'جاري تحميل بيانات الفريق...' +
+            '</div>' +
+        '</div>';
+
+    modal.classList.add('show');
+
+    modal.onclick = function(e){
+        if (e.target === modal) closeTeamView();
+    };
+
+    /* Collect + render */
+    try {
+        const data = await tvCollectTeamData(teamName);
+
+        modal.innerHTML =
+            '<div class="team-modal-box">' + tvRenderModal(data) + '</div>';
+
+        modal.onclick = function(e){
+            if (e.target === modal) closeTeamView();
+        };
+
+    } catch(e){
+        console.error('[TeamView] Failed:', e);
+        modal.innerHTML =
+            '<div class="team-modal-box">' +
+                '<button class="team-modal-close" onclick="closeTeamView()">' +
+                    '<span class="tg-icon tg-icon-sm tg-icon-close"></span>' +
+                '</button>' +
+                '<div class="team-modal-loading" style="color:#EF4444;">' +
+                    'فشل تحميل البيانات: ' + tvEscapeHTML(e.message) +
+                '</div>' +
+            '</div>';
+    }
+}
+
+function closeTeamView(){
     const modal = document.getElementById('teamModal');
     if (modal) {
         modal.classList.remove('show');
@@ -168,5 +295,21 @@ function closeTeamView() {
     }
 }
 
+/* =========================================================
+   KEYBOARD — ESC to close
+========================================================= */
+
+document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeTeamView();
+});
+
+/* =========================================================
+   EXPORTS
+========================================================= */
+
 window.openTeamView = openTeamView;
 window.closeTeamView = closeTeamView;
+
+console.log('[TeamView] Ready.');
+
+})();
