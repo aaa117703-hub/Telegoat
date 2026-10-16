@@ -1,7 +1,9 @@
 /* =========================================================
-   download.js — v24
-   - إصلاح: TOTW بدون خلفية بيضاء
-   - إصلاح: زوايا دائرية لـ TOTW
+   download.js — v25
+   - Dark Luxury Theme
+   - ألوان متناسقة مع الثيم الداكن
+   - console logging للتشخيص
+   - إصلاح محتمل لمشكلة html2canvas
 ========================================================= */
 
 function waitForImagesToLoad(element) {
@@ -70,10 +72,6 @@ function applyRoundedCorners(sourceCanvas, radius) {
 }
 
 
-/* =========================================================
-   DEBUG
-========================================================= */
-
 function dlDebug(text, isError) {
     if (isError) {
         console.error('[DL]', text);
@@ -82,10 +80,6 @@ function dlDebug(text, isError) {
     }
 }
 
-
-/* =========================================================
-   TOGGLE DOWNLOAD MENU
-========================================================= */
 
 function toggleDownloadMenu(event) {
     if (event) event.stopPropagation();
@@ -121,10 +115,6 @@ document.addEventListener('click', function(e) {
 });
 
 
-/* =========================================================
-   Detect Active Tab
-========================================================= */
-
 function getActiveTabName() {
     const fixturesTab = document.getElementById('fixturesTab');
     const standingsTab = document.getElementById('standingsTab');
@@ -142,10 +132,6 @@ function getActiveTabName() {
 }
 
 
-/* =========================================================
-   CHECK CANVAS TAINTED
-========================================================= */
-
 function isCanvasTainted(canvas) {
     try {
         canvas.getContext('2d').getImageData(0, 0, 1, 1);
@@ -157,7 +143,7 @@ function isCanvasTainted(canvas) {
 
 
 /* =========================================================
-   IMAGE MODAL
+   IMAGE MODAL — Dark Theme
 ========================================================= */
 
 function showImageModal(blob, filename) {
@@ -188,15 +174,15 @@ function showImageModal(blob, filename) {
     ].join(';');
 
     modal.innerHTML =
-        '<div style="text-align:center;color:#00e676;margin-bottom:10px;font-weight:900;font-size:15px;letter-spacing:0.5px;padding:8px 12px;background:rgba(0,200,83,0.15);border-radius:12px;border:1px solid #00e676;max-width:500px;">' +
+        '<div style="text-align:center;color:#A78BFA;margin-bottom:10px;font-weight:900;font-size:15px;letter-spacing:0.5px;padding:8px 12px;background:rgba(124,58,237,0.15);border-radius:12px;border:1px solid #7C3AED;max-width:500px;">' +
             '👆 اضغط مطولاً على الصورة → احفظ في الألبوم' +
         '</div>' +
-        '<img id="dlImagePreview" src="' + url + '" style="max-width:100%;max-height:65vh;border-radius:18px;box-shadow:0 10px 40px rgba(0,0,0,0.8);border:2px solid #00e676;margin:8px 0;background:transparent;" />' +
+        '<img id="dlImagePreview" src="' + url + '" style="max-width:100%;max-height:65vh;border-radius:18px;box-shadow:0 10px 40px rgba(0,0,0,0.8);border:2px solid #7C3AED;margin:8px 0;background:transparent;" />' +
         '<div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding-bottom:20px;">' +
-            '<button id="dlDirectBtn" style="padding:12px 22px;background:linear-gradient(135deg,#00e676,#009b40);color:#fff;border:none;border-radius:24px;font-weight:900;font-size:14px;letter-spacing:0.5px;box-shadow:0 4px 14px rgba(0,200,83,0.5);cursor:pointer;font-family:inherit;">📥 تحميل مباشر</button>' +
-            '<button id="dlCloseBtn" style="padding:12px 22px;background:linear-gradient(135deg,#ff4081,#b8003f);color:#fff;border:none;border-radius:24px;font-weight:900;font-size:14px;letter-spacing:0.5px;box-shadow:0 4px 14px rgba(255,0,90,0.5);cursor:pointer;font-family:inherit;">✕ إغلاق</button>' +
+            '<button id="dlDirectBtn" style="padding:12px 22px;background:linear-gradient(135deg,#7C3AED,#6D28D9);color:#fff;border:none;border-radius:24px;font-weight:900;font-size:14px;letter-spacing:0.5px;box-shadow:0 4px 14px rgba(124,58,237,0.5);cursor:pointer;font-family:inherit;">📥 تحميل مباشر</button>' +
+            '<button id="dlCloseBtn" style="padding:12px 22px;background:linear-gradient(135deg,#EF4444,#DC2626);color:#fff;border:none;border-radius:24px;font-weight:900;font-size:14px;letter-spacing:0.5px;box-shadow:0 4px 14px rgba(239,68,68,0.5);cursor:pointer;font-family:inherit;">✕ إغلاق</button>' +
         '</div>' +
-        '<div style="color:#888;font-size:11px;margin-top:8px;text-align:center;padding-bottom:20px;">' +
+        '<div style="color:#6B6B80;font-size:11px;margin-top:8px;text-align:center;padding-bottom:20px;">' +
             'إذا ما اشتغل التحميل المباشر — اضغط مطولاً على الصورة' +
         '</div>';
 
@@ -237,7 +223,7 @@ function showImageModal(blob, filename) {
 
 
 /* =========================================================
-   DOWNLOAD AS IMAGE — v24
+   DOWNLOAD AS IMAGE — v25
 ========================================================= */
 
 function downloadAsImage(scaleFactor) {
@@ -245,6 +231,17 @@ function downloadAsImage(scaleFactor) {
     if (typeof scaleFactor !== 'number') scaleFactor = 3;
 
     closeDownloadMenu();
+
+    dlDebug('start, scale=' + scaleFactor);
+
+    /* ⭐ تحقق من html2canvas */
+    if (typeof html2canvas === 'undefined') {
+        dlDebug('html2canvas NOT loaded!', true);
+        if (typeof showToast === 'function') {
+            showToast('html2canvas غير محمّل — حدّث الصفحة', false, 5000);
+        }
+        return;
+    }
 
     const activeTabName = getActiveTabName();
     dlDebug('tab=' + activeTabName);
@@ -300,13 +297,12 @@ function downloadAsImage(scaleFactor) {
         showToast('جاري تجهيز الصورة...', false, 2000);
     }
 
-    /* ⭐ cornerRadius لـ كل شي (بما فيها TOTW) */
     const cornerRadius = 20 * scaleFactor;
 
     waitForImagesToLoad(element)
         .then(function() {
+            dlDebug('images loaded, calling html2canvas');
             return html2canvas(element, {
-                /* ⭐ شفاف تماماً — لا خلفية بيضاء */
                 backgroundColor: null,
                 scale: scaleFactor,
                 useCORS: true,
@@ -367,9 +363,7 @@ function downloadAsImage(scaleFactor) {
                     const lockPanel = clonedElement.querySelector('#adminLockPanel');
                     if (lockPanel) lockPanel.style.display = 'none';
 
-                    /* ⭐ إزالة أي padding/خلفية من .totw-pitch-wrapper */
                     if (isTOTW) {
-                        const totwWrapper = clonedElement.closest ? clonedElement : null;
                         const parent = clonedElement.parentElement;
                         if (parent && parent.classList && parent.classList.contains('totw-pitch-wrapper')) {
                             parent.style.padding = '0';
@@ -391,7 +385,6 @@ function downloadAsImage(scaleFactor) {
                 return;
             }
 
-            /* ⭐ نطبّق الزوايا الدائرية دائماً */
             const finalCanvas = applyRoundedCorners(canvas, cornerRadius);
 
             finalCanvas.toBlob(function(blob) {
