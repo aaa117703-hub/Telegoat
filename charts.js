@@ -626,7 +626,7 @@ async function renderChartsPage() {
                 createRankProgressionChart('chartRankProg', rankData);
             }
             if (risersData && document.getElementById('chartRisers')) {
-                createRisersFallerChart('chartRisers', risersData);
+              createRisersFallersChart('chartRisers', risersData);
             }
             if (top15Data) {
                 createTop15Chart('chartTop15', top15Data);
