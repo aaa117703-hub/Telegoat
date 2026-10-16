@@ -1,78 +1,36 @@
 /* =========================================================
-   champions-cup.js — v2
-   Champions Cup System
-   - 20 فرق، دوري واحد
-   - PIN 4 أرقام لكل فريق
-   - 11 أساسي + 2 دكة + 2 بونص
-   - Sync تلقائي كل 5 دقايق
+   champions-cup.js — v3
+   - إصلاح: ccRenderTeams (لا throw على error object)
+   - إصلاح: عرض الحالة الفارغة
 ========================================================= */
 
 (function(){
 'use strict';
 
-/* =========================================================
-   الإعدادات الأساسية
-========================================================= */
-
 var CC_LEAGUES = {
-    'ARS': 369450,
-    'AVL': 369537,
-    'BOU': 369291,
-    'BRE': 369578,
-    'BHA': 369606,
-    'CHE': 369638,
-    'COV': 369673,
-    'CRY': 369721,
-    'EVE': 369745,
-    'FUL': 369770,
-    'HUL': 369795,
-    'IPS': 369827,
-    'LEE': 369850,
-    'LIV': 370310,
-    'MCI': 369942,
-    'MUN': 369961,
-    'NEW': 369987,
-    'NOT': 370008,
-    'SUN': 370048,
-    'TOT': 370074
+    'ARS': 369450, 'AVL': 369537, 'BOU': 369291, 'BRE': 369578,
+    'BHA': 369606, 'CHE': 369638, 'COV': 369673, 'CRY': 369721,
+    'EVE': 369745, 'FUL': 369770, 'HUL': 369795, 'IPS': 369827,
+    'LEE': 369850, 'LIV': 370310, 'MCI': 369942, 'MUN': 369961,
+    'NEW': 369987, 'NOT': 370008, 'SUN': 370048, 'TOT': 370074
 };
 
 var CC_TEAM_NAMES = {
-    'ARS': 'Arsenal',
-    'AVL': 'Aston Villa',
-    'BOU': 'Bournemouth',
-    'BRE': 'Brentford',
-    'BHA': 'Brighton',
-    'CHE': 'Chelsea',
-    'COV': 'Coventry City',
-    'CRY': 'Crystal Palace',
-    'EVE': 'Everton',
-    'FUL': 'Fulham',
-    'HUL': 'Hull City',
-    'IPS': 'Ipswich Town',
-    'LEE': 'Leeds United',
-    'LIV': 'Liverpool',
-    'MCI': 'Man City',
-    'MUN': 'Man Utd',
-    'NEW': 'Newcastle',
-    'NOT': 'Nottingham Forest',
-    'SUN': 'Sunderland',
-    'TOT': 'Spurs'
+    'ARS': 'Arsenal', 'AVL': 'Aston Villa', 'BOU': 'Bournemouth',
+    'BRE': 'Brentford', 'BHA': 'Brighton', 'CHE': 'Chelsea',
+    'COV': 'Coventry City', 'CRY': 'Crystal Palace', 'EVE': 'Everton',
+    'FUL': 'Fulham', 'HUL': 'Hull City', 'IPS': 'Ipswich Town',
+    'LEE': 'Leeds United', 'LIV': 'Liverpool', 'MCI': 'Man City',
+    'MUN': 'Man Utd', 'NEW': 'Newcastle', 'NOT': 'Nottingham Forest',
+    'SUN': 'Sunderland', 'TOT': 'Spurs'
 };
 
 var CC_TEAMS_LIST = Object.keys(CC_LEAGUES);
-
 var CC_WORKER = 'https://fpl-api.aaa117703.workers.dev';
 var CC_SYNC_INTERVAL = 5 * 60 * 1000;
 
-var CC_PROMOTED_TEAMS = ['HUL', 'COV', 'LEE'];
-var CC_TOP6_TEAMS = ['ARS', 'CHE', 'LIV', 'MCI', 'MUN', 'TOT'];
-
-/* حالة النظام */
 var ccState = {
     members: {},
-    squads: {},
-    pins: {},
     currentRound: 1,
     loading: false,
     lastSync: 0,
@@ -80,9 +38,7 @@ var ccState = {
     _currentEdit: null
 };
 
-/* =========================================================
-   HELPERS
-========================================================= */
+/* ========== HELPERS ========== */
 
 function ccLog() {
     var args = Array.prototype.slice.call(arguments);
@@ -92,14 +48,7 @@ function ccLog() {
 
 function ccEscapeHTML(s) {
     return String(s || '').replace(/[&<>"']/g, function(c) {
-        var map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        };
-        return map[c];
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
 }
 
@@ -115,17 +64,13 @@ function ccFetch(url, timeout) {
     return fetch(url);
 }
 
-/* =========================================================
-   1) SYNC MEMBERS من 20 دوري
-========================================================= */
+/* ========== SYNC ========== */
 
 async function ccSyncMembers() {
-    if (ccState.loading) return;
+    if (ccState.loading) return { ok: false, error: 'already_loading' };
     ccState.loading = true;
 
     ccLog('بدء Sync الأعضاء...');
-    var startTime = Date.now();
-
     var allMembers = {};
 
     for (var i = 0; i < CC_TEAMS_LIST.length; i++) {
@@ -141,13 +86,11 @@ async function ccSyncMembers() {
 
             var data = await res.json();
             var results = (data.standings && data.standings.results) || [];
-
             ccLog(teamCode + ': ' + results.length + ' عضو');
 
             for (var j = 0; j < results.length; j++) {
                 var m = results[j];
                 var id = m.entry;
-
                 if (!allMembers[id]) {
                     allMembers[id] = {
                         entry_id: id,
@@ -165,7 +108,6 @@ async function ccSyncMembers() {
                     allMembers[id].teams.push(teamCode);
                 }
             }
-
         } catch(e) {
             ccLog('خطأ ' + teamCode + ': ' + e.message);
         }
@@ -173,12 +115,9 @@ async function ccSyncMembers() {
 
     var membersArr = [];
     for (var key in allMembers) {
-        if (allMembers.hasOwnProperty(key)) {
-            membersArr.push(allMembers[key]);
-        }
+        if (allMembers.hasOwnProperty(key)) membersArr.push(allMembers[key]);
     }
-
-    ccLog('مجموع الأعضاء الفريدين: ' + membersArr.length);
+    ccLog('مجموع الأعضاء: ' + membersArr.length);
 
     var sb = ccGetSb();
     if (sb && membersArr.length > 0) {
@@ -199,17 +138,15 @@ async function ccSyncMembers() {
                 };
             });
 
-            for (var i2 = 0; i2 < rows.length; i2 += 50) {
-                var chunk = rows.slice(i2, i2 + 50);
+            for (var k = 0; k < rows.length; k += 50) {
+                var chunk = rows.slice(k, k + 50);
                 var upRes = await sb
                     .from('champions_cup_members')
                     .upsert(chunk, { onConflict: 'entry_id' });
-                if (upRes.error) {
-                    ccLog('خطأ حفظ: ' + upRes.error.message);
-                }
+                if (upRes.error) ccLog('خطأ حفظ: ' + upRes.error.message);
             }
 
-            ccLog('تم حفظ الأعضاء في Supabase');
+            ccLog('تم حفظ ' + rows.length + ' عضو في Supabase');
         } catch(e) {
             ccLog('خطأ Supabase: ' + e.message);
         }
@@ -218,107 +155,69 @@ async function ccSyncMembers() {
     ccState.members = allMembers;
     ccState.loading = false;
     ccState.lastSync = Date.now();
-
-    var elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-    ccLog('انتهى Sync في ' + elapsed + ' ثانية');
+    return { ok: true, count: membersArr.length };
 }
 
-/* =========================================================
-   2) جلب أعضاء فريق محدد
-========================================================= */
+/* ========== GET ========== */
 
 async function ccGetTeamMembers(teamCode) {
     var sb = ccGetSb();
     if (!sb) return [];
 
     try {
-        var result = await sb
-            .from('champions_cup_members')
-            .select('*');
-
-        if (result.error || !result.data) return [];
+        var result = await sb.from('champions_cup_members').select('*');
+        if (result.error) {
+            ccLog('خطأ جلب: ' + result.error.message);
+            return [];
+        }
+        if (!result.data) return [];
 
         var filtered = result.data.filter(function(m) {
             var teams = Array.isArray(m.teams) ? m.teams : [];
             return teams.indexOf(teamCode) !== -1;
         });
-
-        filtered.sort(function(a, b) {
-            return (b.total || 0) - (a.total || 0);
-        });
-
+        filtered.sort(function(a, b) { return (b.total || 0) - (a.total || 0); });
         return filtered;
     } catch(e) {
-        ccLog('خطأ جلب أعضاء: ' + e.message);
+        ccLog('خطأ: ' + e       .message);
         return [];
-    }
+    if }
 }
 
-/* =========================================================
-   3) جلب PIN الفريق
-========================================================= */
-
-async function ccGetTeamPin(teamCode) {
-    var sb = ccGetSb();
-    if (!sb) return null;
-
+async function ccGetTeamPin(team (Code) {
+    var sb = ccresultGetSb();
+    if (!sb).error) return null;
     try {
-        var result = await sb
-            .from('champions_cup_pins')
-            .select('pin')
-            .eq('team', teamCode)
-            .maybeSingle();
-
-        if (result.error || !result.data) return null;
-        return result.data.pin;
-    } catch(e) {
-        return null;
-    }
+        {
+ var result = await sb.from('champions           _cup_pins').select(' ccpin').eq('team', teamLogCode).maybeSingle();
+        if(' (result.error || !result.dataخط) return null;
+        return resultأ.data.pin;
+    } Supabase catch(e) { return null; }
 }
-
-/* =========================================================
-   4) جلب تشكيلة فريق في جولة
-========================================================= */
 
 async function ccGetSquad(teamCode, round) {
     var sb = ccGetSb();
     if (!sb) return null;
-
     try {
-        var result = await sb
-            .from('champions_cup_squads')
-            .select('*')
-            .eq('team', teamCode)
-            .eq('round', round)
-            .maybeSingle();
-
+        var result = await sb.from('champions_cup_squads').select('*')
+            .eq('team', teamCode).eq('round', round).maybeSingle();
         if (result.error || !result.data) return null;
         return result.data;
-    } catch(e) {
-        return null;
-    }
+    } catch(e) { return null; }
 }
-
-/* =========================================================
-   5) حفظ تشكيلة
-========================================================= */
 
 async function ccSaveSquad(teamCode, round, squadData) {
     var sb = ccGetSb();
     if (!sb) return { ok: false, error: 'no_sb' };
-
     try {
-        var result = await sb
-            .from('champions_cup_squads')
-            .upsert({
-                team: teamCode,
-                round: round,
-                starters: squadData.starters || [],
-                bench: squadData.bench || [],
-                bonus: squadData.bonus || [],
-                updated_at: new Date().toISOString()
-            }, { onConflict: 'team,round' });
-
+        var result = await sb.from('champions_cup_squads').upsert({
+            team: teamCode,
+            round: round,
+            starters: squadData.starters || [],
+            bench: squadData.bench || [],
+            bonus: squadData.bonus || [],
+            updated_at: new Date().toISOString()
+        }, { onConflict: 'team,round' });
         if (result.error) return { ok: false, error: result.error.message };
         return { ok: true };
     } catch(e) {
@@ -326,9 +225,7 @@ async function ccSaveSquad(teamCode, round, squadData) {
     }
 }
 
-/* =========================================================
-   6) عرض الفرق
-========================================================= */
+/* ========== RENDER TEAMS ========== */
 
 async function ccRenderTeams() {
     var container = document.getElementById('ccTeamsGrid');
@@ -343,19 +240,24 @@ async function ccRenderTeams() {
     }
 
     try {
-        var result = await sb
-            .from('champions_cup_members')
-            .select('*')
-            .eq('status', 'active');
+        var result = await sb.from('champions_cup_members').select('*');
 
-        if (result.error) throw result.error;
+: ' + result.error.message);
+            container.innerHTML = '<div class="cc-error">فشل الاتصال بـ Supabase</div>';
+            return;
+        }
 
-        var byTeam = {};
-        for (var k = 0; k < CC_TEAMS_LIST.length; k++) {
+        var data = result.data        || [];
+        ccLog('عدد الأعضاء في '</ Supabase: ' + data.length);
+
+       div /* تجميع حسب الفريق */
+        var> by';
+
+Team = {};
+        for (var k    = 0; k < CC_TEAMS_LIST.length; k++) {
             byTeam[CC_TEAMS_LIST[k]] = [];
         }
 
-        var data = result.data || [];
         for (var i = 0; i < data.length; i++) {
             var m = data[i];
             var teams = Array.isArray(m.teams) ? m.teams : [];
@@ -364,6 +266,7 @@ async function ccRenderTeams() {
             }
         }
 
+        /* ترتيب */
         for (var code in byTeam) {
             if (byTeam.hasOwnProperty(code)) {
                 byTeam[code].sort(function(a, b) {
@@ -372,13 +275,14 @@ async function ccRenderTeams() {
             }
         }
 
+        /* بناء HTML */
         var html = '';
         var totalCount = 0;
 
         for (var ci = 0; ci < CC_TEAMS_LIST.length; ci++) {
-            var code2 = CC_TEAMS_LIST[ci];
-            var name = CC_TEAM_NAMES[code2];
-            var members = byTeam[code2] || [];
+            var tc = CC_TEAMS_LIST[ci];
+            var name = CC_TEAM_NAMES[tc];
+            var members = byTeam[tc] || [];
             totalCount += members.length;
 
             var logo = '';
@@ -386,7 +290,7 @@ async function ccRenderTeams() {
                 logo = TEAMS_LOGOS[name];
             }
 
-            html += '<div class="cc-team-card" data-team="' + code2 + '">' +
+            html += '<div class="cc-team-card" data-team="' + tc + '">' +
                 '<div class="cc-team-logo">' +
                     (logo ? '<img src="./' + logo + '" onerror="this.style.display=\'none\'">' : '') +
                 '</div>' +
@@ -399,16 +303,18 @@ async function ccRenderTeams() {
 
         container.innerHTML = html;
 
+        /* bind click */
         var cards = container.querySelectorAll('.cc-team-card');
         for (var c = 0; c < cards.length; c++) {
             cards[c].addEventListener('click', function() {
-                var teamCode = this.getAttribute('data-team');
-                ccOpenTeam(teamCode);
+                ccOpenTeam(this.getAttribute('data-team'));
             });
         }
 
         var countEl = document.getElementById('ccMembersCount');
         if (countEl) countEl.textContent = totalCount;
+
+        ccLog('تم عرض ' + CC_TEAMS_LIST.length + ' فريق، ' + totalCount + ' مدير');
 
     } catch(e) {
         ccLog('خطأ عرض: ' + e.message);
@@ -416,9 +322,7 @@ async function ccRenderTeams() {
     }
 }
 
-/* =========================================================
-   7) فتح فريق (مودال)
-========================================================= */
+/* ========== OPEN TEAM ========== */
 
 async function ccOpenTeam(teamCode) {
     var modal = document.getElementById('ccModal');
@@ -442,18 +346,17 @@ async function ccOpenTeam(teamCode) {
                 '</button>' +
             '</div>' +
             '<div class="cc-loading">جاري التحميل...</div>' +
-        '</div>';
-
-    modal.classList.add('show');
+ modal.classList.add('show');
 
     var closeBtn = modal.querySelector('[data-close]');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', ccCloseModal);
-    }
+    if (closeBtn) closeBtn.addEventListener('click', ccCloseModal);
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) ccCloseModal();
+    });
 
     var members = await ccGetTeamMembers(teamCode);
     var squad = await ccGetSquad(teamCode, ccState.currentRound);
-
     ccRenderTeamModal(teamCode, members, squad);
 }
 
@@ -468,17 +371,21 @@ function ccRenderTeamModal(teamCode, members, squad) {
     }
 
     var membersHtml = '';
-    for (var i = 0; i < members.length; i++) {
-        var m = members[i];
-        membersHtml +=
-            '<div class="cc-member-row">' +
-                '<div class="cc-member-rank">' + (i + 1) + '</div>' +
-                '<div class="cc-member-info">' +
-                    '<div class="cc-member-name">' + ccEscapeHTML(m.entry_name || m.player_name) + '</div>' +
-                    '<div class="cc-member-sub">' + ccEscapeHTML(m.player_name) + '</div>' +
-                '</div>' +
-                '<div class="cc-member-points">' + (m.total || 0) + '</div>' +
-            '</div>';
+    if (members.length === 0) {
+        membersHtml = '<div class="cc-empty">لا يوجد أعضاء لهذا الفريق حالياً<br><small>اضغط زر التحديث لجلب الأعضاء</small></div>';
+    } else {
+        for (var i = 0; i < members.length; i++) {
+            var m = members[i];
+            membersHtml +=
+                '<div class="cc-member-row">' +
+                    '<div class="cc-member-rank">' + (i + 1) + '</div>' +
+                    '<div class="cc-member-info">' +
+                        '<div class="cc-member-name">' + ccEscapeHTML(m.entry_name || m.player_name) + '</div>' +
+                        '<div class="cc-member-sub">' + ccEscapeHTML(m.player_name) + '</div>' +
+                    '</div>' +
+                    '<div class="cc-member-points">' + (m.total || 0) + '</div>' +
+                '</div>';
+        }
     }
 
     modal.innerHTML =
@@ -511,6 +418,10 @@ function ccRenderTeamModal(teamCode, members, squad) {
             ccPromptPin(teamCode);
         });
     }
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) ccCloseModal();
+    });
 }
 
 function ccCloseModal() {
@@ -521,9 +432,7 @@ function ccCloseModal() {
     }
 }
 
-/* =========================================================
-   8) طلب PIN
-========================================================= */
+/* ========== PIN ========== */
 
 async function ccPromptPin(teamCode) {
     var teamName = CC_TEAM_NAMES[teamCode] || teamCode;
@@ -544,9 +453,7 @@ async function ccPromptPin(teamCode) {
     ccOpenSquadEditor(teamCode);
 }
 
-/* =========================================================
-   9) محرر التشكيلة
-========================================================= */
+/* ========== EDITOR ========== */
 
 async function ccOpenSquadEditor(teamCode) {
     var modal = document.getElementById('ccModal');
@@ -645,7 +552,7 @@ function ccToggleMember(entryId) {
         } else if (state.bench.length < 2) {
             state.bench.push(entryId);
         } else {
-            if (typeof showToast === 'function') showToast('التشكيلة كاملة (11 + 2)', false);
+            if (typeof showToast === 'function') showToast('التشكيلة كاملة', false);
         }
     }
 
@@ -698,47 +605,33 @@ async function ccSaveCurrent(teamCode) {
     }
 }
 
-/* =========================================================
-   10) Auto-Update
-========================================================= */
+/* ========== AUTO UPDATE ========== */
 
 function ccStartAutoUpdate() {
     if (ccState.syncTimer) clearInterval(ccState.syncTimer);
-
     ccState.syncTimer = setInterval(function() {
-        ccLog('Auto-sync...');
-        ccSyncMembers().then(function() {
-            ccRenderTeams();
-        });
+        ccSyncMembers().then(function() { ccRenderTeams(); });
     }, CC_SYNC_INTERVAL);
-
-    ccLog('Auto-update started');
 }
 
-/* =========================================================
-   11) Init
-========================================================= */
+/* ========== INIT ========== */
 
 async function ccInit() {
-    ccLog('Init Champions Cup...');
-
+    ccLog('Init...');
     ccState.currentRound = (typeof currentRound !== 'undefined') ? currentRound : 1;
 
+    /* عرض أولاً (بيانات محفوظة إن وجدت) */
     await ccRenderTeams();
 
-    var lastSync = ccState.lastSync;
-    if (!lastSync || (Date.now() - lastSync) > CC_SYNC_INTERVAL) {
-        ccSyncMembers().then(function() {
-            ccRenderTeams();
-        });
-    }
+    /* ثم مزامنة تلقائية */
+    ccSyncMembers().then(function() {
+        ccRenderTeams();
+    });
 
     ccStartAutoUpdate();
 }
 
-/* =========================================================
-   Exports
-========================================================= */
+/* ========== EXPORTS ========== */
 
 window.ccInit = ccInit;
 window.ccSyncMembers = ccSyncMembers;
