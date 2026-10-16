@@ -1,5 +1,5 @@
 /* =========================================================
-   theme.css — v8 (Final)
+   theme.css — v8
    Dark Luxury Theme
    - ثيم داكن موحّد: أسود رمادي + بنفسجي
    - نظام أيقونات SVG موحّد (tg-icon-*)
@@ -81,7 +81,6 @@ body {
     transition: background 0.4s var(--ease-out);
 }
 
-/* نقش بنفسجي خفيف في الخلفية */
 body::before {
     content: '';
     position: fixed;
@@ -94,7 +93,7 @@ body::before {
 }
 
 /* =========================================================
-   3. نظام الأيقونات SVG الموحّد
+   3. TG ICONS
 ========================================================= */
 
 .tg-icon {
@@ -118,8 +117,6 @@ body::before {
 .tg-icon-lg { width: 26px; height: 26px; }
 .tg-icon-xl { width: 36px; height: 36px; }
 
-/* ---------- أيقونات ---------- */
-
 .tg-icon-settings {
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z'/%3E%3C/svg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z'/%3E%3C/svg%3E");
@@ -135,8 +132,8 @@ body::before {
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 9.9-1'/%3E%3C/svg%3E");
 }
 
-.tg-icon-w fillrench {
-    -webkit-mask-image: url("='data:image/svg+xml,%3Csvgnone xmlns='http://www.w3.org/2000/svg' viewBox'='0 0  stroke24 24'='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z'/%3E%3C/svg%3E");
+.tg-icon-wrench {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z'/%3E%3C/svg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z'/%3E%3C/svg%3E");
 }
 
@@ -146,8 +143,8 @@ body::before {
 }
 
 .tg-icon-star {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
 }
 
 .tg-icon-edit {
@@ -196,8 +193,8 @@ body::before {
 }
 
 .tg-icon-ball {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 7l4.76 3.45-1.82 5.6h-5.88l-1.82-5.6z'/%3E%3Cpath d='M12 2v5'/%3E%3Cpath d='M12 22v-5'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 7l4.76 3.45-1.82 5.6h-5.88l-1.82-5.6z'/%3E%3Cpath d='M12 2v5'/%3E%3Cpath d='M12 22v-5'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 7l4.76 3.45-1.82 5.6h-5.88l-1.82-5.6z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 7l4.76 3.45-1.82 5.6h-5.88l-1.82-5.6z'/%3E%3C/svg%3E");
 }
 
 .tg-icon-search {
@@ -226,8 +223,8 @@ body::before {
 }
 
 .tg-icon-crown {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 18h20l-2-11-5 5-3-8-3 8-5-5z'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 18h20l-2-11-5 5-3-8-3 8-5-5z'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M2 18h20l-2-11-5 5-3-8-3 8-5-5z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M2 18h20l-2-11-5 5-3-8-3 8-5-5z'/%3E%3C/svg%3E");
 }
 
 .tg-icon-shield {
@@ -245,7 +242,11 @@ body::before {
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18.36 6.64a9 9 0 1 1-12.73 0'/%3E%3Cline x1='12' y1='2' x2='12' y2='12'/%3E%3C/svg%3E");
 }
 
-/* ---------- مساعد: أيقونة داخل زر مع نص ---------- */
+.tg-icon-bolt {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpolygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpolygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/%3E%3C/svg%3E");
+}
+
 .tg-icon-btn {
     display: inline-flex;
     align-items: center;
@@ -601,7 +602,6 @@ body::before {
     border-top-color: var(--purple-500) !important;
 }
 
-/* KPI Cards */
 .stats-kpi-card {
     background: var(--bg-card) !important;
     border: 1.5px solid var(--border-purple) !important;
@@ -620,7 +620,6 @@ body::before {
 }
 .stats-kpi-label { color: var(--text-secondary) !important; }
 
-/* Sections */
 .stats-section {
     background: var(--bg-card) !important;
     border: 1.5px solid var(--border-purple) !important;
@@ -632,7 +631,6 @@ body::before {
     text-shadow: none !important;
 }
 
-/* Rows */
 .stats-row {
     background: var(--bg-card) !important;
     border-bottom: 1px solid var(--border) !important;
@@ -687,7 +685,6 @@ body::before {
 }
 .stats-row-value-label { color: var(--text-tertiary) !important; }
 
-/* Logos */
 .stats-row-logo {
     background: transparent !important;
     border: none !important;
@@ -702,7 +699,6 @@ body::before {
     border-radius: 50% !important;
 }
 
-/* Search */
 .stats-search-input {
     background: var(--bg-elevated) !important;
     border: 1.5px solid var(--border-purple) !important;
@@ -732,7 +728,6 @@ body::before {
 .stats-search-entry { color: var(--text-primary) !important; }
 .stats-search-player { color: var(--text-tertiary) !important; }
 
-/* Profile */
 .stats-profile-card {
     background: var(--bg-card) !important;
     border: 2px solid var(--border-purple) !important;
@@ -760,7 +755,6 @@ body::before {
 .stats-green { color: var(--green-500) !important; }
 .stats-yellow { color: var(--amber-500) !important; }
 
-/* Records */
 .stats-record-card {
     background: var(--bg-card) !important;
     border: 1.5px solid var(--border-purple) !important;
@@ -842,7 +836,7 @@ body::before {
 }
 
 /* =========================================================
-   17. TRENDS — تحويل كامل
+   17. TRENDS
 ========================================================= */
 
 .trend-row {
@@ -874,7 +868,7 @@ body::before {
 }
 
 /* =========================================================
-   18. MANAGER HUB — تحويل كامل
+   18. MANAGER HUB
 ========================================================= */
 
 .mh-controls {
@@ -1073,7 +1067,7 @@ body::before {
 }
 
 /* =========================================================
-   19. FPL DATABASE — تحويل كامل
+   19. FPL DATABASE
 ========================================================= */
 
 .fpl-player-row {
@@ -1156,7 +1150,6 @@ body::before {
 .squad-stat-value.green { color: var(--green-500) !important; }
 .squad-stat-value.gold { color: var(--amber-500) !important; }
 
-/* Badges — C / V / 3x */
 .squad-cap-C {
     background: linear-gradient(135deg, #FFD700 0%, #F59E0B 100%) !important;
     color: #2D1B4E !important;
@@ -1205,7 +1198,7 @@ body::before {
 .team-player-rank { color: var(--text-tertiary) !important; }
 
 /* =========================================================
-   22. SETTINGS EMBED — Scroll fix
+   22. SETTINGS EMBED
 ========================================================= */
 
 .settings-body {
@@ -1288,7 +1281,6 @@ body::before {
     to   { opacity: 1; transform: scale(1); }
 }
 
-/* Utility classes */
 .tg-anim-pulse { animation: tgPulse 2s ease-in-out infinite; }
 .tg-anim-glow  { animation: tgGlow 2.5s ease-in-out infinite; }
 .tg-anim-fade-up { animation: tgFadeUp 0.4s var(--ease-out) both; }
