@@ -1,8 +1,7 @@
 /* =========================================================
    compare.js — v2
-   - Dark Luxury Theme
-   - استبدال الإيموجي بأيقونات SVG
-   - لا تغيير في المنطق
+   Head-to-Head Compare: Manager A vs Manager B
+   Dark Luxury Theme
 ========================================================= */
 
 let cmpManagerA = null;
@@ -57,14 +56,14 @@ function cmpBuildUI() {
 
         '<div class="cmp-capture" id="cmpCapture">' +
             '<div class="cmp-empty" id="cmpEmptyState">' +
-                '<span class="cmp-empty-icon"><span class="tg-icon tg-icon-xl tg-icon-shield"></span></span>' +
+                '<span class="cmp-empty-icon">&#9876;</span>' +
                 'اختر مديرين للمقارنة' +
             '</div>' +
             '<div id="cmpBody" style="display:none;">' +
                 '<div class="cmp-header">' +
-                    '<div class="cmp-header-name a" id="cmpHeaderA">—</div>' +
+                    '<div class="cmp-header-name a" id="cmpHeaderA">&mdash;</div>' +
                     '<div class="cmp-header-vs">VS</div>' +
-                    '<div class="cmp-header-name b" id="cmpHeaderB">—</div>' +
+                    '<div class="cmp-header-name b" id="cmpHeaderB">&mdash;</div>' +
                 '</div>' +
                 '<div class="cmp-metrics" id="cmpMetrics"></div>' +
                 '<div class="cmp-chart-wrap">' +
@@ -75,15 +74,17 @@ function cmpBuildUI() {
         '</div>' +
 
         '<div class="cmp-actions">' +
-            '<button class="cmp-btn dl" onclick="cmpDownload(3)"><span class="tg-icon tg-icon-sm tg-icon-download"></span><span>3x</span></button>' +
-            '<button class="cmp-btn dl" onclick="cmpDownload(4)"><span class="tg-icon tg-icon-sm tg-icon-download"></span><span>4x</span></button>' +
+            '<button class="cmp-btn dl" onclick="cmpDownload(3)">3x Download</button>' +
+            '<button class="cmp-btn dl" onclick="cmpDownload(4)">4x Download</button>' +
             '<button class="cmp-btn reset" onclick="cmpReset()">Reset</button>' +
         '</div>';
 
     document.addEventListener('click', function (e) {
         if (!e.target.closest('.cmp-selector')) {
-            document.getElementById('cmpResultsA')?.classList.remove('show');
-            document.getElementById('cmpResultsB')?.classList.remove('show');
+            var rA = document.getElementById('cmpResultsA');
+            var rB = document.getElementById('cmpResultsB');
+            if (rA) rA.classList.remove('show');
+            if (rB) rB.classList.remove('show');
         }
     });
 }
@@ -164,8 +165,11 @@ function cmpPick(side, entryId) {
     const manager = statsAllManagers.find(function (m) { return m.entry === entryId; });
     if (!manager) return;
 
-    if (side === 'A') cmpManagerA = manager;
-    else               cmpManagerB = manager;
+    if (side === 'A') {
+        cmpManagerA = manager;
+    } else {
+        cmpManagerB = manager;
+    }
 
     const display = document.getElementById('cmpDisplay' + side);
     const input   = document.getElementById('cmpSearch' + side);
@@ -204,10 +208,7 @@ async function cmpRender() {
     document.getElementById('cmpHeaderA').textContent = nameA;
     document.getElementById('cmpHeaderB').textContent = nameB;
 
-    /* ---------- Load TOTW counts ---------- */
     const totwData = await cmpLoadTotwCounts();
-
-    /* ---------- Compute metrics ---------- */
     const ranks = cmpComputeRanks();
 
     const metrics = [
@@ -257,28 +258,30 @@ async function cmpRender() {
             empty: true
         },
         {
-            label: 'Best GWstats',
-            a:Sorted null,
+            label: 'Best GW',
+            a: null,
             b: null,
-By            higher: true,
-Total            empty: true.length
+            higher: true,
+            empty: true
         }
     ];
 
-    /* ---------- Render metric rows ---------- */
     const metricsEl = document.getElementById('cmpMetrics');
     metricsEl.innerHTML = metrics.map(function (m) {
         let aVal, bVal, aCls = '', bCls = '';
 
         if (m.empty || (m.a === null && m.b === null)) {
-            aVal = '—'; bVal = '—';
-            aCls = bCls = 'empty';
+            aVal = '\u2014';
+            bVal = '\u2014';
+            aCls = 'empty';
+            bCls = 'empty';
         } else {
             aVal = cmpFmt(m.a, m.decimals, m.compact);
             bVal = cmpFmt(m.b, m.decimals, m.compact);
 
             if (m.a === m.b) {
-                aCls = bCls = 'tie';
+                aCls = 'tie';
+                bCls = 'tie';
             } else {
                 const aWins = m.higher ? (m.a > m.b) : (m.a < m.b);
                 aCls = aWins ? 'win' : 'lose';
@@ -293,7 +296,6 @@ Total            empty: true.length
         '</div>';
     }).join('');
 
-    /* ---------- Render chart ---------- */
     cmpDrawChart(metrics, nameA, nameB);
 }
 
@@ -308,7 +310,7 @@ function cmpAvgGW(manager) {
 }
 
 function cmpFmt(v, decimals, compact) {
-    if (v === null || v === undefined) return '—';
+    if (v === null || v === undefined) return '\u2014';
     let n = Number(v);
     if (compact && n >= 1000) {
         return (n / 1000).toFixed(1) + 'k';
@@ -319,7 +321,9 @@ function cmpFmt(v, decimals, compact) {
 
 function cmpComputeRanks() {
     const map = {};
-    if (typeof statsSortedByTotal === 'undefined' || !) return map;
+    if (typeof statsSortedByTotal === 'undefined' || !statsSortedByTotal.length) {
+        return map;
+    }
     statsSortedByTotal.forEach(function (m, i) {
         map[m.entry] = i + 1;
     });
@@ -466,18 +470,29 @@ function cmpReset() {
 
     const dA = document.getElementById('cmpDisplayA');
     const dB = document.getElementById('cmpDisplayB');
-    if (dA) { dA.textContent = 'Select manager...'; dA.classList.add('empty'); }
-    if (dB) { dB.textContent = 'Select manager...'; dB.classList.add('empty'); }
+    if (dA) {
+        dA.textContent = 'Select manager...';
+        dA.classList.add('empty');
+    }
+    if (dB) {
+        dB.textContent = 'Select manager...';
+        dB.classList.add('empty');
+    }
 
     const iA = document.getElementById('cmpSearchA');
     const iB = document.getElementById('cmpSearchB');
     if (iA) iA.value = '';
     if (iB) iB.value = '';
 
-    if (cmpChart) { cmpChart.destroy(); cmpChart = null; }
+    if (cmpChart) {
+        cmpChart.destroy();
+        cmpChart = null;
+    }
 
-    document.getElementById('cmpEmptyState').style.display = 'block';
-    document.getElementById('cmpBody').style.display = 'none';
+    const emptyState = document.getElementById('cmpEmptyState');
+    const body = document.getElementById('cmpBody');
+    if (emptyState) emptyState.style.display = 'block';
+    if (body) body.style.display = 'none';
 }
 
 /* =========================================================
@@ -530,7 +545,7 @@ async function cmpDownload(scale) {
    EXPORTS
 ========================================================= */
 
-window.cmpInit        = cmpInit;
-window.cmpPick        = cmpPick;
-window.cmpReset       = cmpReset;
-window.cmpDownload    = cmpDownload;
+window.cmpInit     = cmpInit;
+window.cmpPick     = cmpPick;
+window.cmpReset    = cmpReset;
+window.cmpDownload = cmpDownload;
