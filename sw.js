@@ -1,22 +1,23 @@
 /* =========================================================
-   sw.js — v2 (Fixed)
-   - إصلاح: respondWith لا يرجع null
-   - Cache للأصول المحلية فقط
+   sw.js — v3 (Cache Busting)
+   - كاش جديد: telegoat-v3 (يمسح القديم تلقائياً)
+   - skipWaiting + clients.claim للتفعيل الفوري
+   - تجاهل الطلبات الخارجية (CDN)
 ========================================================= */
 
-const CACHE_NAME  = 'telegoat-v2';
+const CACHE_NAME  = 'telegoat-v3';
 const CACHE_FILES = [
     './',
     './index.html',
     './theme.css',
     './mobile.css',
-    './splash.css',
-    './compare.css',
     './stats.css',
     './totw.css',
+    './trends.css',
     './clubs.css',
     './charts.css',
-    './trends.css',
+    './compare.css',
+    './splash.css',
     './fpl-database.css',
     './manager-hub.css',
     './manager-squad.css',
@@ -44,6 +45,7 @@ self.addEventListener('activate', function (event) {
             return Promise.all(
                 keys.map(function (key) {
                     if (key !== CACHE_NAME) {
+                        console.log('[SW] Deleting old cache:', key);
                         return caches.delete(key);
                     }
                 })
@@ -68,35 +70,33 @@ self.addEventListener('fetch', function (event) {
         url.indexOf('cdn.jsdelivr') !== -1 ||
         url.indexOf('cdnjs.cloudflare') !== -1 ||
         url.indexOf('unpkg.com') !== -1) {
-        return; /* ← لا نستدعي respondWith أصلاً */
+        return; /* لا نستدعي respondWith */
     }
 
-    /* تعامل مع الطلبات المحلية فقط */
+    /* تعامل مع الطلبات المحلية فقط — Network First */
     event.respondWith(
-        caches.match(event.request).then(function (cached) {
+        fetch(event.request).then(function (response) {
 
-            if (cached) {
-                return cached;
+            /* تخزين فقط الاستجابات الناجحة */
+            if (response && response.status === 200 && response.type === 'basic') {
+                const clone = response.clone();
+                caches.open(CACHE_NAME).then(function (cache) {
+                    cache.put(event.request, clone);
+                }).catch(function () {});
             }
 
-            return fetch(event.request).then(function (response) {
+            return response;
 
-                /* تخزين فقط الاستجابات الناجحة */
-                if (response && response.status === 200 && response.type === 'basic') {
-                    const clone = response.clone();
-                    caches.open(CACHE_NAME).then(function (cache) {
-                        cache.put(event.request, clone);
-                    }).catch(function () {});
-                }
+        }).catch(function () {
+            /* fallback: الكاش */
+            return caches.match(event.request).then(function (cached) {
+                if (cached) return cached;
 
-                return response;
-
-            }).catch(function () {
                 /* fallback: صفحة رئيسية للطلبات navigation */
                 if (event.request.mode === 'navigate') {
                     return caches.match('./index.html');
                 }
-                /* رجّع Response فاضي بدل null */
+
                 return new Response('', {
                     status: 408,
                     statusText: 'Offline'
@@ -104,4 +104,11 @@ self.addEventListener('fetch', function (event) {
             });
         })
     );
+});
+
+/* ---------- FORCE UPDATE ---------- */
+self.addEventListener('message', function (event) {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
 });
