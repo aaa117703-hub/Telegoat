@@ -1313,3 +1313,41 @@ body::before {
     background: linear-gradient(180deg, var(--purple-400), var(--purple-600));
     background-clip: padding-box;
 }
+/* =========================================================
+   FIX: Download button + menu z-index
+========================================================= */
+
+.download-wrapper {
+    position: relative !important;
+    z-index: 100 !important;
+    display: inline-block !important;
+}
+
+.download-btn {
+    position: relative !important;
+    z-index: 101 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+.download-btn:active {
+    transform: scale(0.94) !important;
+}
+
+.download-menu {
+    z-index: 200 !important;
+}
+
+.download-menu.show {
+    pointer-events: auto !important;
+}
+
+/* ضمان إن العنصر قابل للضغط حتى لو الأب غير قابل */
+.round-selector-row {
+    pointer-events: none !important;
+}
+
+.round-selector-row > * {
+    pointer-events: auto !important;
+}
