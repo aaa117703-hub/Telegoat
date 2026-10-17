@@ -1,14 +1,13 @@
 /* =========================================================
-   config.js — v3
-   - إضافة: نظام Manual Entries (إضافة مديرين بالـ ID)
-   - إضافة: زر تحديث يدوي
+   config.js — v5
+   - تحديث: Supabase جديد (Telegoat-New)
 ========================================================= */
 
 const SUPABASE_URL =
-    'https://qzsteswrannqsrnlytzl.supabase.co';
+    'https://vgnheydpxmmqfdibgqqa.supabase.co';
 
 const SUPABASE_ANON_KEY =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF6c3Rlc3dyYW5ucXNybmx5dHpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MTExNjgsImV4cCI6MjEwNDI4NzE2OH0.AFYiXODdfDbDiYn1fUoB9e2ZC8i7mFGgLvVxZzSPjxw';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnbmhleWRweG1tcWZkaWJncWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTY0MzMsImV4cCI6MjEwNzgzMjQzM30.T-QzrIrDdPZeq97vjYBDYY2gBzyLhLqN_DcnKBxTDpI';
 
 window.sbClient =
     window.supabase.createClient(
