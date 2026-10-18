@@ -808,7 +808,6 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
 }
 </style>
 
-<!-- ⚡ تحديث جميع أرقام الإصدارات لكسر الكاش -->
 <link rel="stylesheet" href="mobile.css?v=20261018">
 <link rel="stylesheet" href="totw.css?v=20261018">
 <link rel="stylesheet" href="stats.css?v=20261018">
@@ -1295,7 +1294,6 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
     });
 
     window.addEventListener('load', () => {
-        // ⚡ هنا غيرنا المسار إلى sw-v5.js
         navigator.serviceWorker.register('./sw-v5.js', { scope: './' })
             .then(reg => {
                 reg.update();
