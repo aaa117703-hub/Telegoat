@@ -808,19 +808,20 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
 }
 </style>
 
-<link rel="stylesheet" href="mobile.css?v=9">
-<link rel="stylesheet" href="totw.css?v=31">
-<link rel="stylesheet" href="stats.css?v=12">
-<link rel="stylesheet" href="trends.css?v=7">
-<link rel="stylesheet" href="clubs.css?v=9">
-<link rel="stylesheet" href="fpl-database.css?v=2">
-<link rel="stylesheet" href="manager-squad.css?v=2">
-<link rel="stylesheet" href="manager-hub.css?v=7">
-<link rel="stylesheet" href="theme.css?v=8">
-<link rel="stylesheet" href="charts.css?v=2">
-<link rel="stylesheet" href="splash.css?v=2">
-<link rel="stylesheet" href="compare.css?v=2">
-<link rel="stylesheet" href="champions-cup.css?v=1">
+<!-- ⚡ تحديث جميع أرقام الإصدارات لكسر الكاش -->
+<link rel="stylesheet" href="mobile.css?v=20261018">
+<link rel="stylesheet" href="totw.css?v=20261018">
+<link rel="stylesheet" href="stats.css?v=20261018">
+<link rel="stylesheet" href="trends.css?v=20261018">
+<link rel="stylesheet" href="clubs.css?v=20261018">
+<link rel="stylesheet" href="fpl-database.css?v=20261018">
+<link rel="stylesheet" href="manager-squad.css?v=20261018">
+<link rel="stylesheet" href="manager-hub.css?v=20261018">
+<link rel="stylesheet" href="theme.css?v=20261018">
+<link rel="stylesheet" href="charts.css?v=20261018">
+<link rel="stylesheet" href="splash.css?v=20261018">
+<link rel="stylesheet" href="compare.css?v=20261018">
+<link rel="stylesheet" href="champions-cup.css?v=20261018">
 
 </head>
 
@@ -1244,27 +1245,28 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
 })();
 </script>
 
-<script src="config.js?v=5"></script>
+<!-- ⚡ تحديث جميع أرقام الإصدارات للـ JS -->
+<script src="config.js?v=6"></script>
 <script src="locks.js?v=20"></script>
 <script src="teams.js?v=2"></script>
-<script src="matchweeks.js"></script>
-<script src="supabase.js"></script>
+<script src="matchweeks.js?v=1"></script>
+<script src="supabase.js?v=1"></script>
 <script src="carousel.js?v=4"></script>
 <script src="fixtures.js?v=42"></script>
 <script src="standings.js?v=9"></script>
 <script src="download.js?v=24"></script>
 <script src="players-teams.js?v=98"></script>
-<script src="totw.js?v=115"></script>
+<script src="totw.js?v=116"></script>
 <script src="trends.js?v=5"></script>
-<script src="fpl-database.js?v=5"></script>
-<script src="manager-squad.js?v=4"></script>
+<script src="fpl-database.js?v=6"></script>
+<script src="manager-squad.js?v=5"></script>
 <script src="manager-hub.js?v=7"></script>
-<script src="stats.js?v=15"></script>
+<script src="stats.js?v=16"></script>
 <script src="charts.js?v=2"></script>
 <script src="clubs.js?v=9"></script>
 <script src="team-view.js?v=1"></script>
 <script src="main.js?v=3"></script>
-<script src="champions-cup.js?v4"></script>
+<script src="champions-cup.js?v=5"></script>
 
 <!-- ⚠️ BACKFILL HISTORY — معطّل مؤقتاً (يسبب Load failed على iOS) -->
 <!-- <script src="backfill-history.js?v=5"></script> -->
@@ -1272,19 +1274,41 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
 <script src="compare.js?v=2"></script>
 <script src="splash.js?v=1"></script>
 
-<!-- ========== PWA SERVICE WORKER ========== -->
+<!-- ========== SERVICE WORKER v4 ========== -->
 <script>
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-        navigator.serviceWorker.register('./sw.js')
-            .then(function (reg) {
-                console.log('[PWA] Service Worker registered:', reg.scope);
-            })
-            .catch(function (err) {
-                console.warn('[PWA] SW registration failed:', err);
-            });
+(function () {
+    if (!('serviceWorker' in navigator)) return;
+
+    const RELOAD_FLAG = 'tg_sw_reloaded_v4';
+    let reloading = false;
+
+    function reloadOnce() {
+        if (reloading) return;
+        if (sessionStorage.getItem(RELOAD_FLAG)) return;
+        sessionStorage.setItem(RELOAD_FLAG, '1');
+        reloading = true;
+        window.location.reload();
+    }
+
+    navigator.serviceWorker.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'SW_UPDATED') reloadOnce();
     });
-}
+
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js', { scope: './' })
+            .then(reg => {
+                reg.update();
+                reg.addEventListener('updatefound', () => {
+                    const nw = reg.installing;
+                    if (!nw) return;
+                    nw.addEventListener('statechange', () => {
+                        if (nw.state === 'activated') reloadOnce();
+                    });
+                });
+            })
+            .catch(err => console.warn('[SW] register failed:', err));
+    });
+})();
 </script>
 
 </body>
