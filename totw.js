@@ -1,7 +1,6 @@
 /* =========================================================
-   totw.js — v115
-   - يستخدم getAllManagersCached (cache موحّد من config.js)
-   - التوزيع: أعلى 3 = هجوم / ثم 3 وسط / ثم 4 دفاع / الأخير = حارس
+   totw.js — v116
+   - إصلاح: مشكلة GW6 الفارغة (Fallback إذا كان الفلتر يمنع 20 مدير)
 ========================================================= */
 
 const TOTW_TOTAL_PAGES = 7;
@@ -103,7 +102,7 @@ async function loadTOTWSnapshot(round) {
 }
 
 /* =========================================================
-   GET TOP 20
+   GET TOP 20 (تم إصلاحه)
 ========================================================= */
 
 function getTOTWTop20(allResults) {
@@ -111,14 +110,22 @@ function getTOTWTop20(allResults) {
         return (b.event_total || 0) - (a.event_total || 0);
     });
 
-    const filtered = sorted.filter(function(m) {
+    // المحاولة الأولى: فلترة حسب الفريق
+    let filtered = sorted.filter(function(m) {
         if (typeof findPlayerTeam !== 'function') return true;
         const rawName = m.player_name || m.entry_name || '';
         const teamName = findPlayerTeam(rawName) || '';
         return teamName !== '';
     });
 
-    console.log('TOTW Filter: ' + filtered.length + ' / ' + sorted.length);
+    // الخطة البديلة: إذا كان الفلتر يمنعنا من الحصول على 20 مدير، نتجاهله
+    // ونأخذ أعلى 20 مدير بناءً على نقاط الجولة فقط.
+    if (filtered.length < TOTW_TOP_COUNT) {
+        console.log('[TOTW] Filtered list too short (' + filtered.length + '), falling back to top 20 overall.');
+        filtered = sorted;
+    }
+
+    console.log('TOTW Filter result: ' + filtered.length + ' / ' + sorted.length);
 
     return filtered.slice(0, TOTW_TOP_COUNT);
 }
