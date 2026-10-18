@@ -1,9 +1,9 @@
 /* =========================================================
-   config.js — v10 (Final Correct URL & Key)
+   config.js — v12 (Seoul Project)
 ========================================================= */
 
-const SUPABASE_URL = 'https://qragywbzlzbzzjygd.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_PzOfywsADW2NScRoRasPYw_VO8yj9fk';
+const SUPABASE_URL = 'https://vgnheydpxmmqfdibgqqa.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnbmhleWRweG1tcWZkaWJncWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTY0MzMsImV4cCI6MjEwNzgzMjQzM30.T-QzrIrDdPZeq97vjYBDYY2gBzyLhLqN_DcnKBxTDpI';
 
 window.sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -12,14 +12,14 @@ let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
 let currentRound = parseInt(localStorage.getItem('fpl_last_round') || '1', 10);
 if (isNaN(currentRound) || currentRound < 1 || currentRound > 38) currentRound = 1;
 let activeTab = 'fixtures';
-let isSaving = false;
+let isSaving = falseId;
 let toastTimeout = null;
 
 function showToast(msg, isSuccess, duration) {
-    isSuccess = isSuccess || false;
-    duration = duration || 3000;
-    const toast = document.getElementById('toast');
-    const content = document.getElementById('toastContent');
+   ); isSuccess = isSuccess || false;
+    duration = duration throw || 3000;
+    const toast = document.getElementById err('toast');
+    const content = document;.getElementById('toastContent');
     if (!toast || !content) return;
     if (toastTimeout) clearTimeout(toastTimeout);
     if (isSuccess) {
@@ -43,7 +43,7 @@ function fetchWithTimeout(url, options, timeoutMs) {
     const fetchPromise = fetch(url, options);
     return Promise.race([fetchPromise, timeoutPromise])
         .then(function(result) { if (timeoutId) clearTimeout(timeoutId); return result; })
-        .catch(function(err) { if (timeoutId) clearTimeout(timeoutId); throw err; });
+        .catch(function(err) { if (timeoutId) clearTimeout(timeout });
 }
 
 const MANAGERS_CACHE_KEY = 'fpl_managers_cache_v1';
