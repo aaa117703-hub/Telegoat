@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head><title>Force Fix</title></head>
+<body style="background:#111;color:#fff;padding:20px;font-family:sans-serif;">
+    <h2>جاري تنظيف المتصفح وإجبار الاتصال...</h2>
+    <div id="log" style="font-family:monospace; white-space: pre-wrap; font-size:14px; line-height:1.6;"></div>
+    <script>
+        function log(msg) { document.getElementById('log').innerText += msg + '\n'; }
+        
+        async function run() {
+            log('1. إلغاء تفعيل Service Worker...');
+            if ('serviceWorker' in navigator) {
+                const regs = await navigator.serviceWorker.getRegistrations();
+                for (let reg of regs) {
+                    await reg.unregister();
+                    log('   - تم إلغاء SW');
+                }
+            }
+            
+            log('2. مسح الكاش...');
+            const keys = await caches.keys();
+            for (let key of keys) {
+                await caches.delete(key);
+            }
+            log('   - تم مسح الكاش');
+
+            log('3. محاولة الاتصال المباشر بسوباس...');
+            const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnbmhleWRweG1tcWZkaWJncWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTY0MzMsImV4cCI6MjEwNzgzMjQzM30.T-QzrIrDdPZeq97vjYBDYY2gBzyLhLqN_DcnKBxTDpI';
+            
+            try {
+                const res = await fetch('https://vgnheydpxmmqfdibgqqa.supabase.co/rest/v1/champions_cup_pins?select=*', {
+                    headers: { 'apikey': apiKey, 'Authorization': 'Bearer ' + apiKey }
+                });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                log('✅ نجح الاتصال المباشر! عدد الرموز: ' + data.length);
+                log('🎉 المشكلة كانت من الكاش/الـ SW. الموقع سيعمل الآن!');
+            } catch (e) {
+                log('❌ فشل الاتصال المباشر: ' + e.message);
+                log('4. جاري تجربة الاتصال عبر وسيط (Proxy) لتجاوز حظر سفاري...');
+                try {
+                    const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://vgnheydpxmmqfdibgqqa.supabase.co/rest/v1/champions_cup_pins?select=*');
+                    const res2 = await fetch(proxyUrl, {
+                        headers: { 'apikey': apiKey, 'Authorization': 'Bearer ' + apiKey }
+                    });
+                    if (!res2.ok) throw new Error('HTTP ' + res2.status);
+                    const data2 = await res2.json();
+                    log('✅ نجح الاتصال عبر الوسيط! عدد الرموز: ' + data2.length);
+                    log('💡 الخلاصة: سفاري يحظر سوباس، وسنضطر نمرر كل الطلبات عبر الـ Cloudflare Worker.');
+                } catch (e2) {
+                    log('❌ فشل الاتصال عبر الوسيط أيضاً: ' + e2.message);
+                }
+            }
+        }
+        run();
+    </script>
+</body>
+</html>
