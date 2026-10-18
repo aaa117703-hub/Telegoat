@@ -1,35 +1,53 @@
 <!DOCTYPE html>
 <html>
-<head><title>Proxy Test</title></head>
-<body style="background:#111;color:#fff;padding:20px;font-family:sans-serif;">
-    <h2>فحص الاتصال عبر الوسيط (Worker)</h2>
-    <div id="sb-result" style="padding:10px;margin:10px 0;border:1px solid #444;">جاري الفحص...</div>
+<head>
+    <title>Final Diagnosis</title>
+    <!-- استدعاء مكتبة سوباس الرسمية -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="background:#111;color:#fff;padding:20px;font-family:monospace;">
+    <h2>جاري الفحص الشامل...</h2>
+    <div id="log" style="white-space: pre-wrap; font-size:14px; line-height: 1.8;"></div>
 
     <script>
-        // الآن نمرر الطلب عبر الـ Worker الخاص بك
-        const workerUrl = 'https://telegoat-api.aa1623165.workers.dev/supabase/rest/v1/champions_cup_pins?select=*';
-        const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnbmhleWRweG1tcWZkaWJncWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTY0MzMsImV4cCI6MjEwNzgzMjQzM30.T-QzrIrDdPZeq97vjYBDYY2gBzyLhLqN_DcnKBxTDpI';
+        const logDiv = document.getElementById('log');
+        function log(msg, color = '#fff') {
+            logDiv.innerHTML += `<div style="color:${color}">${msg}</div>`;
+            console.log(msg);
+        }
 
-        fetch(workerUrl, {
-            headers: {
-                'apikey': apiKey,
-                'Authorization': 'Bearer ' + apiKey
+        // الرابط والمفتاح من مشروع سيول (Telegoat-New)
+        const SUPABASE_URL = 'https://vgnheydpxmmqfdibgqqa.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnbmhleWRweG1tcWZkaWJncWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTY0MzMsImV4cCI6MjEwNzgzMjQzM30.T-QzrIrDdPZeq97vjYBDYY2gBzyLhLqN_DcnKBxTDpI';
+
+        async function runTest() {
+            log('1. تهيئة مكتبة سوباس...');
+            try {
+                const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                log('✅ تم إنشاء العميل بنجاح', '#0f0');
+
+                log('2. محاولة قراءة جدول (champions_cup_pins)...');
+                const { data, error } = await sb.from('champions_cup_pins').select('*');
+                
+                if (error) {
+                    log('❌ خطأ من سوباس: ' + error.message, '#f00');
+                    log('تفاصيل: ' + JSON.stringify(error), '#f00');
+                    if (error.message.includes('Could not find the table')) {
+                        log('💡 الخلاصة: الجدول غير موجود في هذا المشروع (سيول)! يجب نقل الجداول إليه.', '#ff0');
+                    }
+                } else {
+                    log('✅ نجح الاتصال وقراءة البيانات!', '#0f0');
+                    log('عدد السجلات: ' + data.length, '#0f0');
+                    if (data.length === 0) {
+                        log('⚠️ الجدول موجود لكنه فارغ (0 سجل).', '#ff0');
+                    }
+                }
+            } catch (e) {
+                log('❌ خطأ فادح (Load failed): ' + e.message, '#f00');
             }
-        })
-        .then(res => {
-            if (!res.ok) throw new Error('HTTP ' + res.status + ' (قد يكون الـ Worker لم يتم رفعه بشكل صحيح)');
-            return res.json();
-        })
-        .then(data => {
-            let el = document.getElementById('sb-result');
-            el.style.color = 'lime';
-            el.innerText = '✅ نجح الاتصال عبر الوسيط! عدد الرموز: ' + data.length;
-        })
-        .catch(e => {
-            let el = document.getElementById('sb-result');
-            el.style.color = 'red';
-            el.innerText = '❌ فشل الاتصال عبر الوسيط: ' + e.message;
-        });
+        }
+
+        runTest();
     </script>
 </body>
 </html>
