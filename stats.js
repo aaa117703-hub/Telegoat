@@ -1,11 +1,9 @@
 /* =========================================================
-   stats.js — v15
-   - Debug: تشخيص مشكلة No data
-   - Support: Compare Tab
-   - Animations: KPI + Rows + Records
+   stats.js — v16
+   - تحديث: رابط Worker جديد
 ========================================================= */
 
-const STATS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
+const STATS_WORKER_URL = 'https://telegoat-api.aa1623165.workers.dev';
 const STATS_TOTAL_PAGES = 7;
 
 let statsAllManagers    = [];
@@ -39,39 +37,29 @@ async function fetchAllManagersForStats() {
     }
 
     /* ---------- 2. Fallback: Worker مباشرة ---------- */
+    /* ملاحظة: الـ Worker v2 لا يدعم ?page=N. هذا الـ fallback احتياطي فقط. */
     const allResults = [];
 
-    for (let page = 1; page <= STATS_TOTAL_PAGES; page++) {
-        try {
-            const url = STATS_WORKER_URL + '/?page=' + page;
-            console.log('[Stats] Fetching:', url);
-
-            const response = await fetch(url);
-            console.log('[Stats] Response status:', response.status, response.ok);
-
-            if (!response.ok) {
-                console.warn('[Stats] Worker page', page, 'bad status');
-                break;
-            }
-
-            const data = await response.json();
-            console.log('[Stats] Page', page, 'raw data:', data);
-
-            if (data && data.standings && data.standings.results) {
-                allResults.push(...data.standings.results);
-                console.log('[Stats] Total so far:', allResults.length);
-
-                if (data.standings.has_next !== true) {
-                    console.log('[Stats] Last page reached');
-                    break;
+    if (typeof FPL_LEAGUES !== 'undefined' && Array.isArray(FPL_LEAGUES)) {
+        const seen = {};
+        for (let i = 0; i < FPL_LEAGUES.length; i++) {
+            const leagueId = FPL_LEAGUES[i];
+            try {
+                const url = STATS_WORKER_URL + '/?type=league&id=' + leagueId;
+                const response = await fetch(url);
+                if (!response.ok) continue;
+                const data = await response.json();
+                if (data && data.standings && data.standings.results) {
+                    data.standings.results.forEach(function(m) {
+                        if (!seen[m.entry]) {
+                            seen[m.entry] = true;
+                            allResults.push(m);
+                        }
+                    });
                 }
-            } else {
-                console.warn('[Stats] Unexpected data shape:', data);
-                break;
+            } catch (e) {
+                console.warn('[Stats] league ' + leagueId + ' failed:', e);
             }
-        } catch (e) {
-            console.error('[Stats] Fetch page ' + page + ' ERROR:', e);
-            break;
         }
     }
 
@@ -506,7 +494,7 @@ async function loadStats() {
 }
 
 /* =========================================================
-   TAB SWITCHING + ANIMATIONS
+   TAB SWITCHING
 ========================================================= */
 
 function switchStatsTab(tabName) {
@@ -518,22 +506,18 @@ function switchStatsTab(tabName) {
         view.classList.toggle('active', view.id === 'statsView-' + tabName);
     });
 
-    /* Clubs tab */
     if (tabName === 'clubs' && typeof loadClubs === 'function') {
         loadClubs();
     }
 
-    /* Charts tab */
     if (tabName === 'charts' && typeof initCharts === 'function') {
         initCharts();
     }
 
-    /* Compare tab */
     if (tabName === 'compare' && typeof cmpInit === 'function') {
         cmpInit();
     }
 
-    /* Animation on active view */
     const activeView = document.querySelector('.stats-view.active');
     if (activeView) {
         activeView.classList.remove('stats-view-enter');
@@ -541,7 +525,6 @@ function switchStatsTab(tabName) {
         activeView.classList.add('stats-view-enter');
     }
 
-    /* Scroll tab button into view */
     setTimeout(function () {
         const activeBtn = document.querySelector('.stats-tab-btn.active');
         if (activeBtn && activeBtn.scrollIntoView) {
