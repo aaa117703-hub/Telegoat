@@ -1,16 +1,14 @@
 /* =========================================================
-   config.js — v6
-   - تحديث: Supabase جديد (Telegoat-New)
-   - تحديث: Cloudflare Worker الجديد
-   - تحديث: جلب الـ 20 دوري بشكل متوازي بدلاً من صفحة عامة
-   - إصلاح: CORS في جلب بيانات المدير يدوياً (عبر الـ Worker)
+   config.js — v7
+   - العودة للمشروع القديم (qragywbzlzbzzjygd)
+   - ربط الـ Cloudflare Worker الجديد
 ========================================================= */
 
 const SUPABASE_URL =
-    'https://vgnheydpxmmqfdibgqqa.supabase.co';
+    'https://qragywbzlzbzzjygd.supabase.co';
 
 const SUPABASE_ANON_KEY =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnbmhleWRweG1tcWZkaWJncWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTY0MzMsImV4cCI6MjEwNzgzMjQzM30.T-QzrIrDdPZeq97vjYBDYY2gBzyLhLqN_DcnKBxTDpI';
+    'sb_publishable_PzOfywsADW2NScRoRasPYw_VO8yj9fk';
 
 window.sbClient =
     window.supabase.createClient(
