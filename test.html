@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head><title>Diagnostic Test</title></head>
+<body style="background:#111;color:#fff;padding:20px;font-family:sans-serif;">
+    <h2>جاري فحص الاتصال...</h2>
+    <div id="sb-result" style="padding:10px;margin:10px 0;border:1px solid #444;">فحص سوباس: جاري...</div>
+    <div id="worker-result" style="padding:10px;margin:10px 0;border:1px solid #444;">فحص الـ Worker: جاري...</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+    <script>
+        const sb = supabase.createClient(
+            'https://qragywbzlzbzzjygdvxkk.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyYWd5d2J6bGJ6emp5Z2R2eGtrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1Mjk1OTcsImV4cCI6MjEwNjEwNTU5N30.-0TQGJH6dKoPygwW-Co9o609_sUUq90KY6nWpTCfELc'
+        );
+        
+        sb.from('champions_cup_pins').select('*').then(r => {
+            let el = document.getElementById('sb-result');
+            if (r.error) {
+                el.style.color = 'red';
+                el.innerText = '❌ فشل سوباس: ' + r.error.message;
+            } else {
+                el.style.color = 'lime';
+                el.innerText = '✅ نجح سوباس! عدد الرموز: ' + r.data.length;
+            }
+        }).catch(e => {
+            document.getElementById('sb-result').style.color = 'red';
+            document.getElementById('sb-result').innerText = '❌ سوباس محظور (Load failed): ' + e.message;
+        });
+
+        fetch('https://telegoat-api.aa1623165.workers.dev/?type=league&id=369450')
+            .then(r => r.json())
+            .then(d => {
+                let el = document.getElementById('worker-result');
+                el.style.color = 'lime';
+                el.innerText = '✅ نجح الـ Worker! اسم الدوري: ' + d.league.name;
+            }).catch(e => {
+                document.getElementById('worker-result').style.color = 'red';
+                document.getElementById('worker-result').innerText = '❌ الـ Worker محظور (Load failed): ' + e.message;
+            });
+    </script>
+</body>
+</html>
