@@ -1,14 +1,14 @@
 /* =========================================================
-   config.js — v7
-   - العودة للمشروع القديم (qragywbzlzbzzjygd)
+   config.js — v8
+   - العودة للمشروع القديم (المفتاح القديم eyJ)
    - ربط الـ Cloudflare Worker الجديد
 ========================================================= */
 
 const SUPABASE_URL =
-    'https://qragywbzlzbzzjygd.supabase.co';
+    'https://qragywbzlzbzzjygdvxkk.supabase.co';
 
 const SUPABASE_ANON_KEY =
-    'sb_publishable_PzOfywsADW2NScRoRasPYw_VO8yj9fk';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyYWd5d2J6bGJ6emp5Z2R2eGtrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1Mjk1OTcsImV4cCI6MjEwNjEwNTU5N30.-0TQGJH6dKoPygwW-Co9o609_sUUq90KY6nWpTCfELc';
 
 window.sbClient =
     window.supabase.createClient(
