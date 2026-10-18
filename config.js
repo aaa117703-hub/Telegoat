@@ -1,6 +1,9 @@
 /* =========================================================
-   config.js — v5
+   config.js — v6
    - تحديث: Supabase جديد (Telegoat-New)
+   - تحديث: Cloudflare Worker الجديد
+   - تحديث: جلب الـ 20 دوري بشكل متوازي بدلاً من صفحة عامة
+   - إصلاح: CORS في جلب بيانات المدير يدوياً (عبر الـ Worker)
 ========================================================= */
 
 const SUPABASE_URL =
@@ -105,8 +108,15 @@ function fetchWithTimeout(url, options, timeoutMs) {
 
 const MANAGERS_CACHE_KEY = 'fpl_managers_cache_v1';
 const MANAGERS_CACHE_TTL = 6 * 60 * 60 * 1000;
-const MANAGERS_WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
-const MANAGERS_TOTAL_PAGES = 7;
+const MANAGERS_WORKER_URL = 'https://telegoat-api.aa1623165.workers.dev';
+
+// أكواد الدوريات الـ 20 التي تم جمعها
+const FPL_LEAGUES = [
+    369450, 369537, 369291, 369578, 369606,
+    369638, 369673, 369721, 369745, 369770,
+    369795, 369827, 369850, 370310, 369942,
+    369961, 369987, 370008, 370048, 370074
+];
 
 let _managersCache = null;
 let _managersLoading = null;
@@ -144,30 +154,43 @@ async function getAllManagersCached(forceRefresh) {
             _managersLoading = (async function() {
                 const all = [];
 
-                for (let page = 1; page <= MANAGERS_TOTAL_PAGES; page++) {
+                // جلب الـ 20 دوري بشكل متوازي لتسريع العملية
+                const fetchPromises = FPL_LEAGUES.map(async function(leagueId) {
                     try {
                         const res = await fetchWithTimeout(
-                            MANAGERS_WORKER_URL + '/?page=' + page
+                            MANAGERS_WORKER_URL + '/?type=league&id=' + leagueId,
+                            {},
+                            12000
                         );
 
                         if (!res.ok) {
-                            console.warn('[Managers] page ' + page + ' HTTP ' + res.status);
-                            break;
+                            console.warn('[Managers] league ' + leagueId + ' HTTP ' + res.status);
+                            return [];
                         }
 
                         const data = await res.json();
 
                         if (data && data.standings && data.standings.results) {
-                            all.push.apply(all, data.standings.results);
-                            if (data.standings.has_next !== true) break;
-                        } else {
-                            break;
+                            return data.standings.results;
                         }
                     } catch (e) {
-                        console.warn('[Managers] page ' + page + ' failed:', e.message);
-                        break;
+                        console.warn('[Managers] league ' + leagueId + ' failed:', e.message);
                     }
-                }
+                    return [];
+                });
+
+                const results = await Promise.all(fetchPromises);
+                
+                // دمج النتائج وإزالة التكرار (مدير واحد قد يكون في أكثر من دوري)
+                const seen = {};
+                results.forEach(function(list) {
+                    list.forEach(function(m) {
+                        if (!seen[m.entry]) {
+                            seen[m.entry] = true;
+                            all.push(m);
+                        }
+                    });
+                });
 
                 _managersCache = all;
 
@@ -249,17 +272,20 @@ function saveManualEntries(list) {
 
 
 async function fetchFplEntryData(entryId) {
+    // تمرير الطلب عبر الـ Worker لحل مشكلة CORS
     const res = await fetchWithTimeout(
-        'https://fantasy.premierleague.com/api/entry/' + entryId + '/',
+        MANAGERS_WORKER_URL + '/?type=entry&id=' + entryId,
         {},
-        8000
+        10000
     );
 
     if (!res.ok) {
         throw new Error('HTTP ' + res.status);
     }
 
-    const data = await res.json();
+    const payload = await res.json();
+    const data = payload.entry; // الـ Worker يرجع البيانات داخل حقل entry
+
     if (!data || !data.id) {
         throw new Error('Invalid response');
     }
