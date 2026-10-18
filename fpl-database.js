@@ -1,12 +1,13 @@
 /* =========================================================
    fpl-database.js — FPL Players & Teams Database
    (يشتغل بالخلفية بدون واجهة)
+   v2: تحديث رابط Worker + استخدام ?type=bootstrap
 ========================================================= */
 
 (function(){
 'use strict';
 
-const WORKER_URL = 'https://fpl-api.aaa117703.workers.dev';
+const WORKER_URL = 'https://telegoat-api.aa1623165.workers.dev';
 const CACHE_KEY = 'fpl_bootstrap_v3';
 const CACHE_TTL = 6 * 60 * 60 * 1000;
 
@@ -62,7 +63,7 @@ async function loadBootstrap(){
     } catch(e){}
 
     console.log('[FPL] Fetching bootstrap...');
-    const res = await fetch(WORKER_URL + '?type=current');
+    const res = await fetch(WORKER_URL + '?type=bootstrap');
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
 
@@ -114,7 +115,6 @@ function renderPlayerRow(p){
     row.className = 'fpl-player-row';
     row.dataset.id = p.id;
 
-    // Team badge
     const badgeWrap = document.createElement('div');
     badgeWrap.className = 'fpl-player-team-badge';
     if(badge){
@@ -126,7 +126,6 @@ function renderPlayerRow(p){
     }
     row.appendChild(badgeWrap);
 
-    // Names
     const names = document.createElement('div');
     names.className = 'fpl-player-names';
 
@@ -147,13 +146,11 @@ function renderPlayerRow(p){
 
     row.appendChild(names);
 
-    // Price
     const priceDiv = document.createElement('div');
     priceDiv.className = 'fpl-player-price';
     priceDiv.textContent = '£' + price + 'm';
     row.appendChild(priceDiv);
 
-    // Points
     const ptsDiv = document.createElement('div');
     ptsDiv.className = 'fpl-player-points';
     ptsDiv.appendChild(document.createTextNode(String(p.total_points)));
@@ -320,14 +317,12 @@ function openModal(playerId){
     const box = document.createElement('div');
     box.className = 'fpl-modal-box';
 
-    // Close
     const closeBtn = document.createElement('button');
     closeBtn.className = 'fpl-modal-close';
     closeBtn.textContent = '×';
     closeBtn.onclick = function(){ modal.classList.remove('show'); };
     box.appendChild(closeBtn);
 
-    // Header — شعار الفريق بدل صورة اللاعب
     const header = document.createElement('div');
     header.className = 'fpl-modal-header';
 
@@ -378,7 +373,6 @@ function openModal(playerId){
     header.appendChild(info);
     box.appendChild(header);
 
-    // Stats
     const stats = document.createElement('div');
     stats.className = 'fpl-modal-stats';
 
@@ -391,7 +385,6 @@ function openModal(playerId){
 
     box.appendChild(stats);
 
-    // Details
     const details = document.createElement('div');
     details.className = 'fpl-modal-details';
 
@@ -570,12 +563,12 @@ async function init(){
     }
 }
 
-/* ====== Auto-init (يشتغل بالخلفية دايماً) ====== */
+/* ====== Auto-init ====== */
 document.addEventListener('DOMContentLoaded', function(){
     setTimeout(init, 1000);
 });
 
-/* ====== Expose for other scripts ====== */
+/* ====== Expose ====== */
 window.fplDbInit = init;
 window.fplDbGetData = function(){ return state.data; };
 window.fplDbGetTeamsById = function(){ return state.teamsById; };
