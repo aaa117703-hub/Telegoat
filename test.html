@@ -8,10 +8,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
     <script>
-        // الرابط الصحيح 100% والمفتاح الجديد
         const sb = supabase.createClient(
-            'https://qragywbzlzbzzjygd.supabase.co',
-            'sb_publishable_PzOfywsADW2NScRoRasPYw_VO8yj9fk'
+            'https://vgnheydpxmmqfdibgqqa.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnbmhleWRweG1tcWZkaWJncWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTY0MzMsImV4cCI6MjEwNzgzMjQzM30.T-QzrIrDdPZeq97vjYBDYY2gBzyLhLqN_DcnKBxTDpI'
         );
         
         sb.from('champions_cup_pins').select('*').then(r => {
