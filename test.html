@@ -1,31 +1,34 @@
 <!DOCTYPE html>
 <html>
-<head><title>Raw Fetch Test</title></head>
+<head><title>Proxy Test</title></head>
 <body style="background:#111;color:#fff;padding:20px;font-family:sans-serif;">
-    <h2>فحص الاتصال المباشر (بدون مكتبة)</h2>
-    <div id="sb-result" style="padding:10px;margin:10px 0;border:1px solid #444;">فحص سوباس: جاري...</div>
+    <h2>فحص الاتصال عبر الوسيط (Worker)</h2>
+    <div id="sb-result" style="padding:10px;margin:10px 0;border:1px solid #444;">جاري الفحص...</div>
 
     <script>
-        // فحص سوباس باستخدام fetch مباشر
-        fetch('https://vgnheydpxmmqfdibgqqa.supabase.co/rest/v1/champions_cup_pins?select=*', {
+        // الآن نمرر الطلب عبر الـ Worker الخاص بك
+        const workerUrl = 'https://telegoat-api.aa1623165.workers.dev/supabase/rest/v1/champions_cup_pins?select=*';
+        const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnbmhleWRweG1tcWZkaWJncWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTY0MzMsImV4cCI6MjEwNzgzMjQzM30.T-QzrIrDdPZeq97vjYBDYY2gBzyLhLqN_DcnKBxTDpI';
+
+        fetch(workerUrl, {
             headers: {
-                'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnbmhleWRweG1tcWZkaWJncWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTY0MzMsImV4cCI6MjEwNzgzMjQzM30.T-QzrIrDdPZeq97vjYBDYY2gBzyLhLqN_DcnKBxTDpI',
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnbmhleWRweG1tcWZkaWJncWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTY0MzMsImV4cCI6MjEwNzgzMjQzM30.T-QzrIrDdPZeq97vjYBDYY2gBzyLhLqN_DcnKBxTDpI'
+                'apikey': apiKey,
+                'Authorization': 'Bearer ' + apiKey
             }
         })
         .then(res => {
-            if (!res.ok) throw new Error('HTTP ' + res.status);
+            if (!res.ok) throw new Error('HTTP ' + res.status + ' (قد يكون الـ Worker لم يتم رفعه بشكل صحيح)');
             return res.json();
         })
         .then(data => {
             let el = document.getElementById('sb-result');
             el.style.color = 'lime';
-            el.innerText = '✅ نجح الاتصال المباشر! عدد الرموز: ' + data.length;
+            el.innerText = '✅ نجح الاتصال عبر الوسيط! عدد الرموز: ' + data.length;
         })
         .catch(e => {
             let el = document.getElementById('sb-result');
             el.style.color = 'red';
-            el.innerText = '❌ فشل الاتصال المباشر: ' + e.message;
+            el.innerText = '❌ فشل الاتصال عبر الوسيط: ' + e.message;
         });
     </script>
 </body>
