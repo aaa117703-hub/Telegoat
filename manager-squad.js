@@ -1,15 +1,10 @@
 /* =========================================================
-   manager-squad.js — v4
-   - Dark Luxury Theme
-   - استبدال الرموز (×) بأيقونات SVG (tg-icon-*)
-   - زر "View FPL Squad" مع أيقونة
-   - لا تغيير في المنطق
+   manager-squad.js — v5
+   - تحديث: رابط Worker جديد (مرتين)
 ========================================================= */
 
 (function(){
 'use strict';
-
-/* ========== Helpers ========== */
 
 const FPL_TO_LOCAL_TEAM = {
     'Arsenal': 'Arsenal',
@@ -99,13 +94,13 @@ async function findEntryId(managerName, teamName){
 
 /* ========== Fetch Squad ========== */
 async function fetchSquad(entryId, gw){
-    const res = await fetchWithTimeout('https://fpl-api.aaa117703.workers.dev/?type=picks&entry=' + entryId + '&gw=' + gw);
+    const res = await fetchWithTimeout('https://telegoat-api.aa1623165.workers.dev/?type=picks&entry=' + entryId + '&gw=' + gw);
     if(!res.ok) throw new Error('HTTP ' + res.status);
     return await res.json();
 }
 
 async function fetchLive(gw){
-    const res = await fetchWithTimeout('https://fpl-api.aaa117703.workers.dev/?type=live&gw=' + gw);
+    const res = await fetchWithTimeout('https://telegoat-api.aa1623165.workers.dev/?type=live&gw=' + gw);
     if(!res.ok) throw new Error('HTTP ' + res.status);
     return await res.json();
 }
@@ -204,7 +199,6 @@ function renderSquad(managerName, gw, picksData, liveData){
 
     let html = '';
 
-    // Stats
     const history = picksData.entry_history || {};
     const totalPts = history.points || 0;
     const overallPts = history.total_points || 0;
@@ -216,7 +210,6 @@ function renderSquad(managerName, gw, picksData, liveData){
     html += '<div class="squad-stat-box"><div class="squad-stat-label">Overall Rank</div><div class="squad-stat-value gold">' + (typeof overallRank === 'number' ? overallRank.toLocaleString() : overallRank) + '</div></div>';
     html += '</div>';
 
-    // Sections
     const order = ['GK', 'DEF', 'MID', 'FWD'];
     order.forEach(function(key){
         const g = groups[key];
@@ -227,7 +220,6 @@ function renderSquad(managerName, gw, picksData, liveData){
         html += '</div>';
     });
 
-    // Bench
     if(benchArr.length > 0){
         html += '<div class="squad-section">';
         html += '<div class="squad-section-title">Bench</div>';
@@ -238,14 +230,12 @@ function renderSquad(managerName, gw, picksData, liveData){
     return html;
 }
 
-/* ========== Close Button HTML (موحّد) ========== */
 function closeBtnHTML(){
     return '<button class="squad-modal-close" onclick="document.getElementById(\'squadModal\').classList.remove(\'show\')">' +
                 '<span class="tg-icon tg-icon-sm tg-icon-close"></span>' +
             '</button>';
 }
 
-/* ========== Open Modal ========== */
 async function openSquadModal(entryId, managerName){
     const modal = document.getElementById('squadModal');
     if(!modal) return;
@@ -319,7 +309,6 @@ async function openSquadModal(entryId, managerName){
     }
 }
 
-/* ========== Attach Button ========== */
 function attachSquadButton(){
     const profile = document.getElementById('statsProfile');
     if(!profile) return;
@@ -377,7 +366,6 @@ function attachSquadButton(){
     console.log('[SQUAD] Button added for:', playerName, '|', teamName);
 }
 
-/* ========== Watch Profile ========== */
 let _profileObserver = null;
 
 function setupProfileWatcher(){
@@ -407,13 +395,11 @@ function setupProfileWatcher(){
     attachSquadButton();
 }
 
-/* ========== Public API ========== */
 window.openManagerSquad = async function(entryId, managerName){
     await openSquadModal(entryId, managerName || 'Manager');
 };
 window.findManagerEntryId = findEntryId;
 
-/* ========== Init ========== */
 document.addEventListener('DOMContentLoaded', function(){
     setTimeout(setupProfileWatcher, 1500);
     setTimeout(function(){ getAllManagersCached(); }, 2500);
