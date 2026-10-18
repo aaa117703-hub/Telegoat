@@ -1,114 +1,88 @@
-/* =========================================================
-   sw.js — v3 (Cache Busting)
-   - كاش جديد: telegoat-v3 (يمسح القديم تلقائياً)
-   - skipWaiting + clients.claim للتفعيل الفوري
-   - تجاهل الطلبات الخارجية (CDN)
-========================================================= */
+// ============================================================
+// Telegram Goat - Service Worker v4
+// Fix: "Load failed" on iOS Safari
+// Strategy:
+//   - HTML / JS / CSS  -> Network-first (always fresh)
+//   - Images / Fonts   -> Cache-first
+//   - Cross-origin     -> BYPASS (Supabase, Worker, FPL)
+// ============================================================
 
-const CACHE_NAME  = 'telegoat-v3';
-const CACHE_FILES = [
-    './',
-    './index.html',
-    './theme.css',
-    './mobile.css',
-    './stats.css',
-    './totw.css',
-    './trends.css',
-    './clubs.css',
-    './charts.css',
-    './compare.css',
-    './splash.css',
-    './fpl-database.css',
-    './manager-hub.css',
-    './manager-squad.css',
-    './premier-league-logo.png',
-    './icon-512.png'
-];
+const SW_VERSION    = 'telegoat-v4';
+const RUNTIME_CACHE = SW_VERSION + '-runtime';
 
-/* ---------- INSTALL ---------- */
-self.addEventListener('install', function (event) {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then(function (cache) {
-            return cache.addAll(CACHE_FILES).catch(function (err) {
-                console.warn('[SW] Some files failed to cache:', err);
-            });
-        }).then(function () {
-            return self.skipWaiting();
-        })
-    );
+// ---------- INSTALL: activate immediately ----------
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
+  event.waitUntil(Promise.resolve());
 });
 
-/* ---------- ACTIVATE ---------- */
-self.addEventListener('activate', function (event) {
-    event.waitUntil(
-        caches.keys().then(function (keys) {
-            return Promise.all(
-                keys.map(function (key) {
-                    if (key !== CACHE_NAME) {
-                        console.log('[SW] Deleting old cache:', key);
-                        return caches.delete(key);
-                    }
-                })
-            );
-        }).then(function () {
-            return self.clients.claim();
-        })
+// ---------- ACTIVATE: wipe ALL old caches + claim tabs ----------
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    // 1) Delete every cache that doesn't belong to v4
+    const keys = await caches.keys();
+    await Promise.all(
+      keys.filter(k => !k.startsWith(SW_VERSION))
+          .map(k => caches.delete(k))
     );
+
+    // 2) Take control of all open tabs instantly
+    await self.clients.claim();
+
+    // 3) Tell clients to reload once (handled in index.html)
+    const clientList = await self.clients.matchAll({ type: 'window' });
+    clientList.forEach(c => c.postMessage({ type: 'SW_UPDATED', version: SW_VERSION }));
+  })());
 });
 
-/* ---------- FETCH ---------- */
-self.addEventListener('fetch', function (event) {
-    const url = event.request.url;
+// ---------- FETCH ----------
+self.addEventListener('fetch', (event) => {
+  const req = event.request;
+  if (req.method !== 'GET') return;
 
-    /* تجاهل كل الطلبات الخارجية + non-GET */
-    if (event.request.method !== 'GET' ||
-        url.indexOf('supabase.co') !== -1 ||
-        url.indexOf('workers.dev') !== -1 ||
-        url.indexOf('fantasy.premierleague.com') !== -1 ||
-        url.indexOf('fonts.googleapis') !== -1 ||
-        url.indexOf('fonts.gstatic') !== -1 ||
-        url.indexOf('cdn.jsdelivr') !== -1 ||
-        url.indexOf('cdnjs.cloudflare') !== -1 ||
-        url.indexOf('unpkg.com') !== -1) {
-        return; /* لا نستدعي respondWith */
-    }
+  const url = new URL(req.url);
 
-    /* تعامل مع الطلبات المحلية فقط — Network First */
+  // Bypass ALL cross-origin requests entirely (Supabase, Worker, FPL, etc.)
+  if (url.origin !== self.location.origin) return;
+
+  // Extra safety net for same-origin edge cases
+  if (url.hostname.includes('supabase.co') ||
+      url.hostname.includes('workers.dev') ||
+      url.hostname.includes('fantasy.premierleague.com')) return;
+
+  const isStatic = /\.(png|jpe?g|gif|webp|svg|ico|woff2?|ttf|otf)$/i.test(url.pathname);
+
+  if (isStatic) {
+    // Cache-first for images & fonts
     event.respondWith(
-        fetch(event.request).then(function (response) {
-
-            /* تخزين فقط الاستجابات الناجحة */
-            if (response && response.status === 200 && response.type === 'basic') {
-                const clone = response.clone();
-                caches.open(CACHE_NAME).then(function (cache) {
-                    cache.put(event.request, clone);
-                }).catch(function () {});
-            }
-
-            return response;
-
-        }).catch(function () {
-            /* fallback: الكاش */
-            return caches.match(event.request).then(function (cached) {
-                if (cached) return cached;
-
-                /* fallback: صفحة رئيسية للطلبات navigation */
-                if (event.request.mode === 'navigate') {
-                    return caches.match('./index.html');
-                }
-
-                return new Response('', {
-                    status: 408,
-                    statusText: 'Offline'
-                });
-            });
-        })
+      caches.match(req).then(cached => {
+        if (cached) return cached;
+        return fetch(req).then(res => {
+          if (res && res.ok) {
+            const clone = res.clone();
+            caches.open(RUNTIME_CACHE).then(c => c.put(req, clone));
+          }
+          return res;
+        });
+      })
     );
+  } else {
+    // Network-first for HTML / JS / CSS
+    event.respondWith(
+      fetch(req)
+        .then(res => {
+          if (res && res.ok) {
+            const clone = res.clone();
+            caches.open(RUNTIME_CACHE).then(c => c.put(req, clone));
+          }
+          return res;
+        })
+        .catch(() => caches.match(req)) // offline fallback
+    );
+  }
 });
 
-/* ---------- FORCE UPDATE ---------- */
-self.addEventListener('message', function (event) {
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-        self.skipWaiting();
-    }
+// ---------- MESSAGE: manual update trigger ----------
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
