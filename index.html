@@ -1274,12 +1274,12 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
 <script src="compare.js?v=2"></script>
 <script src="splash.js?v=1"></script>
 
-<!-- ========== SERVICE WORKER v4 ========== -->
+<!-- ========== SERVICE WORKER v5 ========== -->
 <script>
 (function () {
     if (!('serviceWorker' in navigator)) return;
 
-    const RELOAD_FLAG = 'tg_sw_reloaded_v4';
+    const RELOAD_FLAG = 'tg_sw_reloaded_v5';
     let reloading = false;
 
     function reloadOnce() {
@@ -1295,7 +1295,8 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
     });
 
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js', { scope: './' })
+        // ⚡ هنا غيرنا المسار إلى sw-v5.js
+        navigator.serviceWorker.register('./sw-v5.js', { scope: './' })
             .then(reg => {
                 reg.update();
                 reg.addEventListener('updatefound', () => {
