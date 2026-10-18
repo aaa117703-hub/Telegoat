@@ -1,7 +1,6 @@
 /* =========================================================
-   champions-cup.js — v4
-   - إصلاح: SyntaxError على السطر 184 (قوس مفقود)
-   - Dark Theme + 20 فرق + Sync تلقائي
+   champions-cup.js — v5
+   - تحديث: رابط Worker جديد
 ========================================================= */
 
 (function(){
@@ -26,7 +25,7 @@ var CC_TEAM_NAMES = {
 };
 
 var CC_TEAMS_LIST = Object.keys(CC_LEAGUES);
-var CC_WORKER = 'https://fpl-api.aaa117703.workers.dev';
+var CC_WORKER = 'https://telegoat-api.aa1623165.workers.dev';
 var CC_SYNC_INTERVAL = 5 * 60 * 1000;
 
 var ccState = {
