@@ -1,5 +1,5 @@
 /* =========================================================
-   champions-cup.js — v8 (Clean & Error-Free Edition)
+   champions-cup.js — v9 (The Ultimate Masterpiece)
 ========================================================= */
 
 (function(){
@@ -27,10 +27,10 @@ var CC_TEAMS_LIST = Object.keys(CC_LEAGUES);
 var CC_WORKER = 'https://telegoat-api.aa1623165.workers.dev';
 var CC_SYNC_INTERVAL = 10 * 60 * 1000; // 10 Minutes
 
-// FPL Rules
+// Rules
 var CC_TOP_6 = ['ARS', 'MCI', 'MUN', 'LIV', 'CHE', 'TOT'];
 var CC_PROMOTED = ['COV', 'HUL', 'LEE'];
-var CC_ADMIN_ID = 2984723; 
+var CC_ADMIN_ID = 2984723;
 
 var ccState = {
     members: {},
@@ -39,7 +39,8 @@ var ccState = {
     syncTimer: null,
     fplData: null,
     _currentEdit: null,
-    _bonusStep: 0
+    _bonusStep: 0,
+    _scoresCache: {}
 };
 
 /* ========== HELPERS ========== */
@@ -76,7 +77,7 @@ async function ccCalculateAllScores() {
 
     var sb = ccGetSb();
     var { data: squads } = await sb.from('champions_cup_squads').select('*').eq('round', round);
-    if (!squads) return {};
+    if (!squads || squads.length === 0) return {};
 
     var scores = {};
     var fetchPromises = [];
@@ -107,19 +108,25 @@ async function ccCalculateAllScores() {
             var vc = starters.find(function(p) { return p.is_vice_captain; });
             
             var targetCapId = cap ? cap.element : (vc ? vc.element : null);
-            if (cap && liveMap[cap.element] === 0 && vc) {
-                 targetCapId = vc.element;
+            // Check if Captain played (Minutes > 0). If not, use Vice.
+            if (cap) {
+                var capLive = liveData.elements.find(function(e) { return e.id === cap.element; });
+                if (capLive && capLive.stats.minutes === 0 && vc) {
+                    targetCapId = vc.element;
+                }
             }
 
             starters.forEach(function(p) {
                 var pts = liveMap[p.element] || 0;
                 teamScore += pts;
+                // Captain gets 2x ONLY (Ignore Triple Captain)
                 if (p.element === targetCapId) {
-                    teamScore += pts; // Captain gets 2x ONLY
+                    teamScore += pts; 
                 }
             });
         });
 
+        // Add Bonus Players Points
         if (sq.bonus && sq.bonus.length > 0) {
             sq.bonus.forEach(function(bonusId) {
                 teamScore += (liveMap[bonusId] || 0);
@@ -129,11 +136,62 @@ async function ccCalculateAllScores() {
         scores[sq.team] = teamScore;
     });
 
+    ccState._scoresCache = scores;
     return scores;
 }
 
-/* ========== RENDER TEAMS ========== */
-async function ccRenderTeams() {
+/* ========== RENDER MATCHES (H2H) ========== */
+async function ccRenderMatches() {
+    var container = document.getElementById('ccMatchesContainer');
+    if (!container) return;
+    container.innerHTML = '<div class="cc-loading">Calculating scores...</div>';
+
+    var scores = await ccCalculateAllScores();
+    var round = ccState.currentRound;
+    var matches = (typeof matchweeks !== 'undefined' && matchweeks[round]) ? matchweeks[round] : [];
+
+    if (matches.length === 0) {
+        container.innerHTML = '<div class="cc-empty">No matches for this round.</div>';
+        return;
+    }
+
+    var html = '<div class="cc-matches-container">';
+    html += '<div class="cc-matches-header">MATCHWEEK ' + round + '</div>';
+
+    matches.forEach(function(m) {
+        var home = m[0], away = m[1];
+        var homeScore = scores[home] !== undefined ? scores[home] : 0;
+        var awayScore = scores[away] !== undefined ? scores[away] : 0;
+        
+        var homeName = CC_TEAM_NAMES[home], awayName = CC_TEAM_NAMES[away];
+        var homeLogo = (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[homeName]) ? TEAMS_LOGOS[homeName] : '';
+        var awayLogo = (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[awayName]) ? TEAMS_LOGOS[awayName] : '';
+
+        html += '<div class="cc-match-row">';
+        // Home Team
+        html += '<div class="cc-match-team home" onclick="ccOpenTeam(\'' + home + '\')">';
+        html += '<span>' + homeName + '</span>';
+        if (homeLogo) html += '<img src="./' + homeLogo + '">';
+        html += '</div>';
+
+        // Score Box
+        html += '<div class="cc-match-score">' + homeScore + ' <span class="vs">-</span> ' + awayScore + '</div>';
+
+        // Away Team
+        html += '<div class="cc-match-team away" onclick="ccOpenTeam(\'' + away + '\')">';
+        if (awayLogo) html += '<img src="./' + awayLogo + '">';
+        html += '<span>' + awayName + '</span>';
+        html += '</div>';
+
+        html += '</div>';
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+/* ========== RENDER TEAMS GRID ========== */
+async function ccRenderTeamsGrid() {
     var container = document.getElementById('ccTeamsGrid');
     if (!container) return;
     container.innerHTML = '<div class="cc-loading">Loading Teams...</div>';
@@ -153,34 +211,30 @@ async function ccRenderTeams() {
         var logo = (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[name]) ? TEAMS_LOGOS[name] : '';
         var count = byTeam[tc].length;
 
-        html += `<div class="cc-team-card" data-team="${tc}" style="display:flex;flex-direction:column;align-items:center;padding:15px;background:var(--bg-card);border-radius:12px;border:1px solid var(--border);cursor:pointer;">
-            <div class="cc-team-logo" style="width:60px;height:60px;margin-bottom:10px;">${logo ? `<img src="./${logo}" style="width:100%;height:100%;object-fit:contain;">` : ''}</div>
-            <div class="cc-team-info" style="text-align:center;">
-                <div class="cc-team-name" style="font-weight:900;color:#fff;">${name}</div>
-                <div class="cc-team-count" style="font-size:11px;color:var(--purple-300);">${count} Managers</div>
-            </div>
-        </div>`;
+        html += '<div class="cc-team-card" data-team="' + tc + '">' +
+            '<div class="cc-team-logo">' + (logo ? '<img src="./' + logo + '">' : '') + '</div>' +
+            '<div class="cc-team-info"><div class="cc-team-name">' + name + '</div>' +
+            '<div class="cc-team-count">' + count + ' Managers</div></div></div>';
     });
     container.innerHTML = html;
-    
     container.querySelectorAll('.cc-team-card').forEach(function(c) {
         c.addEventListener('click', function() { ccOpenTeam(this.getAttribute('data-team')); });
     });
 }
 
-/* ========== TEAM MODAL & PITCH ========== */
+/* ========== PITCH VIEW ========== */
 async function ccOpenTeam(teamCode) {
     var modal = document.getElementById('ccModal');
     var sb = ccGetSb();
     if (!modal || !sb) return;
 
-    modal.innerHTML = `<div class="cc-modal-box"><div class="cc-loading">Loading...</div></div>`;
+    modal.innerHTML = '<div class="cc-modal-box"><div class="cc-loading">Loading Squad...</div></div>';
     modal.classList.add('show');
 
     var { data: squad } = await sb.from('champions_cup_squads').select('*').eq('team', teamCode).eq('round', ccState.currentRound).maybeSingle();
     var { data: members } = await sb.from('champions_cup_members').select('*');
     
-    ccRenderPitch(teamCode, members, squad, false);
+    ccRenderPitchUI(teamCode, members, squad, false);
 }
 
 async function ccOpenSquadEditor(teamCode) {
@@ -195,12 +249,14 @@ async function ccOpenSquadEditor(teamCode) {
         bonus: squad ? (squad.bonus || []).slice() : []
     };
 
-    ccRenderPitch(teamCode, members, squad, true);
+    ccRenderPitchUI(teamCode, members, squad, true);
 }
 
-function ccRenderPitch(teamCode, allMembers, squad, isEdit) {
+function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
     var modal = document.getElementById('ccModal');
     var teamName = CC_TEAM_NAMES[teamCode];
+    var teamLogo = (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName]) ? TEAMS_LOGOS[teamName] : '';
+
     var starters = isEdit ? ccState._currentEdit.starters : (squad ? squad.starters : []);
     var bench = isEdit ? ccState._currentEdit.bench : (squad ? squad.bench : []);
     var bonus = isEdit ? ccState._currentEdit.bonus : (squad ? squad.bonus : []);
@@ -209,81 +265,95 @@ function ccRenderPitch(teamCode, allMembers, squad, isEdit) {
     var membersMap = {};
     teamMembers.forEach(function(m) { membersMap[m.entry_id] = m; });
 
+    // Helper to get shirt
+    function getShirt(teamFullName) {
+        if (typeof TEAMS_SHIRTS !== 'undefined' && TEAMS_SHIRTS[teamFullName]) {
+            return './' + TEAMS_SHIRTS[teamFullName].file;
+        }
+        return ''; // fallback
+    }
+
     function createCard(id, isBonus, isBenchCard) {
         var m = membersMap[id];
         if (!m) return '';
-        var pts = m.total || 0;
-        var cssClass = isBonus ? 'is-bonus' : (isBenchCard ? 'is-bench' : 'is-starter');
         
-        // Using template literals to avoid quote escaping issues
-        return `<div class="cc-pitch-player ${cssClass}" data-id="${id}">
-            <div class="cc-shirt-wrapper"><img src="./shirt.png" onerror="this.style.display='none'"></div>
-            <div class="cc-pitch-name">${ccEscapeHTML(m.entry_name || m.player_name).substring(0,10)}</div>
-            <div class="cc-pitch-points">${pts}</div>
-        </div>`;
+        var shirtUrl = getShirt(teamName); // Since all managers in this view belong to the same team
+        var pts = m.total || 0;
+        
+        var html = '<div class="cc-player-card ' + (isBonus ? 'is-bonus' : '') + '">';
+        if (shirtUrl) {
+            html += '<img src="' + shirtUrl + '" class="cc-player-shirt" onerror="this.style.display=\'none\'">';
+        }
+        html += '<div class="cc-player-name-box">' + ccEscapeHTML(m.entry_name || m.player_name).substring(0,10) + '</div>';
+        html += '<div class="cc-player-points">' + pts + '</div>';
+        html += '</div>';
+        return html;
     }
 
-    var html = `<div class="cc-modal-box">
-        <div class="cc-modal-header">
-            <div class="cc-modal-title">${teamName} ${isEdit ? '— Edit' : ''}</div>
-            <button class="cc-modal-close" onclick="document.getElementById('ccModal').classList.remove('show')"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button>
-        </div>
-        <div class="cc-modal-body">`;
+    var html = '<div class="cc-modal-box">' +
+        '<div class="cc-modal-header"><div class="cc-modal-title">' + teamName + (isEdit ? ' — Edit' : '') + '</div>' +
+        '<button class="cc-modal-close" onclick="document.getElementById(\'ccModal\').classList.remove(\'show\')"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button></div>' +
+        '<div class="cc-modal-body">';
 
     if (starters.length === 0 && !isEdit) {
-        html += `<div class="cc-empty">No squad selected for Round ${ccState.currentRound}.</div>`;
+        html += '<div class="cc-empty">No squad selected for this round.</div>';
         if (typeof isAdmin === 'function' && isAdmin()) {
-            html += `<button class="cc-action-btn" onclick="ccOpenSquadEditor('${teamCode}')">Edit Squad</button>`;
+            html += '<button class="cc-action-btn" onclick="ccOpenSquadEditor(\'' + teamCode + '\')">Edit Squad</button>';
         }
     } else {
-        // PITCH
-        html += `<div class="cc-pitch-container">
-            <div class="cc-pitch-box"></div>
-            <div class="cc-pitch-box-bottom"></div>
-            <div class="cc-pitch-row">${starters.slice(8, 11).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('')}</div>
-            <div class="cc-pitch-row">${starters.slice(5, 8).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('')}</div>
-            <div class="cc-pitch-row">${starters.slice(1, 5).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('')}</div>
-            <div class="cc-pitch-row">${starters.slice(0, 1).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('')}</div>
-        </div>`;
+        // PITCH UI
+        html += '<div class="cc-pitch-wrapper">';
+        
+        // Team Header on Pitch
+        html += '<div class="cc-pitch-team-header">';
+        if (teamLogo) html += '<img src="./' + teamLogo + '">';
+        html += '<span>' + teamName + '</span></div>';
+
+        // Rows (FWD, MID, DEF, GK)
+        html += '<div class="cc-pitch-row">' + starters.slice(8, 11).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
+        html += '<div class="cc-pitch-row">' + starters.slice(5, 8).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
+        html += '<div class="cc-pitch-row">' + starters.slice(1, 5).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
+        html += '<div class="cc-pitch-row">' + starters.slice(0, 1).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
+        html += '</div>'; // End Pitch
 
         // BENCH
-        html += `<div class="cc-bench-area">
-            <div class="cc-bench-title">Bench</div>
-            <div class="cc-bench-row">${bench.map(function(id) { return createCard(id, false, true); }).join('')}</div>
-        </div>`;
+        if (bench.length > 0) {
+            html += '<div class="cc-bench-wrapper"><div class="cc-bench-title">BENCH</div><div class="cc-bench-row">' +
+                bench.map(function(id) { return createCard(id, false, true); }).join('') + '</div></div>';
+        }
 
         // BONUS DISPLAY
         if (bonus.length > 0) {
             var fplData = ccState.fplData;
-            html += `<div class="cc-section-title" style="margin-top:10px;color:var(--cc-purple-300);">Bonus Players</div>
-            <div class="cc-bench-row" style="gap:10px;flex-wrap:wrap;">`;
+            html += '<div class="cc-section-title" style="margin-top:20px;color:var(--cc-purple-300);">BONUS PLAYERS</div><div class="cc-bench-row" style="gap:10px;flex-wrap:wrap;justify-content:flex-start;">';
             bonus.forEach(function(bonusId) {
                 var el = fplData ? fplData.elements.find(function(e) { return e.id === bonusId; }) : null;
                 if (el) {
                     var teamObj = fplData.teams.find(function(t) { return t.id === el.team; });
-                    var badge = `https://resources.premierleague.com/premierleague/badges/70/t${teamObj.code}.png`;
-                    html += `<div class="cc-pitch-player is-bonus" style="width:80px;">
-                        <div class="cc-shirt-wrapper"><img src="${badge}"></div>
-                        <div class="cc-pitch-name">${el.web_name}</div>
-                        <div class="cc-pitch-points">${el.total_points || 0}</div>
-                    </div>`;
+                    var badge = 'https://resources.premierleague.com/premierleague/badges/70/t' + teamObj.code + '.png';
+                    html += '<div class="cc-player-card is-bonus">' +
+                        '<img src="' + badge + '" class="cc-player-shirt">' +
+                        '<div class="cc-player-name-box">' + el.web_name + '</div>' +
+                        '<div class="cc-player-points">' + (el.total_points || 0) + '</div></div>';
                 }
             });
-            html += `</div>`;
+            html += '</div>';
         }
 
         if (isEdit) {
-            html += `<button class="cc-action-btn" onclick="ccOpenSelectionList('${teamCode}')"><span class="tg-icon tg-icon-sm tg-icon-users"></span> Select 11 + 2 Bench</button>
-            <button class="cc-action-btn cc-btn-bonus" onclick="ccOpenBonusModal('${teamCode}')"><span class="tg-icon tg-icon-sm tg-icon-star"></span> Select Bonus Players</button>
-            <button class="cc-action-btn cc-btn-save" onclick="ccSaveSquad('${teamCode}')"><span class="tg-icon tg-icon-sm tg-icon-check"></span> Save Squad</button>`;
+            html += '<div class="cc-actions-area">';
+            html += '<button class="cc-action-btn" onclick="ccOpenSelectionList(\''+teamCode+'\')"><span class="tg-icon tg-icon-sm tg-icon-users"></span> Select 11 + 2 Bench</button>';
+            html += '<button class="cc-action-btn bonus" onclick="ccOpenBonusModal(\''+teamCode+'\')"><span class="tg-icon tg-icon-sm tg-icon-star"></span> Select Bonus Players</button>';
+            html += '<button class="cc-action-btn save" onclick="ccSaveSquad(\'' + teamCode + '\')"><span class="tg-icon tg-icon-sm tg-icon-check"></span> Save Squad</button>';
+            html += '</div>';
         } else {
             if (typeof isAdmin === 'function' && isAdmin()) {
-                html += `<button class="cc-action-btn" onclick="ccOpenSquadEditor('${teamCode}')">Edit Squad</button>`;
+                html += '<button class="cc-action-btn" style="margin-top:15px;" onclick="ccOpenSquadEditor(\'' + teamCode + '\')">Edit Squad</button>';
             }
         }
     }
 
-    html += `</div></div>`;
+    html += '</div></div>';
     modal.innerHTML = html;
 }
 
@@ -294,25 +364,22 @@ async function ccOpenSelectionList(teamCode) {
     var teamMembers = (members || []).filter(function(m) { return m.teams.includes(teamCode); });
     var state = ccState._currentEdit;
 
-    var html = `<div class="cc-modal-box">
-        <div class="cc-modal-header">
-            <div class="cc-modal-title">${CC_TEAM_NAMES[teamCode]} — Select Squad</div>
-            <button class="cc-modal-close" onclick="ccRenderPitch('${teamCode}', null, null, true)"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button>
-        </div>
-        <div class="cc-modal-body"><div class="cc-select-list">`;
+    var html = '<div class="cc-modal-box">' +
+        '<div class="cc-modal-header"><div class="cc-modal-title">' + CC_TEAM_NAMES[teamCode] + ' — Select Squad</div>' +
+        '<button class="cc-modal-close" onclick="ccRenderPitchUI(\''+teamCode+'\', null, null, true)"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button></div>' +
+        '<div class="cc-modal-body"><div class="cc-list-container">';
 
     teamMembers.forEach(function(m) {
         var isStarter = state.starters.includes(m.entry_id);
         var isBench = state.bench.includes(m.entry_id);
         var cls = isStarter ? 'is-starter' : (isBench ? 'is-bench' : '');
         
-        html += `<div class="cc-select-item ${cls}" onclick="ccToggleMember(${m.entry_id}, '${teamCode}')">
-            <div class="cc-select-name">${ccEscapeHTML(m.entry_name || m.player_name)}</div>
-            <div class="cc-select-pts">${m.total||0} pts</div>
-        </div>`;
+        html += '<div class="cc-list-item ' + cls + '" onclick="ccToggleMember('+m.entry_id+', \''+teamCode+'\')">' +
+            '<div class="cc-list-name">' + ccEscapeHTML(m.entry_name || m.player_name) + '</div>' +
+            '<div class="cc-list-pts">' + (m.total||0) + ' pts</div></div>';
     });
 
-    html += `</div><button class="cc-action-btn" onclick="ccRenderPitch('${teamCode}', null, null, true)">Done</button></div></div>`;
+    html += '</div><button class="cc-action-btn" style="margin-top:15px;" onclick="ccRenderPitchUI(\''+teamCode+'\', null, null, true)">Done</button></div></div>';
     document.getElementById('ccModal').innerHTML = html;
 }
 
@@ -331,7 +398,7 @@ function ccToggleMember(entryId, teamCode) {
         } else if (state.bench.length < 2) {
             state.bench.push(entryId);
         } else {
-            alert('Squad full! 11 starters and 2 bench already selected.');
+            if (typeof showToast === 'function') showToast('Squad full! (11 Starters, 2 Bench)', false);
         }
     }
     ccOpenSelectionList(teamCode);
@@ -343,7 +410,7 @@ async function ccOpenBonusModal(teamCode) {
     if (!fplData) return alert('FPL Data not loaded');
 
     var step = ccState._bonusStep;
-    var title = step === 0 ? 'Bonus 1 (Outside Top 6 & Promoted)' : 'Bonus 2 (Promoted Only)';
+    var title = step === 0 ? 'Bonus 1 (Not Top 6 & Promoted)' : 'Bonus 2 (Promoted Only)';
     var validElements = [];
 
     fplData.elements.forEach(function(el) {
@@ -364,28 +431,21 @@ async function ccOpenBonusModal(teamCode) {
 
     validElements.sort(function(a, b) { return b.el.total_points - a.el.total_points; });
 
-    var html = `<div class="cc-modal-box">
-        <div class="cc-modal-header">
-            <div class="cc-modal-title">${title}</div>
-            <button class="cc-modal-close" onclick="ccRenderPitch('${teamCode}', null, null, true)"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button>
-        </div>
-        <div class="cc-modal-body"><div class="cc-select-list" style="max-height:400px;">`;
+    var html = '<div class="cc-modal-box">' +
+        '<div class="cc-modal-header"><div class="cc-modal-title">' + title + '</div>' +
+        '<button class="cc-modal-close" onclick="ccRenderPitchUI(\''+teamCode+'\', null, null, true)"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button></div>' +
+        '<div class="cc-modal-body"><div class="cc-list-container">';
     
     validElements.forEach(function(item) {
-        var badge = `https://resources.premierleague.com/premierleague/badges/70/t${item.teamObj.code}.png`;
-        html += `<div class="cc-bonus-item" onclick="ccSelectBonusPlayer(${item.el.id}, '${teamCode}')">
-            <div class="cc-bonus-info">
-                <img src="${badge}" class="cc-bonus-img">
-                <div>
-                    <div class="cc-bonus-name">${item.el.web_name}</div>
-                    <div class="cc-bonus-team">${item.teamObj.name} | ${item.el.total_points} pts</div>
-                </div>
-            </div>
-            <span class="tg-icon tg-icon-check" style="color:var(--cc-purple)"></span>
-        </div>`;
+        var badge = 'https://resources.premierleague.com/premierleague/badges/70/t' + item.teamObj.code + '.png';
+        html += '<div class="cc-bonus-item" onclick="ccSelectBonusPlayer(' + item.el.id + ', \''+teamCode+'\')">' +
+            '<img src="' + badge + '" class="cc-bonus-img">' +
+            '<div><div class="cc-bonus-name">' + item.el.web_name + '</div>' +
+            '<div class="cc-bonus-team">' + item.teamObj.name + ' | ' + item.el.total_points + ' pts</div></div>' +
+            '</div>';
     });
 
-    html += `</div></div></div>`;
+    html += '</div></div></div>';
     document.getElementById('ccModal').innerHTML = html;
 }
 
@@ -402,7 +462,7 @@ function ccSelectBonusPlayer(playerId, teamCode) {
         ccState._currentEdit.bonus[1] = playerId;
         ccState._bonusStep = 0;
         if (typeof showToast === 'function') showToast('Bonus 2 selected: ' + el.web_name, true);
-        ccRenderPitch(teamCode, null, null, true);
+        ccRenderPitchUI(teamCode, null, null, true);
     }
 }
 
@@ -446,7 +506,7 @@ async function ccSyncMembers() {
             var results = (data.standings && data.standings.results) || [];
             
             results.forEach(function(m) {
-                if (m.entry === CC_ADMIN_ID) return;
+                if (m.entry === CC_ADMIN_ID) return; // Exclude Admin
                 if (!allMembers[m.entry]) {
                     allMembers[m.entry] = { entry_id: m.entry, player_name: m.player_name, entry_name: m.entry_name, total: m.total, event_total: m.event_total, teams: [] };
                 }
@@ -473,73 +533,42 @@ async function ccSyncMembers() {
     return { ok: true, count: membersArr.length };
 }
 
-/* ========== MATCHES (H2H) ========== */
-async function ccRenderMatches() {
-    var container = document.getElementById('ccMatchesGrid');
-    if (!container) return;
-    container.innerHTML = '<div class="cc-loading">Calculating scores...</div>';
-
-    var scores = await ccCalculateAllScores();
-    var round = ccState.currentRound;
-    var matches = (typeof matchweeks !== 'undefined' && matchweeks[round]) ? matchweeks[round] : [];
-
-    if (matches.length === 0) {
-        container.innerHTML = `<div class="cc-empty">No matches for Round ${round}</div>`;
-        return;
-    }
-
-    var html = '';
-    matches.forEach(function(m) {
-        var home = m[0], away = m[1];
-        var homeScore = scores[home] !== undefined ? scores[home] : 0;
-        var awayScore = scores[away] !== undefined ? scores[away] : 0;
-        
-        var homeName = CC_TEAM_NAMES[home], awayName = CC_TEAM_NAMES[away];
-        var homeLogo = (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[homeName]) ? TEAMS_LOGOS[homeName] : '';
-        var awayLogo = (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[awayName]) ? TEAMS_LOGOS[awayName] : '';
-
-        html += `<div class="cc-match-row">
-            <div class="cc-match-team" onclick="ccOpenTeam('${home}')">
-                ${homeLogo ? `<img src="./${homeLogo}">` : ''} ${homeName}
-            </div>
-            <div class="cc-match-score">${homeScore} - ${awayScore}</div>
-            <div class="cc-match-team" onclick="ccOpenTeam('${away}')">
-                ${awayLogo ? `<img src="./${awayLogo}">` : ''} ${awayName}
-            </div>
-        </div>`;
-    });
-
-    container.innerHTML = html;
-}
-
 /* ========== INIT ========== */
 async function ccInit() {
     ccState.currentRound = (typeof currentRound !== 'undefined') ? currentRound : 1;
     
     var container = document.querySelector('.cc-container');
     if (container && !document.querySelector('.cc-main-tabs')) {
+        // Build Tabs and Views
         container.innerHTML = `<div class="cc-main-tabs">
-            <button class="cc-tab-btn active" onclick="ccSwitchTab('teams')">Teams</button>
-            <button class="cc-tab-btn" onclick="ccSwitchTab('matches')">Matches (H2H)</button>
+            <button class="cc-tab-btn active" onclick="ccSwitchTab('matches')">Matches (H2H)</button>
+            <button class="cc-tab-btn" onclick="ccSwitchTab('teams')">Teams</button>
         </div>
-        <div id="ccTeamsGrid" class="cc-teams-grid"></div>
-        <div id="ccMatchesGrid" style="display:none;"></div>`;
+        <div id="ccMatchesContainer"></div>
+        <div id="ccTeamsGrid" class="cc-teams-grid" style="display:none;"></div>`;
     }
 
+    // Hide refresh button for non-admins
     var refreshBtn = document.getElementById('ccRefreshBtn');
     if (refreshBtn) {
         if (typeof isAdmin === 'function' && isAdmin()) refreshBtn.style.display = 'flex';
         else refreshBtn.style.display = 'none';
     }
 
-    await ccRenderTeams();
-    ccSyncMembers().then(function() { ccRenderTeams(); });
+    // Initial Render
+    await ccRenderMatches(); // Default to Matches tab
     
+    ccSyncMembers().then(function() { 
+        if (document.getElementById('ccMatchesContainer').style.display !== 'none') ccRenderMatches();
+        if (document.getElementById('ccTeamsGrid').style.display !== 'none') ccRenderTeamsGrid();
+    });
+    
+    // Start 10 min timer
     if (ccState.syncTimer) clearInterval(ccState.syncTimer);
     ccState.syncTimer = setInterval(function() {
         ccSyncMembers().then(function() { 
-            ccRenderTeams(); 
-            if (document.getElementById('ccMatchesGrid').style.display !== 'none') ccRenderMatches(); 
+            if (document.getElementById('ccMatchesContainer').style.display !== 'none') ccRenderMatches();
+            if (document.getElementById('ccTeamsGrid').style.display !== 'none') ccRenderTeamsGrid();
         });
     }, CC_SYNC_INTERVAL);
 }
@@ -554,16 +583,18 @@ window.ccOpenBonusModal = ccOpenBonusModal;
 window.ccSelectBonusPlayer = ccSelectBonusPlayer;
 window.ccOpenSelectionList = ccOpenSelectionList;
 window.ccToggleMember = ccToggleMember;
-window.ccRenderPitch = ccRenderPitch;
+window.ccRenderPitchUI = ccRenderPitchUI;
 window.ccSwitchTab = function(tab) {
     document.querySelectorAll('.cc-tab-btn').forEach(function(b) { b.classList.remove('active'); });
-    var btn = Array.from(document.querySelectorAll('.cc-tab-btn')).find(function(b) { return b.innerText.toLowerCase().includes(tab.substring(0,4)); });
+    var btn = Array.from(document.querySelectorAll('.cc-tab-btn')).find(function(b) { return b.innerText.toLowerCase().includes(tab); });
     if(btn) btn.classList.add('active');
     
     document.getElementById('ccTeamsGrid').style.display = tab === 'teams' ? 'grid' : 'none';
-    document.getElementById('ccMatchesGrid').style.display = tab === 'matches' ? 'block' : 'none';
+    document.getElementById('ccMatchesContainer').style.display = tab === 'matches' ? 'block' : 'none';
+    
     if (tab === 'matches') ccRenderMatches();
+    if (tab === 'teams') ccRenderTeamsGrid();
 };
 
-ccLog('v8 Loaded');
+ccLog('v9 Loaded');
 })();
