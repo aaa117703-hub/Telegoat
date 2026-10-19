@@ -1,5 +1,7 @@
 /* =========================================================
-   champions-cup.css — v7 (Original Structure Preserved)
+   champions-cup.css — v9 (Original 100% + TOTW Pitch)
+   Champions Cup System
+   Dark Luxury Theme
 ========================================================= */
 
 /* =========================================================
@@ -1002,129 +1004,207 @@
 .cc-team-card:nth-child(15) { animation-delay: 0.30s; }
 .cc-team-card:nth-child(16) { animation-delay: 0.32s; }
 .cc-team-card:nth-child(17) { animation-delay: 0.34s; }
-.cc:-team-card:nth-child(18) { animation -delay: 0.36s; }
-50.cc-team-card:nth-child(%;
-19) { animation-delay: 0.   38s; }
+.cc-team-card:nth-child(18) { animation-delay: 0.36s; }
+.cc-team-card:nth-child(19) { animation-delay: 0.38s; }
 .cc-team-card:nth-child(20) { animation-delay: 0.40s; }
 
 
 /* =========================================================
    ============  ADDITIONS START HERE  =====================
-   (Pitch View, Player Cards, Bonus, Edit Modals)
+   (Pitch View exact match to TOTW)
    ========================================================= */
 
-/* ===== 16. PITCH VIEW (The FPL Design) ===== */
+/* ===== 16. PITCH WRAPPER ===== */
 .cc-pitch-wrapper {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.cc-pitch {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 860/1160;
     background-image: url('./pitch-bg.png');
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: 16px;
-    position: relative;
-    padding: 70px 10px 20px 10px;
-    margin-bottom: 15px;
-    min-height: 500px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border: 2px solid rgba(255,255,255,0.1);
+    border: 3px solid var(--purple-700, #5B21B6);
+    border-radius: 18px;
+    box-shadow: 0 10px 45px rgba(0, 0, 0, 0.55), 0 0 40px rgba(124, 58, 237, 0.25);
+    overflow: hidden;
+    transition: box-shadow 0.4s var(--ease-out);
 }
 
-.cc-pitch-team-header {
+/* ===== 17. LOGO ANIMATION ===== */
+.cc-team-logo-top {
     position: absolute;
-    top: 10px;
-    left transform: translateX(-50%);
+    top: 11%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 5px;
-    z-index: 10;
-}
-.cc-pitch-team-header img {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 4px #000);
-}
-.cc-pitch-team-header span {
-    font-size: 14px;
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 0 2px 4px #000;
-    background: rgba(0,0,0,0.6);
-    padding: 2px 12px;
-    border-radius: 10px;
+    animation: floatLogo 4s ease-in-out infinite;
 }
 
-.cc-pitch-row {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-    position: relative;
+.cc-team-logo-top img {
+    width: 65px;
+    height: 65px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 15px rgba(124, 58, 237, 0.8));
+}
+
+@keyframes floatLogo {
+    0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+    50% { transform: translateX(-50%) translateY(-8px) scale(1.05); }
+}
+
+/* ===== 18. PLAYERS CONTAINER ===== */
+.cc-players-container {
+    position: absolute;
+    inset: 0;
     z-index: 2;
 }
 
-/* Player Card Design */
-.cc-player-card {
+.cc-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.cc-row-gk {
+    top: 22%;
+    justify-content: center;
+}
+
+.cc-row-def {
+    top: 38%;
+    justify-content: space-evenly;
+    padding: 0 14%;
+}
+
+.cc-row-mid {
+    top: 56%;
+    justify-content: space-evenly;
+    padding: 0 4%;
+}
+
+.cc-row-fwd {
+    top: 74%;
+    justify-content: space-evenly;
+    padding: 0 22%;
+}
+
+/* ===== 19. CARD DESIGN (EXACT TOTW MATCH) ===== */
+.cc-card {
+    width: 60px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 65px;
-    cursor: pointer;
-    background: rgba(15, 15, 20, 0.65); /* Semi-transparent box */
-    border-radius: 12px;
-    padding: 4px 4px 0 4px;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
     position: relative;
-    transition: transform 0.2s;
-}
-.cc-player-card:active {
-    transform: scale(0.95);
-}
-.cc-player-card.is-bonus {
-    border: 1px solid var(--purple-500, #7C3AED);
-    background: rgba(124, 58, 237, 0.2);
+    transition: transform 0.3s var(--ease-spring), filter 0.3s var(--ease-out);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    cursor: pointer;
 }
 
-.cc-player-shirt {
-    width: 45px;
-    height: 45px;
+.cc-card:hover {
+    transform: scale(1.10);
+    z-index: 100;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(124, 58, 237, 0.6);
+    filter: brightness(1.1);
+}
+
+.cc-card-shirt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 54px;
+    position: relative;
+    z-index: 3;
+    flex-shrink: 0;
+    background: rgba(20, 15, 40, 0.75);
+    padding: 4px 6px 0 6px;
+    box-sizing: border-box;
+    margin: 0;
+    backdrop-filter: blur(4px);
+}
+
+.cc-card-shirt img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
     object-fit: contain;
-    margin-bottom: -8px; /* Pull name box up to overlap shirt */
-    z-index: 1;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
+    display: block;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
-.cc-player-name-box {
-    background: #FFFFFF;
-    color: #000000;
-    border-radius: 6px;
-    padding: 2px 0;
-    width: 100%;
-    text-align: center;
-    font-size: 9px;
+.cc-card-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 14px;
+    padding: 0 3px;
+    margin-top: -6px;
+    background: var(--bg-elevated, #24242E);
+    color: var(--purple-300, #A78BFA);
+    font-size: 7px;
     font-weight: 900;
-    z-index: 2;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-    white-space: nowrap;
+    text-align: center;
+    line-height: 1;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-.cc-player-points {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: var(--purple-500, #7C3AED);
-    color: #fff;
-    font-size: 10px;
-    font-weight: 900;
-    padding: 2px 6px;
-    border-radius: 10px;
-    border: 1px solid #fff;
+    white-space: nowrap;
+    position: relative;
+    z-index: 10;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 0;
+    border-top: 1px solid var(--border-purple, rgba(124, 58, 237, 0.25));
 }
 
-/* Bench Area */
+.cc-card-points {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 14px;
+    padding: 0 6px;
+    margin: 0;
+    background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: 900;
+    text-align: center;
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 4;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 0;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* ===== 20. BENCH ===== */
 .cc-bench-wrapper {
     background: rgba(15, 15, 20, 0.8);
     border-radius: 16px;
@@ -1146,7 +1226,7 @@
     gap: 20px;
 }
 
-/* ===== 17. EDIT ACTIONS & LISTS ===== */
+/* ===== 21. EDIT ACTIONS & LISTS ===== */
 .cc-actions-area {
     display: flex;
     flex-direction: column;
@@ -1169,18 +1249,10 @@
     gap: 8px;
     transition: transform 0.2s;
 }
-.cc-action-btn:active {
-    transform: scale(0.98);
-}
-.cc-action-btn.save {
-    background: var(--green-500, #10B981);
-}
-.cc-action-btn.bonus {
-    background: var(--amber-500, #F59E0B);
-    color: #000;
-}
+.cc-action-btn:active { transform: scale(0.98); }
+.cc-action-btn.save { background: var(--green-500, #10B981); }
+.cc-action-btn.bonus { background: var(--amber-500, #F59E0B); color: #000; }
 
-/* Selection List inside Modal */
 .cc-list-container {
     max-height: 400px;
     overflow-y: auto;
@@ -1200,29 +1272,12 @@
     cursor: pointer;
     transition: all 0.2s;
 }
-.cc-list-item:hover {
-    border-color: var(--purple-500, #7C3AED);
-}
-.cc-list-item.is-starter {
-    background: rgba(16,185,129,0.15);
-    border-color: var(--green-500, #10B981);
-}
-.cc-list-item.is-bench {
-    background: rgba(245,158,11,0.15);
-    border-color: var(--amber-500, #F59E0B);
-}
-.cc-list-name {
-    font-size: 13px;
-    font-weight: 800;
-    color: #fff;
-}
-.cc-list-pts {
-    font-size: 13px;
-    font-weight: 900;
-    color: var(--purple-300, #A78BFA);
-}
+.cc-list-item:hover { border-color: var(--purple-500, #7C3AED); }
+.cc-list-item.is-starter { background: rgba(16,185,129,0.15); border-color: var(--green-500, #10B981); }
+.cc-list-item.is-bench { background: rgba(245,158,11,0.15); border-color: var(--amber-500, #F59E0B); }
+.cc-list-name { font-size: 13px; font-weight: 800; color: #fff; }
+.cc-list-pts { font-size: 13px; font-weight: 900; color: var(--purple-300, #A78BFA); }
 
-/* Bonus List Items */
 .cc-bonus-item {
     display: flex;
     align-items: center;
@@ -1234,20 +1289,7 @@
     cursor: pointer;
     border: 1px solid transparent;
 }
-.cc-bonus-item:hover {
-    border-color: var(--purple-500, #7C3AED);
-}
-.cc-bonus-img {
-    width: 35px;
-    height: 35px;
-    object-fit: contain;
-}
-.cc-bonus-name {
-    font-size: 13px;
-    font-weight: 800;
-    color: #fff;
-}
-.cc-bonus-team {
-    font-size: 10px;
-    color: var(--text-secondary, #A1A1B5);
-}
+.cc-bonus-item:hover { border-color: var(--purple-500, #7C3AED); }
+.cc-bonus-img { width: 35px; height: 35px; object-fit: contain; }
+.cc-bonus-name { font-size: 13px; font-weight: 800; color: #fff; }
+.cc-bonus-team { font-size: 10px; color: var(--text-secondary, #A1A1B5); }
