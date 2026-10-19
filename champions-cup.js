@@ -1,5 +1,5 @@
 /* =========================================================
-   champions-cup.js — v18 (Deadline Lock & Countdown)
+   champions-cup.js — v22 (Bonus Points Fixed)
 ========================================================= */
 
 (function(){
@@ -56,7 +56,9 @@ var ccState = {
     fplData: null,
     _currentEdit: null,
     _bonusStep: 0,
-    _recentGWsPoints: {} 
+    _recentGWsPoints: {},
+    _recentGWsRound: 0, // لحل مشكلة الكاش
+    _cachedMembers: null 
 };
 
 /* ========== HELPERS ========== */
@@ -95,7 +97,6 @@ function ccRenderDeadlineBar(round) {
         return '<div style="background:rgba(239,68,68,0.2);color:#EF4444;text-align:center;padding:8px;border-radius:8px;margin-bottom:10px;font-weight:900;font-size:13px;border:1px solid #EF4444;">🔒 انتهى وقت التعديل لهذه الجولة</div>';
     }
     
-    // حساب الوقت المتبقي
     var diff = deadline - now;
     var days = Math.floor(diff / (1000 * 60 * 60 * 24));
     var hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -111,25 +112,94 @@ function ccRenderDeadlineBar(round) {
     return '<div style="background:rgba(16,185,129,0.15);color:#10B981;text-align:center;padding:8px;border-radius:8px;margin-bottom:10px;font-weight:900;font-size:12px;border:1px solid #10B981;">⏳ متبقي ' + timeStr + ' (الديدلاين: ' + formattedDate + ')</div>';
 }
 
-/* ========== FETCH LAST 5 GWs ========== */
+/* ========== FETCH LAST 5 GWs (Fixed Cache) ========== */
 async function ccFetchLast5GWs(currentGW) {
-    if (ccState._recentGWsPoints && Object.keys(ccState._recentGWsPoints).length > 0) return ccState._recentGWsPoints;
-    var pointsMap = {}; var startGW = Math.max(1, currentGW - 5); var promises = [];
-    for (var gw = startGW; gw < currentGW; gw++) {
-        promises.push(ccFetch(CC_WORKER + '/?type=live&gw=' + gw).then(function(r) { return r.ok ? r.json() : null; }).then(function(data) { return { gw: gw, data: data }; }));
+    // إذا كنا محتفظين بالبيانات لنفس الجولة، نرجعها فوراً
+    if (ccState._recentGWsRound === currentGW && ccState._recentGWsPoints && Object.keys(ccState._recentGWsPoints).length > 0) {
+        return ccState._recentGWsPoints;
     }
+    
+    ccState._recentGWsPoints = {}; // تصفير الكاش القديم
+    ccState._recentGWsRound = currentGW;
+
+    var pointsMap = {}; 
+    var startGW = Math.max(1, currentGW - 5); 
+    var promises = [];
+    
+    // جلب آخر 5 جولات
+    for (var gw = startGW; gw < currentGW; gw++) {
+        promises.push(
+            ccFetch(CC_WORKER + '/?type=live&gw=' + gw)
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(data) { return { gw: gw, data: data }; })
+            .catch(function() { return { gw: gw, data: null }; })
+        );
+    }
+    
     var results = await Promise.all(promises);
+    
     results.forEach(function(res) {
         if (!res.data || !res.data.elements) return;
         res.data.elements.forEach(function(el) {
             if (!pointsMap[el.id]) pointsMap[el.id] = {};
-            pointsMap[el.id][res.gw] = el.stats.total_points || 0;
+            pointsMap[el.id][res.gw] = el.stats ? (el.stats.total_points || 0) : 0;
         });
     });
-    ccState._recentGWsPoints = pointsMap; return pointsMap;
+    
+    ccState._recentGWsPoints = pointsMap; 
+    return pointsMap;
 }
 
-/* ========== CALCULATE SCORES ========== */
+/* ========== CALCULATE CURRENT TEAM POINTS ========== */
+async function ccCalculateTeamCurrentPoints(teamCode, squad) {
+    var round = ccState.currentRound;
+    var fplData = await ccFetchFplBootstrap();
+    if (!fplData) return 0;
+    var liveRes = await ccFetch(CC_WORKER + '/?type=live&gw=' + round);
+    var liveData = liveRes.ok ? await liveRes.json() : null;
+    if (!liveData) return 0;
+
+    var liveMap = {};
+    liveData.elements.forEach(function(el) { liveMap[el.id] = el.stats.total_points || 0; });
+
+    if (!squad || !squad.starters) return 0;
+
+    var teamScore = 0;
+    var fetchPromises = [];
+
+    for (var i = 0; i < squad.starters.length; i++) {
+        var entryId = squad.starters[i];
+        if (!entryId) continue;
+        fetchPromises.push(ccFetch(CC_WORKER + '/?type=picks&entry=' + entryId + '&gw=' + round).then(function(r) { return r.ok ? r.json() : null; }).then(function(data) { return { entryId: entryId, picks: data ? data.picks : null }; }));
+    }
+
+    var picksResults = await Promise.all(fetchPromises);
+    var picksMap = {};
+    picksResults.forEach(function(res) { if(res && res.picks) picksMap[res.entryId] = res.picks; });
+
+    for (var i = 0; i < squad.starters.length; i++) {
+        var entryId = squad.starters[i];
+        if (!entryId) continue;
+        var picks = picksMap[entryId];
+        if (!picks) continue;
+        var starters = picks.filter(function(p) { return p.position <= 11; });
+        var cap = starters.find(function(p) { return p.is_captain; });
+        var vc = starters.find(function(p) { return p.is_vice_captain; });
+        var targetCapId = cap ? cap.element : (vc ? vc.element : null);
+        if (cap && liveData.elements.find(function(e) { return e.id === cap.element; })?.stats.minutes === 0 && vc) { targetCapId = vc.element; }
+        starters.forEach(function(p) {
+            var pts = liveMap[p.element] || 0; teamScore += pts;
+            if (p.element === targetCapId) teamScore += pts;
+        });
+    }
+
+    if (squad.bonus) {
+        squad.bonus.forEach(function(bonusId) { teamScore += (liveMap[bonusId] || 0); });
+    }
+    return teamScore;
+}
+
+/* ========== CALCULATE ALL SCORES (For Table) ========== */
 async function ccCalculateAllScores() {
     var round = ccState.currentRound;
     var fplData = await ccFetchFplBootstrap();
@@ -214,8 +284,9 @@ window.ccForceSync = function() { if (typeof showToast === 'function') showToast
 /* ========== TEAM STATS CALCULATOR ========== */
 function ccGetTeamStats(teamCode) {
     var stats = { pts: 0, w: 0, d: 0, l: 0, played: 0 };
+    if (typeof matchweeks === 'undefined' || typeof scoresStorage === 'undefined') return stats;
     for (var r = 1; r <= ccState.currentRound; r++) {
-        var matches = (typeof matchweeks !== 'undefined' && matchweeks[r]) ? matchweeks[r] : [];
+        var matches = matchweeks[r] || [];
         for (var i = 0; i < matches.length; i++) {
             var m = matches[i];
             if (m[0] === teamCode || m[1] === teamCode) {
@@ -277,6 +348,9 @@ async function ccRenderTeamsGrid() {
     container.innerHTML = '<div class="cc-loading">Loading Teams...</div>';
     var sb = ccGetSb();
     var { data: members } = await sb.from('champions_cup_members').select('*');
+    
+    ccState._cachedMembers = members || []; 
+    
     var byTeam = {};
     CC_TEAMS_LIST.forEach(function(t) { byTeam[t] = []; });
     (members || []).forEach(function(m) { (m.teams || []).forEach(function(t) { if (byTeam[t]) byTeam[t].push(m); }); });
@@ -298,7 +372,7 @@ async function ccOpenTeam(teamCode) {
     modal.innerHTML = '<div class="cc-modal-box"><div class="cc-loading">Loading Squad...</div></div>';
     modal.classList.add('show');
     
-    await ccFetchFplBootstrap(); // Needed for deadline check
+    await ccFetchFplBootstrap();
     
     var { data: squad } = await sb.from('champions_cup_squads').select('*').eq('team', teamCode).eq('round', ccState.currentRound).maybeSingle();
     if (!squad) {
@@ -306,8 +380,15 @@ async function ccOpenTeam(teamCode) {
         if (prevSquads && prevSquads.length > 0) squad = prevSquads[0];
     }
 
-    var { data: members } = await sb.from('champions_cup_members').select('*');
-    ccRenderPitchUI(teamCode, members, squad, false);
+    var allMembers = ccState._cachedMembers || [];
+    if (allMembers.length === 0) {
+        var res = await sb.from('champions_cup_members').select('*');
+        allMembers = res.data || [];
+        ccState._cachedMembers = allMembers;
+    }
+    
+    var gwPoints = await ccCalculateTeamCurrentPoints(teamCode, squad);
+    ccRenderPitchUI(teamCode, allMembers, squad, false, gwPoints);
 }
 
 async function ccOpenSquadEditor(teamCode) {
@@ -323,7 +404,12 @@ async function ccOpenSquadEditor(teamCode) {
         if (prevSquads && prevSquads.length > 0) squad = prevSquads[0];
     }
 
-    var { data: members } = await sb.from('champions_cup_members').select('*');
+    var allMembers = ccState._cachedMembers || [];
+    if (allMembers.length === 0) {
+        var res = await sb.from('champions_cup_members').select('*');
+        allMembers = res.data || [];
+        ccState._cachedMembers = allMembers;
+    }
     
     var starters = squad ? squad.starters.slice() : [];
     while(starters.length < 11) starters.push(null);
@@ -341,15 +427,18 @@ async function ccOpenSquadEditor(teamCode) {
         bench: bench,
         bonus: bonus
     };
-    ccRenderPitchUI(teamCode, members, null, true);
+    
+    var gwPoints = await ccCalculateTeamCurrentPoints(teamCode, squad);
+    ccRenderPitchUI(teamCode, allMembers, null, true, gwPoints);
 }
 
-function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
+function ccRenderPitchUI(teamCode, allMembers, squad, isEdit, gwPoints) {
     var modal = document.getElementById('ccModal');
     var teamName = CC_TEAM_NAMES[teamCode];
     var teamLogo = (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[teamName]) ? TEAMS_LOGOS[teamName] : '';
     
     var deadlinePassed = ccIsDeadlinePassed(ccState.currentRound);
+    if (gwPoints === undefined) gwPoints = 0;
     
     var starters, bench, bonus;
     
@@ -380,12 +469,16 @@ function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
         return ''; 
     }
 
-    function createCard(id, isBonus) {
+    function createCard(id, isBonus, isGK) {
+        var shirtUrl = isGK ? './gk-shirt.png' : getShirt(teamName);
+        
         if (!id) {
             var onClickAction = (isEdit && !deadlinePassed) ? 'onclick="ccOpenSelectionList(\'' + teamCode + '\')"' : '';
             var pointerStyle = (isEdit && !deadlinePassed) ? 'cursor:pointer;' : 'cursor:default; opacity:0.6;';
+            var emptyShirtHtml = shirtUrl ? '<img src="' + shirtUrl + '" style="opacity:0.3;" onerror="this.style.display=\'none\'">' : '<div class="cc-plus-icon">' + ((isEdit && !deadlinePassed) ? '+' : '-') + '</div>';
+            
             return '<div class="cc-card cc-card-empty" style="' + pointerStyle + '" ' + onClickAction + '>' +
-                '<div class="cc-card-shirt"><div class="cc-plus-icon">' + ((isEdit && !deadlinePassed) ? '+' : '-') + '</div></div>' +
+                '<div class="cc-card-shirt">' + emptyShirtHtml + '</div>' +
                 '<div class="cc-card-name">' + ((isEdit && !deadlinePassed) ? 'Select' : 'Empty') + '</div>' +
                 '<div class="cc-card-points">-</div>' +
             '</div>';
@@ -393,21 +486,20 @@ function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
         
         var m = membersMap[id];
         if (!m) return '';
-        var shirtUrl = getShirt(teamName);
         var pts = m.total || 0;
         var shirtHtml = shirtUrl ? '<img src="' + shirtUrl + '" onerror="this.style.display=\'none\'">' : '';
+        
         return '<div class="cc-card"><div class="cc-card-shirt">' + shirtHtml + '</div><div class="cc-card-name">' + ccEscapeHTML(m.entry_name || m.player_name).substring(0,10) + '</div><div class="cc-card-points">' + pts + '</div></div>';
     }
 
     var html = '<div class="cc-modal-box"><div class="cc-modal-header"><div class="cc-modal-title">' + teamName + (isEdit ? ' — Edit' : '') + '</div><button class="cc-modal-close" onclick="document.getElementById(\'ccModal\').classList.remove(\'show\')"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button></div><div class="cc-modal-body">';
 
-    // Deadline Bar
     html += ccRenderDeadlineBar(ccState.currentRound);
 
-    // Stats Bar
     var stats = ccGetTeamStats(teamCode);
     html += '<div class="cc-team-stats-bar">' +
-        '<div class="cc-stat-item pts">النقاط <span>' + stats.pts + '</span></div>' +
+        '<div class="cc-stat-item gw-pts">نقاط الجولة <span>' + gwPoints + '</span></div>' +
+        '<div class="cc-stat-item pts">نقاط الدوري <span>' + stats.pts + '</span></div>' +
         '<div class="cc-stat-item w">فاز <span>' + stats.w + '</span></div>' +
         '<div class="cc-stat-item d">تعادل <span>' + stats.d + '</span></div>' +
         '<div class="cc-stat-item l">خسر <span>' + stats.l + '</span></div>' +
@@ -421,15 +513,14 @@ function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
         if (teamLogo) { html += '<div class="cc-team-logo-top"><img src="./' + teamLogo + '"></div>'; }
         html += '<div class="cc-players-container">';
         
-        // 4-3-3 Rows
-        html += '<div class="cc-row cc-row-fwd">' + starters.slice(8, 11).map(function(id) { return createCard(id, bonus.includes(id)); }).join('') + '</div>';
-        html += '<div class="cc-row cc-row-mid">' + starters.slice(5, 8).map(function(id) { return createCard(id, bonus.includes(id)); }).join('') + '</div>';
-        html += '<div class="cc-row cc-row-def">' + starters.slice(1, 5).map(function(id) { return createCard(id, bonus.includes(id)); }).join('') + '</div>';
-        html += '<div class="cc-row cc-row-gk">' + starters.slice(0, 1).map(function(id) { return createCard(id, bonus.includes(id)); }).join('') + '</div>';
+        html += '<div class="cc-row cc-row-fwd">' + starters.slice(8, 11).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
+        html += '<div class="cc-row cc-row-mid">' + starters.slice(5, 8).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
+        html += '<div class="cc-row cc-row-def">' + starters.slice(1, 5).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
+        html += '<div class="cc-row cc-row-gk">' + starters.slice(0, 1).map(function(id) { return createCard(id, bonus.includes(id), true); }).join('') + '</div>';
         html += '</div></div></div>';
 
         if (bench.length > 0) {
-            html += '<div class="cc-bench-wrapper"><div class="cc-bench-title">BENCH</div><div class="cc-bench-row">' + bench.map(function(id) { return createCard(id, false); }).join('') + '</div></div>';
+            html += '<div class="cc-bench-wrapper"><div class="cc-bench-title">BENCH</div><div class="cc-bench-row">' + bench.map(function(id) { return createCard(id, false, false); }).join('') + '</div></div>';
         }
         if (bonus.length > 0) {
             var fplData = ccState.fplData;
@@ -470,12 +561,19 @@ function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
 
 async function ccOpenSelectionList(teamCode) {
     if (ccIsDeadlinePassed(ccState.currentRound)) return;
-    var sb = ccGetSb();
-    var { data: members } = await sb.from('champions_cup_members').select('*');
-    var teamMembers = (members || []).filter(function(m) { return m.teams.includes(teamCode); });
+    
+    var allMembers = ccState._cachedMembers || [];
+    if (allMembers.length === 0) {
+        var sb = ccGetSb();
+        var { data } = await sb.from('champions_cup_members').select('*');
+        allMembers = data || [];
+        ccState._cachedMembers = allMembers;
+    }
+    
+    var teamMembers = allMembers.filter(function(m) { return m.teams.includes(teamCode); });
     var state = ccState._currentEdit;
     
-    var html = '<div class="cc-modal-box"><div class="cc-modal-header"><div class="cc-modal-title">' + CC_TEAM_NAMES[teamCode] + ' — Select Squad</div><button class="cc-modal-close" onclick="ccRenderPitchUI(\''+teamCode+'\', null, null, true)"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button></div><div class="cc-modal-body"><div class="cc-list-container">';
+    var html = '<div class="cc-modal-box"><div class="cc-modal-header"><div class="cc-modal-title">' + CC_TEAM_NAMES[teamCode] + ' — Select Squad</div><button class="cc-modal-close" onclick="ccRenderPitchUI(\''+teamCode+'\', null, null, true, ccState._currentGWPoints)"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button></div><div class="cc-modal-body"><div class="cc-list-container">';
     
     teamMembers.forEach(function(m) {
         var isStarter = state.starters.includes(m.entry_id);
@@ -484,7 +582,7 @@ async function ccOpenSelectionList(teamCode) {
         html += '<div class="cc-list-item ' + cls + '" onclick="ccToggleMember('+m.entry_id+', \''+teamCode+'\')"><div class="cc-list-name">' + ccEscapeHTML(m.entry_name || m.player_name) + '</div><div class="cc-list-pts">' + (m.total||0) + ' pts</div></div>';
     });
     
-    html += '</div><button class="cc-action-btn" style="margin-top:15px;" onclick="ccRenderPitchUI(\''+teamCode+'\', null, null, true)">Done</button></div></div>';
+    html += '</div><button class="cc-action-btn" style="margin-top:15px;" onclick="ccRenderPitchUI(\''+teamCode+'\', null, null, true, ccState._currentGWPoints)">Done</button></div></div>';
     document.getElementById('ccModal').innerHTML = html;
 }
 
@@ -537,15 +635,21 @@ async function ccOpenBonusModal(teamCode) {
         var mappedName = FPL_TO_LOCAL_TEAM[item.teamObj.name] || item.teamObj.name;
         var shirtUrl = (typeof TEAMS_SHIRTS !== 'undefined' && TEAMS_SHIRTS[mappedName]) ? './' + TEAMS_SHIRTS[mappedName].file : 'https://resources.premierleague.com/premierleague/badges/70/t' + item.teamObj.code + '.png';
         var gwBoxes = '';
+        
+        // Build the 5 GW boxes
         for (var gw = Math.max(1, ccState.currentRound - 5); gw < ccState.currentRound; gw++) {
-            var pts = (recentGWs[item.el.id] && recentGWs[item.el.id][gw] !== undefined) ? recentGWs[item.el.id][gw] : '-';
+            var pts = 0;
+            if (recentGWs && recentGWs[item.el.id] && recentGWs[item.el.id][gw] !== undefined) {
+                pts = recentGWs[item.el.id][gw];
+            }
             var cls = pts >= 6 ? 'high' : (pts >= 3 ? 'med' : (pts === 0 ? 'low' : ''));
             gwBoxes += '<div class="cc-gw-box ' + cls + '">' + pts + '</div>';
         }
+        
         listHtml += '<div class="cc-bonus-row" onclick="ccSelectBonusPlayer(' + item.el.id + ', \'' + teamCode + '\')"><div class="cc-bonus-shirt"><img src="' + shirtUrl + '"></div><div class="cc-bonus-info"><div class="cc-bonus-name">' + item.el.web_name + '</div><div class="cc-bonus-team">' + item.teamObj.name + '</div></div><div class="cc-bonus-gws">' + gwBoxes + '</div><div class="cc-bonus-total"><div class="cc-bonus-total-num">' + item.el.total_points + '</div><div class="cc-bonus-total-label">Total</div></div></div>';
     });
 
-    var html = '<div class="cc-modal-box"><div class="cc-modal-header"><div class="cc-modal-title">' + title + '</div><button class="cc-modal-close" onclick="ccRenderPitchUI(\''+teamCode+'\', null, null, true)"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button></div><div class="cc-modal-body" style="padding:0;"><div class="cc-bonus-container"><div class="cc-bonus-search"><span class="tg-icon tg-icon-sm tg-icon-search" style="color:#A1A1B5;"></span><input type="text" id="ccBonusSearch" placeholder="Search player..." oninput="ccFilterBonusList(this.value)"></div><div class="cc-bonus-list-wrapper" id="ccBonusListWrapper">' + listHtml + '</div></div></div></div>';
+    var html = '<div class="cc-modal-box"><div class="cc-modal-header"><div class="cc-modal-title">' + title + '</div><button class="cc-modal-close" onclick="ccRenderPitchUI(\''+teamCode+'\', null, null, true, ccState._currentGWPoints)"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button></div><div class="cc-modal-body" style="padding:0;"><div class="cc-bonus-container"><div class="cc-bonus-search"><span class="tg-icon tg-icon-sm tg-icon-search" style="color:#A1A1B5;"></span><input type="text" id="ccBonusSearch" placeholder="Search player..." oninput="ccFilterBonusList(this.value)"></div><div class="cc-bonus-list-wrapper" id="ccBonusListWrapper">' + listHtml + '</div></div></div></div>';
     modal.innerHTML = html;
 }
 
@@ -572,7 +676,7 @@ function ccSelectBonusPlayer(playerId, teamCode) {
         ccState._currentEdit.bonus[1] = playerId;
         ccState._bonusStep = 0;
         if (typeof showToast === 'function') showToast('Bonus 2 selected: ' + el.web_name, true);
-        ccRenderPitchUI(teamCode, null, null, true);
+        ccRenderPitchUI(teamCode, null, null, true, ccState._currentGWPoints);
     }
 }
 
@@ -628,13 +732,14 @@ async function ccSyncMembers() {
         } catch(e) { ccLog('Supabase sync error', e); }
     }
     ccState.members = allMembers;
+    ccState._cachedMembers = membersArr; 
     ccState.loading = false;
     return { ok: true, count: membersArr.length };
 }
 
 async function ccInit() {
     ccState.currentRound = (typeof currentRound !== 'undefined') ? currentRound : 1;
-    await ccFetchFplBootstrap(); // Pre-fetch for deadline
+    await ccFetchFplBootstrap(); 
     
     var refreshBtn = document.getElementById('ccRefreshBtn');
     if (refreshBtn) { if (typeof isAdmin === 'function' && isAdmin()) refreshBtn.style.display = 'flex'; else refreshBtn.style.display = 'none'; }
@@ -656,5 +761,5 @@ window.ccToggleMember = ccToggleMember;
 window.ccRenderPitchUI = ccRenderPitchUI;
 window.ccPromptPin = ccPromptPin;
 
-ccLog('v18 Loaded');
+ccLog('v22 Loaded');
 })();
