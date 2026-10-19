@@ -1,5 +1,7 @@
 /* =========================================================
-   champions-cup.css — v10 (Original + Top White Area + Logo Animation)
+   champions-cup.css — v1
+   Champions Cup System
+   Dark Luxury Theme
 ========================================================= */
 
 /* =========================================================
@@ -1006,13 +1008,12 @@
 .cc-team-card:nth-child(19) { animation-delay: 0.38s; }
 .cc-team-card:nth-child(20) { animation-delay: 0.40s; }
 
-
 /* =========================================================
    ============  ADDITIONS START HERE  =====================
-   (Pitch View exact match to TOTW)
+   (Pitch View, Empty Slots, Stats, Bonus)
    ========================================================= */
 
-/* ===== 16. PITCH WRAPPER ===== */
+/* ===== 16. PITCH VIEW (The FPL Design) ===== */
 .cc-pitch-wrapper {
     width: 100%;
     display: flex;
@@ -1036,24 +1037,25 @@
     transition: box-shadow 0.4s var(--ease-out);
 }
 
-/* ===== 17. TOP WHITE OVERLAY & LOGO ANIMATION ===== */
+/* Top White Overlay */
 .cc-pitch-top-white {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 8%; /* 5% to 8% as requested */
-    background: rgba(15, 15, 20, 0.4); /* Dark semi-transparent overlay */
+    height: 8%;
+    background: rgba(15, 15, 20, 0.4);
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
     z-index: 4;
-    border-bottom: 2px solid rgba(124, 58, 237, 0.5); /* Purple glow border */
+    border-bottom: 2px solid rgba(124, 58, 237, 0.5);
     pointer-events: none;
 }
 
+/* Logo Animation */
 .cc-team-logo-top {
     position: absolute;
-    top: 1%; /* Adjusted to sit inside the white area */
+    top: 1%;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
@@ -1061,7 +1063,6 @@
     flex-direction: column;
     align-items: center;
     gap: 5px;
-    /* Entrance Animation */
     animation: logoEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
@@ -1083,7 +1084,7 @@
     }
 }
 
-/* ===== 18. PLAYERS CONTAINER ===== */
+/* Players Container & Rows */
 .cc-players-container {
     position: absolute;
     inset: 0;
@@ -1123,7 +1124,7 @@
     padding: 0 22%;
 }
 
-/* ===== 19. CARD DESIGN (EXACT TOTW MATCH) ===== */
+/* Card Design (TOTW Match) */
 .cc-card {
     width: 60px;
     display: flex;
@@ -1223,7 +1224,36 @@
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-/* ===== 20. BENCH ===== */
+/* ===== 17. EMPTY SLOTS (+) ===== */
+.cc-card-empty {
+    cursor: pointer;
+    border: 2px dashed rgba(124, 58, 237, 0.6) !important;
+    background: rgba(20, 15, 40, 0.4) !important;
+    box-shadow: none !important;
+}
+.cc-card-empty .cc-card-shirt {
+    background: transparent !important;
+    border: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cc-plus-icon {
+    font-size: 26px;
+    font-weight: 300;
+    color: rgba(124, 58, 237, 0.8);
+    line-height: 1;
+}
+.cc-card-empty .cc-card-name {
+    background: rgba(124, 58, 237, 0.2) !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+.cc-card-empty .cc-card-points {
+    background: transparent !important;
+    color: transparent !important;
+}
+
+/* ===== 18. BENCH ===== */
 .cc-bench-wrapper {
     background: rgba(15, 15, 20, 0.8);
     border-radius: 16px;
@@ -1245,36 +1275,37 @@
     gap: 20px;
 }
 
-/* ===== 21. EDIT ACTIONS & LISTS ===== */
-.cc-actions-area {
+/* ===== 19. STATS BAR ===== */
+.cc-team-stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    background: rgba(15, 15, 20, 0.85);
+    border-radius: 10px;
+    padding: 8px 15px;
+    margin: 0 auto 10px auto;
+    width: fit-content;
+    border: 1px solid var(--border-purple, rgba(124, 58, 237, 0.25));
+}
+.cc-stat-item {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 15px;
-}
-.cc-action-btn {
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 900;
-    font-size: 14px;
-    background: var(--purple-500, #7C3AED);
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: transform 0.2s;
+    font-size: 10px;
+    color: var(--text-secondary, #A1A1B5);
+    font-weight: 800;
 }
-.cc-action-btn:active { transform: scale(0.98); }
-.cc-action-btn.save { background: var(--green-500, #10B981); }
-.cc-action-btn.bonus { background: var(--amber-500, #F59E0B); color: #000; }
+.cc-stat-item span {
+    font-size: 14px;
+    color: #fff;
+    font-weight: 900;
+}
+.cc-stat-item.pts span { color: var(--green-500, #10B981); }
+.cc-stat-item.w span { color: #10B981; }
+.cc-stat-item.d span { color: #F59E0B; }
+.cc-stat-item.l span { color: #EF4444; }
 
-/* =========================================================
-   BONUS LIST STYLE (Dark Theme + Search + 5 GWs)
-   ========================================================= */
+/* ===== 20. BONUS LIST ===== */
 .cc-bonus-container {
     background: var(--bg-card, #1A1A22);
     border-radius: 16px;
@@ -1283,7 +1314,6 @@
     flex-direction: column;
     border: 1px solid var(--border, #2E2E3A);
 }
-
 .cc-bonus-search {
     padding: 12px 16px;
     background: var(--bg-elevated, #24242E);
@@ -1301,15 +1331,11 @@
     outline: none;
     font-family: inherit;
 }
-.cc-bonus-search input::placeholder {
-    color: var(--text-tertiary, #6B6B80);
-}
-
+.cc-bonus-search input::placeholder { color: var(--text-tertiary, #6B6B80); }
 .cc-bonus-list-wrapper {
     max-height: 400px;
     overflow-y: auto;
 }
-
 .cc-bonus-row {
     display: flex;
     align-items: center;
@@ -1318,14 +1344,8 @@
     cursor: pointer;
     transition: background 0.2s;
 }
-.cc-bonus-row:hover {
-    background: var(--bg-elevated, #24242E);
-}
-.cc-bonus-row:last-child {
-    border-bottom: none;
-}
-
-/* Left: Shirt */
+.cc-bonus-row:hover { background: var(--bg-elevated, #24242E); }
+.cc-bonus-row:last-child { border-bottom: none; }
 .cc-bonus-shirt {
     width: 40px;
     height: 40px;
@@ -1340,31 +1360,10 @@
     object-fit: contain;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
 }
-
-/* Middle: Name & Team */
-.cc-bonus-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-.cc-bonus-name {
-    font-size: 14px;
-    font-weight: 900;
-    color: #fff;
-}
-.cc-bonus-team {
-    font-size: 11px;
-    color: var(--text-secondary, #A1A1B5);
-    font-weight: 600;
-}
-
-/* Right: 5 GWs */
-.cc-bonus-gws {
-    display: flex;
-    gap: 6px;
-    margin: 0 15px;
-}
+.cc-bonus-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.cc-bonus-name { font-size: 14px; font-weight: 900; color: #fff; }
+.cc-bonus-team { font-size: 11px; color: var(--text-secondary, #A1A1B5); font-weight: 600; }
+.cc-bonus-gws { display: flex; gap: 6px; margin: 0 15px; }
 .cc-gw-box {
     width: 24px;
     height: 24px;
@@ -1381,24 +1380,15 @@
 .cc-gw-box.high { background: rgba(16, 185, 129, 0.2); border-color: #10B981; color: #10B981; }
 .cc-gw-box.med { background: rgba(245, 158, 11, 0.2); border-color: #F59E0B; color: #F59E0B; }
 .cc-gw-box.low { background: rgba(239, 68, 68, 0.2); border-color: #EF4444; color: #EF4444; }
+.cc-bonus-total { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 50px; }
+.cc-bonus-total-num { font-size: 16px; font-weight: 900; color: var(--purple-300, #A78BFA); }
+.cc-bonus-total-label { font-size: 9px; color: var(--text-tertiary, #6B6B80); text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; }
 
-/* Far Right: Total */
-.cc-bonus-total {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-width: 50px;
-}
-.cc-bonus-total-num {
-    font-size: 16px;
-    font-weight: 900;
-    color: var(--purple-300, #A78BFA);
-}
-.cc-bonus-total-label {
-    font-size: 9px;
-    color: var(--text-tertiary, #6B6B80);
-    text-transform: uppercase;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-}
+/* ===== 21. LIST CONTAINER (Selection) ===== */
+.cc-list-container { max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 5px; }
+.cc-list-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: var(--bg-elevated); border-radius: 10px; border: 1px solid transparent; cursor: pointer; transition: all 0.2s; }
+.cc-list-item:hover { border-color: var(--purple-500, #7C3AED); }
+.cc-list-item.is-starter { background: rgba(16,185,129,0.15); border-color: var(--green-500, #10B981); }
+.cc-list-item.is-bench { background: rgba(245,158,11,0.15); border-color: var(--amber-500, #F59E0B); }
+.cc-list-name { font-size: 13px; font-weight: 800; color: #fff; }
+.cc-list-pts { font-size: 13px; font-weight: 900; color: var(--purple-300, #A78BFA); }
