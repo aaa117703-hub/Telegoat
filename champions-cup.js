@@ -1,5 +1,5 @@
 /* =========================================================
-   champions-cup.js — v9 (The Ultimate Masterpiece)
+   champions-cup.js — v10 (Auto-Update Main Fixtures)
 ========================================================= */
 
 (function(){
@@ -39,8 +39,7 @@ var ccState = {
     syncTimer: null,
     fplData: null,
     _currentEdit: null,
-    _bonusStep: 0,
-    _scoresCache: {}
+    _bonusStep: 0
 };
 
 /* ========== HELPERS ========== */
@@ -62,7 +61,7 @@ async function ccFetchFplBootstrap() {
     return null;
 }
 
-/* ========== CALCULATE SCORES (IGNORING CHIPS) ========== */
+/* ========== CALCULATE SCORES ========== */
 async function ccCalculateAllScores() {
     var round = ccState.currentRound;
     var fplData = await ccFetchFplBootstrap();
@@ -83,6 +82,10 @@ async function ccCalculateAllScores() {
     var fetchPromises = [];
 
     squads.forEach(function(sq) {
+        if (!sq.starters || sq.starters.length === 0) {
+            scores[sq.team] = 0;
+            return;
+        }
         sq.starters.forEach(function(entryId) {
             fetchPromises.push(
                 ccFetch(CC_WORKER + '/?type=picks&entry=' + entryId + '&gw=' + round)
@@ -97,6 +100,8 @@ async function ccCalculateAllScores() {
     picksResults.forEach(function(res) { if(res && res.picks) picksMap[res.entryId] = res.picks; });
 
     squads.forEach(function(sq) {
+        if (scores[sq.team] === 0) return; // Skipped earlier
+        
         var teamScore = 0;
 
         sq.starters.forEach(function(entryId) {
@@ -108,7 +113,6 @@ async function ccCalculateAllScores() {
             var vc = starters.find(function(p) { return p.is_vice_captain; });
             
             var targetCapId = cap ? cap.element : (vc ? vc.element : null);
-            // Check if Captain played (Minutes > 0). If not, use Vice.
             if (cap) {
                 var capLive = liveData.elements.find(function(e) { return e.id === cap.element; });
                 if (capLive && capLive.stats.minutes === 0 && vc) {
@@ -119,14 +123,12 @@ async function ccCalculateAllScores() {
             starters.forEach(function(p) {
                 var pts = liveMap[p.element] || 0;
                 teamScore += pts;
-                // Captain gets 2x ONLY (Ignore Triple Captain)
                 if (p.element === targetCapId) {
-                    teamScore += pts; 
+                    teamScore += pts; // Captain gets 2x ONLY
                 }
             });
         });
 
-        // Add Bonus Players Points
         if (sq.bonus && sq.bonus.length > 0) {
             sq.bonus.forEach(function(bonusId) {
                 teamScore += (liveMap[bonusId] || 0);
@@ -136,58 +138,35 @@ async function ccCalculateAllScores() {
         scores[sq.team] = teamScore;
     });
 
-    ccState._scoresCache = scores;
     return scores;
 }
 
-/* ========== RENDER MATCHES (H2H) ========== */
-async function ccRenderMatches() {
-    var container = document.getElementById('ccMatchesContainer');
-    if (!container) return;
-    container.innerHTML = '<div class="cc-loading">Calculating scores...</div>';
-
+/* ========== AUTO UPDATE MAIN FIXTURES ========== */
+async function ccUpdateMainFixtures() {
     var scores = await ccCalculateAllScores();
+    if (!scores || Object.keys(scores).length === 0) return;
+
     var round = ccState.currentRound;
     var matches = (typeof matchweeks !== 'undefined' && matchweeks[round]) ? matchweeks[round] : [];
-
-    if (matches.length === 0) {
-        container.innerHTML = '<div class="cc-empty">No matches for this round.</div>';
-        return;
-    }
-
-    var html = '<div class="cc-matches-container">';
-    html += '<div class="cc-matches-header">MATCHWEEK ' + round + '</div>';
-
-    matches.forEach(function(m) {
+    
+    var updated = false;
+    matches.forEach(function(m, idx) {
         var home = m[0], away = m[1];
-        var homeScore = scores[home] !== undefined ? scores[home] : 0;
-        var awayScore = scores[away] !== undefined ? scores[away] : 0;
-        
-        var homeName = CC_TEAM_NAMES[home], awayName = CC_TEAM_NAMES[away];
-        var homeLogo = (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[homeName]) ? TEAMS_LOGOS[homeName] : '';
-        var awayLogo = (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[awayName]) ? TEAMS_LOGOS[awayName] : '';
-
-        html += '<div class="cc-match-row">';
-        // Home Team
-        html += '<div class="cc-match-team home" onclick="ccOpenTeam(\'' + home + '\')">';
-        html += '<span>' + homeName + '</span>';
-        if (homeLogo) html += '<img src="./' + homeLogo + '">';
-        html += '</div>';
-
-        // Score Box
-        html += '<div class="cc-match-score">' + homeScore + ' <span class="vs">-</span> ' + awayScore + '</div>';
-
-        // Away Team
-        html += '<div class="cc-match-team away" onclick="ccOpenTeam(\'' + away + '\')">';
-        if (awayLogo) html += '<img src="./' + awayLogo + '">';
-        html += '<span>' + awayName + '</span>';
-        html += '</div>';
-
-        html += '</div>';
+        if (scores[home] !== undefined && scores[away] !== undefined) {
+            // حقن النقاط في الجدول الأصلي
+            scoresStorage['r' + round + '_m' + idx + '_home'] = scores[home];
+            scoresStorage['r' + round + '_m' + idx + '_away'] = scores[away];
+            updated = true;
+        }
     });
-
-    html += '</div>';
-    container.innerHTML = html;
+    
+    if (updated) {
+        localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
+        // إعادة رسم الجدول الأساسي
+        if (typeof renderFixtures === 'function') renderFixtures();
+        if (typeof renderStandings === 'function') renderStandings();
+        ccLog('Main fixtures updated automatically.');
+    }
 }
 
 /* ========== RENDER TEAMS GRID ========== */
@@ -265,19 +244,18 @@ function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
     var membersMap = {};
     teamMembers.forEach(function(m) { membersMap[m.entry_id] = m; });
 
-    // Helper to get shirt
     function getShirt(teamFullName) {
         if (typeof TEAMS_SHIRTS !== 'undefined' && TEAMS_SHIRTS[teamFullName]) {
             return './' + TEAMS_SHIRTS[teamFullName].file;
         }
-        return ''; // fallback
+        return ''; 
     }
 
     function createCard(id, isBonus, isBenchCard) {
         var m = membersMap[id];
         if (!m) return '';
         
-        var shirtUrl = getShirt(teamName); // Since all managers in this view belong to the same team
+        var shirtUrl = getShirt(teamName);
         var pts = m.total || 0;
         
         var html = '<div class="cc-player-card ' + (isBonus ? 'is-bonus' : '') + '">';
@@ -304,28 +282,24 @@ function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
         // PITCH UI
         html += '<div class="cc-pitch-wrapper">';
         
-        // Team Header on Pitch
         html += '<div class="cc-pitch-team-header">';
         if (teamLogo) html += '<img src="./' + teamLogo + '">';
         html += '<span>' + teamName + '</span></div>';
 
-        // Rows (FWD, MID, DEF, GK)
         html += '<div class="cc-pitch-row">' + starters.slice(8, 11).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
         html += '<div class="cc-pitch-row">' + starters.slice(5, 8).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
         html += '<div class="cc-pitch-row">' + starters.slice(1, 5).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
         html += '<div class="cc-pitch-row">' + starters.slice(0, 1).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
-        html += '</div>'; // End Pitch
+        html += '</div>';
 
-        // BENCH
         if (bench.length > 0) {
             html += '<div class="cc-bench-wrapper"><div class="cc-bench-title">BENCH</div><div class="cc-bench-row">' +
                 bench.map(function(id) { return createCard(id, false, true); }).join('') + '</div></div>';
         }
 
-        // BONUS DISPLAY
         if (bonus.length > 0) {
             var fplData = ccState.fplData;
-            html += '<div class="cc-section-title" style="margin-top:20px;color:var(--cc-purple-300);">BONUS PLAYERS</div><div class="cc-bench-row" style="gap:10px;flex-wrap:wrap;justify-content:flex-start;">';
+            html += '<div class="cc-section-title" style="margin-top:20px;color:var(--purple-300);">BONUS PLAYERS</div><div class="cc-bench-row" style="gap:10px;flex-wrap:wrap;justify-content:flex-start;">';
             bonus.forEach(function(bonusId) {
                 var el = fplData ? fplData.elements.find(function(e) { return e.id === bonusId; }) : null;
                 if (el) {
@@ -487,6 +461,7 @@ async function ccSaveSquad(teamCode) {
     } else {
         showToast('Squad saved successfully!', true);
         document.getElementById('ccModal').classList.remove('show');
+        ccUpdateMainFixtures(); // تحديث الجدول فوراً بعد الحفظ
     }
 }
 
@@ -537,38 +512,23 @@ async function ccSyncMembers() {
 async function ccInit() {
     ccState.currentRound = (typeof currentRound !== 'undefined') ? currentRound : 1;
     
-    var container = document.querySelector('.cc-container');
-    if (container && !document.querySelector('.cc-main-tabs')) {
-        // Build Tabs and Views
-        container.innerHTML = `<div class="cc-main-tabs">
-            <button class="cc-tab-btn active" onclick="ccSwitchTab('matches')">Matches (H2H)</button>
-            <button class="cc-tab-btn" onclick="ccSwitchTab('teams')">Teams</button>
-        </div>
-        <div id="ccMatchesContainer"></div>
-        <div id="ccTeamsGrid" class="cc-teams-grid" style="display:none;"></div>`;
-    }
-
-    // Hide refresh button for non-admins
     var refreshBtn = document.getElementById('ccRefreshBtn');
     if (refreshBtn) {
         if (typeof isAdmin === 'function' && isAdmin()) refreshBtn.style.display = 'flex';
         else refreshBtn.style.display = 'none';
     }
 
-    // Initial Render
-    await ccRenderMatches(); // Default to Matches tab
-    
+    await ccRenderTeamsGrid();
     ccSyncMembers().then(function() { 
-        if (document.getElementById('ccMatchesContainer').style.display !== 'none') ccRenderMatches();
-        if (document.getElementById('ccTeamsGrid').style.display !== 'none') ccRenderTeamsGrid();
+        ccRenderTeamsGrid(); 
+        ccUpdateMainFixtures(); 
     });
     
-    // Start 10 min timer
     if (ccState.syncTimer) clearInterval(ccState.syncTimer);
     ccState.syncTimer = setInterval(function() {
         ccSyncMembers().then(function() { 
-            if (document.getElementById('ccMatchesContainer').style.display !== 'none') ccRenderMatches();
-            if (document.getElementById('ccTeamsGrid').style.display !== 'none') ccRenderTeamsGrid();
+            ccRenderTeamsGrid();
+            ccUpdateMainFixtures();
         });
     }, CC_SYNC_INTERVAL);
 }
@@ -584,17 +544,6 @@ window.ccSelectBonusPlayer = ccSelectBonusPlayer;
 window.ccOpenSelectionList = ccOpenSelectionList;
 window.ccToggleMember = ccToggleMember;
 window.ccRenderPitchUI = ccRenderPitchUI;
-window.ccSwitchTab = function(tab) {
-    document.querySelectorAll('.cc-tab-btn').forEach(function(b) { b.classList.remove('active'); });
-    var btn = Array.from(document.querySelectorAll('.cc-tab-btn')).find(function(b) { return b.innerText.toLowerCase().includes(tab); });
-    if(btn) btn.classList.add('active');
-    
-    document.getElementById('ccTeamsGrid').style.display = tab === 'teams' ? 'grid' : 'none';
-    document.getElementById('ccMatchesContainer').style.display = tab === 'matches' ? 'block' : 'none';
-    
-    if (tab === 'matches') ccRenderMatches();
-    if (tab === 'teams') ccRenderTeamsGrid();
-};
 
-ccLog('v9 Loaded');
+ccLog('v10 Loaded');
 })();
