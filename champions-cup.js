@@ -1,5 +1,5 @@
 /* =========================================================
-   champions-cup.js — v10 (Auto-Update Main Fixtures)
+   champions-cup.js — v12 (Final TOTW Style)
 ========================================================= */
 
 (function(){
@@ -61,7 +61,7 @@ async function ccFetchFplBootstrap() {
     return null;
 }
 
-/* ========== CALCULATE SCORES ========== */
+/* ========== CALCULATE SCORES (IGNORING CHIPS) ========== */
 async function ccCalculateAllScores() {
     var round = ccState.currentRound;
     var fplData = await ccFetchFplBootstrap();
@@ -82,10 +82,7 @@ async function ccCalculateAllScores() {
     var fetchPromises = [];
 
     squads.forEach(function(sq) {
-        if (!sq.starters || sq.starters.length === 0) {
-            scores[sq.team] = 0;
-            return;
-        }
+        if (!sq.starters || sq.starters.length === 0) { scores[sq.team] = 0; return; }
         sq.starters.forEach(function(entryId) {
             fetchPromises.push(
                 ccFetch(CC_WORKER + '/?type=picks&entry=' + entryId + '&gw=' + round)
@@ -100,8 +97,7 @@ async function ccCalculateAllScores() {
     picksResults.forEach(function(res) { if(res && res.picks) picksMap[res.entryId] = res.picks; });
 
     squads.forEach(function(sq) {
-        if (scores[sq.team] === 0) return; // Skipped earlier
-        
+        if (scores[sq.team] === 0) return;
         var teamScore = 0;
 
         sq.starters.forEach(function(entryId) {
@@ -115,26 +111,22 @@ async function ccCalculateAllScores() {
             var targetCapId = cap ? cap.element : (vc ? vc.element : null);
             if (cap) {
                 var capLive = liveData.elements.find(function(e) { return e.id === cap.element; });
-                if (capLive && capLive.stats.minutes === 0 && vc) {
-                    targetCapId = vc.element;
-                }
+                // إذا الكابتن ما لعب، نأخذ نائب الكابتن
+                if (capLive && capLive.stats.minutes === 0 && vc) { targetCapId = vc.element; }
             }
 
             starters.forEach(function(p) {
                 var pts = liveMap[p.element] || 0;
                 teamScore += pts;
-                if (p.element === targetCapId) {
-                    teamScore += pts; // Captain gets 2x ONLY
-                }
+                // الكابتن ياخذ ضعف النقاط فقط (تجاهل التربل كابتن)
+                if (p.element === targetCapId) { teamScore += pts; }
             });
         });
 
+        // إضافة نقاط لاعبي البونص
         if (sq.bonus && sq.bonus.length > 0) {
-            sq.bonus.forEach(function(bonusId) {
-                teamScore += (liveMap[bonusId] || 0);
-            });
+            sq.bonus.forEach(function(bonusId) { teamScore += (liveMap[bonusId] || 0); });
         }
-
         scores[sq.team] = teamScore;
     });
 
@@ -148,12 +140,11 @@ async function ccUpdateMainFixtures() {
 
     var round = ccState.currentRound;
     var matches = (typeof matchweeks !== 'undefined' && matchweeks[round]) ? matchweeks[round] : [];
-    
     var updated = false;
+    
     matches.forEach(function(m, idx) {
         var home = m[0], away = m[1];
         if (scores[home] !== undefined && scores[away] !== undefined) {
-            // حقن النقاط في الجدول الأصلي
             scoresStorage['r' + round + '_m' + idx + '_home'] = scores[home];
             scoresStorage['r' + round + '_m' + idx + '_away'] = scores[away];
             updated = true;
@@ -162,7 +153,7 @@ async function ccUpdateMainFixtures() {
     
     if (updated) {
         localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
-        // إعادة رسم الجدول الأساسي
+        // تحديث الجدول الأساسي في الصفحة الرئيسية
         if (typeof renderFixtures === 'function') renderFixtures();
         if (typeof renderStandings === 'function') renderStandings();
         ccLog('Main fixtures updated automatically.');
@@ -201,7 +192,7 @@ async function ccRenderTeamsGrid() {
     });
 }
 
-/* ========== PITCH VIEW ========== */
+/* ========== PITCH VIEW (TOTW STYLE) ========== */
 async function ccOpenTeam(teamCode) {
     var modal = document.getElementById('ccModal');
     var sb = ccGetSb();
@@ -251,21 +242,20 @@ function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
         return ''; 
     }
 
-    function createCard(id, isBonus, isBenchCard) {
+    // The Card Generator (Exact TOTW Match)
+    function createCard(id, isBonus) {
         var m = membersMap[id];
         if (!m) return '';
         
         var shirtUrl = getShirt(teamName);
         var pts = m.total || 0;
+        var shirtHtml = shirtUrl ? '<img src="' + shirtUrl + '" onerror="this.style.display=\'none\'">' : '';
         
-        var html = '<div class="cc-player-card ' + (isBonus ? 'is-bonus' : '') + '">';
-        if (shirtUrl) {
-            html += '<img src="' + shirtUrl + '" class="cc-player-shirt" onerror="this.style.display=\'none\'">';
-        }
-        html += '<div class="cc-player-name-box">' + ccEscapeHTML(m.entry_name || m.player_name).substring(0,10) + '</div>';
-        html += '<div class="cc-player-points">' + pts + '</div>';
-        html += '</div>';
-        return html;
+        return '<div class="cc-card">' +
+            '<div class="cc-card-shirt">' + shirtHtml + '</div>' +
+            '<div class="cc-card-name">' + ccEscapeHTML(m.entry_name || m.player_name).substring(0,10) + '</div>' +
+            '<div class="cc-card-points">' + pts + '</div>' +
+        '</div>';
     }
 
     var html = '<div class="cc-modal-box">' +
@@ -281,22 +271,30 @@ function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
     } else {
         // PITCH UI
         html += '<div class="cc-pitch-wrapper">';
+        html += '<div class="cc-pitch">';
         
-        html += '<div class="cc-pitch-team-header">';
-        if (teamLogo) html += '<img src="./' + teamLogo + '">';
-        html += '<span>' + teamName + '</span></div>';
-
-        html += '<div class="cc-pitch-row">' + starters.slice(8, 11).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
-        html += '<div class="cc-pitch-row">' + starters.slice(5, 8).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
-        html += '<div class="cc-pitch-row">' + starters.slice(1, 5).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
-        html += '<div class="cc-pitch-row">' + starters.slice(0, 1).map(function(id) { return createCard(id, bonus.includes(id), false); }).join('') + '</div>';
-        html += '</div>';
-
-        if (bench.length > 0) {
-            html += '<div class="cc-bench-wrapper"><div class="cc-bench-title">BENCH</div><div class="cc-bench-row">' +
-                bench.map(function(id) { return createCard(id, false, true); }).join('') + '</div></div>';
+        // Team Logo Animation
+        if (teamLogo) {
+            html += '<div class="cc-team-logo-top"><img src="./' + teamLogo + '"></div>';
         }
 
+        html += '<div class="cc-players-container">';
+        
+        // 4-3-3 Rows (FWD, MID, DEF, GK)
+        html += '<div class="cc-row cc-row-fwd">' + starters.slice(8, 11).map(function(id) { return createCard(id, bonus.includes(id)); }).join('') + '</div>';
+        html += '<div class="cc-row cc-row-mid">' + starters.slice(5, 8).map(function(id) { return createCard(id, bonus.includes(id)); }).join('') + '</div>';
+        html += '<div class="cc-row cc-row-def">' + starters.slice(1, 5).map(function(id) { return createCard(id, bonus.includes(id)); }).join('') + '</div>';
+        html += '<div class="cc-row cc-row-gk">' + starters.slice(0, 1).map(function(id) { return createCard(id, bonus.includes(id)); }).join('') + '</div>';
+        
+        html += '</div></div></div>'; // End Pitch
+
+        // BENCH
+        if (bench.length > 0) {
+            html += '<div class="cc-bench-wrapper"><div class="cc-bench-title">BENCH</div><div class="cc-bench-row">' +
+                bench.map(function(id) { return createCard(id, false); }).join('') + '</div></div>';
+        }
+
+        // BONUS DISPLAY
         if (bonus.length > 0) {
             var fplData = ccState.fplData;
             html += '<div class="cc-section-title" style="margin-top:20px;color:var(--purple-300);">BONUS PLAYERS</div><div class="cc-bench-row" style="gap:10px;flex-wrap:wrap;justify-content:flex-start;">';
@@ -305,10 +303,11 @@ function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
                 if (el) {
                     var teamObj = fplData.teams.find(function(t) { return t.id === el.team; });
                     var badge = 'https://resources.premierleague.com/premierleague/badges/70/t' + teamObj.code + '.png';
-                    html += '<div class="cc-player-card is-bonus">' +
-                        '<img src="' + badge + '" class="cc-player-shirt">' +
-                        '<div class="cc-player-name-box">' + el.web_name + '</div>' +
-                        '<div class="cc-player-points">' + (el.total_points || 0) + '</div></div>';
+                    // نعرض البونص بنفس شكل البطاقة
+                    html += '<div class="cc-card" style="border:1px solid #7C3AED;">' +
+                        '<div class="cc-card-shirt"><img src="' + badge + '"></div>' +
+                        '<div class="cc-card-name">' + el.web_name + '</div>' +
+                        '<div class="cc-card-points">' + (el.total_points || 0) + '</div></div>';
                 }
             });
             html += '</div>';
@@ -461,7 +460,7 @@ async function ccSaveSquad(teamCode) {
     } else {
         showToast('Squad saved successfully!', true);
         document.getElementById('ccModal').classList.remove('show');
-        ccUpdateMainFixtures(); // تحديث الجدول فوراً بعد الحفظ
+        ccUpdateMainFixtures();
     }
 }
 
@@ -481,7 +480,7 @@ async function ccSyncMembers() {
             var results = (data.standings && data.standings.results) || [];
             
             results.forEach(function(m) {
-                if (m.entry === CC_ADMIN_ID) return; // Exclude Admin
+                if (m.entry === CC_ADMIN_ID) return; // تجاهل الأدمن
                 if (!allMembers[m.entry]) {
                     allMembers[m.entry] = { entry_id: m.entry, player_name: m.player_name, entry_name: m.entry_name, total: m.total, event_total: m.event_total, teams: [] };
                 }
@@ -519,17 +518,11 @@ async function ccInit() {
     }
 
     await ccRenderTeamsGrid();
-    ccSyncMembers().then(function() { 
-        ccRenderTeamsGrid(); 
-        ccUpdateMainFixtures(); 
-    });
+    ccSyncMembers().then(function() { ccRenderTeamsGrid(); ccUpdateMainFixtures(); });
     
     if (ccState.syncTimer) clearInterval(ccState.syncTimer);
     ccState.syncTimer = setInterval(function() {
-        ccSyncMembers().then(function() { 
-            ccRenderTeamsGrid();
-            ccUpdateMainFixtures();
-        });
+        ccSyncMembers().then(function() { ccRenderTeamsGrid(); ccUpdateMainFixtures(); });
     }, CC_SYNC_INTERVAL);
 }
 
@@ -545,5 +538,5 @@ window.ccOpenSelectionList = ccOpenSelectionList;
 window.ccToggleMember = ccToggleMember;
 window.ccRenderPitchUI = ccRenderPitchUI;
 
-ccLog('v10 Loaded');
+ccLog('v12 Loaded');
 })();
