@@ -1,5 +1,5 @@
 /* =========================================================
-   champions-cup.js — v12 (Final TOTW Style)
+   champions-cup.js — v14 (Entrance Animation + Top White Area)
 ========================================================= */
 
 (function(){
@@ -23,11 +23,20 @@ var CC_TEAM_NAMES = {
     'SUN': 'Sunderland', 'TOT': 'Spurs'
 };
 
+var FPL_TO_LOCAL_TEAM = {
+    'Arsenal': 'Arsenal', 'Aston Villa': 'Aston Villa', 'Bournemouth': 'Bournemouth',
+    'Brentford': 'Brentford', 'Brighton': 'Brighton', 'Chelsea': 'Chelsea',
+    'Coventry': 'Coventry City', 'Crystal Palace': 'Crystal Palace', 'Everton': 'Everton',
+    'Fulham': 'Fulham', 'Hull': 'Hull City', 'Ipswich': 'Ipswich Town',
+    'Leeds': 'Leeds United', 'Liverpool': 'Liverpool', 'Man City': 'Man City',
+    'Man Utd': 'Man Utd', 'Newcastle': 'Newcastle', "Nott'm Forest": 'Nottingham Forest',
+    'Sunderland': 'Sunderland', 'Spurs': 'Spurs'
+};
+
 var CC_TEAMS_LIST = Object.keys(CC_LEAGUES);
 var CC_WORKER = 'https://telegoat-api.aa1623165.workers.dev';
-var CC_SYNC_INTERVAL = 10 * 60 * 1000; // 10 Minutes
+var CC_SYNC_INTERVAL = 10 * 60 * 1000;
 
-// Rules
 var CC_TOP_6 = ['ARS', 'MCI', 'MUN', 'LIV', 'CHE', 'TOT'];
 var CC_PROMOTED = ['COV', 'HUL', 'LEE'];
 var CC_ADMIN_ID = 2984723;
@@ -39,7 +48,8 @@ var ccState = {
     syncTimer: null,
     fplData: null,
     _currentEdit: null,
-    _bonusStep: 0
+    _bonusStep: 0,
+    _recentGWsPoints: {} 
 };
 
 /* ========== HELPERS ========== */
@@ -48,7 +58,6 @@ function ccGetSb() { return window.sbClient || null; }
 function ccEscapeHTML(s) { return String(s || '').replace(/[&<>"']/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 function ccFetch(url, timeout) { timeout = timeout || 15000; if (typeof fetchWithTimeout === 'function') return fetchWithTimeout(url, {}, timeout); return fetch(url); }
 
-/* ========== DATA FETCHING ========== */
 async function ccFetchFplBootstrap() {
     if (ccState.fplData) return ccState.fplData;
     try {
@@ -61,7 +70,37 @@ async function ccFetchFplBootstrap() {
     return null;
 }
 
-/* ========== CALCULATE SCORES (IGNORING CHIPS) ========== */
+async function ccFetchLast5GWs(currentGW) {
+    if (ccState._recentGWsPoints && Object.keys(ccState._recentGWsPoints).length > 0) {
+        return ccState._recentGWsPoints;
+    }
+
+    var pointsMap = {};
+    var startGW = Math.max(1, currentGW - 5);
+
+    var promises = [];
+    for (var gw = startGW; gw < currentGW; gw++) {
+        promises.push(
+            ccFetch(CC_WORKER + '/?type=live&gw=' + gw)
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(data) { return { gw: gw, data: data }; })
+        );
+    }
+
+    var results = await Promise.all(promises);
+    
+    results.forEach(function(res) {
+        if (!res.data || !res.data.elements) return;
+        res.data.elements.forEach(function(el) {
+            if (!pointsMap[el.id]) pointsMap[el.id] = {};
+            pointsMap[el.id][res.gw] = el.stats.total_points || 0;
+        });
+    });
+
+    ccState._recentGWsPoints = pointsMap;
+    return pointsMap;
+}
+
 async function ccCalculateAllScores() {
     var round = ccState.currentRound;
     var fplData = await ccFetchFplBootstrap();
@@ -103,27 +142,18 @@ async function ccCalculateAllScores() {
         sq.starters.forEach(function(entryId) {
             var picks = picksMap[entryId];
             if (!picks) return;
-
             var starters = picks.filter(function(p) { return p.position <= 11; });
             var cap = starters.find(function(p) { return p.is_captain; });
             var vc = starters.find(function(p) { return p.is_vice_captain; });
-            
             var targetCapId = cap ? cap.element : (vc ? vc.element : null);
-            if (cap) {
-                var capLive = liveData.elements.find(function(e) { return e.id === cap.element; });
-                // إذا الكابتن ما لعب، نأخذ نائب الكابتن
-                if (capLive && capLive.stats.minutes === 0 && vc) { targetCapId = vc.element; }
-            }
-
+            if (cap && liveData.elements.find(function(e) { return e.id === cap.element; })?.stats.minutes === 0 && vc) { targetCapId = vc.element; }
             starters.forEach(function(p) {
                 var pts = liveMap[p.element] || 0;
                 teamScore += pts;
-                // الكابتن ياخذ ضعف النقاط فقط (تجاهل التربل كابتن)
-                if (p.element === targetCapId) { teamScore += pts; }
+                if (p.element === targetCapId) teamScore += pts;
             });
         });
 
-        // إضافة نقاط لاعبي البونص
         if (sq.bonus && sq.bonus.length > 0) {
             sq.bonus.forEach(function(bonusId) { teamScore += (liveMap[bonusId] || 0); });
         }
@@ -133,7 +163,6 @@ async function ccCalculateAllScores() {
     return scores;
 }
 
-/* ========== AUTO UPDATE MAIN FIXTURES ========== */
 async function ccUpdateMainFixtures() {
     var scores = await ccCalculateAllScores();
     if (!scores || Object.keys(scores).length === 0) return;
@@ -153,14 +182,11 @@ async function ccUpdateMainFixtures() {
     
     if (updated) {
         localStorage.setItem('fpl_scores', JSON.stringify(scoresStorage));
-        // تحديث الجدول الأساسي في الصفحة الرئيسية
         if (typeof renderFixtures === 'function') renderFixtures();
         if (typeof renderStandings === 'function') renderStandings();
-        ccLog('Main fixtures updated automatically.');
     }
 }
 
-/* ========== RENDER TEAMS GRID ========== */
 async function ccRenderTeamsGrid() {
     var container = document.getElementById('ccTeamsGrid');
     if (!container) return;
@@ -192,7 +218,6 @@ async function ccRenderTeamsGrid() {
     });
 }
 
-/* ========== PITCH VIEW (TOTW STYLE) ========== */
 async function ccOpenTeam(teamCode) {
     var modal = document.getElementById('ccModal');
     var sb = ccGetSb();
@@ -242,11 +267,9 @@ function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
         return ''; 
     }
 
-    // The Card Generator (Exact TOTW Match)
     function createCard(id, isBonus) {
         var m = membersMap[id];
         if (!m) return '';
-        
         var shirtUrl = getShirt(teamName);
         var pts = m.total || 0;
         var shirtHtml = shirtUrl ? '<img src="' + shirtUrl + '" onerror="this.style.display=\'none\'">' : '';
@@ -269,32 +292,29 @@ function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
             html += '<button class="cc-action-btn" onclick="ccOpenSquadEditor(\'' + teamCode + '\')">Edit Squad</button>';
         }
     } else {
-        // PITCH UI
         html += '<div class="cc-pitch-wrapper">';
         html += '<div class="cc-pitch">';
         
-        // Team Logo Animation
+        // إضافة الغطاء الأبيض ذو الحواف الهلالية
+        html += '<div class="cc-pitch-top-white"></div>';
+        
+        // الشعار مع الأنميشن
         if (teamLogo) {
             html += '<div class="cc-team-logo-top"><img src="./' + teamLogo + '"></div>';
         }
 
         html += '<div class="cc-players-container">';
-        
-        // 4-3-3 Rows (FWD, MID, DEF, GK)
         html += '<div class="cc-row cc-row-fwd">' + starters.slice(8, 11).map(function(id) { return createCard(id, bonus.includes(id)); }).join('') + '</div>';
         html += '<div class="cc-row cc-row-mid">' + starters.slice(5, 8).map(function(id) { return createCard(id, bonus.includes(id)); }).join('') + '</div>';
         html += '<div class="cc-row cc-row-def">' + starters.slice(1, 5).map(function(id) { return createCard(id, bonus.includes(id)); }).join('') + '</div>';
         html += '<div class="cc-row cc-row-gk">' + starters.slice(0, 1).map(function(id) { return createCard(id, bonus.includes(id)); }).join('') + '</div>';
-        
-        html += '</div></div></div>'; // End Pitch
+        html += '</div></div></div>';
 
-        // BENCH
         if (bench.length > 0) {
             html += '<div class="cc-bench-wrapper"><div class="cc-bench-title">BENCH</div><div class="cc-bench-row">' +
                 bench.map(function(id) { return createCard(id, false); }).join('') + '</div></div>';
         }
 
-        // BONUS DISPLAY
         if (bonus.length > 0) {
             var fplData = ccState.fplData;
             html += '<div class="cc-section-title" style="margin-top:20px;color:var(--purple-300);">BONUS PLAYERS</div><div class="cc-bench-row" style="gap:10px;flex-wrap:wrap;justify-content:flex-start;">';
@@ -302,10 +322,12 @@ function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
                 var el = fplData ? fplData.elements.find(function(e) { return e.id === bonusId; }) : null;
                 if (el) {
                     var teamObj = fplData.teams.find(function(t) { return t.id === el.team; });
-                    var badge = 'https://resources.premierleague.com/premierleague/badges/70/t' + teamObj.code + '.png';
-                    // نعرض البونص بنفس شكل البطاقة
+                    var mappedName = FPL_TO_LOCAL_TEAM[teamObj.name] || teamObj.name;
+                    var shirtUrl = getShirt(mappedName);
+                    var shirtHtml = shirtUrl ? '<img src="' + shirtUrl + '">' : '<img src="https://resources.premierleague.com/premierleague/badges/70/t' + teamObj.code + '.png">';
+                    
                     html += '<div class="cc-card" style="border:1px solid #7C3AED;">' +
-                        '<div class="cc-card-shirt"><img src="' + badge + '"></div>' +
+                        '<div class="cc-card-shirt">' + shirtHtml + '</div>' +
                         '<div class="cc-card-name">' + el.web_name + '</div>' +
                         '<div class="cc-card-points">' + (el.total_points || 0) + '</div></div>';
                 }
@@ -330,7 +352,6 @@ function ccRenderPitchUI(teamCode, allMembers, squad, isEdit) {
     modal.innerHTML = html;
 }
 
-/* ========== SELECTION LIST ========== */
 async function ccOpenSelectionList(teamCode) {
     var sb = ccGetSb();
     var { data: members } = await sb.from('champions_cup_members').select('*');
@@ -377,13 +398,18 @@ function ccToggleMember(entryId, teamCode) {
     ccOpenSelectionList(teamCode);
 }
 
-/* ========== BONUS LOGIC ========== */
 async function ccOpenBonusModal(teamCode) {
     var fplData = await ccFetchFplBootstrap();
     if (!fplData) return alert('FPL Data not loaded');
 
+    var modal = document.getElementById('ccModal');
+    modal.innerHTML = '<div class="cc-modal-box"><div class="cc-loading">Loading Bonus Players...</div></div>';
+
     var step = ccState._bonusStep;
     var title = step === 0 ? 'Bonus 1 (Not Top 6 & Promoted)' : 'Bonus 2 (Promoted Only)';
+    
+    var recentGWs = await ccFetchLast5GWs(ccState.currentRound);
+    
     var validElements = [];
 
     fplData.elements.forEach(function(el) {
@@ -404,23 +430,67 @@ async function ccOpenBonusModal(teamCode) {
 
     validElements.sort(function(a, b) { return b.el.total_points - a.el.total_points; });
 
+    var listHtml = '';
+    validElements.forEach(function(item) {
+        var mappedName = FPL_TO_LOCAL_TEAM[item.teamObj.name] || item.teamObj.name;
+        var shirtUrl = (typeof TEAMS_SHIRTS !== 'undefined' && TEAMS_SHIRTS[mappedName]) ? './' + TEAMS_SHIRTS[mappedName].file : 'https://resources.premierleague.com/premierleague/badges/70/t' + item.teamObj.code + '.png';
+        
+        var gwBoxes = '';
+        for (var gw = Math.max(1, ccState.currentRound - 5); gw < ccState.currentRound; gw++) {
+            var pts = (recentGWs[item.el.id] && recentGWs[item.el.id][gw] !== undefined) ? recentGWs[item.el.id][gw] : '-';
+            var cls = '';
+            if (pts >= 6) cls = 'high';
+            else if (pts >= 3) cls = 'med';
+            else if (pts === 0) cls = 'low';
+            
+            gwBoxes += '<div class="cc-gw-box ' + cls + '">' + pts + '</div>';
+        }
+
+        listHtml += '<div class="cc-bonus-row" onclick="ccSelectBonusPlayer(' + item.el.id + ', \'' + teamCode + '\')">' +
+            '<div class="cc-bonus-shirt"><img src="' + shirtUrl + '"></div>' +
+            '<div class="cc-bonus-info">' +
+                '<div class="cc-bonus-name">' + item.el.web_name + '</div>' +
+                '<div class="cc-bonus-team">' + item.teamObj.name + '</div>' +
+            '</div>' +
+            '<div class="cc-bonus-gws">' + gwBoxes + '</div>' +
+            '<div class="cc-bonus-total">' +
+                '<div class="cc-bonus-total-num">' + item.el.total_points + '</div>' +
+                '<div class="cc-bonus-total-label">Total</div>' +
+            '</div>' +
+        '</div>';
+    });
+
     var html = '<div class="cc-modal-box">' +
         '<div class="cc-modal-header"><div class="cc-modal-title">' + title + '</div>' +
         '<button class="cc-modal-close" onclick="ccRenderPitchUI(\''+teamCode+'\', null, null, true)"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button></div>' +
-        '<div class="cc-modal-body"><div class="cc-list-container">';
-    
-    validElements.forEach(function(item) {
-        var badge = 'https://resources.premierleague.com/premierleague/badges/70/t' + item.teamObj.code + '.png';
-        html += '<div class="cc-bonus-item" onclick="ccSelectBonusPlayer(' + item.el.id + ', \''+teamCode+'\')">' +
-            '<img src="' + badge + '" class="cc-bonus-img">' +
-            '<div><div class="cc-bonus-name">' + item.el.web_name + '</div>' +
-            '<div class="cc-bonus-team">' + item.teamObj.name + ' | ' + item.el.total_points + ' pts</div></div>' +
-            '</div>';
-    });
-
-    html += '</div></div></div>';
-    document.getElementById('ccModal').innerHTML = html;
+        '<div class="cc-modal-body" style="padding:0;">' +
+            '<div class="cc-bonus-container">' +
+                '<div class="cc-bonus-search">' +
+                    '<span class="tg-icon tg-icon-sm tg-icon-search" style="color:#A1A1B5;"></span>' +
+                    '<input type="text" id="ccBonusSearch" placeholder="Search player..." oninput="ccFilterBonusList(this.value)">' +
+                '</div>' +
+                '<div class="cc-bonus-list-wrapper" id="ccBonusListWrapper">' +
+                    listHtml +
+                '</div>' +
+            '</div>' +
+        '</div></div>';
+        
+    modal.innerHTML = html;
 }
+
+window.ccFilterBonusList = function(query) {
+    var q = query.toLowerCase().trim();
+    var rows = document.querySelectorAll('#ccBonusListWrapper .cc-bonus-row');
+    rows.forEach(function(row) {
+        var name = row.querySelector('.cc-bonus-name').innerText.toLowerCase();
+        var team = row.querySelector('.cc-bonus-team').innerText.toLowerCase();
+        if (name.includes(q) || team.includes(q)) {
+            row.style.display = 'flex';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+};
 
 function ccSelectBonusPlayer(playerId, teamCode) {
     var fplData = ccState.fplData;
@@ -439,7 +509,6 @@ function ccSelectBonusPlayer(playerId, teamCode) {
     }
 }
 
-/* ========== SAVE SQUAD ========== */
 async function ccSaveSquad(teamCode) {
     var state = ccState._currentEdit;
     if (state.starters.length !== 11 || state.bench.length !== 2) {
@@ -464,7 +533,6 @@ async function ccSaveSquad(teamCode) {
     }
 }
 
-/* ========== SYNC MEMBERS ========== */
 async function ccSyncMembers() {
     if (ccState.loading) return { ok: false };
     ccState.loading = true;
@@ -480,7 +548,7 @@ async function ccSyncMembers() {
             var results = (data.standings && data.standings.results) || [];
             
             results.forEach(function(m) {
-                if (m.entry === CC_ADMIN_ID) return; // تجاهل الأدمن
+                if (m.entry === CC_ADMIN_ID) return; 
                 if (!allMembers[m.entry]) {
                     allMembers[m.entry] = { entry_id: m.entry, player_name: m.player_name, entry_name: m.entry_name, total: m.total, event_total: m.event_total, teams: [] };
                 }
@@ -507,7 +575,6 @@ async function ccSyncMembers() {
     return { ok: true, count: membersArr.length };
 }
 
-/* ========== INIT ========== */
 async function ccInit() {
     ccState.currentRound = (typeof currentRound !== 'undefined') ? currentRound : 1;
     
@@ -526,7 +593,6 @@ async function ccInit() {
     }, CC_SYNC_INTERVAL);
 }
 
-/* ========== EXPORTS ========== */
 window.ccInit = ccInit;
 window.ccSyncMembers = ccSyncMembers;
 window.ccOpenTeam = ccOpenTeam;
@@ -538,5 +604,5 @@ window.ccOpenSelectionList = ccOpenSelectionList;
 window.ccToggleMember = ccToggleMember;
 window.ccRenderPitchUI = ccRenderPitchUI;
 
-ccLog('v12 Loaded');
+ccLog('v14 Loaded');
 })();
