@@ -1,13 +1,10 @@
 /* =========================================================
-   config.js — v13
-   - تمرير طلبات Supabase عبر Cloudflare Worker لتجاوز حظر سفاري
-   - الإبقاء على رابط ومفتاح مشروع سيول (Telegoat-New)
+   config.js — v14 (Telegoat - Connected to Finalissima DB)
 ========================================================= */
 
-// ⚡ هنا التغيير الأهم: نمرر طلبات سوباس عبر الـ Worker
-const SUPABASE_URL = 'https://telegoat-api.aa1623165.workers.dev/supabase';
-
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnbmhleWRweG1tcWZkaWJncWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTY0MzMsImV4cCI6MjEwNzgzMjQzM30.T-QzrIrDdPZeq97vjYBDYY2gBzyLhLqN_DcnKBxTDpI';
+// ⚡ نفس الرابط والمفتاح الذي يعمل عليه الفيناليسما بنجاح
+const SUPABASE_URL = 'https://qragywbzlbzzjygdvxkk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyYWd5d2J6bGJ6emp5Z2R2eGtrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1Mjk1OTcsImV4cCI6MjEwNjEwNTU5N30.-0TQGJH6dKoPygwW-Co9o609_sUUq90KY6nWpTCfELc';
 
 window.sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
