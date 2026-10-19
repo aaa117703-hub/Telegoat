@@ -1,5 +1,5 @@
 /* =========================================================
-   champions-cup.js — v22 (Bonus Points Fixed)
+   champions-cup.js — v24 (Fixed Closure Bug + Live Points)
 ========================================================= */
 
 (function(){
@@ -57,8 +57,9 @@ var ccState = {
     _currentEdit: null,
     _bonusStep: 0,
     _recentGWsPoints: {},
-    _recentGWsRound: 0, // لحل مشكلة الكاش
-    _cachedMembers: null 
+    _recentGWsRound: 0, 
+    _cachedMembers: null,
+    _currentGWPoints: 0
 };
 
 /* ========== HELPERS ========== */
@@ -112,22 +113,21 @@ function ccRenderDeadlineBar(round) {
     return '<div style="background:rgba(16,185,129,0.15);color:#10B981;text-align:center;padding:8px;border-radius:8px;margin-bottom:10px;font-weight:900;font-size:12px;border:1px solid #10B981;">⏳ متبقي ' + timeStr + ' (الديدلاين: ' + formattedDate + ')</div>';
 }
 
-/* ========== FETCH LAST 5 GWs (Fixed Cache) ========== */
+/* ========== FETCH LAST 5 GWs (Fixed Let Bug) ========== */
 async function ccFetchLast5GWs(currentGW) {
-    // إذا كنا محتفظين بالبيانات لنفس الجولة، نرجعها فوراً
     if (ccState._recentGWsRound === currentGW && ccState._recentGWsPoints && Object.keys(ccState._recentGWsPoints).length > 0) {
         return ccState._recentGWsPoints;
     }
     
-    ccState._recentGWsPoints = {}; // تصفير الكاش القديم
+    ccState._recentGWsPoints = {}; 
     ccState._recentGWsRound = currentGW;
 
     var pointsMap = {}; 
     var startGW = Math.max(1, currentGW - 5); 
     var promises = [];
     
-    // جلب آخر 5 جولات
-    for (var gw = startGW; gw < currentGW; gw++) {
+    // إصلاح الخطأ باستخدام let بدلاً من var
+    for (let gw = startGW; gw < currentGW; gw++) {
         promises.push(
             ccFetch(CC_WORKER + '/?type=live&gw=' + gw)
             .then(function(r) { return r.ok ? r.json() : null; })
@@ -199,14 +199,15 @@ async function ccCalculateTeamCurrentPoints(teamCode, squad) {
     return teamScore;
 }
 
-/* ========== CALCULATE ALL SCORES (For Table) ========== */
-async function ccCalculateAllScores() {
+/* ========== AUTO UPDATE MAIN FIXTURES ========== */
+async function ccUpdateMainFixtures(isForced) {
     var round = ccState.currentRound;
     var fplData = await ccFetchFplBootstrap();
     if (!fplData) return {};
     var liveRes = await ccFetch(CC_WORKER + '/?type=live&gw=' + round);
     var liveData = liveRes.ok ? await liveRes.json() : null;
     if (!liveData) return {};
+
     var liveMap = {};
     liveData.elements.forEach(function(el) { liveMap[el.id] = el.stats.total_points || 0; });
 
@@ -245,14 +246,7 @@ async function ccCalculateAllScores() {
         if (sq.bonus && sq.bonus.length > 0) { sq.bonus.forEach(function(bonusId) { teamScore += (liveMap[bonusId] || 0); }); }
         scores[sq.team] = teamScore;
     });
-    return scores;
-}
 
-/* ========== AUTO UPDATE MAIN FIXTURES ========== */
-async function ccUpdateMainFixtures(isForced) {
-    var scores = await ccCalculateAllScores();
-    if (!scores || Object.keys(scores).length === 0) return;
-    var round = ccState.currentRound;
     var matches = (typeof matchweeks !== 'undefined' && matchweeks[round]) ? matchweeks[round] : [];
     var updated = false; var rows = [];
 
@@ -278,6 +272,7 @@ async function ccUpdateMainFixtures(isForced) {
             } catch (e) { if (isForced && typeof showToast === 'function') showToast('فشل تحديث الجدول: ' + e.message, false); }
         }
     }
+    return scores;
 }
 window.ccForceSync = function() { if (typeof showToast === 'function') showToast('جاري تحديث الجدول...', false); ccUpdateMainFixtures(true); };
 
@@ -388,6 +383,7 @@ async function ccOpenTeam(teamCode) {
     }
     
     var gwPoints = await ccCalculateTeamCurrentPoints(teamCode, squad);
+    ccState._currentGWPoints = gwPoints;
     ccRenderPitchUI(teamCode, allMembers, squad, false, gwPoints);
 }
 
@@ -429,6 +425,7 @@ async function ccOpenSquadEditor(teamCode) {
     };
     
     var gwPoints = await ccCalculateTeamCurrentPoints(teamCode, squad);
+    ccState._currentGWPoints = gwPoints;
     ccRenderPitchUI(teamCode, allMembers, null, true, gwPoints);
 }
 
@@ -636,8 +633,7 @@ async function ccOpenBonusModal(teamCode) {
         var shirtUrl = (typeof TEAMS_SHIRTS !== 'undefined' && TEAMS_SHIRTS[mappedName]) ? './' + TEAMS_SHIRTS[mappedName].file : 'https://resources.premierleague.com/premierleague/badges/70/t' + item.teamObj.code + '.png';
         var gwBoxes = '';
         
-        // Build the 5 GW boxes
-        for (var gw = Math.max(1, ccState.currentRound - 5); gw < ccState.currentRound; gw++) {
+        for (let gw = Math.max(1, ccState.currentRound - 5); gw < ccState.currentRound; gw++) {
             var pts = 0;
             if (recentGWs && recentGWs[item.el.id] && recentGWs[item.el.id][gw] !== undefined) {
                 pts = recentGWs[item.el.id][gw];
@@ -761,5 +757,8 @@ window.ccToggleMember = ccToggleMember;
 window.ccRenderPitchUI = ccRenderPitchUI;
 window.ccPromptPin = ccPromptPin;
 
-ccLog('v22 Loaded');
+// ⚡ FIX: إضافة اسم الدالة القديم عشان ما يطلع خطأ (ReferenceError)
+window.ccRenderTeams = ccRenderTeamsGrid; 
+
+ccLog('v24 Loaded');
 })();
