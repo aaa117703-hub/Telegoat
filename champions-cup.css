@@ -1,7 +1,5 @@
 /* =========================================================
-   champions-cup.css — v9 (Original 100% + TOTW Pitch)
-   Champions Cup System
-   Dark Luxury Theme
+   champions-cup.css — v10 (Original + Top White Area + Logo Animation)
 ========================================================= */
 
 /* =========================================================
@@ -1038,30 +1036,51 @@
     transition: box-shadow 0.4s var(--ease-out);
 }
 
-/* ===== 17. LOGO ANIMATION ===== */
+/* ===== 17. TOP WHITE OVERLAY & LOGO ANIMATION ===== */
+.cc-pitch-top-white {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8%; /* 5% to 8% as requested */
+    background: rgba(15, 15, 20, 0.4); /* Dark semi-transparent overlay */
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    z-index: 4;
+    border-bottom: 2px solid rgba(124, 58, 237, 0.5); /* Purple glow border */
+    pointer-events: none;
+}
+
 .cc-team-logo-top {
     position: absolute;
-    top: 11%;
+    top: 1%; /* Adjusted to sit inside the white area */
     left: 50%;
     transform: translateX(-50%);
-    z-index: 5;
+    z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 5px;
-    animation: floatLogo 4s ease-in-out infinite;
+    /* Entrance Animation */
+    animation: logoEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .cc-team-logo-top img {
     width: 65px;
     height: 65px;
     object-fit: contain;
-    filter: drop-shadow(0 0 15px rgba(124, 58, 237, 0.8));
+    filter: drop-shadow(0 4px 10px rgba(124, 58, 237, 0.8));
 }
 
-@keyframes floatLogo {
-    0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
-    50% { transform: translateX(-50%) translateY(-8px) scale(1.05); }
+@keyframes logoEntrance {
+    0% { 
+        opacity: 0; 
+        transform: translateX(-50%) translateY(-30px) scale(0.8); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateX(-50%) translateY(0) scale(1); 
+    }
 }
 
 /* ===== 18. PLAYERS CONTAINER ===== */
@@ -1253,43 +1272,133 @@
 .cc-action-btn.save { background: var(--green-500, #10B981); }
 .cc-action-btn.bonus { background: var(--amber-500, #F59E0B); color: #000; }
 
-.cc-list-container {
-    max-height: 400px;
-    overflow-y: auto;
+/* =========================================================
+   BONUS LIST STYLE (Dark Theme + Search + 5 GWs)
+   ========================================================= */
+.cc-bonus-container {
+    background: var(--bg-card, #1A1A22);
+    border-radius: 16px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding-right: 5px;
+    border: 1px solid var(--border, #2E2E3A);
 }
-.cc-list-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 15px;
-    background: var(--bg-elevated, #24242E);
-    border-radius: 10px;
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.cc-list-item:hover { border-color: var(--purple-500, #7C3AED); }
-.cc-list-item.is-starter { background: rgba(16,185,129,0.15); border-color: var(--green-500, #10B981); }
-.cc-list-item.is-bench { background: rgba(245,158,11,0.15); border-color: var(--amber-500, #F59E0B); }
-.cc-list-name { font-size: 13px; font-weight: 800; color: #fff; }
-.cc-list-pts { font-size: 13px; font-weight: 900; color: var(--purple-300, #A78BFA); }
 
-.cc-bonus-item {
+.cc-bonus-search {
+    padding: 12px 16px;
+    background: var(--bg-elevated, #24242E);
+    border-bottom: 1px solid var(--border, #2E2E3A);
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px;
-    background: var(--bg-elevated, #24242E);
-    border-radius: 8px;
-    margin-bottom: 5px;
-    cursor: pointer;
-    border: 1px solid transparent;
 }
-.cc-bonus-item:hover { border-color: var(--purple-500, #7C3AED); }
-.cc-bonus-img { width: 35px; height: 35px; object-fit: contain; }
-.cc-bonus-name { font-size: 13px; font-weight: 800; color: #fff; }
-.cc-bonus-team { font-size: 10px; color: var(--text-secondary, #A1A1B5); }
+.cc-bonus-search input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+}
+.cc-bonus-search input::placeholder {
+    color: var(--text-tertiary, #6B6B80);
+}
+
+.cc-bonus-list-wrapper {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.cc-bonus-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border, #2E2E3A);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.cc-bonus-row:hover {
+    background: var(--bg-elevated, #24242E);
+}
+.cc-bonus-row:last-child {
+    border-bottom: none;
+}
+
+/* Left: Shirt */
+.cc-bonus-shirt {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+}
+.cc-bonus-shirt img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+/* Middle: Name & Team */
+.cc-bonus-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.cc-bonus-name {
+    font-size: 14px;
+    font-weight: 900;
+    color: #fff;
+}
+.cc-bonus-team {
+    font-size: 11px;
+    color: var(--text-secondary, #A1A1B5);
+    font-weight: 600;
+}
+
+/* Right: 5 GWs */
+.cc-bonus-gws {
+    display: flex;
+    gap: 6px;
+    margin: 0 15px;
+}
+.cc-gw-box {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-elevated, #24242E);
+    border: 1px solid var(--border, #2E2E3A);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #fff;
+}
+.cc-gw-box.high { background: rgba(16, 185, 129, 0.2); border-color: #10B981; color: #10B981; }
+.cc-gw-box.med { background: rgba(245, 158, 11, 0.2); border-color: #F59E0B; color: #F59E0B; }
+.cc-gw-box.low { background: rgba(239, 68, 68, 0.2); border-color: #EF4444; color: #EF4444; }
+
+/* Far Right: Total */
+.cc-bonus-total {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 50px;
+}
+.cc-bonus-total-num {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--purple-300, #A78BFA);
+}
+.cc-bonus-total-label {
+    font-size: 9px;
+    color: var(--text-tertiary, #6B6B80);
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
