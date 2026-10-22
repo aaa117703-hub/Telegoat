@@ -72,7 +72,7 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
                     away_team: match[1],
                     home_score: hasHome ? parseInt(hVal, 10) : null,
                     away_score: hasAway ? parseInt(aVal, 10) : null,
-                    created_at: Date.now()
+                    created_at: new Date().toISOString()
                 });
             }
         });
