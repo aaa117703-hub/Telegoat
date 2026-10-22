@@ -1,5 +1,5 @@
 /* =========================================================
-   supabase.js
+   supabase.js — v9 (Fixed created_at timestamp)
 ========================================================= */
 
 async function loadScoresFromSupabase(matchweeks) {
@@ -72,7 +72,7 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
                     away_team: match[1],
                     home_score: hasHome ? parseInt(hVal, 10) : null,
                     away_score: hasAway ? parseInt(aVal, 10) : null,
-                    created_at: new Date().toISOString()
+                    created_at: new Date().toISOString() // ✅ تم الإصلاح هنا
                 });
             }
         });
