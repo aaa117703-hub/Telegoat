@@ -1,6 +1,7 @@
 /* =========================================================
    manager-squad.js — v6
-   - إصلاح: روابط الـ Worker (fpl-api)
+   - تصحيح رابط Worker
+   - إضافة: تحديث تلقائي كل 5 دقايق (Live Points)
 ========================================================= */
 
 (function(){
@@ -40,18 +41,14 @@ const FPL_TO_LOCAL_TEAM = {
 
 function getTeamLogo(fplTeam) {
     if (!fplTeam) return '';
-
     const rawName = fplTeam.name || '';
     const mappedName = FPL_TO_LOCAL_TEAM[rawName] || rawName;
-
     if (typeof TEAMS_LOGOS !== 'undefined' && TEAMS_LOGOS[mappedName]) {
         return './' + TEAMS_LOGOS[mappedName];
     }
-
     if (fplTeam.code) {
         return 'https://resources.premierleague.com/premierleague/badges/70/t' + fplTeam.code + '.png';
     }
-
     return '';
 }
 
@@ -66,10 +63,7 @@ async function findEntryId(managerName, teamName){
     const all = await getAllManagersCached();
     if(!all || all.length === 0) return null;
 
-    const clean = function(s){
-        return String(s||'').toLowerCase().trim().replace(/\s+/g,' ');
-    };
-
+    const clean = function(s){ return String(s||'').toLowerCase().trim().replace(/\s+/g,' '); };
     const mClean = clean(managerName);
     const tClean = clean(teamName);
 
@@ -92,16 +86,14 @@ async function findEntryId(managerName, teamName){
     return null;
 }
 
-/* ========== Fetch Squad ========== */
+/* ========== Fetch Squad & Live (تم تصحيح الروابط) ========== */
 async function fetchSquad(entryId, gw){
-    // ✅ تم إصلاح الرابط هنا
     const res = await fetchWithTimeout('https://fpl-api.aaa117703.workers.dev/?type=picks&entry=' + entryId + '&gw=' + gw);
-    if       (!res.ok) throw new Error('HTTP ' + res '.status);
-    return awaitGK res.json();
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
 }
 
-async function fetch':Live(gw){
-     // ✅ تم إصلاح الرابط هنا
+async function fetchLive(gw){
     const res = await fetchWithTimeout('https://fpl-api.aaa117703.workers.dev/?type=live&gw=' + gw);
     if(!res.ok) throw new Error('HTTP ' + res.status);
     return await res.json();
@@ -144,7 +136,7 @@ function renderSquad(managerName, gw, picksData, liveData){
     const POS_MAP = {1:'GK', 2:'DEF', 3:'MID', 4:'FWD'};
 
     const groups = {
- {name:'Goalkeeper',  players:[]},
+        'GK':  {name:'Goalkeeper',  players:[]},
         'DEF': {name:'Defenders',   players:[]},
         'MID': {name:'Midfielders', players:[]},
         'FWD': {name:'Forwards',    players:[]}
@@ -233,7 +225,7 @@ function renderSquad(managerName, gw, picksData, liveData){
 }
 
 function closeBtnHTML(){
-    return '<button class="squad-modal-close" onclick="document.getElementById(\'squadModal\').classList.remove(\'show\')">' +
+    return '<button class="squad-modal-close" onclick="document.getElementById(\'squadModal\').classList.remove(\'show\'); clearInterval(window._squadLiveInt);">' +
                 '<span class="tg-icon tg-icon-sm tg-icon-close"></span>' +
             '</button>';
 }
@@ -241,6 +233,9 @@ function closeBtnHTML(){
 async function openSquadModal(entryId, managerName){
     const modal = document.getElementById('squadModal');
     if(!modal) return;
+
+    // مسح أي تحديث قديم شغال
+    if (window._squadLiveInt) clearInterval(window._squadLiveInt);
 
     modal.innerHTML =
         '<div class="squad-modal-box">' +
@@ -255,20 +250,20 @@ async function openSquadModal(entryId, managerName){
     modal.classList.add('show');
 
     modal.onclick = function(e){
-        if(e.target === modal) modal.classList.remove('show');
+        if(e.target === modal) {
+            modal.classList.remove('show');
+            if (window._squadLiveInt) clearInterval(window._squadLiveInt);
+        }
     };
 
     try {
         const currentGw = getCurrentGw();
-
         let picksData = null;
         let usedGw = currentGw;
 
         try {
             picksData = await fetchSquad(entryId, currentGw);
-            if(!picksData.picks || picksData.picks.length === 0){
-                throw new Error('empty');
-            }
+            if(!picksData.picks || picksData.picks.length === 0) throw new Error('empty');
         } catch(e){
             console.warn('[SQUAD] GW ' + currentGw + ' failed, trying previous');
             usedGw = Math.max(1, currentGw - 1);
@@ -282,8 +277,8 @@ async function openSquadModal(entryId, managerName){
             console.warn('[SQUAD] Live data unavailable:', e.message);
         }
 
+        // رسم الواجهة لأول مرة
         const content = renderSquad(managerName, usedGw, picksData, liveData);
-
         modal.innerHTML =
             '<div class="squad-modal-box">' +
                 closeBtnHTML() +
@@ -294,9 +289,30 @@ async function openSquadModal(entryId, managerName){
                 content +
             '</div>';
 
-        modal.onclick = function(e){
-            if(e.target === modal) modal.classList.remove('show');
-        };
+        // ✅ التحديث التلقائي كل 5 دقايق (300,000 مللي ثانية)
+        window._squadLiveInt = setInterval(async () => {
+            // إذا انسدت النافذة يوقف التحديث
+            if(!modal.classList.contains('show')) {
+                clearInterval(window._squadLiveInt);
+                return;
+            }
+            console.log('[SQUAD] Auto-refreshing live points (5 min)...');
+            try {
+                const freshLive = await fetchLive(usedGw);
+                const freshContent = renderSquad(managerName, usedGw, picksData, freshLive);
+                // تحديث المحتوى فقط بدون ما نعيد بناء الهيدر
+                const box = modal.querySelector('.squad-modal-box');
+                if(box) {
+                    box.innerHTML = closeBtnHTML() + 
+                        '<div class="squad-modal-title">' +
+                            '<div class="squad-modal-manager">' + escapeHTML(managerName || 'Squad') + '</div>' +
+                            '<div class="squad-modal-subtitle">GW ' + usedGw + ' Squad (Live)</div>' +
+                        '</div>' + freshContent;
+                }
+            } catch(err) {
+                console.warn('[SQUAD] Auto-refresh failed:', err.message);
+            }
+        }, 5 * 60 * 1000);
 
     } catch(e){
         console.error('[SQUAD] Failed:', e);
@@ -316,7 +332,6 @@ function attachSquadButton(){
     if(!profile) return;
     if(profile.style.display === 'none') return;
     if(!profile.querySelector('.stats-profile-card')) return;
-
     if(profile.querySelector('.btn-view-squad')) return;
 
     const playerEl = profile.querySelector('.stats-profile-player');
@@ -330,9 +345,7 @@ function attachSquadButton(){
     const btn = document.createElement('button');
     btn.className = 'btn-view-squad';
     btn.type = 'button';
-    btn.innerHTML =
-        '<span class="tg-icon tg-icon-sm tg-icon-squad"></span>' +
-        '<span>View FPL Squad</span>';
+    btn.innerHTML = '<span class="tg-icon tg-icon-sm tg-icon-squad"></span><span>View FPL Squad</span>';
 
     btn.addEventListener('click', async function(){
         const origHTML = btn.innerHTML;
@@ -348,7 +361,6 @@ function attachSquadButton(){
                 alert('Could not find this manager in FPL league.');
                 return;
             }
-
             await openSquadModal(entryId, teamName || playerName);
         } catch(e){
             console.error('[SQUAD] Error:', e);
@@ -359,13 +371,8 @@ function attachSquadButton(){
     });
 
     const card = profile.querySelector('.stats-profile-card');
-    if(card){
-        card.appendChild(btn);
-    } else {
-        profile.appendChild(btn);
-    }
-
-    console.log('[SQUAD] Button added for:', playerName, '|', teamName);
+    if(card) card.appendChild(btn);
+    else profile.appendChild(btn);
 }
 
 let _profileObserver = null;
