@@ -38,6 +38,8 @@ document.addEventListener('touchend', function(e) {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/eruda@2.4.1/eruda.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<!-- ✅ تمت إضافة مكتبة GSAP للأنيميشن (السبلاش سكرين) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -469,9 +471,10 @@ body::before{
     background:linear-gradient(180deg, #A78BFA 0%, #7C3AED 50%, #5B21B6 100%);
     z-index:1;
 }
+/* ✅ تم إزالة صورة الشعار المكسورة واستبدالها بخلفية بنفسجية نظيفة */
 #captureStandings::after{
     content:'';position:absolute;top:0;left:0;bottom:0;width:48px;z-index:2;
-    background:url('./premier-league-logo.png') center 16px / 30px 30px no-repeat;
+    background:transparent;
 }
 .standings-content-area{
     background:var(--bg-card);width:100%;padding:10px 10px 10px 58px;
@@ -1255,10 +1258,10 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
 <script src="standings.js?v=9"></script>
 <script src="download.js?v=24"></script>
 <script src="players-teams.js?v=98"></script>
-<script src="totw.js?v=116"></script>
+<script src="totw.js?v=117"></script> 
 <script src="trends.js?v=5"></script>
 <script src="fpl-database.js?v=6"></script>
-<script src="manager-squad.js?v=5"></script>
+<script src="manager-squad.js?v=6"></script> 
 <script src="manager-hub.js?v=7"></script>
 <script src="stats.js?v=16"></script>
 <script src="charts.js?v=2"></script>
