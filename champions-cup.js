@@ -1,5 +1,5 @@
 /* =========================================================
-   champions-cup.js — v24 (Fixed Closure Bug + Live Points)
+   champions-cup.js — v25 (Fixed ccState Scope Bug + UI Bug)
 ========================================================= */
 
 (function(){
@@ -34,7 +34,7 @@ var FPL_TO_LOCAL_TEAM = {
 };
 
 var CC_TEAMS_LIST = Object.keys(CC_LEAGUES);
-var CC_WORKER = 'https://telegoat-api.aa1623165.workers.dev';
+var CC_WORKER = 'https://fpl-api.aaa117703.workers.dev';
 var CC_SYNC_INTERVAL = 10 * 60 * 1000;
 
 var CC_TOP_6 = ['ARS', 'MCI', 'MUN', 'LIV', 'CHE', 'TOT'];
@@ -113,7 +113,7 @@ function ccRenderDeadlineBar(round) {
     return '<div style="background:rgba(16,185,129,0.15);color:#10B981;text-align:center;padding:8px;border-radius:8px;margin-bottom:10px;font-weight:900;font-size:12px;border:1px solid #10B981;">⏳ متبقي ' + timeStr + ' (الديدلاين: ' + formattedDate + ')</div>';
 }
 
-/* ========== FETCH LAST 5 GWs (Fixed Let Bug) ========== */
+/* ========== FETCH LAST 5 GWs ========== */
 async function ccFetchLast5GWs(currentGW) {
     if (ccState._recentGWsRound === currentGW && ccState._recentGWsPoints && Object.keys(ccState._recentGWsPoints).length > 0) {
         return ccState._recentGWsPoints;
@@ -126,7 +126,6 @@ async function ccFetchLast5GWs(currentGW) {
     var startGW = Math.max(1, currentGW - 5); 
     var promises = [];
     
-    // إصلاح الخطأ باستخدام let بدلاً من var
     for (let gw = startGW; gw < currentGW; gw++) {
         promises.push(
             ccFetch(CC_WORKER + '/?type=live&gw=' + gw)
@@ -256,7 +255,7 @@ async function ccUpdateMainFixtures(isForced) {
             scoresStorage['r' + round + '_m' + idx + '_home'] = scores[home];
             scoresStorage['r' + round + '_m' + idx + '_away'] = scores[away];
             updated = true;
-            rows.push({ round: String(round), home_team: home, away_team: away, home_score: scores[home], away_score: scores[away], created_at: Date.now() });
+            rows.push({ round: String(round), home_team: home, away_team: away, home_score: scores[home], away_score: scores[away], created_at: new Date().toISOString() });
         }
     });
 
@@ -570,7 +569,8 @@ async function ccOpenSelectionList(teamCode) {
     var teamMembers = allMembers.filter(function(m) { return m.teams.includes(teamCode); });
     var state = ccState._currentEdit;
     
-    var html = '<div class="cc-modal-box"><div class="cc-modal-header"><div class="cc-modal-title">' + CC_TEAM_NAMES[teamCode] + ' — Select Squad</div><button class="cc-modal-close" onclick="ccRenderPitchUI(\''+teamCode+'\', null, null, true, ccState._currentGWPoints)"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button></div><div class="cc-modal-body"><div class="cc-list-container">';
+    // ✅ تصحيح الخطأ هنا: استخدام ccBackToPitch بدلاً من ccRenderPitchUI
+    var html = '<div class="cc-modal-box"><div class="cc-modal-header"><div class="cc-modal-title">' + CC_TEAM_NAMES[teamCode] + ' — Select Squad</div><button class="cc-modal-close" onclick="ccBackToPitch(\''+teamCode+'\')"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button></div><div class="cc-modal-body"><div class="cc-list-container">';
     
     teamMembers.forEach(function(m) {
         var isStarter = state.starters.includes(m.entry_id);
@@ -579,7 +579,8 @@ async function ccOpenSelectionList(teamCode) {
         html += '<div class="cc-list-item ' + cls + '" onclick="ccToggleMember('+m.entry_id+', \''+teamCode+'\')"><div class="cc-list-name">' + ccEscapeHTML(m.entry_name || m.player_name) + '</div><div class="cc-list-pts">' + (m.total||0) + ' pts</div></div>';
     });
     
-    html += '</div><button class="cc-action-btn" style="margin-top:15px;" onclick="ccRenderPitchUI(\''+teamCode+'\', null, null, true, ccState._currentGWPoints)">Done</button></div></div>';
+    // ✅ تصحيح الخطأ هنا: استخدام ccBackToPitch للرجوع
+    html += '</div><button class="cc-action-btn" style="margin-top:15px;" onclick="ccBackToPitch(\''+teamCode+'\')">Done</button></div></div>';
     document.getElementById('ccModal').innerHTML = html;
 }
 
@@ -645,7 +646,8 @@ async function ccOpenBonusModal(teamCode) {
         listHtml += '<div class="cc-bonus-row" onclick="ccSelectBonusPlayer(' + item.el.id + ', \'' + teamCode + '\')"><div class="cc-bonus-shirt"><img src="' + shirtUrl + '"></div><div class="cc-bonus-info"><div class="cc-bonus-name">' + item.el.web_name + '</div><div class="cc-bonus-team">' + item.teamObj.name + '</div></div><div class="cc-bonus-gws">' + gwBoxes + '</div><div class="cc-bonus-total"><div class="cc-bonus-total-num">' + item.el.total_points + '</div><div class="cc-bonus-total-label">Total</div></div></div>';
     });
 
-    var html = '<div class="cc-modal-box"><div class="cc-modal-header"><div class="cc-modal-title">' + title + '</div><button class="cc-modal-close" onclick="ccRenderPitchUI(\''+teamCode+'\', null, null, true, ccState._currentGWPoints)"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button></div><div class="cc-modal-body" style="padding:0;"><div class="cc-bonus-container"><div class="cc-bonus-search"><span class="tg-icon tg-icon-sm tg-icon-search" style="color:#A1A1B5;"></span><input type="text" id="ccBonusSearch" placeholder="Search player..." oninput="ccFilterBonusList(this.value)"></div><div class="cc-bonus-list-wrapper" id="ccBonusListWrapper">' + listHtml + '</div></div></div></div>';
+    // ✅ تصحيح الخطأ هنا: استخدام ccBackToPitch للرجوع
+    var html = '<div class="cc-modal-box"><div class="cc-modal-header"><div class="cc-modal-title">' + title + '</div><button class="cc-modal-close" onclick="ccBackToPitch(\''+teamCode+'\')"><span class="tg-icon tg-icon-sm tg-icon-close"></span></button></div><div class="cc-modal-body" style="padding:0;"><div class="cc-bonus-container"><div class="cc-bonus-search"><span class="tg-icon tg-icon-sm tg-icon-search" style="color:#A1A1B5;"></span><input type="text" id="ccBonusSearch" placeholder="Search player..." oninput="ccFilterBonusList(this.value)"></div><div class="cc-bonus-list-wrapper" id="ccBonusListWrapper">' + listHtml + '</div></div></div></div>';
     modal.innerHTML = html;
 }
 
@@ -672,7 +674,7 @@ function ccSelectBonusPlayer(playerId, teamCode) {
         ccState._currentEdit.bonus[1] = playerId;
         ccState._bonusStep = 0;
         if (typeof showToast === 'function') showToast('Bonus 2 selected: ' + el.web_name, true);
-        ccRenderPitchUI(teamCode, null, null, true, ccState._currentGWPoints);
+        ccBackToPitch(teamCode);
     }
 }
 
@@ -760,5 +762,10 @@ window.ccPromptPin = ccPromptPin;
 // ⚡ FIX: إضافة اسم الدالة القديم عشان ما يطلع خطأ (ReferenceError)
 window.ccRenderTeams = ccRenderTeamsGrid; 
 
-ccLog('v24 Loaded');
+// ⚡ FIX: إضافة الدالة الوسيطة للرجوع للملعب بأمان (تحل مشكلة الـ Scope)
+window.ccBackToPitch = function(teamCode) {
+    ccRenderPitchUI(teamCode, ccState._cachedMembers, null, true, ccState._currentGWPoints);
+};
+
+ccLog('v25 Loaded');
 })();
