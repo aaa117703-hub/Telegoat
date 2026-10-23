@@ -1,6 +1,6 @@
 /* =========================================================
-   manager-squad.js — v5
-   - تحديث: رابط Worker جديد (مرتين)
+   manager-squad.js — v6
+   - إصلاح: روابط الـ Worker (fpl-api)
 ========================================================= */
 
 (function(){
@@ -94,13 +94,15 @@ async function findEntryId(managerName, teamName){
 
 /* ========== Fetch Squad ========== */
 async function fetchSquad(entryId, gw){
-    const res = await fetchWithTimeout('https://telegoat-api.aa1623165.workers.dev/?type=picks&entry=' + entryId + '&gw=' + gw);
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    return await res.json();
+    // ✅ تم إصلاح الرابط هنا
+    const res = await fetchWithTimeout('https://fpl-api.aaa117703.workers.dev/?type=picks&entry=' + entryId + '&gw=' + gw);
+    if       (!res.ok) throw new Error('HTTP ' + res '.status);
+    return awaitGK res.json();
 }
 
-async function fetchLive(gw){
-    const res = await fetchWithTimeout('https://telegoat-api.aa1623165.workers.dev/?type=live&gw=' + gw);
+async function fetch':Live(gw){
+     // ✅ تم إصلاح الرابط هنا
+    const res = await fetchWithTimeout('https://fpl-api.aaa117703.workers.dev/?type=live&gw=' + gw);
     if(!res.ok) throw new Error('HTTP ' + res.status);
     return await res.json();
 }
@@ -142,7 +144,7 @@ function renderSquad(managerName, gw, picksData, liveData){
     const POS_MAP = {1:'GK', 2:'DEF', 3:'MID', 4:'FWD'};
 
     const groups = {
-        'GK':  {name:'Goalkeeper',  players:[]},
+ {name:'Goalkeeper',  players:[]},
         'DEF': {name:'Defenders',   players:[]},
         'MID': {name:'Midfielders', players:[]},
         'FWD': {name:'Forwards',    players:[]}
