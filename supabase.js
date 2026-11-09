@@ -77,10 +77,12 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
             }
         });
 
+        /* ⚠ match_results مشترك مع موقع Finalissima (نفس القاعدة): نحذف صفوف أندية الدوري فقط */
         const delRes = await window.sbClient
             .from('match_results')
             .delete()
-            .eq('round', String(round));
+            .eq('round', String(round))
+            .in('home_team', Object.keys(teamsMap));
 
         if (delRes.error) {
             console.error('Delete error:', delRes.error);
@@ -111,7 +113,8 @@ async function clearRoundFromSupabase(round) {
         const res = await window.sbClient
             .from('match_results')
             .delete()
-            .eq('round', String(round));
+            .eq('round', String(round))
+            .in('home_team', Object.keys(teamsMap));
 
         if (res.error) {
             console.error('Clear error:', res.error);
