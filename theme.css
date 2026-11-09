@@ -1351,3 +1351,9 @@ body::before {
 .round-selector-row > * {
     pointer-events: auto !important;
 }
+
+/* FIX: قائمة التحميل كانت تظهر خلف عنوان MATCHWEEK (نفس مستوى z-index والـ header أحدث بالترتيب) */
+.round-selector-row {
+    position: relative !important;
+    z-index: 60 !important;
+}
