@@ -8,6 +8,12 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 window.sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+/* ⭐ نتائج المباريات تُحفظ في مشروع Telegoat الخاص (مفصول تماماً عن قاعدة الفيناليسما)
+   حتى لا يحذف أي موقع نتائج الآخر. */
+const RESULTS_SUPABASE_URL = 'https://qzsteswrannqsrnlytzl.supabase.co';
+const RESULTS_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF6c3Rlc3dyYW5ucXNybmx5dHpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MTExNjgsImV4cCI6MjEwNDI4NzE2OH0.AFYiXODdfDbDiYn1fUoB9e2ZC8i7mFGgLvVxZzSPjxw';
+window.sbResults = window.supabase.createClient(RESULTS_SUPABASE_URL, RESULTS_SUPABASE_KEY);
+
 let editMode = false;
 let scoresStorage = JSON.parse(localStorage.getItem('fpl_scores')) || {};
 let currentRound = parseInt(localStorage.getItem('fpl_last_round') || '1', 10);

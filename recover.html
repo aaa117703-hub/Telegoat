@@ -12,23 +12,7 @@ table{border-collapse:collapse;width:100%;font-size:12px}td,th{border:1px solid 
 .ok{color:#10B981}.bad{color:#F87171}.dim{color:#8A8A9A}
 </style></head><body>
 <h1>استرجاع نتائج Telegoat</h1>
-<div class="card">
-<b>الخطوة 1:</b> أنشئ جدول Telegoat الخاص (مرة واحدة) — انسخ والصق في Supabase ← SQL Editor ← Run:
-<pre id="sql">create table if not exists public.tg_match_results (
-  id bigint generated always as identity primary key,
-  round text not null,
-  home_team text not null,
-  away_team text not null,
-  home_score int,
-  away_score int,
-  created_at timestamptz default now()
-);
-alter table public.tg_match_results enable row level security;
-drop policy if exists tg_mr_all on public.tg_match_results;
-create policy tg_mr_all on public.tg_match_results for all using (true) with check (true);</pre>
-<button class="sec" onclick="navigator.clipboard.writeText(document.getElementById('sql').innerText);this.textContent='تم النسخ'">نسخ SQL</button>
-</div>
-<div class="card"><b>الخطوة 2:</b> افحص المصادر القديمة:
+<div class="card"><b>الخطوة 1:</b> افحص المصادر:
 <div><button onclick="scan()">فحص كل المصادر</button></div>
 <div id="log" class="dim"></div></div>
 <div id="res"></div>
@@ -42,8 +26,8 @@ var SOURCES=[
  {id:'qzstes',label:'قاعدة سبتمبر القديمة (qzstes)',url:'https://qzsteswrannqsrnlytzl.supabase.co',key:KEYS.qzstes,table:'match_results'},
  {id:'vgnhey',label:'قاعدة Seoul (vgnhey)',url:'https://vgnheydpxmmqfdibgqga.supabase.co',key:KEYS.vgnhey,table:'match_results'},
  {id:'vgnhey2',label:'Seoul عبر الـ Worker',url:'https://telegoat-api.aa1623165.workers.dev/supabase',key:KEYS.vgnhey,table:'match_results'},
- {id:'qragyw',label:'القاعدة الحالية (match_results)',url:NEW_URL,key:KEYS.qragyw,table:'match_results',onlyPL:true},
- {id:'qragyw_tg',label:'الجدول الجديد (tg_match_results)',url:NEW_URL,key:KEYS.qragyw,table:'tg_match_results'}
+ {id:'qragyw',label:'القاعدة الحالية (match_results)',url:NEW_URL,key:KEYS.qragyw,table:'match_results',onlyPL:true}
+ 
 ];
 var DATA={}; // id -> {round: [rows]}
 function log(t,c){var d=document.getElementById('log');d.innerHTML+='<div class="'+(c||'')+'">'+t+'</div>'}
@@ -73,7 +57,7 @@ async function scan(){
 }
 function complete(rows){return rows.filter(function(r){return r.home_score!=null&&r.away_score!=null}).length}
 function render(){
- var h='<h2>الخطوة 3: اختر مصدر كل جولة</h2><div class="card"><table><tr><th>الجولة</th>';
+ var h='<h2>الخطوة 2: اختر مصدر كل جولة (الاختيار التلقائي مناسب)</h2><div class="card"><table><tr><th>الجولة</th>';
  SOURCES.forEach(function(s){h+='<th>'+s.label.split(' ')[0]+'</th>'});h+='<th>الاختيار</th></tr>';
  for(var r=1;r<=12;r++){
   var best=null,bn=0;h+='<tr><td>'+r+'</td>';
@@ -81,22 +65,24 @@ function render(){
   h+='<td><select id="pick'+r+'"><option value="">لا شيء</option>'+SOURCES.map(function(s){return '<option value="'+s.id+'"'+(s.id===best?' selected':'')+'>'+s.label.split(' ')[0]+'</option>'}).join('')+'</select></td></tr>';
  }
  h+='</table><div class="dim" style="margin-top:6px">الأرقام = عدد المباريات ذات النتيجة الكاملة. الاختيار الافتراضي = المصدر الأكثر اكتمالاً.</div>';
- h+='<button onclick="save()">حفظ المختار في الجدول الجديد</button><div id="saveLog"></div></div>';
+ h+='<button onclick="save()">حفظ المختار في قاعدة Telegoat</button><div id="saveLog"></div></div>';
  document.getElementById('res').innerHTML=h;
 }
 async function save(){
  var L=document.getElementById('saveLog');L.innerHTML='';var tot=0;
+ var T=SOURCES.filter(function(x){return x.id==='qzstes'})[0];
+ var H={apikey:T.key,Authorization:'Bearer '+T.key,'Content-Type':'application/json',Prefer:'return=minimal'};
  for(var r=1;r<=12;r++){
   var id=document.getElementById('pick'+r).value;if(!id)continue;
+  if(id==='qzstes'){L.innerHTML+='<div class="dim">الجولة '+r+': موجودة أصلاً بقاعدة Telegoat — تُركت كما هي</div>';continue}
   var rows=((DATA[id]||{})[String(r)]||[]).filter(function(x){return x.home_score!=null&&x.away_score!=null});if(!rows.length)continue;
-  var H={apikey:KEYS.qragyw,Authorization:'Bearer '+KEYS.qragyw,'Content-Type':'application/json',Prefer:'return=minimal'};
   try{
-   var d=await fetch(NEW_URL+'/rest/v1/tg_match_results?round=eq.'+r,{method:'DELETE',headers:H});if(!d.ok)throw new Error('حذف HTTP '+d.status);
+   var d=await fetch(T.url+'/rest/v1/match_results?round=eq.'+r,{method:'DELETE',headers:H});if(!d.ok)throw new Error('حذف HTTP '+d.status);
    var body=rows.map(function(x){return {round:String(r),home_team:x.home_team,away_team:x.away_team,home_score:x.home_score,away_score:x.away_score}});
-   var p=await fetch(NEW_URL+'/rest/v1/tg_match_results',{method:'POST',headers:H,body:JSON.stringify(body)});if(!p.ok)throw new Error('كتابة HTTP '+p.status+' '+await p.text());
+   var p=await fetch(T.url+'/rest/v1/match_results',{method:'POST',headers:H,body:JSON.stringify(body)});if(!p.ok)throw new Error('كتابة HTTP '+p.status+' '+await p.text());
    L.innerHTML+='<div class="ok">الجولة '+r+': '+rows.length+' نتيجة ✔</div>';tot+=rows.length;
   }catch(e){L.innerHTML+='<div class="bad">الجولة '+r+': '+e.message+'</div>'}
  }
- L.innerHTML+='<div><b>المجموع: '+tot+'</b> — افتح الموقع الآن وحدّث الصفحة.</div>';
+ L.innerHTML+='<div><b>تم. المجموع المنقول: '+tot+'</b> — افتح الموقع الآن وحدّث الصفحة.</div>';
 }
 </script></body></html>

@@ -51,8 +51,8 @@ async function init() {
     }
 
     try {
-        const { error: testError } = await window.sbClient
-            .from('tg_match_results')
+        const { error: testError } = await window.sbResults
+            .from('match_results')
             .select('id')
             .limit(1);
 
