@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Telegoat - استرجاع النتائج</title>
+<style>
+body{background:#0F0F14;color:#F5F3FF;font-family:Cairo,system-ui,sans-serif;margin:0;padding:14px;max-width:760px;margin-inline:auto}
+h1{font-size:18px;color:#A78BFA}h2{font-size:14px;color:#C4B5FD;margin:18px 0 8px}
+.card{background:#1A1A24;border:1px solid #3B2A6B;border-radius:12px;padding:12px;margin:10px 0}
+button{background:linear-gradient(135deg,#7C3AED,#6D28D9);color:#fff;border:0;border-radius:10px;padding:10px 14px;font:800 13px inherit;font-family:inherit;margin:4px 0}
+button.sec{background:#2A2A3A}
+pre{background:#0B0B10;border:1px solid #2A2A3A;border-radius:8px;padding:10px;overflow:auto;font-size:11px;direction:ltr;text-align:left;white-space:pre-wrap}
+table{border-collapse:collapse;width:100%;font-size:12px}td,th{border:1px solid #2A2A3A;padding:5px;text-align:center}
+.ok{color:#10B981}.bad{color:#F87171}.dim{color:#8A8A9A}
+</style></head><body>
+<h1>استرجاع نتائج Telegoat</h1>
+<div class="card">
+<b>الخطوة 1:</b> أنشئ جدول Telegoat الخاص (مرة واحدة) — انسخ والصق في Supabase ← SQL Editor ← Run:
+<pre id="sql">create table if not exists public.tg_match_results (
+  id bigint generated always as identity primary key,
+  round text not null,
+  home_team text not null,
+  away_team text not null,
+  home_score int,
+  away_score int,
+  created_at timestamptz default now()
+);
+alter table public.tg_match_results enable row level security;
+drop policy if exists tg_mr_all on public.tg_match_results;
+create policy tg_mr_all on public.tg_match_results for all using (true) with check (true);</pre>
+<button class="sec" onclick="navigator.clipboard.writeText(document.getElementById('sql').innerText);this.textContent='تم النسخ'">نسخ SQL</button>
+</div>
+<div class="card"><b>الخطوة 2:</b> افحص المصادر القديمة:
+<div><button onclick="scan()">فحص كل المصادر</button></div>
+<div id="log" class="dim"></div></div>
+<div id="res"></div>
+<script src="teams.js"></script>
+<script src="matchweeks.js"></script>
+<script>
+var NEW_URL='https://qragywbzlbzzjygdvxkk.supabase.co';
+var KEYS={qzstes:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF6c3Rlc3dyYW5ucXNybmx5dHpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MTExNjgsImV4cCI6MjEwNDI4NzE2OH0.AFYiXODdfDbDiYn1fUoB9e2ZC8i7mFGgLvVxZzSPjxw',vgnhey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnbmhleWRweG1tcWZkaWJncWdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTY0MzMsImV4cCI6MjEwNzgzMjQzM30.T-QzrIrDdPZeq97vjYBDYY2gBzyLhLqN_DcnKBxTDpI',qragyw:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyYWd5d2J6bGJ6emp5Z2R2eGtrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1Mjk1OTcsImV4cCI6MjEwNjEwNTU5N30.-0TQGJH6dKoPygwW-Co9o609_sUUq90KY6nWpTCfELc'};
+var SOURCES=[
+ {id:'local',label:'ذاكرة هذا المتصفح (fpl_scores)'},
+ {id:'qzstes',label:'قاعدة سبتمبر القديمة (qzstes)',url:'https://qzsteswrannqsrnlytzl.supabase.co',key:KEYS.qzstes,table:'match_results'},
+ {id:'vgnhey',label:'قاعدة Seoul (vgnhey)',url:'https://vgnheydpxmmqfdibgqga.supabase.co',key:KEYS.vgnhey,table:'match_results'},
+ {id:'vgnhey2',label:'Seoul عبر الـ Worker',url:'https://telegoat-api.aa1623165.workers.dev/supabase',key:KEYS.vgnhey,table:'match_results'},
+ {id:'qragyw',label:'القاعدة الحالية (match_results)',url:NEW_URL,key:KEYS.qragyw,table:'match_results',onlyPL:true},
+ {id:'qragyw_tg',label:'الجدول الجديد (tg_match_results)',url:NEW_URL,key:KEYS.qragyw,table:'tg_match_results'}
+];
+var DATA={}; // id -> {round: [rows]}
+function log(t,c){var d=document.getElementById('log');d.innerHTML+='<div class="'+(c||'')+'">'+t+'</div>'}
+function plSet(){return new Set(Object.keys(teamsMap))}
+function group(rows,onlyPL){var by={},pl=plSet();rows.forEach(function(r){if(onlyPL&&!pl.has(r.home_team))return;if(!pl.has(r.home_team)||!pl.has(r.away_team))return;var k=String(r.round);(by[k]=by[k]||[]).push({round:k,home_team:r.home_team,away_team:r.away_team,home_score:r.home_score,away_score:r.away_score})});return by}
+async function fetchRows(s){
+ var out=[],from=0,step=1000;
+ for(;;){
+  var res=await fetch(s.url+'/rest/v1/'+s.table+'?select=round,home_team,away_team,home_score,away_score&order=round.asc',{headers:{apikey:s.key,Authorization:'Bearer '+s.key,Range:from+'-'+(from+step-1)}});
+  if(!res.ok)throw new Error('HTTP '+res.status);
+  var j=await res.json();out=out.concat(j);if(j.length<step)break;from+=step;
+ }
+ return out;
+}
+async function scan(){
+ document.getElementById('log').innerHTML='';DATA={};
+ // local
+ try{
+  var ls=JSON.parse(localStorage.getItem('fpl_scores')||'{}'),rows=[];
+  Object.keys(ls).forEach(function(k){var m=k.match(/^r(\d+)_m(\d+)_home$/);if(!m)return;var r=+m[1],i=+m[2],mw=(typeof matchweeks!=='undefined')&&matchweeks[r];if(!mw||!mw[i])return;var h=ls[k],a=ls['r'+r+'_m'+i+'_away'];if(h===''||h==null||a===''||a==null)return;rows.push({round:r,home_team:mw[i][0],away_team:mw[i][1],home_score:+h,away_score:+a})});
+  DATA.local=group(rows);log('ذاكرة المتصفح: '+rows.length+' نتيجة',rows.length?'ok':'dim');
+ }catch(e){log('ذاكرة المتصفح: '+e.message,'bad')}
+ for(var i=1;i<SOURCES.length;i++){var s=SOURCES[i];
+  try{var rows=await fetchRows(s);DATA[s.id]=group(rows,s.onlyPL);var n=Object.keys(DATA[s.id]).reduce(function(a,k){return a+DATA[s.id][k].length},0);log(s.label+': '+n+' نتيجة (من '+rows.length+' صف)',n?'ok':'dim')}
+  catch(e){log(s.label+': تعذر ('+e.message+')','bad')}}
+ render();
+}
+function complete(rows){return rows.filter(function(r){return r.home_score!=null&&r.away_score!=null}).length}
+function render(){
+ var h='<h2>الخطوة 3: اختر مصدر كل جولة</h2><div class="card"><table><tr><th>الجولة</th>';
+ SOURCES.forEach(function(s){h+='<th>'+s.label.split(' ')[0]+'</th>'});h+='<th>الاختيار</th></tr>';
+ for(var r=1;r<=12;r++){
+  var best=null,bn=0;h+='<tr><td>'+r+'</td>';
+  SOURCES.forEach(function(s){var rows=(DATA[s.id]||{})[String(r)]||[];var n=complete(rows);h+='<td>'+(n||'-')+'</td>';if(n>bn){bn=n;best=s.id}});
+  h+='<td><select id="pick'+r+'"><option value="">لا شيء</option>'+SOURCES.map(function(s){return '<option value="'+s.id+'"'+(s.id===best?' selected':'')+'>'+s.label.split(' ')[0]+'</option>'}).join('')+'</select></td></tr>';
+ }
+ h+='</table><div class="dim" style="margin-top:6px">الأرقام = عدد المباريات ذات النتيجة الكاملة. الاختيار الافتراضي = المصدر الأكثر اكتمالاً.</div>';
+ h+='<button onclick="save()">حفظ المختار في الجدول الجديد</button><div id="saveLog"></div></div>';
+ document.getElementById('res').innerHTML=h;
+}
+async function save(){
+ var L=document.getElementById('saveLog');L.innerHTML='';var tot=0;
+ for(var r=1;r<=12;r++){
+  var id=document.getElementById('pick'+r).value;if(!id)continue;
+  var rows=((DATA[id]||{})[String(r)]||[]).filter(function(x){return x.home_score!=null&&x.away_score!=null});if(!rows.length)continue;
+  var H={apikey:KEYS.qragyw,Authorization:'Bearer '+KEYS.qragyw,'Content-Type':'application/json',Prefer:'return=minimal'};
+  try{
+   var d=await fetch(NEW_URL+'/rest/v1/tg_match_results?round=eq.'+r,{method:'DELETE',headers:H});if(!d.ok)throw new Error('حذف HTTP '+d.status);
+   var body=rows.map(function(x){return {round:String(r),home_team:x.home_team,away_team:x.away_team,home_score:x.home_score,away_score:x.away_score}});
+   var p=await fetch(NEW_URL+'/rest/v1/tg_match_results',{method:'POST',headers:H,body:JSON.stringify(body)});if(!p.ok)throw new Error('كتابة HTTP '+p.status+' '+await p.text());
+   L.innerHTML+='<div class="ok">الجولة '+r+': '+rows.length+' نتيجة ✔</div>';tot+=rows.length;
+  }catch(e){L.innerHTML+='<div class="bad">الجولة '+r+': '+e.message+'</div>'}
+ }
+ L.innerHTML+='<div><b>المجموع: '+tot+'</b> — افتح الموقع الآن وحدّث الصفحة.</div>';
+}
+</script></body></html>

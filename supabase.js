@@ -5,7 +5,7 @@
 async function loadScoresFromSupabase(matchweeks) {
     try {
         const res = await window.sbClient
-            .from('match_results')
+            .from('tg_match_results')
             .select('round, home_team, away_team, home_score, away_score');
 
         if (res.error) {
@@ -79,7 +79,7 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
 
         /* ⚠ match_results مشترك مع موقع Finalissima (نفس القاعدة): نحذف صفوف أندية الدوري فقط */
         const delRes = await window.sbClient
-            .from('match_results')
+            .from('tg_match_results')
             .delete()
             .eq('round', String(round))
             .in('home_team', Object.keys(teamsMap));
@@ -91,7 +91,7 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
 
         if (rows.length > 0) {
             const insRes = await window.sbClient
-                .from('match_results')
+                .from('tg_match_results')
                 .insert(rows);
 
             if (insRes.error) {
@@ -111,7 +111,7 @@ async function saveRoundToSupabase(round, matchweeks, scoresStorage) {
 async function clearRoundFromSupabase(round) {
     try {
         const res = await window.sbClient
-            .from('match_results')
+            .from('tg_match_results')
             .delete()
             .eq('round', String(round))
             .in('home_team', Object.keys(teamsMap));

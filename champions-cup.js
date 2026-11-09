@@ -265,8 +265,8 @@ async function ccUpdateMainFixtures(isForced, roundOverride) {
         if (typeof renderStandings === 'function') renderStandings();
         if (window.sbClient) {
             try {
-                await window.sbClient.from('match_results').delete().eq('round', String(round)).in('home_team', Object.keys(teamsMap));
-                if (rows.length > 0) await window.sbClient.from('match_results').insert(rows);
+                await window.sbClient.from('tg_match_results').delete().eq('round', String(round)).in('home_team', Object.keys(teamsMap));
+                if (rows.length > 0) await window.sbClient.from('tg_match_results').insert(rows);
                 if (isForced && typeof showToast === 'function') showToast('تم تحديث الجدول بنجاح!', true);
             } catch (e) { if (isForced && typeof showToast === 'function') showToast('فشل تحديث الجدول: ' + e.message, false); }
         }
