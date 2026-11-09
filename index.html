@@ -25,12 +25,7 @@
 
 <script>
 document.addEventListener('dblclick', function(e) { e.preventDefault(); }, { passive: false });
-let _lastTouchEnd = 0;
-document.addEventListener('touchend', function(e) {
-    const now = Date.now();
-    if (now - _lastTouchEnd <= 300) { e.preventDefault(); }
-    _lastTouchEnd = now;
-}, false);
+/* منع التكبير بالنقر المزدوج يتم عبر touch-action:manipulation في CSS (بدون ابتلاع النقرات السريعة) */
 </script>
 
 <!-- ========== EXTERNAL LIBRARIES ========== -->
