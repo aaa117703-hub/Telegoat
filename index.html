@@ -1051,7 +1051,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
                 </div>
                 <div style="display:flex;align-items:center;gap:8px;">
                     <span class="cc-sync-indicator">LIVE</span>
-                    <button class="cc-refresh-btn" id="ccRecoverBtn" style="display:none;width:auto;padding:0 10px;font-size:11px;font-weight:900;" onclick="if(confirm('استرجاع نتائج الجولات 1-8 من تشكيلات الكأس؟'))ccRecoverRounds(1,8)">استرجاع 1-8</button>
+                    <button class="cc-refresh-btn" id="ccRecoverBtn" style="display:none;width:auto;padding:0 10px;font-size:11px;font-weight:900;" onclick="if(confirm('إعادة حساب الجولات الفارغة أو الصفرية (1-10) من تشكيلات الكأس؟'))ccRecoverRounds(1,10)">استرجاع 1-10</button>
                     <button class="cc-refresh-btn" id="ccRefreshBtn" onclick="ccSyncMembers().then(ccRenderTeams)">
                         <span class="tg-icon tg-icon-refresh"></span>
                     </button>
@@ -1263,7 +1263,7 @@ tr.pos-20{background:linear-gradient(90deg, rgba(239,68,68,0.30) 0%, rgba(239,68
 <script src="clubs.js?v=9"></script>
 <script src="team-view.js?v=1"></script>
 <script src="main.js?v=5"></script>
-<script src="champions-cup.js?v=29"></script>
+<script src="champions-cup.js?v=30"></script>
 
 <!-- ⚠️ BACKFILL HISTORY — معطّل مؤقتاً (يسبب Load failed على iOS) -->
 <!-- <script src="backfill-history.js?v=5"></script> -->

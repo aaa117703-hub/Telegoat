@@ -199,6 +199,18 @@ async function ccCalculateTeamCurrentPoints(teamCode, squad) {
 }
 
 /* ========== AUTO UPDATE MAIN FIXTURES ========== */
+/* جلب تشكيلة مدير مع إعادة محاولة (حدود FPL / أخطاء الشبكة) */
+async function ccPicksRetry(entryId, round) {
+    for (var t = 0; t < 3; t++) {
+        try {
+            var r = await ccFetch(CC_WORKER + '/?type=picks&entry=' + entryId + '&gw=' + round);
+            if (r.ok) { var d = await r.json(); if (d && d.picks) return { entryId: entryId, picks: d.picks }; }
+        } catch (e) {}
+        await new Promise(function(res) { setTimeout(res, 700 * (t + 1)); });
+    }
+    return { entryId: entryId, picks: null };
+}
+
 async function ccUpdateMainFixtures(isForced, roundOverride) {
     var round = roundOverride || ccState.currentRound;
     var fplData = await ccFetchFplBootstrap();
@@ -219,7 +231,7 @@ async function ccUpdateMainFixtures(isForced, roundOverride) {
         if (!sq.starters || sq.starters.length === 0) { scores[sq.team] = 0; return; }
         sq.starters.forEach(function(entryId) {
             if (!entryId) return; 
-            fetchPromises.push(ccFetch(CC_WORKER + '/?type=picks&entry=' + entryId + '&gw=' + round).then(function(r) { return r.ok ? r.json() : null; }).then(function(data) { return { entryId: entryId, picks: data ? data.picks : null }; }));
+            fetchPromises.push(ccPicksRetry(entryId, round));
         });
     });
     var picksResults = await Promise.all(fetchPromises);
@@ -229,6 +241,9 @@ async function ccUpdateMainFixtures(isForced, roundOverride) {
     squads.forEach(function(sq) {
         if (scores[sq.team] === 0) return;
         var teamScore = 0;
+        /* إذا فشل جلب تشكيلة أي مدير لا نسجّل نتيجة هذا الفريق (كان يُسجَّل صفر خطأً) */
+        var incomplete = sq.starters.some(function(entryId) { return entryId && !picksMap[entryId]; });
+        if (incomplete) { delete scores[sq.team]; ccState._incompleteTeams = (ccState._incompleteTeams || []).concat([sq.team]); return; }
         sq.starters.forEach(function(entryId) {
             if (!entryId) return;
             var picks = picksMap[entryId]; if (!picks) return;
@@ -265,7 +280,8 @@ async function ccUpdateMainFixtures(isForced, roundOverride) {
         if (typeof renderStandings === 'function') renderStandings();
         if (window.sbClient) {
             try {
-                await window.sbResults.from('match_results').delete().eq('round', String(round)).in('home_team', Object.keys(teamsMap));
+                /* نحذف فقط صفوف المباريات التي أعدنا حسابها (حتى لا نمسح نتائج سليمة) */
+                await window.sbResults.from('match_results').delete().eq('round', String(round)).in('home_team', rows.map(function(x) { return x.home_team; }));
                 if (rows.length > 0) await window.sbResults.from('match_results').insert(rows);
                 if (isForced && typeof showToast === 'function') showToast('تم تحديث الجدول بنجاح!', true);
             } catch (e) { if (isForced && typeof showToast === 'function') showToast('فشل تحديث الجدول: ' + e.message, false); }
@@ -280,11 +296,12 @@ window.ccRecoverRounds = async function(from, to) {
     if (typeof isAdmin === 'function' && !isAdmin()) { if (typeof showToast === 'function') showToast('للأدمن فقط', false); return; }
     var done = [], missing = [], skipped = [];
     for (var r = from; r <= to; r++) {
-        var has = Object.keys(scoresStorage || {}).some(function(k) { return k.indexOf('r' + r + '_m') === 0 && scoresStorage[k] !== '' && scoresStorage[k] != null; });
+        var has = Object.keys(scoresStorage || {}).some(function(k) { return k.indexOf('r' + r + '_m') === 0 && Number(scoresStorage[k]) > 0; });
         if (has) { skipped.push(r); continue; }
         if (typeof showToast === 'function') showToast('استرجاع الجولة ' + r + '...', false, 4000);
-        var sc = {};
+        var sc = {}; ccState._incompleteTeams = [];
         try { sc = await ccUpdateMainFixtures(true, r); } catch (e) { sc = {}; }
+        if (ccState._incompleteTeams.length) console.warn('[CC recover] round', r, 'incomplete:', ccState._incompleteTeams);
         if (sc && Object.keys(sc).length > 0) done.push(r); else missing.push(r);
     }
     var msg = 'تم استرجاع: ' + (done.join(',') || 'لا شيء') +
