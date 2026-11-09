@@ -367,8 +367,16 @@ function setupEruda() {
 
         if (clickCount >= 5) {
             clickCount = 0;
-            if (typeof eruda !== 'undefined' && eruda.init) {
+            var openEruda = function() {
                 try { eruda.init(); eruda.show(); } catch (e) {}
+            };
+            if (typeof eruda !== 'undefined' && eruda.init) {
+                openEruda();
+            } else {
+                var sc = document.createElement('script');
+                sc.src = 'https://cdn.jsdelivr.net/npm/eruda@2.4.1/eruda.js';
+                sc.onload = openEruda;
+                document.head.appendChild(sc);
             }
         }
 

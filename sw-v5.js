@@ -2,7 +2,7 @@
 // Telegram Goat - Service Worker v5
 // ============================================================
 
-const SW_VERSION    = 'telegoat-v5';
+const SW_VERSION    = 'telegoat-v6';
 const RUNTIME_CACHE = SW_VERSION + '-runtime';
 
 self.addEventListener('install', (event) => {
