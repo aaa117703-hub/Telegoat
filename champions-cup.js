@@ -289,30 +289,6 @@ async function ccUpdateMainFixtures(isForced, roundOverride) {
     }
     return scores;
 }
-/* ========== RECOVER LOST ROUNDS (admin) ==========
-   يعيد حساب نتائج جولات سابقة من تشكيلات الكأس المحفوظة (champions_cup_squads)
-   ويكتبها في match_results. يتخطى الجولة التي لها نتائج حالياً. */
-window.ccRecoverRounds = async function(from, to) {
-    if (typeof isAdmin === 'function' && !isAdmin()) { if (typeof showToast === 'function') showToast('للأدمن فقط', false); return; }
-    var done = [], missing = [], skipped = [];
-    for (var r = from; r <= to; r++) {
-        var has = Object.keys(scoresStorage || {}).some(function(k) { return k.indexOf('r' + r + '_m') === 0 && Number(scoresStorage[k]) > 0; });
-        if (has) { skipped.push(r); continue; }
-        if (typeof showToast === 'function') showToast('استرجاع الجولة ' + r + '...', false, 4000);
-        var sc = {}; ccState._incompleteTeams = [];
-        try { sc = await ccUpdateMainFixtures(true, r); } catch (e) { sc = {}; }
-        if (ccState._incompleteTeams.length) console.warn('[CC recover] round', r, 'incomplete:', ccState._incompleteTeams);
-        if (sc && Object.keys(sc).length > 0) done.push(r); else missing.push(r);
-    }
-    var msg = 'تم استرجاع: ' + (done.join(',') || 'لا شيء') +
-        (missing.length ? ' | بلا تشكيلات محفوظة: ' + missing.join(',') : '') +
-        (skipped.length ? ' | موجودة أصلاً: ' + skipped.join(',') : '');
-    console.log('[CC recover]', msg);
-    if (typeof showToast === 'function') showToast(msg, done.length > 0, 9000);
-    if (typeof renderFixtures === 'function') renderFixtures();
-    if (typeof renderStandings === 'function') renderStandings();
-    return { done: done, missing: missing, skipped: skipped };
-};
 window.ccForceSync = function() { if (typeof showToast === 'function') showToast('جاري تحديث الجدول...', false); ccUpdateMainFixtures(true); };
 
 /* ========== TEAM STATS CALCULATOR ========== */
@@ -781,8 +757,6 @@ async function ccInit() {
     
     var refreshBtn = document.getElementById('ccRefreshBtn');
     if (refreshBtn) { if (typeof isAdmin === 'function' && isAdmin()) refreshBtn.style.display = 'flex'; else refreshBtn.style.display = 'none'; }
-    var recBtn = document.getElementById('ccRecoverBtn');
-    if (recBtn) recBtn.style.display = (typeof isAdmin === 'function' && isAdmin()) ? 'flex' : 'none';
     await ccRenderTeamsGrid();
     ccSyncMembers().then(function() { ccRenderTeamsGrid(); ccUpdateMainFixtures(); });
     if (ccState.syncTimer) clearInterval(ccState.syncTimer);
