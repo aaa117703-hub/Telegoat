@@ -539,3 +539,41 @@ body.splash-active {
 }
 .splash-logo-glow { background: radial-gradient(circle, rgba(255,255,255,.22) 0%, rgba(233,0,82,.12) 40%, transparent 65%); }
 .splash-sub { color: rgba(255,255,255,.7); }
+
+/* ===== v4: أسود على بنفسجي + هندسة مرتبة ===== */
+.splash-screen { background: #050508; }
+.splash-bg {
+    background:
+        radial-gradient(circle at 50% calc(50% - 62px), rgba(124,58,237,.38) 0%, rgba(76,29,149,.18) 32%, transparent 62%),
+        #050508;
+}
+.splash-bg::before, .splash-bg::after { display: none; }
+.splash-grid, .splash-corner, .splash-rings, .splash-hex { display: block !important; }
+.splash-lines { display: none !important; }
+.splash-grid { background-image:
+    linear-gradient(rgba(167,139,250,.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(167,139,250,.10) 1px, transparent 1px); background-size: 36px 36px; }
+.splash-corner { border-color: #A78BFA; box-shadow: none; border-radius: 0 !important; width: 34px; height: 34px; border-width: 2px; }
+/* كل الأشكال متمركزة على الأسد ولا تدور — تظهر بترتيب */
+.splash-rings { align-items: flex-start; }
+.splash-ring, .splash-hex { top: calc(50% - 62px) !important; }
+.splash-ring.r1 { width: 150px; height: 150px; border: 1.5px solid #A78BFA; box-shadow: none;
+    animation: sp-ring-in .6s .5s ease forwards !important; }
+.splash-ring.r2 { width: 240px; height: 240px; border: 1px solid rgba(167,139,250,.65);
+    animation: sp-ring-in .6s .8s ease forwards !important; }
+.splash-ring.r3 { width: 330px; height: 330px; border: 1px dashed rgba(167,139,250,.4);
+    animation: sp-ring-in .6s 1.1s ease forwards !important; }
+.splash-ring.r4 { width: 430px; height: 430px; border: 1px solid rgba(167,139,250,.18);
+    animation: sp-ring-in .6s 1.4s ease forwards, sp-ring-pulse 1.2s 2.2s ease-out !important; }
+@keyframes sp-ring-pulse { 0%,100% { box-shadow: 0 0 0 rgba(167,139,250,0); } 40% { box-shadow: 0 0 40px rgba(167,139,250,.5); border-color: #A78BFA; } }
+.splash-hex { width: 290px; height: 290px; animation: sp-fade .5s .9s ease forwards !important; transform: translate(-50%, -50%) !important; }
+.splash-hex polygon { stroke: rgba(167,139,250,.55); stroke-width: 1; filter: none;
+    animation: sp-hex-draw 1.2s .9s ease forwards; }
+/* خطوط المحاور */
+.splash-bg::before, .splash-bg::after { display: block; content: ''; position: absolute; opacity: 0; background: linear-gradient(90deg, transparent, rgba(167,139,250,.55) 50%, transparent); border: 0; border-radius: 0; margin: 0; }
+.splash-bg::before { left: 0; right: 0; top: calc(50% - 62px); height: 1px; width: auto; transform: scaleX(0); transform-origin: center; animation: sp-axis-x 1s .3s ease forwards; }
+.splash-bg::after { top: 0; bottom: 0; left: 50%; width: 1px; height: auto; background: linear-gradient(180deg, transparent, rgba(167,139,250,.55) 50%, transparent); transform: scaleY(0); animation: sp-axis-y 1s .4s ease forwards; }
+@keyframes sp-axis-x { to { opacity: 1; transform: scaleX(1); } }
+@keyframes sp-axis-y { to { opacity: 1; transform: scaleY(1); } }
+.splash-logo-wrap .sp-svg { filter: drop-shadow(0 0 10px rgba(167,139,250,.7)) drop-shadow(0 0 26px rgba(124,58,237,.5)); }
+.splash-logo-glow { background: radial-gradient(circle, rgba(167,139,250,.28) 0%, rgba(124,58,237,.1) 40%, transparent 65%); }

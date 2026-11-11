@@ -1707,3 +1707,7 @@ body.champ-draw-open{
     user-select:none;
     pointer-events:none;
 }
+
+/* ترتيب A→D من اليسار لليمين */
+.champ-groups-stage,.champ-pot-teams{direction:ltr;}
+.champ-draw-title{direction:ltr !important;letter-spacing:3px;}

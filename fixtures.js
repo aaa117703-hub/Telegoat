@@ -65,7 +65,7 @@ function switchTab(tabName) {
         }
 
         if (tabName === 'cup' && isLocked('champions')) {
-            showSectionMaintenance('Telegoat Cup');
+            showSectionMaintenance('GOAT LEAGUE');
             return;
         }
 

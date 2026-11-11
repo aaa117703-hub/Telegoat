@@ -542,7 +542,7 @@ function champBuildDrawScreen(pots) {
     html += '<div class="champ-preloader" id="champPreloader">';
     html += '<div class="champ-preloader-logo">';
     html += '<div class="champ-preloader-ring"></div>';
-    html += '<div class="champ-preloader-text">FINALISSIMA</div>';
+    html += '<div class="champ-preloader-text">GOAT LEAGUE</div>';
     html += '</div>';
     html += '<div class="champ-preloader-bar"><div class="champ-preloader-fill" id="champPreloaderFill"></div></div>';
     html += '<div class="champ-preloader-status" id="champPreloaderStatus">جاري التحضير...</div>';
@@ -563,10 +563,10 @@ function champBuildDrawScreen(pots) {
     html += '<div class="champ-draw-title-wrap">';
     html += '<div class="champ-draw-title" id="champDrawTitle">';
     html += '<span class="champ-title-deco"></span>';
-    html += '<span>قرعة الأبطال</span>';
+    html += '<span>GOAT LEAGUE</span>';
     html += '<span class="champ-title-deco"></span>';
     html += '</div>';
-    html += '<div class="champ-draw-subtitle">FINALISSIMA · CHAMPIONS 2026</div>';
+    html += '<div class="champ-draw-subtitle">THE DRAW · 2026</div>';
     html += '</div>';
     html += '<div class="champ-draw-spacer"></div>';
     html += '</div>';
@@ -762,7 +762,7 @@ async function champStageIntro() {
 
     overlay.style.display = 'flex';
 
-    textEl.innerHTML = '<div class="champ-intro-line">CHAMPIONS</div>';
+    textEl.innerHTML = '<div class="champ-intro-line">GOAT</div>';
     const line1 = textEl.querySelector('.champ-intro-line');
     gsap.set(line1, { opacity: 0, y: 120, scale: 0.5, filter: 'blur(30px)' });
 
@@ -809,7 +809,7 @@ async function champStageIntro() {
     await champWait(900);
 
     textEl.innerHTML =
-        '<div class="champ-intro-subline">FINALISSIMA</div>' +
+        '<div class="champ-intro-subline">LEAGUE</div>' +
         '<div class="champ-intro-year">2026</div>';
     const subline = textEl.querySelector('.champ-intro-subline');
     const year = textEl.querySelector('.champ-intro-year');

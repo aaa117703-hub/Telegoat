@@ -9,7 +9,7 @@ const carouselSlides = [
     { image: './banner3.png',     tab: 'totw',       alt: 'TOTW' },
     { image: './banner4.png.PNG', tab: 'stats',      alt: 'STATISTICS' },
     { image: './banner5.png',     tab: 'champions',  alt: 'CHAMPIONS CUP' },
-    { image: './banner6.png',     tab: 'cup',        alt: 'TELEGOAT CUP' }
+    { image: './banner6.png',     tab: 'cup',        alt: 'GOAT LEAGUE' }
 ];
 
 let carouselIndex = 0;
