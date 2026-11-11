@@ -1,0 +1,45 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>حفظ نتائج الجولات 7 – 10</title>
+<style>body{background:#0b0b12;color:#fff;font-family:system-ui,sans-serif;margin:0 auto;padding:16px;max-width:520px}
+h2{color:#A78BFA}.r{display:grid;grid-template-columns:1fr 70px 70px 1fr;gap:6px;align-items:center;margin:6px 0;direction:ltr}
+.r span{font-weight:700;font-size:14px}.r span:last-child{text-align:right}
+input{width:100%;padding:8px;border-radius:8px;border:1px solid #4c1d95;background:#16162a;color:#fff;text-align:center;font-size:16px;box-sizing:border-box}
+button{width:100%;padding:14px;border:0;border-radius:12px;background:#7c3aed;color:#fff;font-size:17px;font-weight:800;margin-top:14px}
+#log{margin-top:12px;white-space:pre-wrap;font-size:14px;line-height:1.7}.warn{color:#fbbf24;font-size:13px}</style></head><body>
+<h2>نتائج الجولات 7 – 10</h2>
+<div class="warn">راجع الأرقام (خصوصاً سندرلاند × تشيلسي) ثم اضغط حفظ.</div>
+<div id="rows"></div>
+<button id="go">حفظ في قاعدة النتائج</button>
+<div id="log"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+<script>
+var URL_='https://qzsteswrannqsrnlytzl.supabase.co';
+var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF6c3Rlc3dyYW5ucXNybmx5dHpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MTExNjgsImV4cCI6MjEwNDI4NzE2OH0.AFYiXODdfDbDiYn1fUoB9e2ZC8i7mFGgLvVxZzSPjxw';
+var DATA={"7": [["BOU", "SUN", 708, 718], ["BRE", "LIV", 783, 755], ["BHA", "CRY", 766, 790], ["EVE", "CHE", 703, 774], ["FUL", "HUL", 721, 709], ["LEE", "MUN", 789, 711], ["MCI", "IPS", 745, 721], ["NEW", "AVL", 791, 767], ["NOT", "ARS", 729, 741], ["TOT", "COV", 808, 772]], "8": [["ARS", "EVE", 566, 473], ["AVL", "MCI", 568, 535], ["CHE", "TOT", 593, 560], ["COV", "FUL", 553, 565], ["CRY", "NEW", 596, 525], ["HUL", "BRE", 597, 601], ["IPS", "NOT", 544, 483], ["LIV", "BHA", 536, 550], ["MUN", "BOU", 569, 571], ["SUN", "LEE", 601, 542]], "9": [["BOU", "LEE", 651, 627], ["BRE", "NOT", 575, 602], ["CHE", "MUN", 607, 633], ["COV", "SUN", 618, 567], ["HUL", "IPS", 602, 650], ["LIV", "ARS", 706, 628], ["MCI", "BHA", 649, 601], ["NEW", "EVE", 632, 615], ["TOT", "CRY", 617, 674], ["AVL", "FUL", 585, 617]], "10": [["ARS", "HUL", 748, 655], ["BHA", "BRE", 675, 701], ["CRY", "LIV", 678, 623], ["EVE", "COV", 696, 641], ["FUL", "NEW", 719, 666], ["IPS", "BOU", 646, 735], ["LEE", "TOT", 723, 691], ["MUN", "AVL", 669, 701], ["NOT", "MCI", 663, 664], ["SUN", "CHE", 678, 629]]};
+var NAMES={ARS:'Arsenal',AVL:'Aston Villa',BOU:'Bournemouth',BRE:'Brentford',BHA:'Brighton',CHE:'Chelsea',COV:'Coventry',CRY:'Crystal Palace',EVE:'Everton',FUL:'Fulham',HUL:'Hull',IPS:'Ipswich',LEE:'Leeds',LIV:'Liverpool',MCI:'Man City',MUN:'Man Utd',NEW:'Newcastle',NOT:"Nott'm Forest",SUN:'Sunderland',TOT:'Spurs'};
+var box=document.getElementById('rows');
+Object.keys(DATA).forEach(function(r){
+ box.insertAdjacentHTML('beforeend','<h3 style="color:#C4B5FD;margin:18px 0 4px">الجولة '+r+'</h3>');
+ DATA[r].forEach(function(d,i){box.insertAdjacentHTML('beforeend','<div class="r"><span>'+NAMES[d[0]]+'</span><input id="h'+r+'_'+i+'" type="number" value="'+d[2]+'"><input id="a'+r+'_'+i+'" type="number" value="'+d[3]+'"><span>'+NAMES[d[1]]+'</span></div>')});
+});
+function log(t){document.getElementById('log').textContent+=t+'\n'}
+document.getElementById('go').onclick=async function(){
+ var btn=this;btn.disabled=true;document.getElementById('log').textContent='';
+ var sb=supabase.createClient(URL_,KEY);
+ var ls={};try{ls=JSON.parse(localStorage.getItem('fpl_scores'))||{}}catch(e){}
+ for(var r of Object.keys(DATA)){
+  var rows=DATA[r].map(function(d,i){return{round:String(r),home_team:d[0],away_team:d[1],home_score:parseInt(document.getElementById('h'+r+'_'+i).value,10),away_score:parseInt(document.getElementById('a'+r+'_'+i).value,10),created_at:Date.now()}});
+  var codes=DATA[r].map(function(d){return d[0]});
+  var old=await sb.from('match_results').select('*').eq('round',String(r)).in('home_team',codes);
+  if(old.error){log('❌ جولة '+r+' فشل القراءة: '+old.error.message);continue}
+  var del=await sb.from('match_results').delete().eq('round',String(r)).in('home_team',codes);
+  if(del.error){log('❌ جولة '+r+' فشل المسح: '+del.error.message);continue}
+  var ins=await sb.from('match_results').insert(rows);
+  if(ins.error){log('❌ جولة '+r+' فشل الحفظ: '+ins.error.message);if(old.data&&old.data.length)await sb.from('match_results').insert(old.data);log('   (أُعيدت القديمة)');continue}
+  var chk=await sb.from('match_results').select('home_team').eq('round',String(r)).in('home_team',codes);
+  log((chk.data&&chk.data.length===10?'✅ ':'⚠ ')+'جولة '+r+': '+(chk.data?chk.data.length:0)+'/10');
+  rows.forEach(function(x,i){ls['r'+r+'_m'+i+'_home']=String(x.home_score);ls['r'+r+'_m'+i+'_away']=String(x.away_score)});
+ }
+ try{localStorage.setItem('fpl_scores',JSON.stringify(ls))}catch(e){}
+ log('انتهى. ارجع للموقع وحدّث الصفحة.');btn.disabled=false};
+</script></body></html>
