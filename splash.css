@@ -514,3 +514,28 @@ body.splash-active {
     .sp-lion { stroke-dashoffset: 0; fill: url(#spG); }
     .sp-gl, .sp-crown { opacity: 1; transform: none; }
 }
+
+/* ===== v3: خلفية بسيطة بلون الدوري الإنكليزي ===== */
+.splash-grid, .splash-corner, .splash-lines, .splash-rings, .splash-hex { display: none !important; }
+.splash-screen { background: #2a0030; }
+.splash-bg {
+    background:
+        radial-gradient(circle at 50% 42%, #6b1a73 0%, #4a0a52 38%, #2a0030 72%, #1a001f 100%);
+}
+/* موجة ناعمة تخرج من الأسد عند الزمجرة */
+.splash-bg::before, .splash-bg::after {
+    content: ''; position: absolute; left: 50%; top: 42%;
+    width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, .5); opacity: 0;
+    animation: sp-wave 1.9s 2.1s ease-out both;
+}
+.splash-bg::after { animation-delay: 2.7s; border-color: rgba(0, 255, 133, .45); }
+@keyframes sp-wave {
+    0% { transform: scale(.4); opacity: .8; }
+    100% { transform: scale(7); opacity: 0; }
+}
+.splash-logo-wrap .sp-svg {
+    filter: drop-shadow(0 0 12px rgba(255,255,255,.35)) drop-shadow(0 0 30px rgba(233,0,82,.45));
+}
+.splash-logo-glow { background: radial-gradient(circle, rgba(255,255,255,.22) 0%, rgba(233,0,82,.12) 40%, transparent 65%); }
+.splash-sub { color: rgba(255,255,255,.7); }
