@@ -270,7 +270,7 @@ async function ccUpdateMainFixtures(isForced, roundOverride) {
             scoresStorage['r' + round + '_m' + idx + '_home'] = scores[home];
             scoresStorage['r' + round + '_m' + idx + '_away'] = scores[away];
             updated = true;
-            rows.push({ round: String(round), home_team: home, away_team: away, home_score: scores[home], away_score: scores[away], created_at: new Date().toISOString() });
+            rows.push({ round: String(round), home_team: home, away_team: away, home_score: scores[home], away_score: scores[away], created_at: Date.now() });
         }
     });
 
