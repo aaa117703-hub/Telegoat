@@ -4,12 +4,12 @@
 ========================================================= */
 
 const carouselSlides = [
-    { image: './banner1.png.png', tab: 'standings',  alt: 'STANDINGS' },
-    { image: './banner2.png.png', tab: 'fixtures',   alt: 'MATCHES' },
-    { image: './banner3.png',     tab: 'totw',       alt: 'TOTW' },
-    { image: './banner4.png.PNG', tab: 'stats',      alt: 'STATISTICS' },
-    { image: './banner5.png',     tab: 'champions',  alt: 'CHAMPIONS CUP' },
-    { image: './banner6.png',     tab: 'cup',        alt: 'GOAT LEAGUE' }
+    { image: './banner1.webp', tab: 'standings',  alt: 'STANDINGS' },
+    { image: './banner2.webp', tab: 'fixtures',   alt: 'MATCHES' },
+    { image: './banner3.webp',     tab: 'totw',       alt: 'TOTW' },
+    { image: './banner4.webp', tab: 'stats',      alt: 'STATISTICS' },
+    { image: './banner5.webp',     tab: 'champions',  alt: 'CHAMPIONS CUP' },
+    { image: './banner6.webp',     tab: 'cup',        alt: 'GOAT LEAGUE' }
 ];
 
 let carouselIndex = 0;

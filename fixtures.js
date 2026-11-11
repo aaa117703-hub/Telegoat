@@ -41,6 +41,31 @@ function changeRound(step) {
    SWITCH TAB
 ========================================================= */
 
+/* ===== تحميل كأس GOAT LEAGUE عند الطلب فقط (يسرّع فتح الموقع) ===== */
+var TG_CUP_VER = '3';
+var _tgCupPromise = null;
+function tgLoadCup() {
+    if (typeof loadChampions === 'function' && window.__tgCupReady) return Promise.resolve();
+    if (_tgCupPromise) return _tgCupPromise;
+    var css = ['pitch-fpl.css', 'champions.css', 'champions-draw.css', 'champions-captains.css', 'champions-special.css'];
+    var js = ['champions.js', 'champions-draw.js', 'champions-captains.js', 'champions-special.js', 'cup-adapter.js'];
+    css.forEach(function (f) {
+        var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = f + '?v=' + TG_CUP_VER; document.head.appendChild(l);
+    });
+    _tgCupPromise = js.reduce(function (p, f) {
+        return p.then(function () {
+            return new Promise(function (res, rej) {
+                var s = document.createElement('script'); s.src = f + '?v=' + TG_CUP_VER; s.async = false;
+                s.onload = res; s.onerror = function () { rej(new Error('load ' + f)); };
+                document.head.appendChild(s);
+            });
+        });
+    }, Promise.resolve()).then(function () { window.__tgCupReady = true; }).catch(function (e) {
+        _tgCupPromise = null; throw e;
+    });
+    return _tgCupPromise;
+}
+
 function switchTab(tabName) {
 
     if (
@@ -103,7 +128,10 @@ function switchTab(tabName) {
     } else if (tabName === 'cup') {
         const el = document.getElementById('cupTab');
         if (el) el.classList.add('active');
-        if (typeof loadChampions === 'function') loadChampions();
+        var cupEl = document.getElementById('tgCupContent');
+        if (cupEl && !window.__tgCupReady) cupEl.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#A78BFA;font-weight:800;">GOAT LEAGUE…</div>';
+        tgLoadCup().then(function () { if (typeof loadChampions === 'function') loadChampions(); })
+            .catch(function () { if (cupEl) cupEl.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#F87171;">تعذّر تحميل الكأس — تأكد من الإنترنت وحدّث الصفحة</div>'; });
     } else {
         const el = document.getElementById('fixturesTab');
         if (el) el.classList.add('active');

@@ -1156,3 +1156,34 @@
         }
     }
 }
+
+/* ===== v2: ضبط المقاسات للموبايل (أسماء كاملة، أعمدة واضحة) ===== */
+@media (max-width: 480px) {
+    .fixture-row { gap: 0 !important; padding: 9px 2px !important; }
+    .team-box { flex: 1 1 0 !important; min-width: 0 !important; font-size: clamp(11px, 3.3vw, 14px) !important; line-height: 1.12 !important; gap: 2px !important; }
+    .team-box > span:not(.logo-24) { white-space: normal !important; overflow: visible !important; text-overflow: clip !important; word-break: normal; overflow-wrap: anywhere; min-width: 0; }
+    .logo-24 { width: 26px !important; height: 26px !important; min-width: 26px !important; min-height: 26px !important; max-width: 26px !important; max-height: 26px !important; margin: 0 3px !important; }
+    .match-score-center { width: 104px !important; min-width: 104px !important; padding: 6px 4px !important; gap: 3px !important; }
+    .score-display { font-size: 14px !important; }
+    .score-input { width: 34px !important; }
+
+    .standings-content-area { padding: 8px 6px !important; }
+    .pos-container { gap: 3px !important; }
+    .pos-indicator-img { width: 16px !important; height: 16px !important; min-width: 16px !important; min-height: 16px !important; max-width: 16px !important; max-height: 16px !important; }
+    .pos-number { min-width: 20px !important; text-align: center; font-size: 13px !important; }
+    .team-cell { font-size: clamp(11px, 3.2vw, 13px) !important; gap: 5px !important; padding: 0 !important; min-width: 0; }
+    .team-cell { white-space: normal !important; line-height: 1.1; overflow-wrap: anywhere; }
+    .logo-20 { width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; max-width: 22px !important; max-height: 22px !important; }
+    .col-pos { width: 17% !important; }
+    .col-club { width: 40% !important; }
+    .col-gf { width: 15% !important; }
+    .col-pts { width: 12% !important; }
+    .col-form { width: 16% !important; }
+    .stat-number { font-size: 13px !important; }
+    .form-letter { font-size: 10px !important; width: 11px !important; }
+}
+@media (max-width: 360px) {
+    .match-score-center { width: 96px !important; min-width: 96px !important; }
+    .logo-24 { width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; max-width: 22px !important; max-height: 22px !important; }
+    .team-cell { font-size: 11px !important; }
+}

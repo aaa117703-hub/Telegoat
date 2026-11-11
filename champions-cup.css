@@ -1027,7 +1027,7 @@
     width: 100%;
     max-width: 480px;
     aspect-ratio: 860/1160;
-    background-image: url('./pitch-bg.png');
+    background-image: url('./pitch-bg.webp');
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
