@@ -64,6 +64,11 @@ function switchTab(tabName) {
             return;
         }
 
+        if (tabName === 'cup' && isLocked('champions')) {
+            showSectionMaintenance('Telegoat Cup');
+            return;
+        }
+
         if (tabName === 'champions' && isLocked('champions')) {
             showSectionMaintenance('Champions Cup');
             return;
@@ -95,6 +100,10 @@ function switchTab(tabName) {
         const el = document.getElementById('championsTab');
         if (el) el.classList.add('active');
         if (typeof ccInit === 'function') ccInit();
+    } else if (tabName === 'cup') {
+        const el = document.getElementById('cupTab');
+        if (el) el.classList.add('active');
+        if (typeof loadChampions === 'function') loadChampions();
     } else {
         const el = document.getElementById('fixturesTab');
         if (el) el.classList.add('active');

@@ -1,0 +1,3156 @@
+/* =========================================================
+   champions-captains.css — FINALISSIMA LEAGUE (v=16)
+   👑 Lineup — FPL Style + Bench + Assassination
+   ⭐ v16: تصميم الاغتيال + الترقية + تفاصيل الخواص + Admin Force
+========================================================= */
+
+/* ═══════════════════════════════════════════════════════
+   1) WRAPPER + INTRO
+   ═══════════════════════════════════════════════════════ */
+
+.champ-captains-wrap {
+    width: 100%;
+    padding: 8px 4px 24px;
+    direction: ltr;
+    font-family: 'Inter', 'Cairo', sans-serif;
+    color: #F5F3FF;
+}
+
+.champ-captains-intro {
+    background: linear-gradient(135deg,
+        rgba(91,33,182, 0.25) 0%,
+        rgba(58, 10, 21, 0.4) 100%);
+    border: 1.5px solid rgba(167,139,250, 0.4);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.champ-captains-intro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%, #A78BFA 50%, transparent 100%);
+    box-shadow: 0 0 12px rgba(167,139,250, 0.6);
+}
+
+.champ-captains-intro h2 {
+    font-size: 22px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    text-shadow: 0 0 20px rgba(167,139,250, 0.5);
+}
+
+.champ-captains-intro h2 i {
+    margin-right: 8px;
+}
+
+.champ-captains-intro p {
+    font-size: 12px;
+    color: #A1A1B5;
+    line-height: 1.7;
+    letter-spacing: 0.3px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   2) TEAMS SELECT GRID
+   ═══════════════════════════════════════════════════════ */
+
+.cc-teams-select-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.cc-team-select-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #24242E;
+    border: 1.5px solid #2E2E3A;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    min-height: 64px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.cc-team-select-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%, rgba(167,139,250, 0.6) 50%, transparent 100%);
+}
+
+.cc-team-select-card:hover {
+    border-color: #A78BFA;
+    background: #2E2E3A;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(167,139,250, 0.15);
+}
+
+.cc-team-select-card:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.cc-team-select-card.cc-team-select-ready {
+    border-color: rgba(16, 185, 129, 0.5);
+    background: linear-gradient(135deg,
+        rgba(16, 185, 129, 0.1) 0%,
+        #24242E 60%);
+}
+
+.cc-team-select-card.cc-team-select-ready::before {
+    background: linear-gradient(90deg,
+        transparent 0%, #10B981 50%, transparent 100%);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.cc-team-select-card img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.cc-team-select-info {
+    flex: 1;
+    min-width: 0;
+    direction: ltr;
+    text-align: left;
+}
+
+.cc-team-select-name {
+    font-size: 12px;
+    font-weight: 900;
+    color: #F5F3FF;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cc-team-select-status {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-top: 2px;
+    text-transform: uppercase;
+    color: #A78BFA;
+}
+
+.cc-team-select-card.cc-team-select-ready .cc-team-select-status {
+    color: #10B981;
+    text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.cc-team-select-icon {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: rgba(167,139,250, 0.12);
+    color: #A78BFA;
+    font-size: 15px;
+}
+
+.cc-team-select-card.cc-team-select-ready .cc-team-select-icon {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10B981;
+    filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.5));
+}
+
+/* ═══════════════════════════════════════════════════════
+   3) MODAL
+   ═══════════════════════════════════════════════════════ */
+
+.champ-captain-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 9999999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    direction: ltr;
+}
+
+.champ-captain-modal.show { display: flex; }
+
+.champ-captain-modal-box {
+    width: 100%;
+    max-width: 420px;
+    background: #24242E;
+    border: 2px solid #8B5CF6;
+    border-radius: 20px;
+    padding: 28px 24px;
+    position: relative;
+    animation: champCaptainModalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.8),
+        0 0 60px rgba(167,139,250, 0.2);
+    max-height: 92vh;
+    overflow-y: auto;
+}
+
+@keyframes champCaptainModalIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.champ-captain-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1.5px solid #8B5CF6;
+    border-radius: 50%;
+    color: #A78BFA;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.champ-captain-modal-close:hover {
+    background: #8B5CF6;
+    color: #1A1A22;
+    transform: rotate(90deg);
+}
+
+.champ-captain-modal-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: #A78BFA;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.champ-captain-modal-sub {
+    font-size: 11px;
+    color: #A1A1B5;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+    line-height: 1.6;
+}
+
+.cc-pin-team-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px auto 16px;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,
+        rgba(91,33,182, 0.3) 0%,
+        rgba(58, 10, 21, 0.5) 100%);
+    border: 2px solid rgba(167,139,250, 0.5);
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.5),
+        inset 0 0 12px rgba(167,139,250, 0.15);
+}
+
+.cc-pin-team-logo img {
+    width: 78%;
+    height: 78%;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6));
+}
+
+.champ-captain-pin-input {
+    width: 100%;
+    padding: 18px;
+    background: #1A1A22;
+    border: 2px solid #2E2E3A;
+    border-radius: 14px;
+    color: #F5F3FF;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 14px;
+    text-align: center;
+    font-family: 'Inter', monospace;
+    outline: none;
+    transition: all 0.2s ease;
+    direction: ltr;
+}
+
+.champ-captain-pin-input:focus {
+    border-color: #8B5CF6;
+    box-shadow: 0 0 0 3px rgba(139,92,246, 0.2);
+}
+
+.champ-captain-pin-input::placeholder {
+    color: #2E2E3A;
+    letter-spacing: 10px;
+}
+
+.champ-captain-pin-error {
+    color: #EF4444;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+    margin-top: 12px;
+    min-height: 18px;
+    letter-spacing: 0.5px;
+}
+
+.champ-captain-modal-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 18px;
+    background: linear-gradient(135deg, #A78BFA 0%, #5B21B6 100%);
+    color: #1A1A22;
+    border: 2px solid #F5F3FF;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.25s ease;
+    box-shadow:
+        0 6px 20px rgba(167,139,250, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.champ-captain-modal-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+        0 10px 28px rgba(167,139,250, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════
+   4) HEADER
+   ═══════════════════════════════════════════════════════ */
+
+.champ-captain-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg,
+        rgba(91,33,182, 0.4) 0%,
+        rgba(58, 10, 21, 0.6) 100%);
+    border: 1.5px solid rgba(167,139,250, 0.5);
+    border-radius: 16px;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+}
+
+.champ-captain-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%, #A78BFA 50%, transparent 100%);
+    box-shadow: 0 0 12px rgba(167,139,250, 0.6);
+}
+
+.champ-captain-header-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    justify-content: flex-end;
+    min-width: 0;
+}
+
+.champ-captain-header-info img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
+    flex-shrink: 0;
+}
+
+.champ-captain-header-text {
+    min-width: 0;
+    direction: rtl;
+    text-align: right;
+}
+
+.champ-captain-header-team {
+    font-size: 16px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 0 12px rgba(167,139,250, 0.5);
+}
+
+.champ-captain-header-name {
+    font-size: 10px;
+    font-weight: 700;
+    color: #A1A1B5;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.champ-captain-header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    background: rgba(167,139,250, 0.15);
+    border: 1.5px solid #8B5CF6;
+    border-radius: 50px;
+    color: #A78BFA;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.champ-captain-header-badge i {
+    font-size: 13px;
+}
+
+.champ-captain-logout {
+    padding: 8px 14px;
+    background: rgba(91,33,182, 0.5);
+    border: 1.5px solid #B8253F;
+    border-radius: 50px;
+    color: #F5F3FF;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.champ-captain-logout i {
+    font-size: 14px;
+}
+
+.champ-captain-logout:hover {
+    background: #5B21B6;
+    transform: scale(1.04);
+}
+
+.champ-captain-logout:active {
+    transform: scale(0.97);
+}
+
+/* ═══════════════════════════════════════════════════════
+   5) SPECIAL INLINE
+   ═══════════════════════════════════════════════════════ */
+
+.cc-lineup-special-slot {
+    margin-bottom: 16px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   6) SPECIAL RESULTS — ⭐ v16 (تصميم كامل للتفاصيل)
+   ═══════════════════════════════════════════════════════ */
+
+.cc-special-results {
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    direction: rtl;
+}
+
+.cc-special-results-title {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid rgba(167,139,250,0.3);
+    text-align: center;
+    text-shadow: 0 0 12px rgba(167,139,250, 0.4);
+}
+
+.cc-special-card {
+    background: linear-gradient(135deg, rgba(30,30,32,0.95), rgba(20,20,22,0.95));
+    border: 1.5px solid #2E2E3A;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    animation: ccSpecialCardIn 0.4s ease;
+}
+
+@keyframes ccSpecialCardIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.cc-special-card-red    { border-color: rgba(239,68,68,0.5); }
+.cc-special-card-dark   { border-color: rgba(91,33,182,0.5); }
+.cc-special-card-gold   { border-color: rgba(167,139,250,0.5); }
+.cc-special-card-green  { border-color: rgba(16,185,129,0.5); }
+.cc-special-card-purple { border-color: rgba(168,85,247,0.5); }
+.cc-special-card-blue   { border-color: rgba(92,191,235,0.5); }
+
+.cc-special-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    flex-wrap: wrap;
+}
+
+.cc-special-card-red    .cc-special-card-header { background: rgba(239,68,68,0.15); }
+.cc-special-card-dark   .cc-special-card-header { background: rgba(91,33,182,0.25); }
+.cc-special-card-gold   .cc-special-card-header { background: rgba(167,139,250,0.15); }
+.cc-special-card-green  .cc-special-card-header { background: rgba(16,185,129,0.15); }
+.cc-special-card-purple .cc-special-card-header { background: rgba(168,85,247,0.15); }
+.cc-special-card-blue   .cc-special-card-header { background: rgba(92,191,235,0.15); }
+
+.cc-special-card-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.cc-special-card-title {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    color: #F5F3FF;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    flex: 1;
+}
+
+.cc-special-card-team {
+    font-family: 'Cairo', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    color: #A78BFA;
+    padding: 2px 8px;
+    background: rgba(167,139,250,0.15);
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+}
+
+.cc-special-card-result {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.cc-special-card-result.green { background: rgba(16,185,129,0.25); color: #10B981; border: 1px solid #10B981; }
+.cc-special-card-result.red   { background: rgba(239,68,68,0.25); color: #EF4444; border: 1px solid #EF4444; }
+.cc-special-card-result.gray  { background: rgba(168,168,170,0.2); color: #A1A1B5; border: 1px solid #A1A1B5; }
+
+.cc-special-card-body {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cc-special-card-line {
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #A78BFA;
+    letter-spacing: 0.3px;
+    line-height: 1.5;
+}
+
+.cc-special-card-line strong {
+    color: #F5F3FF;
+    font-weight: 900;
+}
+
+.cc-special-card-blocked {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: rgba(239,68,68,0.1);
+    border-right: 3px solid #EF4444;
+    border-radius: 8px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    color: #FCA5A5;
+    letter-spacing: 0.3px;
+}
+
+/* H2H Versus */
+.cc-h2h-versus {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 4px;
+}
+
+.cc-h2h-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
+
+.cc-h2h-name {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    color: #F5F3FF;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cc-h2h-points {
+    font-family: 'Inter', monospace;
+    font-size: 20px;
+    font-weight: 900;
+    color: #A1A1B5;
+    line-height: 1;
+}
+
+.cc-h2h-points.winner {
+    color: #10B981;
+    text-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+}
+
+.cc-h2h-label {
+    font-family: 'Cairo', sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    color: #6B6B80;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.cc-h2h-vs {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    color: #A78BFA;
+    background: rgba(167,139,250,0.15);
+    padding: 6px 10px;
+    border-radius: 50%;
+    border: 1.5px solid #A78BFA;
+    letter-spacing: 0.5px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   7) ASSASSINATION OVERLAY — ⭐ v16
+   ═══════════════════════════════════════════════════════ */
+
+.cc-slot-assassinated {
+    position: relative;
+}
+
+.cc-slot-assassinated .cc-slot-shirt-box {
+    border: 2.5px solid #EF4444 !important;
+    background: linear-gradient(180deg,
+        rgba(239, 68, 68, 0.25) 0%,
+        rgba(91,33,182, 0.95) 100%) !important;
+    animation: ccAssassinatedPulse 2s ease-in-out infinite;
+}
+
+@keyframes ccAssassinatedPulse {
+    0%, 100% {
+        box-shadow:
+            0 0 0 0 rgba(239, 68, 68, 0.7),
+            0 4px 14px rgba(0, 0, 0, 0.5);
+    }
+    50% {
+        box-shadow:
+            0 0 0 8px rgba(239, 68, 68, 0),
+            0 4px 14px rgba(0, 0, 0, 0.5);
+    }
+}
+
+.cc-slot-assassinated .cc-slot-name-box {
+    background: #EF4444 !important;
+    border-color: #FFFFFF !important;
+    animation: ccAssassinatedNamePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes ccAssassinatedNamePulse {
+    0%, 100% { background: #EF4444; }
+    50%      { background: #DC2626; }
+}
+
+.cc-slot-assassinated .cc-slot-name {
+    color: #FFFFFF !important;
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+    text-decoration-color: #FCA5A5;
+}
+
+.cc-assassination-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    z-index: 10;
+    pointer-events: none;
+    filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.9));
+    animation: ccSkullFloat 2s ease-in-out infinite;
+}
+
+@keyframes ccSkullFloat {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1) rotate(-5deg);
+        opacity: 0.85;
+    }
+    50% {
+        transform: translate(-50%, -55%) scale(1.15) rotate(5deg);
+        opacity: 1;
+    }
+}
+
+/* خط الدم الأحمر */
+.cc-slot-assassinated .cc-slot-shirt-box::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 30%;
+    background: linear-gradient(180deg,
+        rgba(220, 38, 38, 0.9) 0%,
+        rgba(91,33,182, 0.6) 100%);
+    border-radius: 0 0 3px 3px;
+    animation: ccBloodDrip 3s ease-in-out infinite;
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.8);
+}
+
+@keyframes ccBloodDrip {
+    0%   { height: 20%; opacity: 0.7; }
+    50%  { height: 35%; opacity: 1; }
+    100% { height: 20%; opacity: 0.7; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   8) PROMOTED SLOT — ⭐ v16 (لاعب صعد من الدكة)
+   ═══════════════════════════════════════════════════════ */
+
+.cc-slot-promoted .cc-slot-shirt-box {
+    border: 2.5px solid #10B981 !important;
+    background: linear-gradient(180deg,
+        rgba(16, 185, 129, 0.2) 0%,
+        rgba(91,33,182, 0.85) 100%) !important;
+    animation: ccPromotedGlow 2s ease-in-out infinite;
+}
+
+@keyframes ccPromotedGlow {
+    0%, 100% {
+        box-shadow:
+            0 0 0 0 rgba(16, 185, 129, 0.5),
+            0 4px 14px rgba(0, 0, 0, 0.5);
+    }
+    50% {
+        box-shadow:
+            0 0 0 6px rgba(16, 185, 129, 0),
+            0 4px 14px rgba(0, 0, 0, 0.5);
+    }
+}
+
+.cc-slot-promoted .cc-slot-name-box {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+    border-color: #F5F3FF !important;
+}
+
+.cc-slot-promoted .cc-slot-name {
+    color: #FFFFFF !important;
+}
+
+.cc-promoted-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 16px;
+    z-index: 10;
+    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.8));
+    animation: ccPromotedBounce 1.5s ease-in-out infinite;
+}
+
+@keyframes ccPromotedBounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-4px) scale(1.1); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   9) ADMIN FORCE PANEL — ⭐ v16
+   ═══════════════════════════════════════════════════════ */
+
+.cc-admin-force-panel {
+    margin: 16px 0;
+    padding: 14px;
+    background: linear-gradient(135deg,
+        rgba(167,139,250, 0.1) 0%,
+        rgba(91,33,182, 0.15) 100%);
+    border: 2px dashed rgba(167,139,250, 0.5);
+    border-radius: 14px;
+    direction: rtl;
+    text-align: center;
+}
+
+.cc-admin-force-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.cc-admin-force-desc {
+    font-family: 'Cairo', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #A1A1B5;
+    margin-bottom: 10px;
+    letter-spacing: 0.3px;
+}
+
+.cc-admin-force-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    background: linear-gradient(135deg, #A78BFA 0%, #5B21B6 100%);
+    color: #1A1A22;
+    border: 2px solid #F5F3FF;
+    border-radius: 50px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(167,139,250, 0.4);
+}
+
+.cc-admin-force-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(167,139,250, 0.6);
+}
+
+.cc-admin-force-btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.cc-admin-force-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #1A1A22;
+    border: 1.5px solid #2E2E3A;
+    border-radius: 12px;
+    color: #F5F3FF;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    direction: rtl;
+    text-align: right;
+    letter-spacing: 0.3px;
+}
+
+.cc-admin-force-option:hover:not(:disabled) {
+    border-color: #A78BFA;
+    background: #24242E;
+    transform: translateY(-1px);
+}
+
+.cc-admin-force-option:disabled,
+.cc-admin-force-option.used {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: rgba(16, 185, 129, 0.05);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════
+   10) PROGRESS
+   ═══════════════════════════════════════════════════════ */
+
+.champ-captain-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #24242E;
+    border: 1.5px solid #2E2E3A;
+    border-radius: 14px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.champ-captain-progress-text {
+    font-size: 11px;
+    font-weight: 900;
+    color: #F5F3FF;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.champ-captain-progress-count {
+    display: inline-block;
+    min-width: 20px;
+    color: #A78BFA;
+    font-size: 17px;
+    text-shadow: 0 0 12px rgba(167,139,250, 0.6);
+}
+
+.champ-captain-progress-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(167,139,250, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    max-width: 200px;
+    min-width: 80px;
+}
+
+.champ-captain-progress-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #5B21B6 0%, #A78BFA 100%);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 12px rgba(167,139,250, 0.6);
+}
+
+.champ-captain-progress-fill.full {
+    background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+}
+
+/* ═══════════════════════════════════════════════════════
+   11) PITCH (TOTW Style)
+   ═══════════════════════════════════════════════════════ */
+
+.tgc-pitch {
+    position: relative;
+    width: 100%;
+    margin: 14px 0;
+    padding: 0;
+    background:
+        radial-gradient(ellipse at 50% 0%,
+            rgba(91,33,182, 0.35) 0%,
+            transparent 60%),
+        radial-gradient(ellipse at 50% 100%,
+            rgba(74, 10, 21, 0.5) 0%,
+            transparent 70%),
+        linear-gradient(180deg,
+            #2D1B4E 0%,
+            #4C1D95 40%,
+            #2D1B4E 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.6),
+        inset 0 0 80px rgba(0, 0, 0, 0.4),
+        inset 0 0 0 2px rgba(167,139,250, 0.2);
+    height: 720px;
+    direction: ltr;
+}
+
+.tgc-pitch-opponent {
+    background:
+        radial-gradient(ellipse at 50% 0%,
+            rgba(184, 37, 63, 0.3) 0%,
+            transparent 60%),
+        radial-gradient(ellipse at 50% 100%,
+            rgba(74, 10, 21, 0.5) 0%,
+            transparent 70%),
+        linear-gradient(180deg,
+            #1F1330 0%,
+            #4A0F0F 40%,
+            #1F1330 100%);
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.6),
+        inset 0 0 80px rgba(0, 0, 0, 0.4),
+        inset 0 0 0 2px rgba(184, 37, 63, 0.4);
+}
+
+.tgc-pitch::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(167,139,250, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(167,139,250, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.tgc-pitch-field,
+.tgc-pitch-line,
+.tgc-pitch-line-center,
+.tgc-pitch-line-top,
+.tgc-pitch-line-bottom,
+.tgc-pitch-circle {
+    display: none !important;
+}
+
+.tgc-pitch-rows {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    padding: 0;
+}
+
+.tgc-pitch-row {
+    position: absolute;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: nowrap;
+}
+
+.tgc-pitch-row-gk {
+    top: 8%;
+    justify-content: center;
+}
+
+.tgc-pitch-row-def {
+    top: 30%;
+    padding: 0 20px;
+    justify-content: space-around;
+}
+
+.tgc-pitch-row-mid {
+    top: 55%;
+    gap: 60px;
+    justify-content: center;
+}
+
+.tgc-pitch-row-fwd {
+    top: 78%;
+    justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════════════
+   12) SLOT (FPL STYLE)
+   ═══════════════════════════════════════════════════════ */
+
+.cc-slot {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    background: transparent;
+    border: none;
+    min-width: 96px;
+    max-width: 116px;
+    cursor: pointer;
+    transition: transform 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'Inter', 'Cairo', sans-serif;
+}
+
+.cc-slot:hover {
+    transform: translateY(-5px);
+}
+
+.cc-slot.cc-slot-readonly {
+    cursor: default;
+}
+
+.cc-slot.cc-slot-readonly:hover {
+    transform: none;
+}
+
+.cc-slot-shirt-box {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    padding: 12px 8px 8px;
+    background: linear-gradient(180deg, rgba(30, 30, 32, 0.3) 0%, rgba(91,33,182, 0.85) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border-radius: 12px 12px 0 0;
+    border: 1.5px solid rgba(167,139,250, 0.3);
+    border-bottom: none;
+}
+
+.cc-slot.cc-slot-empty .cc-slot-shirt-box {
+    background: linear-gradient(180deg,
+        rgba(30, 30, 32, 0.2) 0%,
+        rgba(91,33,182, 0.3) 100%);
+    border: 2px dashed rgba(167,139,250, 0.5);
+    border-radius: 12px;
+}
+
+.cc-slot.cc-slot-active .cc-slot-shirt-box {
+    box-shadow:
+        0 0 30px rgba(167,139,250, 1),
+        0 4px 14px rgba(0, 0, 0, 0.5);
+    animation: ccSlotActivePulse 1.4s ease-in-out infinite;
+}
+
+@keyframes ccSlotActivePulse {
+    0%, 100% {
+        box-shadow: 0 0 30px rgba(167,139,250, 1), 0 4px 14px rgba(0, 0, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 50px rgba(167,139,250, 1), 0 4px 18px rgba(0, 0, 0, 0.6);
+    }
+}
+
+.cc-slot-shirt-img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+    transition: filter 0.25s ease;
+}
+
+.cc-slot-shirt-box .cc-slot-shirt-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.cc-slot-plus-shirt {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(167,139,250, 0.15);
+    border: 2px dashed rgba(167,139,250, 0.7);
+    color: #A78BFA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.cc-slot-plus-shirt i {
+    animation: ccPlusPulse 2s ease-in-out infinite;
+}
+
+@keyframes ccPlusPulse {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50%      { transform: scale(1.15); opacity: 1; }
+}
+
+.cc-slot.cc-slot-empty:hover .cc-slot-plus-shirt {
+    background: rgba(167,139,250, 0.3);
+    border-color: #A78BFA;
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(167,139,250, 0.7);
+}
+
+.cc-slot-name-box {
+    position: relative;
+    z-index: 3;
+    margin-top: -16px;
+    width: 112%;
+    padding: 4px 8px;
+    background: linear-gradient(135deg, #5B21B6 0%, #611120 100%);
+    border: 1.5px solid #A78BFA;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+    min-height: 26px;
+}
+
+.cc-slot-name {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 10px;
+    font-weight: 900;
+    color: #A78BFA;
+    text-align: center;
+    letter-spacing: 0.3px;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
+}
+
+.cc-slot-name.cc-slot-name-empty {
+    color: rgba(167,139,250, 0.6);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 8px rgba(167,139,250, 0.5);
+}
+
+.cc-slot-label {
+    display: none !important;
+}
+
+.cc-slot-points-box {
+    margin-top: 3px;
+    padding: 3px 12px;
+    background: linear-gradient(135deg,
+        #5B21B6 0%,
+        #B8253F 100%);
+    border: 1px solid #A78BFA;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 20px;
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.5),
+        0 0 10px rgba(91,33,182, 0.5);
+    z-index: 3;
+}
+
+.cc-slot-points {
+    font-family: 'Inter', monospace;
+    font-size: 10px;
+    font-weight: 900;
+    color: #FFFFFF;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
+}
+
+.cc-slot-remove {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #EF4444;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid #1A1A22;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.7);
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.cc-slot-remove:hover {
+    background: #DC2626;
+    transform: scale(1.15);
+}
+
+.cc-slot.cc-slot-opp .cc-slot-shirt-box {
+    background: linear-gradient(180deg,
+        rgba(180, 140, 130, 0.55) 0%,
+        rgba(140, 100, 90, 0.55) 100%);
+    opacity: 0.85;
+}
+
+.cc-slot.cc-slot-opp .cc-slot-name-box {
+    background: linear-gradient(180deg,
+        rgba(30, 10, 10, 0.95) 0%,
+        rgba(74, 10, 21, 0.98) 100%);
+    border-color: rgba(184, 37, 63, 0.5);
+}
+
+.cc-slot-plus-hidden {
+    background: rgba(106, 106, 109, 0.15);
+    border-color: rgba(106, 106, 109, 0.5);
+    color: #6B6B80;
+}
+
+.cc-slot-plus-hidden i {
+    animation: none;
+    opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════════════════════
+   13) BENCH SECTION
+   ═══════════════════════════════════════════════════════ */
+
+.cc-bench-section {
+    margin: 20px 0;
+    padding: 14px;
+    background: linear-gradient(135deg,
+        rgba(30, 30, 32, 0.8) 0%,
+        rgba(20, 20, 22, 0.9) 100%);
+    border: 1.5px solid rgba(167,139,250, 0.4);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    direction: ltr;
+}
+
+.cc-bench-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%, #A78BFA 50%, transparent 100%);
+    box-shadow: 0 0 12px rgba(167,139,250, 0.6);
+}
+
+.cc-bench-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.tgc-bench-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(167,139,250, 0.4);
+}
+
+.tgc-bench-title i {
+    font-size: 16px;
+    filter: drop-shadow(0 0 6px rgba(167,139,250, 0.6));
+}
+
+.cc-bench-count {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 12px;
+    background: rgba(167,139,250, 0.15);
+    border: 1px solid rgba(167,139,250, 0.4);
+    border-radius: 50px;
+    font-family: 'Inter', monospace;
+    font-size: 11px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 0.5px;
+}
+
+.cc-bench-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    margin-bottom: 12px;
+    background: rgba(167,139,250, 0.06);
+    border: 1px solid rgba(167,139,250, 0.2);
+    border-radius: 8px;
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #A1A1B5;
+    letter-spacing: 0.3px;
+    direction: rtl;
+}
+
+.cc-bench-hint i {
+    font-size: 13px;
+    color: #A78BFA;
+    flex-shrink: 0;
+}
+
+.tgc-bench-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.cc-bench-slot {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    min-height: 140px;
+    justify-content: center;
+    background: linear-gradient(180deg,
+        rgba(74, 10, 21, 0.4) 0%,
+        rgba(30, 10, 15, 0.6) 100%);
+    border: 1.5px dashed rgba(167,139,250, 0.5);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'Inter', 'Cairo', sans-serif;
+}
+
+.cc-bench-slot:hover {
+    border-color: #A78BFA;
+    background: linear-gradient(180deg,
+        rgba(74, 10, 21, 0.6) 0%,
+        rgba(30, 10, 15, 0.7) 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(167,139,250, 0.2);
+}
+
+.cc-bench-slot.cc-bench-filled {
+    border-style: solid;
+    border-color: rgba(167,139,250, 0.6);
+    background: linear-gradient(180deg,
+        rgba(91,33,182, 0.3) 0%,
+        rgba(30, 10, 15, 0.7) 100%);
+}
+
+.cc-bench-slot.cc-bench-readonly {
+    cursor: default;
+}
+
+.cc-bench-slot.cc-bench-readonly:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.cc-bench-slot.cc-bench-active {
+    border-color: #A78BFA;
+    border-style: solid;
+    background: linear-gradient(180deg,
+        rgba(167,139,250, 0.2) 0%,
+        rgba(30, 10, 15, 0.7) 100%);
+    box-shadow:
+        0 0 20px rgba(167,139,250, 0.7),
+        inset 0 0 15px rgba(167,139,250, 0.15);
+    animation: ccBenchActivePulse 1.4s ease-in-out infinite;
+}
+
+@keyframes ccBenchActivePulse {
+    0%, 100% {
+        box-shadow:
+            0 0 20px rgba(167,139,250, 0.7),
+            inset 0 0 15px rgba(167,139,250, 0.15);
+    }
+    50% {
+        box-shadow:
+            0 0 30px rgba(167,139,250, 1),
+            inset 0 0 20px rgba(167,139,250, 0.2);
+    }
+}
+
+.cc-bench-number {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(167,139,250, 0.2);
+    border: 1.5px solid rgba(167,139,250, 0.6);
+    color: #A78BFA;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cc-bench-slot.cc-bench-filled .cc-bench-number {
+    background: linear-gradient(135deg, #A78BFA 0%, #5B21B6 100%);
+    color: #1A1A22;
+    border-color: #F5F3FF;
+}
+
+.cc-bench-slot .cc-slot-shirt-img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+}
+
+.cc-bench-name {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    color: #F5F3FF;
+    text-align: center;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    padding: 3px 8px;
+    background: rgba(20, 20, 22, 0.85);
+    border: 1px solid rgba(167,139,250, 0.4);
+    border-radius: 6px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
+}
+
+.cc-bench-plus {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(167,139,250, 0.08);
+    border: 2px dashed rgba(167,139,250, 0.6);
+    color: #A78BFA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+
+.cc-bench-plus i {
+    animation: ccPlusPulse 2s ease-in-out infinite;
+}
+
+.cc-bench-slot:hover .cc-bench-plus {
+    background: rgba(167,139,250, 0.2);
+    border-color: #A78BFA;
+    transform: scale(1.08);
+    box-shadow: 0 0 18px rgba(167,139,250, 0.5);
+}
+
+.cc-bench-label {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 10px;
+    font-weight: 900;
+    color: rgba(167,139,250, 0.7);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.cc-bench-remove {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #EF4444;
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid #1A1A22;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.7);
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.cc-bench-remove:hover {
+    background: #DC2626;
+    transform: scale(1.15);
+}
+
+/* ═══════════════════════════════════════════════════════
+   14) LINEUP ACTIONS
+   ═══════════════════════════════════════════════════════ */
+
+.cc-lineup-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 18px;
+    position: sticky;
+    bottom: 12px;
+    z-index: 40;
+}
+
+.champ-captain-save-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #FFFFFF;
+    border: 3px solid #F5F3FF;
+    border-radius: 50px;
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow:
+        0 8px 30px rgba(16, 185, 129, 0.5),
+        0 0 60px rgba(16, 185, 129, 0.3);
+    animation: champCaptSavePulse 2.4s ease-in-out infinite;
+}
+
+@keyframes champCaptSavePulse {
+    0%, 100% {
+        box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5),
+                    0 0 60px rgba(16, 185, 129, 0.3);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 12px 40px rgba(16, 185, 129, 0.8),
+                    0 0 100px rgba(16, 185, 129, 0.5);
+        transform: scale(1.02);
+    }
+}
+
+.champ-captain-save-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    animation: none;
+    background: linear-gradient(135deg, #2E2E3A 0%, #24242E 100%);
+    border-color: #2E2E3A;
+}
+
+.cc-clear-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 20px;
+    background: rgba(106, 106, 109, 0.15);
+    color: #A1A1B5;
+    border: 1.5px solid #2E2E3A;
+    border-radius: 50px;
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.cc-clear-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: #EF4444;
+    color: #EF4444;
+}
+
+.tgc-edit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #A78BFA 0%, #5B21B6 100%);
+    color: #1A1A22;
+    border: 3px solid #F5F3FF;
+    border-radius: 50px;
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow:
+        0 8px 30px rgba(167,139,250, 0.4),
+        0 0 40px rgba(167,139,250, 0.2);
+}
+
+.tgc-edit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 12px 36px rgba(167,139,250, 0.6),
+        0 0 60px rgba(167,139,250, 0.4);
+}
+
+.tgc-edit-btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+/* ═══════════════════════════════════════════════════════
+   15) LOCKED STATE
+   ═══════════════════════════════════════════════════════ */
+
+.champ-captain-locked {
+    padding: 20px 16px;
+    background: linear-gradient(135deg,
+        rgba(167,139,250, 0.1) 0%,
+        rgba(58, 10, 21, 0.3) 100%);
+    border: 2px solid rgba(167,139,250, 0.5);
+    border-radius: 16px;
+    text-align: center;
+    margin-top: 12px;
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.champ-captain-locked-icon {
+    font-size: 40px;
+    color: #A78BFA;
+    margin-bottom: 10px;
+    display: block;
+    filter: drop-shadow(0 0 20px rgba(167,139,250, 0.6));
+}
+
+.champ-captain-locked-title {
+    font-size: 15px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.champ-captain-locked-sub {
+    font-size: 11px;
+    color: #A1A1B5;
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   16) PICKER
+   ═══════════════════════════════════════════════════════ */
+
+.champ-captains-picker-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 340px;
+    overflow-y: auto;
+    margin-bottom: 14px;
+    padding-right: 4px;
+}
+
+.champ-captains-picker-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #1A1A22;
+    border: 1.5px solid #2E2E3A;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    direction: ltr;
+    text-align: left;
+}
+
+.champ-captains-picker-item:hover {
+    border-color: #A78BFA;
+    background: #24242E;
+}
+
+.champ-captains-picker-item.selected {
+    border-color: #10B981;
+    background: linear-gradient(90deg,
+        rgba(16, 185, 129, 0.15) 0%,
+        #1A1A22 70%);
+}
+
+.champ-captains-picker-item.cc-picker-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #1A1A22;
+}
+
+.champ-captains-picker-item.cc-picker-disabled:hover {
+    border-color: #2E2E3A;
+    background: #1A1A22;
+    transform: none;
+}
+
+.cc-picker-shirt {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cc-picker-shirt img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.champ-captains-picker-info {
+    flex: 1;
+    min-width: 0;
+    direction: ltr;
+    text-align: left;
+}
+
+.champ-captains-picker-name {
+    font-size: 12px;
+    font-weight: 900;
+    color: #F5F3FF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.champ-captains-picker-sub {
+    font-size: 10px;
+    color: #A1A1B5;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+.cc-picker-check {
+    color: #10B981;
+    font-size: 20px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6));
+}
+
+.cc-picker-block {
+    color: #EF4444;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.cc-picker-remove-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    background: rgba(239, 68, 68, 0.15);
+    color: #EF4444;
+    border: 1.5px solid #EF4444;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cc-picker-remove-btn:hover {
+    background: rgba(239, 68, 68, 0.25);
+    transform: scale(1.02);
+}
+
+/* ═══════════════════════════════════════════════════════
+   17) LOADING / EMPTY
+   ═══════════════════════════════════════════════════════ */
+
+.champ-captains-loading,
+.champ-captains-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 50px 20px;
+    text-align: center;
+    color: #A1A1B5;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+}
+
+.champ-captains-loading i,
+.champ-captains-empty i {
+    font-size: 40px;
+    color: #A78BFA;
+    opacity: 0.7;
+}
+
+.champ-captains-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(167,139,250, 0.2);
+    border-top-color: #A78BFA;
+    border-radius: 50%;
+    animation: champCaptSpin 0.8s linear infinite;
+}
+
+@keyframes champCaptSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   18) MATCHUP SCORE
+   ═══════════════════════════════════════════════════════ */
+
+.cc-matchup-score {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 20px 14px;
+    background: linear-gradient(135deg,
+        rgba(91,33,182, 0.25) 0%,
+        rgba(30, 30, 32, 0.5) 50%,
+        rgba(91,33,182, 0.25) 100%);
+    border: 2px solid rgba(167,139,250, 0.5);
+    border-radius: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.cc-matchup-score::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%, #A78BFA 50%, transparent 100%);
+    box-shadow: 0 0 16px rgba(167,139,250, 0.8);
+}
+
+.cc-matchup-team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.cc-matchup-team img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+}
+
+.cc-matchup-team-name {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    color: #F5F3FF;
+    text-align: center;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.cc-matchup-team-points {
+    font-family: 'Inter', monospace;
+    font-size: 28px;
+    font-weight: 900;
+    color: #A78BFA;
+    text-shadow: 0 0 20px rgba(167,139,250, 0.6);
+    line-height: 1;
+    margin-top: 4px;
+}
+
+.cc-matchup-vs {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    color: #A78BFA;
+    background: linear-gradient(135deg, #5B21B6 0%, #4C1D95 100%);
+    padding: 12px 14px;
+    border-radius: 50%;
+    border: 2px solid #8B5CF6;
+    box-shadow: 0 4px 12px rgba(91,33,182, 0.5);
+    letter-spacing: 1px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   19) ADMIN TITLE
+   ═══════════════════════════════════════════════════════ */
+
+.champ-captains-admin-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(167,139,250, 0.2);
+}
+
+.champ-captains-admin-title i {
+    font-size: 16px;
+}
+
+.cc-status-count {
+    margin-inline-start: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    background: linear-gradient(135deg,
+        rgba(16, 185, 129, 0.15) 0%,
+        rgba(167,139,250, 0.1) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 50px;
+    color: #10B981;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   20) MOBILE — 600px
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 600px) {
+    .cc-teams-select-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .cc-team-select-card {
+        padding: 10px 12px;
+        min-height: 58px;
+    }
+
+    .cc-team-select-card img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .cc-team-select-name {
+        font-size: 11px;
+    }
+
+    .champ-captain-header {
+        flex-wrap: wrap;
+    }
+
+    .champ-captain-header-team { font-size: 14px; }
+    .champ-captain-header-info img { width: 36px; height: 36px; }
+
+    .tgc-pitch {
+        height: 640px;
+    }
+
+    .tgc-pitch-row-def {
+        padding: 0 8px;
+        gap: 8px;
+    }
+
+    .tgc-pitch-row-mid {
+        gap: 40px;
+    }
+
+    .cc-slot {
+        min-width: 82px;
+        max-width: 96px;
+    }
+
+    .cc-slot-shirt-box {
+        padding: 10px 6px 6px;
+    }
+
+    .cc-slot-plus-shirt {
+        width: 52px;
+        height: 52px;
+        font-size: 22px;
+    }
+
+    .cc-slot-name-box {
+        margin-top: -12px;
+        padding: 4px 8px;
+        min-height: 24px;
+        width: 110%;
+    }
+
+    .cc-slot-name {
+        font-size: 10px;
+    }
+
+    .cc-slot-points {
+        font-size: 9px;
+    }
+
+    .cc-bench-slot {
+        min-height: 125px;
+        padding: 10px 6px;
+    }
+
+    .cc-bench-slot .cc-slot-shirt-img {
+        width: 46px;
+        height: 46px;
+    }
+
+    .cc-bench-name {
+        font-size: 10px;
+    }
+
+    .cc-matchup-team img { width: 38px; height: 38px; }
+    .cc-matchup-team-name { font-size: 11px; }
+    .cc-matchup-team-points { font-size: 22px; }
+    .cc-matchup-vs { font-size: 12px; padding: 10px 12px; }
+
+    .cc-assassination-overlay { font-size: 40px; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   21) MOBILE — 480px
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 480px) {
+    .cc-teams-select-grid {
+        gap: 6px;
+    }
+
+    .cc-team-select-card {
+        padding: 8px 10px;
+        gap: 8px;
+        border-radius: 12px;
+    }
+
+    .cc-team-select-card img { width: 28px; height: 28px; }
+    .cc-team-select-icon { width: 22px; height: 22px; font-size: 13px; }
+
+    .champ-captain-header {
+        padding: 10px 10px;
+        gap: 6px;
+    }
+
+    .champ-captain-header-team { font-size: 13px; letter-spacing: 0.8px; }
+    .champ-captain-header-info img { width: 32px; height: 32px; }
+    .champ-captain-header-name { font-size: 9px; }
+
+    .champ-captain-header-badge {
+        padding: 4px 9px;
+        font-size: 9px;
+        letter-spacing: 1px;
+    }
+
+    .champ-captain-logout {
+        padding: 6px 10px;
+        font-size: 10px;
+        gap: 3px;
+    }
+
+    .champ-captain-logout i {
+        font-size: 12px;
+    }
+
+    .tgc-pitch {
+        height: 580px;
+    }
+
+    .tgc-pitch-row-def {
+        gap: 4px;
+        padding: 0 2px;
+    }
+
+    .tgc-pitch-row-mid {
+        gap: 30px;
+    }
+
+    .cc-slot {
+        min-width: 72px;
+        max-width: 84px;
+    }
+
+    .cc-slot-shirt-box {
+        padding: 8px 4px 4px;
+    }
+
+    .cc-slot-plus-shirt {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+
+    .cc-slot-name-box {
+        margin-top: -10px;
+        padding: 3px 6px;
+        min-height: 22px;
+        border-radius: 4px;
+        width: 108%;
+    }
+
+    .cc-slot-name {
+        font-size: 9px;
+    }
+
+    .cc-slot-points {
+        font-size: 8.5px;
+    }
+
+    .cc-slot-points-box {
+        padding: 2px 8px;
+        min-height: 18px;
+    }
+
+    .cc-slot-remove {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+        top: -3px;
+        right: -3px;
+    }
+
+    .cc-bench-section {
+        padding: 12px 10px;
+    }
+
+    .tgc-bench-title {
+        font-size: 12px;
+    }
+
+    .cc-bench-hint {
+        font-size: 9.5px;
+    }
+
+    .tgc-bench-row {
+        gap: 8px;
+    }
+
+    .cc-bench-slot {
+        min-height: 115px;
+        padding: 8px 4px;
+    }
+
+    .cc-bench-slot .cc-slot-shirt-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .cc-bench-name {
+        font-size: 9px;
+        padding: 2px 6px;
+    }
+
+    .cc-bench-plus {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+
+    .cc-bench-label {
+        font-size: 9px;
+    }
+
+    .cc-matchup-score {
+        padding: 14px 8px;
+        gap: 8px;
+    }
+
+    .cc-matchup-team img { width: 32px; height: 32px; }
+    .cc-matchup-team-points { font-size: 20px; }
+    .cc-matchup-vs { font-size: 10px; padding: 8px 10px; }
+
+    .cc-special-card-title {
+        font-size: 12px;
+    }
+
+    .cc-special-card-icon {
+        font-size: 18px;
+    }
+
+    .cc-h2h-name {
+        font-size: 10px;
+    }
+
+    .cc-h2h-points {
+        font-size: 18px;
+    }
+
+    .cc-assassination-overlay { font-size: 36px; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   22) MOBILE — 400px
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 400px) {
+    .cc-slot {
+        min-width: 64px;
+        max-width: 76px;
+    }
+
+    .cc-slot-plus-shirt {
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+    }
+
+    .cc-slot-name {
+        font-size: 8px;
+    }
+
+    .cc-slot-points {
+        font-size: 7.5px;
+    }
+
+    .tgc-pitch {
+        height: 540px;
+    }
+
+    .cc-bench-slot {
+        min-height: 105px;
+    }
+
+    .cc-bench-slot .cc-slot-shirt-img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .cc-bench-name {
+        font-size: 8.5px;
+    }
+
+    .cc-bench-plus {
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+    }
+
+    .cc-assassination-overlay { font-size: 32px; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   23) REDUCED MOTION
+   ═══════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+    .champ-captain-save-btn,
+    .cc-refresh-indicator i,
+    .cc-deadline-badge,
+    .cc-slot.cc-slot-active .cc-slot-shirt-box,
+    .cc-bench-slot.cc-bench-active,
+    .cc-slot-plus-shirt i,
+    .cc-bench-plus i,
+    .cc-slot-assassinated .cc-slot-shirt-box,
+    .cc-slot-assassinated .cc-slot-name-box,
+    .cc-assassination-overlay,
+    .cc-slot-assassinated .cc-slot-shirt-box::after,
+    .cc-slot-promoted .cc-slot-shirt-box,
+    .cc-promoted-badge,
+    .cc-special-card {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+/* =========================================================
+   champions-captains.css — FINALISSIMA LEAGUE (v=18)
+   ⭐ v18: Fullscreen Matchup + Live Special Details
+========================================================= */
+
+/* ... (اترك بقية الكود القديم كما هو، فقط أضف هذا في نهاية الملف) ... */
+
+/* =========================================================
+   ⭐ v28: FULLSCREEN MATCHUP VIEW
+   ========================================================= */
+
+body.cc-matchup-active {
+    overflow: hidden;
+}
+
+body.cc-matchup-active #champCaptainsLineupContent {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999999;
+    background: #1A1A22;
+    overflow-y: auto;
+    padding: 16px;
+    padding-top: calc(16px + env(safe-area-inset-top));
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    animation: ccSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ccSlideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+/* =========================================================
+   ⭐ v28: LIVE SPECIAL DETAILS CARDS
+   ========================================================= */
+
+.cc-special-results {
+    margin: 20px 0;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(30,30,32,0.9), rgba(20,20,22,0.9));
+    border: 1.5px solid rgba(167,139,250,0.4);
+    border-radius: 20px;
+    direction: rtl;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.cc-special-results-title {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1.5px solid rgba(167,139,250,0.3);
+    text-align: center;
+    text-shadow: 0 0 15px rgba(167,139,250, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.cc-special-card {
+    background: linear-gradient(180deg, #24242E 0%, #1A1A22 100%);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.05);
+    animation: ccFadeIn 0.5s ease;
+}
+
+@keyframes ccFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.cc-special-card:last-child {
+    margin-bottom: 0;
+}
+
+.cc-special-card-red    { border: 2px solid rgba(239,68,68,0.6); }
+.cc-special-card-dark   { border: 2px solid rgba(91,33,182,0.6); }
+.cc-special-card-gold   { border: 2px solid rgba(167,139,250,0.6); }
+.cc-special-card-green  { border: 2px solid rgba(16,185,129,0.6); }
+.cc-special-card-purple { border: 2px solid rgba(168,85,247,0.6); }
+.cc-special-card-blue   { border: 2px solid rgba(92,191,235,0.6); }
+
+.cc-special-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.cc-special-card-red    .cc-special-card-header { background: rgba(239,68,68,0.15); }
+.cc-special-card-dark   .cc-special-card-header { background: rgba(91,33,182,0.25); }
+.cc-special-card-gold   .cc-special-card-header { background: rgba(167,139,250,0.15); }
+.cc-special-card-green  .cc-special-card-header { background: rgba(16,185,129,0.15); }
+.cc-special-card-purple .cc-special-card-header { background: rgba(168,85,247,0.15); }
+.cc-special-card-blue   .cc-special-card-header { background: rgba(92,191,235,0.15); }
+
+.cc-special-card-icon { font-size: 22px; }
+
+.cc-special-card-title {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    color: #F5F3FF;
+    letter-spacing: 0.5px;
+    flex: 1;
+}
+
+.cc-special-card-team {
+    font-family: 'Cairo', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    color: #A78BFA;
+    padding: 4px 10px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 20px;
+}
+
+.cc-special-card-result {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+}
+
+.cc-special-card-result.green { background: rgba(16,185,129,0.25); color: #10B981; border: 1px solid #10B981; box-shadow: 0 0 10px rgba(16,185,129,0.3); }
+.cc-special-card-result.red   { background: rgba(239,68,68,0.25); color: #EF4444; border: 1px solid #EF4444; box-shadow: 0 0 10px rgba(239,68,68,0.3); }
+.cc-special-card-result.gray  { background: rgba(168,168,170,0.2); color: #A1A1B5; border: 1px solid #A1A1B5; }
+
+.cc-special-card-body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cc-special-card-line {
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #A1A1B5;
+    line-height: 1.6;
+}
+
+.cc-special-card-line strong {
+    color: #F5F3FF;
+    font-size: 14px;
+}
+
+.cc-special-card-blocked {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.2);
+    border-right: 3px solid #EF4444;
+    border-radius: 8px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: #FCA5A5;
+}
+
+/* H2H Live Score */
+.cc-h2h-versus {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+    align-items: center;
+    margin-top: 6px;
+}
+
+.cc-h2h-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 10px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.cc-h2h-name {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    color: #F5F3FF;
+    text-align: center;
+}
+
+.cc-h2h-points {
+    font-family: 'Inter', monospace;
+    font-size: 26px;
+    font-weight: 900;
+    color: #A1A1B5;
+    line-height: 1;
+    transition: all 0.3s ease;
+}
+
+.cc-h2h-points.winner {
+    color: #10B981;
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+    transform: scale(1.1);
+}
+
+.cc-h2h-label {
+    font-family: 'Cairo', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    color: #6B6B80;
+    letter-spacing: 1px;
+}
+
+.cc-h2h-vs {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    color: #A78BFA;
+    background: rgba(167,139,250,0.15);
+    padding: 8px 12px;
+    border-radius: 50%;
+    border: 1.5px solid #A78BFA;
+    box-shadow: 0 0 15px rgba(167,139,250,0.3);
+}
+/* =========================================================
+   ⭐ v32: Clean Sheet Managers Details CSS
+   ========================================================= */
+
+.cc-cs-manager-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    margin-bottom: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    font-family: 'Cairo', sans-serif;
+}
+
+.cc-cs-manager-name {
+    font-size: 13px;
+    font-weight: 900;
+    color: #F5F3FF;
+}
+
+.cc-cs-manager-stats {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    color: #5CBFEB;
+    background: rgba(92, 191, 235, 0.1);
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(92, 191, 235, 0.3);
+}
+
+.cc-cs-total-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    font-weight: 900;
+    color: #5CBFEB;
+    text-shadow: 0 0 10px rgba(92, 191, 235, 0.5);
+}
+
+.cc-cs-total-badge {
+    background: rgba(92, 191, 235, 0.2);
+    padding: 6px 16px;
+    border-radius: 50px;
+    border: 1.5px solid #5CBFEB;
+    font-size: 16px;
+}
+
+.cc-cs-no-def {
+    text-align: center;
+    padding: 12px;
+    color: #A1A1B5;
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    font-style: italic;
+}
+/* =========================================================
+   ⭐ v34: EPL Roster Management UI
+   ========================================================= */
+
+/* زر فتح لوحة الإدارة */
+.cc-admin-epl-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #A78BFA 0%, #5B21B6 100%);
+    color: #1A1A22;
+    border: 2px solid #F5F3FF;
+    border-radius: 12px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(167,139,250, 0.4);
+}
+
+.cc-admin-epl-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(167,139,250, 0.6);
+}
+
+/* الشاشة الكاملة للوحة الإدارة */
+.cc-epl-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 99999999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    direction: rtl;
+}
+
+.cc-epl-modal.show { display: flex; }
+
+.cc-epl-box {
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    background: #1A1A22;
+    border: 2px solid #8B5CF6;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    animation: ccModalIn 0.3s ease;
+}
+
+@keyframes ccModalIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.cc-epl-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #5B21B6 0%, #4C1D95 100%);
+    border-bottom: 2px solid #8B5CF6;
+}
+
+.cc-epl-header-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 16px;
+    font-weight: 900;
+    color: #FFFFFF;
+    letter-spacing: 1px;
+}
+
+.cc-epl-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1.5px solid #8B5CF6;
+    color: #A78BFA;
+    font-size: 16px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.cc-epl-close:hover {
+    background: #8B5CF6;
+    color: #1A1A22;
+    transform: rotate(90deg);
+}
+
+.cc-epl-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+/* شبكة الفرق */
+.cc-epl-teams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+}
+
+.cc-epl-team-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: #24242E;
+    border: 1.5px solid #2E2E3A;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.cc-epl-team-btn:hover {
+    border-color: #A78BFA;
+    background: #2E2E3A;
+    transform: translateY(-2px);
+}
+
+.cc-epl-team-btn img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.cc-epl-team-btn-name {
+    font-size: 12px;
+    font-weight: 900;
+    color: #F5F3FF;
+    text-transform: uppercase;
+}
+
+.cc-epl-team-btn-status {
+    font-size: 9px;
+    font-weight: 800;
+    margin-top: 2px;
+}
+.cc-epl-team-btn-status.saved { color: #10B981; }
+.cc-epl-team-btn-status.empty { color: #6B6B80; }
+
+/* قائمة اللاعبين */
+.cc-epl-players-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.cc-epl-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    margin-bottom: 12px;
+    background: #24242E;
+    border: 1.5px solid #2E2E3A;
+    border-radius: 50px;
+    color: #A78BFA;
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cc-epl-back-btn:hover {
+    background: #2E2E3A;
+}
+
+.cc-epl-player-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #24242E;
+    border: 1.5px solid #2E2E3A;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    direction: ltr;
+}
+
+.cc-epl-player-row:hover {
+    border-color: #A78BFA;
+    background: #2E2E3A;
+}
+
+/* ألوان التحديد */
+.cc-epl-player-row.selected-gk {
+    border-color: #F59E0B;
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.2) 0%, #24242E 70%);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}
+
+.cc-epl-player-row.selected-def {
+    border-color: #10B981;
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.15) 0%, #24242E 70%);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+}
+
+.cc-epl-player-pos {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+.cc-epl-player-pos.gk { background: #F59E0B; color: #1A1A22; }
+.cc-epl-player-pos.def { background: #10B981; color: #1A1A22; }
+.cc-epl-player-pos.other { background: #2E2E3A; color: #A1A1B5; }
+
+.cc-epl-player-info {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+}
+
+.cc-epl-player-name {
+    font-size: 13px;
+    font-weight: 900;
+    color: #F5F3FF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cc-epl-player-team {
+    font-size: 10px;
+    font-weight: 700;
+    color: #A1A1B5;
+    margin-top: 2px;
+}
+
+/* النقاط الحية */
+.cc-epl-player-points {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    direction: ltr;
+}
+
+.cc-epl-pts-row {
+    display: flex;
+    gap: 4px;
+}
+
+.cc-epl-pts-badge {
+    min-width: 28px;
+    text-align: center;
+    font-family: 'Inter', monospace;
+    font-size: 10px;
+    font-weight: 900;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.cc-epl-pts-badge.gw-1 {
+    background: rgba(168, 168, 170, 0.15);
+    color: #A1A1B5;
+}
+
+.cc-epl-pts-badge.gw-2 {
+    background: rgba(168, 168, 170, 0.25);
+    color: #F5F3FF;
+}
+
+.cc-epl-pts-badge.gw-current {
+    background: rgba(16, 185, 129, 0.25);
+    color: #10B981;
+    border: 1px solid #10B981;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+    animation: ccPtsPulse 2s ease-in-out infinite;
+}
+
+@keyframes ccPtsPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+    50% { box-shadow: 0 0 18px rgba(16, 185, 129, 0.8); }
+}
+
+.cc-epl-pts-label {
+    font-size: 8px;
+    font-weight: 700;
+    color: #6B6B80;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* أزرار الحفظ */
+.cc-epl-actions {
+    padding: 16px;
+    background: #24242E;
+    border-top: 1.5px solid #2E2E3A;
+    display: flex;
+    gap: 10px;
+}
+
+.cc-epl-save-btn {
+    flex: 1;
+    padding: 14px;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #FFFFFF;
+    border: 2px solid #F5F3FF;
+    border-radius: 12px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+}
+
+.cc-epl-save-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(16, 185, 129, 0.6);
+}
+
+.cc-epl-save-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cc-epl-clear-btn {
+    padding: 14px 20px;
+    background: rgba(239, 68, 68, 0.15);
+    color: #EF4444;
+    border: 1.5px solid #EF4444;
+    border-radius: 12px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cc-epl-clear-btn:hover {
+    background: rgba(239, 68, 68, 0.25);
+}
+
+/* التحميل */
+.cc-epl-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 40px 20px;
+    color: #A1A1B5;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.cc-epl-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba(167,139,250, 0.2);
+    border-top-color: #A78BFA;
+    border-radius: 50%;
+    animation: ccEplSpin 0.8s linear infinite;
+}
+
+@keyframes ccEplSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* =========================================================
+   Full Screen Matchup View (كما كان)
+   ========================================================= */
+
+body.cc-matchup-active {
+    overflow: hidden;
+}
+
+body.cc-matchup-active #champCaptainsLineupContent {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999999;
+    background: #1A1A22;
+    overflow-y: auto;
+    padding: 16px;
+    padding-top: calc(16px + env(safe-area-inset-top));
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    animation: ccSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ccSlideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+/* v35 — اسم الفريق + اسم المدير */
+.cc-slot-name-two{display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.1;}
+.cc-slot-name-two b{font-size:9.5px;font-weight:900;color:#A78BFA;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cc-slot-name-two i{font-style:normal;font-size:7.5px;font-weight:700;color:rgba(245,230,211,.8);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}

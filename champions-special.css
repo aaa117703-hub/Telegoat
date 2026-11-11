@@ -1,0 +1,1675 @@
+/* =========================================================
+   champions-special.css — FINALISSIMA LEAGUE (v=5)
+   🎯 Special Moves — نظام جديد
+   ⭐ v5: Green frame for activated moves + green pending badge
+========================================================= */
+
+/* ═══════════════════════════════════════════════════════
+   1) WRAPPER + INTRO
+   ═══════════════════════════════════════════════════════ */
+
+.champ-special-wrap {
+    width: 100%;
+    padding: 8px 4px 24px;
+    direction: ltr;
+    font-family: 'Inter', 'Cairo', sans-serif;
+    color: #F5F3FF;
+}
+
+.champ-special-intro {
+    background: linear-gradient(135deg,
+        rgba(91,33,182, 0.25) 0%,
+        rgba(58, 10, 21, 0.4) 100%);
+    border: 1.5px solid rgba(167,139,250, 0.4);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.champ-special-intro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%, #A78BFA 50%, transparent 100%);
+    box-shadow: 0 0 12px rgba(167,139,250, 0.6);
+}
+
+.champ-special-intro h2 {
+    font-size: 22px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    text-shadow: 0 0 20px rgba(167,139,250, 0.5);
+}
+
+.champ-special-intro h2 i {
+    margin-right: 8px;
+}
+
+.champ-special-intro p {
+    font-size: 12px;
+    color: #A1A1B5;
+    line-height: 1.7;
+    letter-spacing: 0.3px;
+}
+
+.champ-special-intro p strong {
+    color: #A78BFA;
+    font-weight: 900;
+}
+
+/* ═══════════════════════════════════════════════════════
+   2) CAPTAIN BAR
+   ═══════════════════════════════════════════════════════ */
+
+.cs-captain-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg,
+        rgba(91,33,182, 0.35) 0%,
+        rgba(58, 10, 21, 0.5) 100%);
+    border: 1.5px solid rgba(167,139,250, 0.5);
+    border-radius: 16px;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+}
+
+.cs-captain-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%, #A78BFA 50%, transparent 100%);
+    box-shadow: 0 0 12px rgba(167,139,250, 0.6);
+}
+
+.cs-captain-bar-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1.5px solid #8B5CF6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.cs-captain-bar-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 4px;
+}
+
+.cs-captain-bar-info {
+    flex: 1;
+    min-width: 0;
+    direction: ltr;
+    text-align: left;
+}
+
+.cs-captain-bar-team {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cs-captain-bar-meta {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #A1A1B5;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cs-captain-bar-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #A78BFA 0%, #5B21B6 100%);
+    color: #1A1A22;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    box-shadow:
+        0 4px 12px rgba(167,139,250, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    animation: csCaptainBadgePulse 2.5s ease-in-out infinite;
+}
+
+@keyframes csCaptainBadgePulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.08); }
+}
+
+.cs-captain-bar-badge i {
+    color: #5B21B6;
+}
+
+/* ═══════════════════════════════════════════════════════
+   3) CONFIG GATE — Progress
+   ═══════════════════════════════════════════════════════ */
+
+.cs-config-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #24242E;
+    border: 1.5px solid #2E2E3A;
+    border-radius: 14px;
+    margin-bottom: 18px;
+}
+
+.cs-config-progress-text {
+    font-size: 12px;
+    font-weight: 900;
+    color: #F5F3FF;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.cs-config-progress-text span {
+    color: #A78BFA;
+    font-size: 16px;
+    text-shadow: 0 0 10px rgba(167,139,250, 0.5);
+}
+
+.cs-config-progress-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(167,139,250, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+.cs-config-progress-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #5B21B6 0%, #A78BFA 100%);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 12px rgba(167,139,250, 0.6);
+}
+
+.cs-config-progress-fill.full {
+    background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+}
+
+/* ═══════════════════════════════════════════════════════
+   4) CONFIG GATE — Grid + Cards
+   ═══════════════════════════════════════════════════════ */
+
+.cs-config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.cs-config-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 14px 14px;
+    background: linear-gradient(135deg, #24242E 0%, #1A1A22 100%);
+    border: 2px solid #2E2E3A;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.cs-config-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%, rgba(167,139,250, 0.5) 50%, transparent 100%);
+    transition: width 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cs-config-card:hover {
+    border-color: #A78BFA;
+    background: linear-gradient(135deg, #2E2E3A 0%, #24242E 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(167,139,250, 0.15);
+}
+
+.cs-config-card:hover::before {
+    width: 90px;
+    box-shadow: 0 0 12px rgba(167,139,250, 0.6);
+}
+
+.cs-config-card:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.cs-config-card.cs-config-card-selected {
+    border-color: #10B981;
+    background: linear-gradient(135deg,
+        rgba(16, 185, 129, 0.15) 0%,
+        rgba(16, 185, 129, 0.05) 100%);
+    box-shadow:
+        0 0 20px rgba(16, 185, 129, 0.4),
+        inset 0 0 20px rgba(16, 185, 129, 0.08);
+}
+
+.cs-config-card.cs-config-card-selected::before {
+    width: 90px;
+    background: linear-gradient(90deg,
+        transparent 0%, #10B981 50%, transparent 100%);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.7);
+}
+
+.cs-config-card-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    box-shadow:
+        inset 0 0 0 1.5px rgba(255, 255, 255, 0.15),
+        0 3px 10px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease;
+}
+
+.cs-config-card:hover .cs-config-card-icon {
+    transform: scale(1.08) rotate(-4deg);
+}
+
+.cs-config-card-icon i {
+    color: #FFFFFF;
+    font-size: 22px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+.cs-config-card-icon[data-color="green"] {
+    background: linear-gradient(135deg, #10B981 0%, #047857 100%);
+}
+.cs-config-card-icon[data-color="red"] {
+    background: linear-gradient(135deg, #B8253F 0%, #4C1D95 100%);
+}
+.cs-config-card-icon[data-color="gold"] {
+    background: linear-gradient(135deg, #A78BFA 0%, #5B21B6 100%);
+}
+.cs-config-card-icon[data-color="purple"] {
+    background: linear-gradient(135deg, #A855F7 0%, #7C3AED 100%);
+}
+.cs-config-card-icon[data-color="blue"] {
+    background: linear-gradient(135deg, #5CBFEB 0%, #0891B2 100%);
+}
+
+.cs-config-card-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    direction: ltr;
+    text-align: left;
+}
+
+.cs-config-card-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    color: #F5F3FF;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cs-config-card-subtitle {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #A1A1B5;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cs-config-card-desc {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 11px;
+    color: #A1A1B5;
+    line-height: 1.6;
+    letter-spacing: 0.2px;
+    min-height: 36px;
+}
+
+.cs-config-card-check {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #10B981;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.8));
+}
+
+.cs-config-card-check i {
+    font-size: 22px;
+}
+
+.cs-config-card.cs-config-card-selected .cs-config-card-check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* ═══════════════════════════════════════════════════════
+   5) CONFIG GATE — Actions + Warning
+   ═══════════════════════════════════════════════════════ */
+
+.cs-config-actions {
+    margin-top: 16px;
+    margin-bottom: 14px;
+}
+
+.cs-config-save-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #FFFFFF;
+    border: 3px solid #F5F3FF;
+    border-radius: 50px;
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow:
+        0 8px 30px rgba(16, 185, 129, 0.5),
+        0 0 60px rgba(16, 185, 129, 0.3);
+    animation: csConfigSavePulse 2.4s ease-in-out infinite;
+}
+
+@keyframes csConfigSavePulse {
+    0%, 100% {
+        box-shadow:
+            0 8px 30px rgba(16, 185, 129, 0.5),
+            0 0 60px rgba(16, 185, 129, 0.3);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow:
+            0 12px 40px rgba(16, 185, 129, 0.8),
+            0 0 100px rgba(16, 185, 129, 0.5);
+        transform: scale(1.02);
+    }
+}
+
+.cs-config-save-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    animation: none;
+    background: linear-gradient(135deg, #2E2E3A 0%, #24242E 100%);
+    border-color: #2E2E3A;
+    box-shadow: none;
+}
+
+.cs-config-save-btn:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.02);
+}
+
+.cs-config-save-btn i {
+    font-size: 18px;
+}
+
+.cs-config-warning {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg,
+        rgba(239, 68, 68, 0.15) 0%,
+        rgba(220, 38, 38, 0.08) 100%);
+    border: 1.5px solid rgba(239, 68, 68, 0.5);
+    border-radius: 12px;
+    color: #EF4444;
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    line-height: 1.6;
+    direction: rtl;
+    margin-top: 10px;
+}
+
+.cs-config-warning i {
+    font-size: 18px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.6));
+    animation: csConfigWarnPulse 2s ease-in-out infinite;
+}
+
+@keyframes csConfigWarnPulse {
+    0%, 100% { opacity: 0.7; }
+    50%      { opacity: 1; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   6) INLINE — Special Moves فوق الملعب
+   ═══════════════════════════════════════════════════════ */
+
+.cs-inline-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding: 0 2px;
+}
+
+.cs-inline-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: 0 0 12px rgba(167,139,250, 0.4);
+}
+
+.cs-inline-title i {
+    font-size: 16px;
+    filter: drop-shadow(0 0 6px rgba(167,139,250, 0.6));
+}
+
+.cs-inline-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    background: rgba(167,139,250, 0.1);
+    border: 1px solid rgba(167,139,250, 0.35);
+    border-radius: 50px;
+    font-family: 'Inter', monospace;
+    font-size: 10px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 0.5px;
+}
+
+.cs-inline-count-label {
+    color: #6B6B80;
+    font-size: 8px;
+    letter-spacing: 1px;
+    margin-left: 2px;
+    text-transform: uppercase;
+}
+
+.cs-inline-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 2px 10px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(167,139,250, 0.4) transparent;
+}
+
+.cs-inline-scroll::-webkit-scrollbar { height: 4px; }
+.cs-inline-scroll::-webkit-scrollbar-thumb {
+    background: rgba(167,139,250, 0.4);
+    border-radius: 2px;
+}
+.cs-inline-scroll::-webkit-scrollbar-track { background: transparent; }
+
+.cs-inline-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: 110px;
+    min-height: 108px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 8px;
+    background: linear-gradient(135deg, #24242E 0%, #1A1A22 100%);
+    border: 1.5px solid #2E2E3A;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    scroll-snap-align: start;
+    font-family: inherit;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+}
+
+.cs-inline-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%, #A78BFA 50%, transparent 100%);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 8px rgba(167,139,250, 0.5);
+}
+
+.cs-inline-card:hover {
+    border-color: #A78BFA;
+    background: linear-gradient(135deg, #2E2E3A 0%, #24242E 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(167,139,250, 0.25);
+}
+
+.cs-inline-card:hover::before {
+    width: 60px;
+    box-shadow: 0 0 16px rgba(167,139,250, 0.9);
+}
+
+.cs-inline-card:active {
+    transform: translateY(-1px) scale(0.97);
+}
+
+.cs-inline-card-used {
+    opacity: 1;
+    border: 2px solid #10B981;
+    background: linear-gradient(135deg,
+        rgba(16, 185, 129, 0.12) 0%,
+        rgba(16, 185, 129, 0.04) 50%,
+        #1A1A22 100%);
+    box-shadow:
+        0 0 0 1px rgba(16, 185, 129, 0.3),
+        0 0 18px rgba(16, 185, 129, 0.4),
+        inset 0 0 12px rgba(16, 185, 129, 0.06);
+}
+
+.cs-inline-card-used::before {
+    width: 60px;
+    background: linear-gradient(90deg,
+        transparent 0%, #10B981 50%, transparent 100%);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.7);
+}
+
+.cs-inline-card-used:hover {
+    border-color: #10B981;
+    background: linear-gradient(135deg,
+        rgba(16, 185, 129, 0.18) 0%,
+        rgba(16, 185, 129, 0.06) 50%,
+        #1A1A22 100%);
+    box-shadow:
+        0 0 0 1px rgba(16, 185, 129, 0.5),
+        0 0 24px rgba(16, 185, 129, 0.55),
+        inset 0 0 14px rgba(16, 185, 129, 0.08);
+}
+
+.cs-inline-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #5B21B6 0%, #4C1D95 100%);
+    border: 1.5px solid #8B5CF6;
+    font-size: 18px;
+    color: #F5F3FF;
+    margin-bottom: 2px;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+        0 2px 6px rgba(0, 0, 0, 0.5);
+    transition: transform 0.25s ease;
+}
+
+.cs-inline-card:hover .cs-inline-icon {
+    transform: scale(1.1) rotate(-4deg);
+}
+
+.cs-inline-card[data-move="revival"] .cs-inline-icon {
+    background: linear-gradient(135deg, #10B981 0%, #047857 100%);
+}
+.cs-inline-card[data-move="assassination"] .cs-inline-icon {
+    background: linear-gradient(135deg, #B8253F 0%, #4C1D95 100%);
+}
+.cs-inline-card[data-move="h2h"] .cs-inline-icon {
+    background: linear-gradient(135deg, #A78BFA 0%, #5B21B6 100%);
+}
+.cs-inline-card[data-move="sniper"] .cs-inline-icon {
+    background: linear-gradient(135deg, #A855F7 0%, #7C3AED 100%);
+}
+.cs-inline-card[data-move="clean_sheet"] .cs-inline-icon {
+    background: linear-gradient(135deg, #5CBFEB 0%, #0891B2 100%);
+}
+
+.cs-inline-name {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 9px;
+    font-weight: 900;
+    color: #F5F3FF;
+    text-align: center;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    line-height: 1.15;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cs-inline-name-ar {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    color: #A1A1B5;
+    text-align: center;
+    line-height: 1.1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cs-inline-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+}
+
+.cs-inline-badge-pending {
+    background: rgba(16, 185, 129, 0.25);
+    color: #10B981;
+    border: 1px solid #10B981;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.cs-inline-badge-active {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10B981;
+    border: 1px solid #10B981;
+    animation: csInlineBadgePulse 2s ease-in-out infinite;
+}
+
+.cs-inline-badge-used {
+    background: rgba(106, 106, 109, 0.2);
+    color: #6B6B80;
+    border: 1px solid #6B6B80;
+}
+
+@keyframes csInlineBadgePulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.15); }
+}
+
+.cs-inline-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px 16px;
+    background: rgba(167,139,250, 0.05);
+    border: 1.5px dashed rgba(167,139,250, 0.3);
+    border-radius: 14px;
+    color: #A1A1B5;
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    direction: rtl;
+}
+
+.cs-inline-empty i {
+    font-size: 22px;
+    color: #A78BFA;
+    opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════════════════════
+   7) MODAL (عام)
+   ═══════════════════════════════════════════════════════ */
+
+.cs-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 9999999;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    direction: ltr;
+}
+
+.cs-modal.show { display: flex; }
+
+.cs-modal-box {
+    width: 100%;
+    max-width: 480px;
+    max-height: 92vh;
+    overflow-y: auto;
+    background: #24242E;
+    border: 2px solid #8B5CF6;
+    border-radius: 20px;
+    padding: 26px 22px;
+    position: relative;
+    animation: csModalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.8),
+        0 0 60px rgba(167,139,250, 0.2);
+}
+
+@keyframes csModalIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.cs-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1.5px solid #8B5CF6;
+    border-radius: 50%;
+    color: #A78BFA;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    z-index: 5;
+}
+
+.cs-modal-close:hover {
+    background: #8B5CF6;
+    color: #1A1A22;
+    transform: rotate(90deg);
+}
+
+.cs-modal-title {
+    font-size: 17px;
+    font-weight: 900;
+    color: #A78BFA;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.cs-modal-title i {
+    margin-right: 6px;
+}
+
+.cs-modal-sub {
+    font-size: 11px;
+    color: #A1A1B5;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+    line-height: 1.7;
+}
+
+/* ═══════════════════════════════════════════════════════
+   8) MODAL — Actions (تأكيد + إلغاء)
+   ═══════════════════════════════════════════════════════ */
+
+.cs-modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.cs-modal-cancel-btn {
+    flex: 1;
+    padding: 14px;
+    background: rgba(106, 106, 109, 0.15);
+    color: #A1A1B5;
+    border: 1.5px solid #2E2E3A;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.25s ease;
+}
+
+.cs-modal-cancel-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: #EF4444;
+    color: #EF4444;
+}
+
+.cs-modal-cancel-btn:active {
+    transform: scale(0.97);
+}
+
+.cs-modal-confirm-btn {
+    flex: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #FFFFFF;
+    border: 2px solid #F5F3FF;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.25s ease;
+    box-shadow:
+        0 4px 14px rgba(16, 185, 129, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.cs-modal-confirm-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 22px rgba(16, 185, 129, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.cs-modal-confirm-btn:active:not(:disabled) {
+    transform: translateY(0) scale(0.97);
+}
+
+.cs-modal-confirm-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cs-modal-confirm-btn i {
+    font-size: 16px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   9) MODAL — Opponent Display
+   ═══════════════════════════════════════════════════════ */
+
+.cs-move-opponent-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg,
+        rgba(91,33,182, 0.2) 0%,
+        rgba(30, 30, 32, 0.4) 100%);
+    border: 1.5px solid rgba(167,139,250, 0.4);
+    border-radius: 14px;
+    margin-bottom: 16px;
+    direction: rtl;
+}
+
+.cs-move-opponent-label {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    color: #A1A1B5;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.cs-move-opponent-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.cs-move-opponent-info img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.cs-move-opponent-info span {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════════
+   10) MODAL — Info Box
+   ═══════════════════════════════════════════════════════ */
+
+.cs-move-info-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg,
+        rgba(167,139,250, 0.1) 0%,
+        rgba(167,139,250, 0.03) 100%);
+    border: 1.5px solid rgba(167,139,250, 0.4);
+    border-radius: 12px;
+    color: #A78BFA;
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+    direction: rtl;
+}
+
+.cs-move-info-box i {
+    font-size: 16px;
+    flex-shrink: 0;
+    color: #A78BFA;
+    margin-top: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   11) MODAL — No Opponent
+   ═══════════════════════════════════════════════════════ */
+
+.cs-no-opponent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.cs-no-opponent-icon {
+    font-size: 64px;
+    color: #A78BFA;
+    opacity: 0.7;
+    filter: drop-shadow(0 0 20px rgba(167,139,250, 0.5));
+    animation: csNoOpponentFloat 3s ease-in-out infinite;
+}
+
+@keyframes csNoOpponentFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+}
+
+.cs-no-opponent-title {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 16px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 1px;
+    line-height: 1.5;
+}
+
+.cs-no-opponent-sub {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 12px;
+    color: #A1A1B5;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════
+   12) MODAL — Picker Count + Sections
+   ═══════════════════════════════════════════════════════ */
+
+.cs-picker-count {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #1A1A22;
+    border: 1.5px solid #2E2E3A;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    color: #A1A1B5;
+    letter-spacing: 0.5px;
+    direction: rtl;
+}
+
+.cs-picker-count-value {
+    font-family: 'Inter', monospace;
+    color: #A78BFA;
+    font-size: 14px;
+    text-shadow: 0 0 8px rgba(167,139,250, 0.5);
+}
+
+.cs-picker-section {
+    margin-bottom: 16px;
+}
+
+.cs-picker-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    color: #A78BFA;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.cs-picker-label i {
+    font-size: 14px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   13) MODAL — Manager Picker
+   ═══════════════════════════════════════════════════════ */
+
+.cs-manager-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+.cs-manager-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #1A1A22;
+    border: 1.5px solid #2E2E3A;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    direction: ltr;
+    text-align: left;
+}
+
+.cs-manager-option:hover {
+    border-color: #A78BFA;
+    background: #24242E;
+}
+
+.cs-manager-option.selected {
+    border-color: #10B981;
+    background: linear-gradient(90deg,
+        rgba(16, 185, 129, 0.15) 0%,
+        #1A1A22 70%);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+.cs-manager-option img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.cs-manager-option-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.cs-manager-option-name {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    color: #F5F3FF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cs-manager-option-points {
+    font-family: 'Inter', monospace;
+    font-size: 10px;
+    font-weight: 800;
+    color: #A78BFA;
+    margin-top: 2px;
+}
+
+.cs-manager-option.cs-manager-immune {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: linear-gradient(90deg,
+        rgba(167,139,250, 0.08) 0%,
+        #1A1A22 70%);
+    border-color: rgba(167,139,250, 0.4);
+}
+
+.cs-manager-option.cs-manager-immune:hover {
+    border-color: rgba(167,139,250, 0.4);
+    background: linear-gradient(90deg,
+        rgba(167,139,250, 0.08) 0%,
+        #1A1A22 70%);
+}
+
+.cs-manager-immune-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(167,139,250, 0.15);
+    border: 1.5px solid #A78BFA;
+    color: #A78BFA;
+    font-size: 15px;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px rgba(167,139,250, 0.5);
+}
+
+.cs-manager-immune-badge i {
+    font-size: 15px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   14) MODAL — Team Picker
+   ═══════════════════════════════════════════════════════ */
+
+.cs-team-picker {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+.cs-team-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 10px;
+    background: #1A1A22;
+    border: 1.5px solid #2E2E3A;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    direction: ltr;
+    text-align: center;
+    min-height: 50px;
+}
+
+.cs-team-option:hover {
+    border-color: #A78BFA;
+    background: #24242E;
+    transform: translateY(-2px);
+}
+
+.cs-team-option.selected {
+    border-color: #10B981;
+    background: linear-gradient(135deg,
+        rgba(16, 185, 129, 0.15) 0%,
+        #1A1A22 70%);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+.cs-team-option-name {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    color: #F5F3FF;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ═══════════════════════════════════════════════════════
+   15) LOADING + SPINNER
+   ═══════════════════════════════════════════════════════ */
+
+.cs-loading,
+.cs-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 50px 20px;
+    text-align: center;
+    color: #A1A1B5;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+}
+
+.cs-loading i,
+.cs-empty i {
+    font-size: 40px;
+    color: #A78BFA;
+    opacity: 0.7;
+}
+
+.cs-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(167,139,250, 0.2);
+    border-top-color: #A78BFA;
+    border-radius: 50%;
+    animation: csSpin 0.8s linear infinite;
+}
+
+@keyframes csSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   16) MOBILE — 600px
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 600px) {
+    .cs-config-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .cs-config-card {
+        padding: 14px 12px 12px;
+    }
+
+    .cs-config-card-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
+    }
+
+    .cs-config-card-icon i {
+        font-size: 20px;
+    }
+
+    .cs-config-card-title {
+        font-size: 13px;
+    }
+
+    .cs-config-card-desc {
+        font-size: 10.5px;
+        min-height: 32px;
+    }
+
+    .cs-inline-card {
+        width: 96px;
+        min-height: 96px;
+    }
+
+    .cs-inline-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+
+    .cs-inline-title {
+        font-size: 11px;
+    }
+
+    .cs-modal-box {
+        padding: 22px 18px;
+    }
+
+    .cs-modal-title {
+        font-size: 15px;
+    }
+
+    .cs-modal-sub {
+        font-size: 10.5px;
+    }
+
+    .cs-move-opponent-info img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .cs-move-opponent-info span {
+        font-size: 12px;
+    }
+
+    .cs-team-picker {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cs-manager-picker {
+        max-height: 220px;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════
+   17) MOBILE — 480px
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 480px) {
+    .champ-special-intro h2 {
+        font-size: 18px;
+        letter-spacing: 2px;
+    }
+
+    .champ-special-intro p {
+        font-size: 11px;
+    }
+
+    .cs-captain-bar {
+        padding: 12px 14px;
+        gap: 10px;
+    }
+
+    .cs-captain-bar-logo {
+        width: 36px;
+        height: 36px;
+    }
+
+    .cs-captain-bar-team {
+        font-size: 12px;
+    }
+
+    .cs-captain-bar-badge {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+    }
+
+    .cs-config-progress {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .cs-config-progress-text {
+        font-size: 11px;
+    }
+
+    .cs-config-progress-text span {
+        font-size: 14px;
+    }
+
+    .cs-config-card {
+        padding: 12px 10px 10px;
+    }
+
+    .cs-config-card-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+    }
+
+    .cs-config-card-icon i {
+        font-size: 18px;
+    }
+
+    .cs-config-card-title {
+        font-size: 12px;
+    }
+
+    .cs-config-card-subtitle {
+        font-size: 9px;
+    }
+
+    .cs-config-card-desc {
+        font-size: 10px;
+        min-height: 28px;
+        line-height: 1.5;
+    }
+
+    .cs-config-save-btn {
+        padding: 14px 18px;
+        font-size: 12px;
+        letter-spacing: 1.5px;
+    }
+
+    .cs-config-save-btn i {
+        font-size: 16px;
+    }
+
+    .cs-config-warning {
+        font-size: 10px;
+        padding: 10px 12px;
+    }
+
+    .cs-inline-card {
+        width: 88px;
+        min-height: 88px;
+        padding: 8px 6px;
+    }
+
+    .cs-inline-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+
+    .cs-inline-name,
+    .cs-inline-name-ar {
+        font-size: 8px;
+    }
+
+    .cs-inline-title {
+        font-size: 10px;
+    }
+
+    .cs-inline-count {
+        font-size: 9px;
+        padding: 2px 8px;
+    }
+
+    .cs-modal-box {
+        padding: 20px 14px;
+        border-radius: 16px;
+    }
+
+    .cs-modal-title {
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+
+    .cs-modal-close {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+        top: 10px;
+        right: 10px;
+    }
+
+    .cs-modal-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .cs-modal-cancel-btn,
+    .cs-modal-confirm-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 12px;
+    }
+
+    .cs-move-opponent-display {
+        padding: 10px 12px;
+    }
+
+    .cs-move-opponent-label {
+        font-size: 10px;
+    }
+
+    .cs-move-opponent-info img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .cs-move-opponent-info span {
+        font-size: 11px;
+    }
+
+    .cs-picker-count {
+        padding: 8px 12px;
+        font-size: 11px;
+    }
+
+    .cs-picker-count-value {
+        font-size: 13px;
+    }
+
+    .cs-picker-label {
+        font-size: 10px;
+    }
+
+    .cs-manager-option {
+        padding: 8px 10px;
+        gap: 8px;
+    }
+
+    .cs-manager-option img {
+        width: 22px;
+        height: 22px;
+    }
+
+    .cs-manager-option-name {
+        font-size: 11px;
+    }
+
+    .cs-manager-option-points {
+        font-size: 9px;
+    }
+
+    .cs-team-picker {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .cs-team-option {
+        padding: 10px 8px;
+        min-height: 44px;
+    }
+
+    .cs-team-option-name {
+        font-size: 10px;
+    }
+
+    .cs-manager-immune-badge {
+        width: 24px;
+        height: 24px;
+        font-size: 13px;
+    }
+
+    .cs-manager-immune-badge i {
+        font-size: 13px;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════
+   18) REDUCED MOTION
+   ═══════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+    .cs-modal-box,
+    .cs-spinner,
+    .cs-config-save-btn,
+    .cs-inline-card,
+    .cs-inline-icon,
+    .cs-inline-badge-active,
+    .cs-captain-bar-badge,
+    .cs-config-card,
+    .cs-config-card-icon,
+    .cs-no-opponent-icon,
+    .cs-config-warning i {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+
+/* ⭐ v9: خاصية استُخدمت في جولة سابقة (مقفلة) */
+.cs-inline-card-locked,
+.cs-inline-card-locked:hover{
+    opacity:.5;
+    filter:grayscale(.85);
+    cursor:not-allowed;
+    border:2px dashed #3A3A3E;
+    background:#18181A;
+    box-shadow:none;
+}
+.cs-inline-card-locked:active{ transform:none; }
+.cs-inline-used-note{
+    margin-top:4px;
+    font-size:9px;
+    font-weight:800;
+    color:#8B8BA0;
+    letter-spacing:.3px;
+}
