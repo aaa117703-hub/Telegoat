@@ -1711,3 +1711,41 @@ body.champ-draw-open{
 /* ترتيب A→D من اليسار لليمين */
 .champ-groups-stage,.champ-pot-teams{direction:ltr;}
 .champ-draw-title{direction:ltr !important;letter-spacing:3px;}
+
+
+/* ===== v2: دخول البطاقات + كشف الفريق + اكتمال المجموعة ===== */
+.champ-team-card { transform-style: preserve-3d; will-change: transform, opacity; }
+.champ-team-card.champ-card-land { animation: champLand .9s ease-out; }
+@keyframes champLand {
+    0%   { box-shadow: 0 0 0 0 rgba(255,255,255,.9), 0 0 40px rgba(167,139,250,1); filter: brightness(1.9); }
+    60%  { box-shadow: 0 0 0 14px rgba(167,139,250,0), 0 0 24px rgba(167,139,250,.5); filter: brightness(1.2); }
+    100% { box-shadow: 0 0 0 0 rgba(167,139,250,0); filter: none; }
+}
+.champ-reveal-overlay {
+    position: fixed; inset: 0; pointer-events: none;
+    background: radial-gradient(circle at 50% 50%, rgba(10,6,24,.55) 0%, rgba(3,2,10,.92) 70%);
+    backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+    display: flex; align-items: center; justify-content: center;
+}
+.champ-reveal-rays {
+    position: absolute; left: 50%; top: 50%; width: 160vmax; height: 160vmax; margin: -80vmax 0 0 -80vmax;
+    background: repeating-conic-gradient(from 0deg, rgba(167,139,250,.16) 0deg 6deg, transparent 6deg 18deg);
+    -webkit-mask-image: radial-gradient(circle, #000 0%, transparent 55%); mask-image: radial-gradient(circle, #000 0%, transparent 55%);
+    animation: champRays 6s linear infinite;
+}
+@keyframes champRays { to { transform: rotate(360deg); } }
+.champ-reveal-badge {
+    position: absolute; left: 50%; top: calc(50% + 110px); transform: translateX(-50%);
+    padding: 8px 22px; border-radius: 999px; border: 1.5px solid #A78BFA;
+    background: rgba(76,29,149,.55); color: #F5F3FF; font-weight: 900; letter-spacing: 3px; font-size: 14px;
+    box-shadow: 0 0 30px rgba(167,139,250,.6); animation: champBadgeIn .5s .25s both cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes champBadgeIn { from { opacity: 0; transform: translateX(-50%) translateY(18px) scale(.7); } to { opacity: 1; transform: translateX(-50%); } }
+.champ-group-complete { animation: champGroupDone 1.6s ease-out; }
+@keyframes champGroupDone {
+    0%,100% { box-shadow: 0 0 0 rgba(167,139,250,0); }
+    40% { box-shadow: 0 0 60px rgba(167,139,250,.9), 0 0 0 3px rgba(255,255,255,.6) inset; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .champ-reveal-rays, .champ-team-card.champ-card-land { animation: none; }
+}

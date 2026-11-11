@@ -1015,11 +1015,7 @@ const CTV_ROWS = [
 ];
 
 const CTV_EPL_NAMES = {
-    ARS: 'Arsenal', AVL: 'Aston Villa', BOU: 'Bournemouth', BRE: 'Brentford',
-    BHA: 'Brighton', CHE: 'Chelsea', CRY: 'Crystal Palace', EVE: 'Everton',
-    FUL: 'Fulham', IPS: 'Ipswich', LEI: 'Leicester', LIV: 'Liverpool',
-    MCI: 'Man City', MUN: 'Man United', NEW: 'Newcastle', NFO: "Nott'm Forest",
-    SOU: 'Southampton', TOT: 'Tottenham', WHU: 'West Ham', WOL: 'Wolves'
+    ARS: 'Arsenal', AVL: 'Aston Villa', BOU: 'Bournemouth', BRE: 'Brentford', BHA: 'Brighton', CHE: 'Chelsea', COV: 'Coventry', CRY: 'Crystal Palace', EVE: 'Everton', FUL: 'Fulham', HUL: 'Hull', IPS: 'Ipswich', LEE: 'Leeds', LIV: 'Liverpool', MCI: 'Man City', MUN: 'Man United', NEW: 'Newcastle', NFO: 'Nott\'m Forest', SUN: 'Sunderland', TOT: 'Spurs'
 };
 
 /* أيقونات SVG مخصصة (بدل الإيموجي) */
@@ -2012,10 +2008,6 @@ function renderChampionsMain() {
         }
     }
 
-    if (isAdmin) {
-        html += '<button class="cc-admin-epl-btn" onclick="ccOpenEplAdminModal()">' + xIcon('shield-star', 'fill') + ' إدارة فرق EPL (المدافعين)' + '</button>';
-    }
-
     if (draw.length === 0) {
         if (isAdmin) {
             html += '<div class="champions-empty">' + xIcon('trophy', 'duotone') +
@@ -2587,6 +2579,7 @@ function champKoTile(team, group, kind) {
 }
 
 function champOpenKnockoutDrawModal() {
+    if (!isChampAdmin()) { if (typeof showToast === 'function') showToast('القرعة للأدمن فقط', false); return; }
     let el = document.getElementById('champKoDrawModal');
     if (!el) { el = document.createElement('div'); el.id = 'champKoDrawModal'; document.body.appendChild(el); }
     el.className = 'kod show';
@@ -2643,6 +2636,7 @@ async function champKoSpin(tiles, winnerTile, cls, ticks) {
 }
 
 async function champRunKnockoutDraw() {
+    if (!isChampAdmin()) { if (typeof showToast === 'function') showToast('القرعة للأدمن فقط', false); return; }
     const d = champKoDraw;
     if (d.running) return;
     d.running = true; d.cancel = false; d.done = false;

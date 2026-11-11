@@ -937,18 +937,42 @@ async function champStagePotsEntry() {
     await champWait(400);
 
     const cards = document.querySelectorAll('.champ-team-card');
-    gsap.set(cards, { opacity: 0, scale: 0.85 });
-
-    await new Promise(function(resolve) {
-        gsap.to(cards, {
-            opacity: 1,
-            scale: 1,
-            duration: 0.5,
-            stagger: 0.04,
-            ease: 'back.out(1.4)',
-            onComplete: resolve
-        });
+    const dirs = [
+        { x: 0,    y: -260, rx: -70, ry: 0   },   /* القدر 1: من الأعلى */
+        { x: 340,  y: 0,    rx: 0,   ry: 80  },   /* القدر 2: من اليمين */
+        { x: 0,    y: 260,  rx: 70,  ry: 0   },   /* القدر 3: من الأسفل */
+        { x: -340, y: 0,    rx: 0,   ry: -80 },   /* القدر 4: من اليسار */
+        { x: 260,  y: -200, rx: -50, ry: 50  }    /* القدر 5: قطري */
+    ];
+    gsap.set(cards, { opacity: 0 });
+    cards.forEach(function (c) {
+        var d = dirs[((parseInt(c.getAttribute('data-pot'), 10) || 1) - 1) % dirs.length];
+        gsap.set(c, { x: d.x, y: d.y, rotationX: d.rx, rotationY: d.ry, scale: 0.4, transformPerspective: 900 });
     });
+
+    for (let pot = 1; pot <= 5; pot++) {
+        if (champDrawState.skipRequested) break;
+        const potCards = Array.prototype.filter.call(cards, function (c) { return c.getAttribute('data-pot') === String(pot); });
+        if (!potCards.length) continue;
+        champPlayTick();
+        champVibrate(12);
+        await new Promise(function (resolve) {
+            let done = 0;
+            potCards.forEach(function (c, i) {
+                gsap.to(c, {
+                    opacity: 1, x: 0, y: 0, rotationX: 0, rotationY: 0, scale: 1,
+                    duration: 0.75, delay: i * 0.09, ease: 'back.out(1.5)',
+                    onComplete: function () {
+                        c.classList.add('champ-card-land');
+                        setTimeout(function () { c.classList.remove('champ-card-land'); }, 900);
+                        if (++done === potCards.length) resolve();
+                    }
+                });
+            });
+        });
+        await champWait(160);
+    }
+    gsap.set(cards, { opacity: 1, x: 0, y: 0, rotationX: 0, rotationY: 0, scale: 1, clearProps: 'transformPerspective' });
 
     await champWait(300);
 
@@ -1005,7 +1029,7 @@ async function champStagePickTeam(row, potNum) {
     if (allPotCards.length === 0) return;
 
     const spotCount = allPotCards.length;
-    const totalCycles = 3;
+    const totalCycles = spotCount >= 4 ? 3 : (spotCount >= 2 ? 2 : 1);
 
     for (let cycle = 0; cycle < totalCycles; cycle++) {
         for (let i = 0; i < spotCount; i++) {
@@ -1130,19 +1154,37 @@ async function champStagePickTeam(row, potNum) {
     if (cardImg) gsap.to(cardImg, { opacity: 0.3, scale: 0.8, duration: 0.4 });
     if (cardName) gsap.to(cardName, { opacity: 0.3, duration: 0.4 });
 
+    /* ===== كشف الفريق في منتصف الشاشة مع أشعة وتعتيم ===== */
+    const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+    const overlay = document.createElement('div');
+    overlay.className = 'champ-reveal-overlay';
+    overlay.innerHTML = '<div class="champ-reveal-rays"></div><div class="champ-reveal-badge">GROUP ' + row.group_name + '</div>';
+    document.body.appendChild(overlay);
+    gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.35 });
+    flyer.style.zIndex = '2147483300';
+    overlay.style.zIndex = '2147483200';
+
+    gsap.to(flyer, { opacity: 1, duration: 0.3 });
     await new Promise(function(resolve) {
-        gsap.to(flyer, {
-            opacity: 1,
-            scale: 1,
-            duration: 0.6,
-            ease: 'back.out(1.7)',
-            onComplete: resolve
-        });
+        /* نقل من موضع البطاقة إلى مركز الشاشة مع تكبير */
+        var t0 = performance.now(), dur = 750;
+        (function mv(now) {
+            if (champDrawState.skipRequested) { resolve(); return; }
+            var k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+            var x = startX + (cx - startX) * e, y = startY + (cy - startY) * e;
+            flyer.style.transform = 'translate(' + (x - 80) + 'px, ' + (y - 35) + 'px) scale(' + (0.2 + 1.9 * e) + ')';
+            if (k < 1) requestAnimationFrame(mv); else resolve();
+        })(t0);
     });
+    flyer.style.transform = 'translate(' + (cx - 80) + 'px, ' + (cy - 35) + 'px) scale(2.1)';
+    champSpawnShockwave(cx, cy, 0);
+    champSpawnBurst(cx, cy, 28);
+    champVibrate([30, 15, 30]);
 
-    await champWait(200);
+    await champWait(950);
+    gsap.to(overlay, { opacity: 0, duration: 0.4, onComplete: function () { overlay.remove(); } });
 
-    await champAnimateFlight(flyer, startX, startY, endX, endY);
+    await champAnimateFlight(flyer, cx, cy, endX, endY, 2.1);
 
     flyer.remove();
     champVibrate([40, 20, 40]);
@@ -1182,6 +1224,7 @@ async function champStagePickTeam(row, potNum) {
     groupTeamsEl.insertAdjacentHTML('beforeend', teamHtml);
 
     const newTeam = groupTeamsEl.lastElementChild;
+    if (groupTeamsEl.children.length >= 5) { try { champSpawnConfetti(36); } catch (e) {} groupTarget.classList.add('champ-group-complete'); }
     gsap.fromTo(newTeam,
         { opacity: 0, scale: 0.4, y: -30 },
         { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: 'back.out(2)' }
@@ -1222,7 +1265,8 @@ async function champStagePickTeam(row, potNum) {
    Flight Animation
 ========================================================= */
 
-async function champAnimateFlight(flyer, startX, startY, endX, endY) {
+async function champAnimateFlight(flyer, startX, startY, endX, endY, startScale) {
+    startScale = startScale || 1;
     return new Promise(function(resolve) {
         const duration = 1.6;
         const startTime = performance.now();
@@ -1261,7 +1305,7 @@ async function champAnimateFlight(flyer, startX, startY, endX, endY) {
             x += Math.cos(spiralPhase) * spiralStrength * 0.4;
             y += Math.sin(spiralPhase) * spiralStrength * 0.3;
 
-            const scale = 1 + Math.sin(eased * Math.PI) * 0.5;
+            const scale = startScale + (1 - startScale) * eased + Math.sin(eased * Math.PI) * 0.5;
             rotation += 25;
             const brightness = 1.3 + Math.sin(eased * Math.PI * 3) * 0.4;
 

@@ -65,20 +65,20 @@ const CS_EPL_TEAMS = [
     { code: 'BRE', name: 'Brentford' },
     { code: 'BHA', name: 'Brighton' },
     { code: 'CHE', name: 'Chelsea' },
+    { code: 'COV', name: 'Coventry' },
     { code: 'CRY', name: 'Crystal Palace' },
     { code: 'EVE', name: 'Everton' },
     { code: 'FUL', name: 'Fulham' },
+    { code: 'HUL', name: 'Hull' },
     { code: 'IPS', name: 'Ipswich' },
-    { code: 'LEI', name: 'Leicester' },
+    { code: 'LEE', name: 'Leeds' },
     { code: 'LIV', name: 'Liverpool' },
     { code: 'MCI', name: 'Man City' },
     { code: 'MUN', name: 'Man United' },
     { code: 'NEW', name: 'Newcastle' },
     { code: 'NFO', name: 'Nott\'m Forest' },
-    { code: 'SOU', name: 'Southampton' },
-    { code: 'TOT', name: 'Tottenham' },
-    { code: 'WHU', name: 'West Ham' },
-    { code: 'WOL', name: 'Wolves' }
+    { code: 'SUN', name: 'Sunderland' },
+    { code: 'TOT', name: 'Spurs' }
 ];
 
 /* =========================================================
