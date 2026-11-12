@@ -1,0 +1,24 @@
+plugins { id 'com.android.application' }
+android {
+  namespace 'com.aqeel.goat'
+  compileSdk 34
+  defaultConfig {
+    applicationId 'com.aqeel.goat'
+    minSdk 23
+    targetSdk 34
+    versionCode 1
+    versionName '1.0'
+  }
+  signingConfigs {
+    release {
+      storeFile file('../release.keystore')
+      storePassword 'goat1234'
+      keyAlias 'goat'
+      keyPassword 'goat1234'
+    }
+  }
+  buildTypes {
+    release { signingConfig signingConfigs.release; minifyEnabled false }
+  }
+  compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
